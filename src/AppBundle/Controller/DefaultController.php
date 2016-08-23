@@ -87,7 +87,7 @@ class DefaultController extends Controller
     	$response->setMaxAge($this->container->getParameter('cache_expiration'));
 
     	$page = $this->renderView('AppBundle:Default:rulesreference.html.twig',
-    			array("pagetitle" => "Rules", "pagedescription" => "Rules Reference"));
+    			array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Rules Reference"));
     	$response->setContent($page);
     	return $response;
     }
