@@ -1,5 +1,7 @@
 (function ui_card(ui, $) {
 
+	var review_minimum_length = 100;
+	
 	/**
 	 * The user is loaded and they have written a review on the page
 	 */
@@ -22,8 +24,8 @@
 	ui.check_review = function check_review(event)
 	{
 		event.preventDefault();
-		if($('#review-form-preview').text().length < 200) {
-			alert(Translator.trans('card.reviews.alerts.minimum', {min: 200}));
+		if($('#review-form-preview').text().length < review_minimum_length) {
+			alert(Translator.trans('card.reviews.alerts.minimum', {min: review_minimum_length}));
 			return;
 		}
 	
@@ -71,7 +73,7 @@
 		 */
 		var form = $("#review-edit-form");
 		form.append('<div><div class="form-group">'
-				+ '<textarea id="review-form-text" class="form-control" rows="20" name="review" placeholder="'+Translator.trans('card.reviews.hint', {min: 200})+'"></textarea>'
+				+ '<textarea id="review-form-text" class="form-control" rows="20" name="review" placeholder="'+Translator.trans('card.reviews.hint', {min: review_minimum_length})+'"></textarea>'
 				+ '</div><div class="well text-muted" id="review-form-preview"><small>Preview. Look <a href="http://daringfireball.net/projects/markdown/dingus">here</a> for a Markdown syntax reference.</small></div>'
 				+ '<button type="submit" class="btn btn-success">'+Translator.trans('card.reviews.submit')+'</button></div>');
 		form.on('submit', ui.check_review);
