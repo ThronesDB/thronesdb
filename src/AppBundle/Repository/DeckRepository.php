@@ -14,8 +14,8 @@ class DeckRepository extends TranslatableRepository
 		$qb = $this->createQueryBuilder('d')
 			->select('d, f, ds, c')
 			->join('d.faction', 'f')
-			->join('d.slots', 'ds')
-			->join('ds.card', 'c')
+			->leftJoin('d.slots', 'ds')
+			->leftJoin('ds.card', 'c')
 			->andWhere('d.id = ?1');
 
 		$qb->setParameter(1, $id);
