@@ -58,6 +58,7 @@ decks:
     traits:
       summer: Verano
       winter: Invierno
+      scheme: Conspiración
   build:
     choose:
       faction: Elige tu Facción

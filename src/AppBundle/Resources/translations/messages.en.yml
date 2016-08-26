@@ -58,6 +58,7 @@ decks:
     traits:
       summer: Summer
       winter: Winter
+      scheme: Scheme
   build:
     choose:
       faction: Choose your faction
