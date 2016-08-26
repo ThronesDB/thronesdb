@@ -427,6 +427,16 @@ deck.get_problem = function get_problem() {
 			return 'agenda';
 		}
 		break;
+		case '04037':
+		if(deck.get_nb_cards(deck.get_cards(null, {type_code: 'plot', traits: new RegExp(Translator.trans('decks.problems_info.traits.winter')+'\\.')})) > 0) {
+			return 'agenda';
+		}
+		break;
+		case '04038':
+		if(deck.get_nb_cards(deck.get_cards(null, {type_code: 'plot', traits: new RegExp(Translator.trans('decks.problems_info.traits.summer')+'\\.')})) > 0) {
+			return 'agenda';
+		}
+		break;
 	}
 }
 
