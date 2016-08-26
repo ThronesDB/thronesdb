@@ -381,7 +381,7 @@ card:
     cost: Cost
     costgold: Cost/Gold
     type: Type
-    strength: Fuerza
+    strength: Strength
     str: STR
     strini: Strength/Initiative
     traits: Traits
