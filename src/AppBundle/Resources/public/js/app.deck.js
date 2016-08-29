@@ -372,12 +372,16 @@ deck.get_copies_and_deck_limit = function get_copies_and_deck_limit() {
  * @memberOf deck
  */
 deck.get_problem = function get_problem() {
-	// exactly 7 plots
-	if(deck.get_plot_deck_size() > 7) {
-		return 'too_many_plots';
-	}
-	if(deck.get_plot_deck_size() < 7) {
-		return 'too_few_plots';
+	var agenda = deck.get_agenda();
+
+	// exactly 7 plots (if not Rains of Castamere)
+	if(!agenda || agenda.code != '05045') {
+		if(deck.get_plot_deck_size() > 7) {
+			return 'too_many_plots';
+		}
+		if(deck.get_plot_deck_size() < 7) {
+			return 'too_few_plots';
+		}
 	}
 
 	// at least 6 different plots
@@ -406,7 +410,6 @@ deck.get_problem = function get_problem() {
 	}
 	
 	// the condition(s) of the agenda must be fulfilled
-	var agenda = deck.get_agenda();
 	if(!agenda) return;
 	switch(agenda.code) {
 		case '01027':
@@ -424,6 +427,22 @@ deck.get_problem = function get_problem() {
 		case '01205':
 		var minor_faction_code = deck.get_minor_faction_code();
 		if(deck.get_nb_cards(deck.get_cards(null, { type_code: { $in: [ 'character', 'attachment', 'location', 'event' ] }, faction_code: minor_faction_code })) < 12) {
+			return 'agenda';
+		}
+		break;
+		case '04037':
+		if(deck.get_nb_cards(deck.get_cards(null, {type_code: 'plot', traits: new RegExp(Translator.trans('decks.problems_info.traits.winter')+'\\.')})) > 0) {
+			return 'agenda';
+		}
+		break;
+		case '04038':
+		if(deck.get_nb_cards(deck.get_cards(null, {type_code: 'plot', traits: new RegExp(Translator.trans('decks.problems_info.traits.summer')+'\\.')})) > 0) {
+			return 'agenda';
+		}
+		break;
+		case '05045':
+		var schemes = deck.get_nb_cards(deck.get_cards(null, {type_code: 'plot', traits: new RegExp(Translator.trans('decks.problems_info.traits.scheme')+'\\.')}))
+		if(deck.get_plot_deck_size() != 12 || schemes != 5) {
 			return 'agenda';
 		}
 		break;

@@ -2,12 +2,16 @@
 
 namespace AppBundle\Helper;
 
+use Symfony\Component\Translation\TranslatorInterface;
+use Functional as F;
+
 class DeckValidationHelper
 {
 	
-	public function __construct(AgendaHelper $agenda_helper)
+	public function __construct(AgendaHelper $agenda_helper, TranslatorInterface $translator)
 	{
 		$this->agenda_helper = $agenda_helper;
+		$this->translator = $translator;
 	}
 	
 	public function getInvalidCards($deck)
@@ -40,13 +44,20 @@ class DeckValidationHelper
 	
 	public function findProblem($deck)
 	{
+		$agenda = $deck->getSlots()->getAgenda();
+
 		$plotDeck = $deck->getSlots()->getPlotDeck();
 		$plotDeckSize = $plotDeck->countCards();
-		if($plotDeckSize > 7) {
-			return 'too_many_plots';
-		}
-		if($plotDeckSize < 7) {
-			return 'too_few_plots';
+
+		//check plot size only if no agenda is used or this agenda is not Rains of Castamere
+		if(!$agenda || $agenda->getCode()!='05045')
+		{
+			if($plotDeckSize > 7) {
+				return 'too_many_plots';
+			}
+			if($plotDeckSize < 7) {
+				return 'too_few_plots';
+			}
 		}
 		if(count($plotDeck) < 6) {
 			return 'too_many_different_plots';
@@ -63,10 +74,28 @@ class DeckValidationHelper
 		if(!empty($this->getInvalidCards($deck))) {
 			return 'invalid_cards';
 		}
-		$agenda = $deck->getSlots()->getAgenda();
-		if($agenda) {
-	
+		if($agenda) {	
 			switch($agenda->getCode()) {
+				case '01198':
+				case '01199':
+				case '01200':
+				case '01201':
+				case '01202':
+				case '01203':
+				case '01204':
+				case '01205': {
+					$minorFactionCode = $this->agenda_helper->getMinorFactionCode($agenda);
+					$minorFactionCards = F\select($deck->getSlots()->getDrawDeck(), function($slot) use($minorFactionCode) {
+						return $slot->getCard()->getFaction()->getCode()===$minorFactionCode;
+					});
+					$totalCards = F\reduce_left($minorFactionCards, function($slot, $index, $coll, $acc) {
+						return $acc + $slot->getQuantity();
+					}, 0);
+					if($totalCards < 12) {
+						return 'agenda';
+					}
+					break;
+				}
 				case '01027': {
 					$drawDeck = $deck->getSlots()->getDrawDeck();
 					$count = 0;
@@ -76,6 +105,30 @@ class DeckValidationHelper
 						}
 					}
 					if($count > 15) {
+						return 'agenda';
+					}
+					break;
+				}
+				case '04037':
+				case '04038': {
+					$trait = $this->translator->trans('decks.problems_info.traits.'.($agenda->getCode()=='04037' ? 'winter' : 'summer'));
+					$some = F\some($plotDeck, function($slot) use($trait) {
+						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
+					});
+					if($some) {
+						return 'agenda';
+					}
+					break;
+				}
+				case '05045': {
+					$trait = $this->translator->trans('decks.problems_info.traits.scheme');
+					$schemes = F\select($plotDeck, function($slot) use($trait) {
+						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
+					});
+					$totalSchemes = F\reduce_left($schemes, function($slot, $index, $coll, $acc) {
+						return $acc + $slot->getQuantity();
+					}, 0);
+					if($plotDeckSize != 12 || $totalSchemes != 5) {
 						return 'agenda';
 					}
 					break;
@@ -90,20 +143,7 @@ class DeckValidationHelper
 		if(! $problem) {
 			return '';
 		}
-		$labels = [
-				'too_many_plots' => "Contains too many Plots",
-				'too_few_plots' => "Contains too few Plots",
-				'too_many_different_plots' => "Contains more than one duplicated Plot",
-				'too_many_agendas' => "Contains more than one Agenda",
-				'too_few_cards' => "Contains too few cards",
-				'too_many_copies' => "Contains too many copies of a card (by title)",
-				'invalid_cards' => "Contains forbidden cards (cards no permitted by Faction or Agenda)",
-				'agenda' => "Doesn't comply with the Agenda conditions"
-		];
-		if(isset($labels[$problem])) {
-			return $labels[$problem];
-		}
-		return '';
+		return $this->translator->trans('decks.problems.'.$problem);
 	}
 	
 	

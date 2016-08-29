@@ -35,4 +35,4 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
     deck_validation_helper:
         class: AppBundle\Helper\DeckValidationHelper
-        arguments: ["@agenda_helper"]
+        arguments: ["@agenda_helper", "@translator"]
