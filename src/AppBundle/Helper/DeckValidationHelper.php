@@ -3,7 +3,7 @@
 namespace AppBundle\Helper;
 
 use Symfony\Component\Translation\TranslatorInterface;
-use Functional as F;
+use AppBundle\Model\SlotCollectionDecorator;
 
 class DeckValidationHelper
 {
@@ -110,24 +110,26 @@ class DeckValidationHelper
 					break;
 				}
 				case '04037':
-				case '04038': {
+				case '04038': {					
 					$trait = $this->translator->trans('decks.problems_info.traits.'.($agenda->getCode()=='04037' ? 'winter' : 'summer'));
-					$some = F\some($plotDeck, function($slot) use($trait) {
+					$some = $plotDeck->getSlots()->filter(function($slot) use($trait) {
 						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
 					});
-					if($some) {
+					/*
+					$some = F\some($plotDeck, function($slot) use($trait) {
+						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
+					});*/
+					if(count($some)) {
 						return 'agenda';
 					}
 					break;
 				}
 				case '05045': {
 					$trait = $this->translator->trans('decks.problems_info.traits.scheme');
-					$schemes = F\select($plotDeck, function($slot) use($trait) {
+					$schemes = new SlotCollectionDecorator($plotDeck->getSlots()->filter(function($slot) use($trait) {
 						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
-					});
-					$totalSchemes = F\reduce_left($schemes, function($slot, $index, $coll, $acc) {
-						return $acc + $slot->getQuantity();
-					}, 0);
+					}));
+					$totalSchemes = $schemes->countCards();
 					if($plotDeckSize != 12 || $totalSchemes != 5) {
 						return 'agenda';
 					}
