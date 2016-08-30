@@ -3,6 +3,7 @@
 namespace AppBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Decorator for a collection of SlotInterface 
  */
@@ -148,6 +149,28 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 			}
 		}
 		return new SlotCollectionDecorator(new ArrayCollection($drawDeck));
+	}
+
+	public function filterByFaction($faction_code)
+	{
+		$slots = [];
+		foreach($this->slots as $slot) {
+			if($slot->getCard()->getFaction()->getCode() === $faction_code) {
+				$slots[] = $slot;
+			}
+		}
+		return new SlotCollectionDecorator(new ArrayCollection($slots));
+	}
+
+	public function filterByTrait($trait)
+	{
+		$slots = [];
+		foreach($this->slots as $slot) {
+			if(preg_match("/$trait\\./", $slot->getCard()->getTraits())) {
+				$slots[] = $slot;
+			}
+		}
+		return new SlotCollectionDecorator(new ArrayCollection($slots));
 	}
 	
 	public function getCopiesAndDeckLimit()

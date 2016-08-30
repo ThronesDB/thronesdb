@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
-class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializable
+use AppBundle\Model\SlotCollectionProviderInterface;
+
+class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializable, SlotCollectionProviderInterface
 {
 
 	public function jsonSerialize()
