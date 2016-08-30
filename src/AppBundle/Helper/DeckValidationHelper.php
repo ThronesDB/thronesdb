@@ -4,6 +4,7 @@ namespace AppBundle\Helper;
 
 use Symfony\Component\Translation\TranslatorInterface;
 use AppBundle\Model\SlotCollectionDecorator;
+use AppBundle\Model\SlotCollectionProviderInterface;
 
 class DeckValidationHelper
 {
@@ -42,11 +43,13 @@ class DeckValidationHelper
 		return false;
 	}
 	
-	public function findProblem($deck)
+	public function findProblem(SlotCollectionProviderInterface $deck)
 	{
-		$agenda = $deck->getSlots()->getAgenda();
+		$slots = $deck->getSlots();
+		
+		$agenda = $slots->getAgenda();
 
-		$plotDeck = $deck->getSlots()->getPlotDeck();
+		$plotDeck = $slots->getPlotDeck();
 		$plotDeckSize = $plotDeck->countCards();
 
 		//check plot size only if no agenda is used or this agenda is not Rains of Castamere
@@ -62,13 +65,13 @@ class DeckValidationHelper
 		if(count($plotDeck) < 6) {
 			return 'too_many_different_plots';
 		}
-		if($deck->getSlots()->getAgendas()->countCards() > 1) {
+		if($slots->getAgendas()->countCards() > 1) {
 			return 'too_many_agendas';
 		}
-		if($deck->getSlots()->getDrawDeck()->countCards() < 60) {
+		if($slots->getDrawDeck()->countCards() < 60) {
 			return 'too_few_cards';
 		}
-		foreach($deck->getSlots()->getCopiesAndDeckLimit() as $cardName => $value) {
+		foreach($slots->getCopiesAndDeckLimit() as $cardName => $value) {
 			if($value['copies'] > $value['deck_limit']) return 'too_many_copies';
 		}
 		if(!empty($this->getInvalidCards($deck))) {
@@ -85,19 +88,14 @@ class DeckValidationHelper
 				case '01204':
 				case '01205': {
 					$minorFactionCode = $this->agenda_helper->getMinorFactionCode($agenda);
-					$minorFactionCards = F\select($deck->getSlots()->getDrawDeck(), function($slot) use($minorFactionCode) {
-						return $slot->getCard()->getFaction()->getCode()===$minorFactionCode;
-					});
-					$totalCards = F\reduce_left($minorFactionCards, function($slot, $index, $coll, $acc) {
-						return $acc + $slot->getQuantity();
-					}, 0);
+					$totalCards = $slots->getDrawDeck()->filterByFaction($minorFactionCode)->countCards();
 					if($totalCards < 12) {
 						return 'agenda';
 					}
 					break;
 				}
 				case '01027': {
-					$drawDeck = $deck->getSlots()->getDrawDeck();
+					$drawDeck = $slots->getDrawDeck();
 					$count = 0;
 					foreach($drawDeck as $slot) {
 						if($slot->getCard()->getFaction()->getCode() === 'neutral') {
@@ -112,25 +110,16 @@ class DeckValidationHelper
 				case '04037':
 				case '04038': {					
 					$trait = $this->translator->trans('decks.problems_info.traits.'.($agenda->getCode()=='04037' ? 'winter' : 'summer'));
-					$some = $plotDeck->getSlots()->filter(function($slot) use($trait) {
-						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
-					});
-					/*
-					$some = F\some($plotDeck, function($slot) use($trait) {
-						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
-					});*/
-					if(count($some)) {
+					$totalPlots = $plotDeck->filterByTrait($trait)->countCards();
+					if($totalPlots > 0) {
 						return 'agenda';
 					}
 					break;
 				}
 				case '05045': {
 					$trait = $this->translator->trans('decks.problems_info.traits.scheme');
-					$schemes = new SlotCollectionDecorator($plotDeck->getSlots()->filter(function($slot) use($trait) {
-						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
-					}));
-					$totalSchemes = $schemes->countCards();
-					if($plotDeckSize != 12 || $totalSchemes != 5) {
+					$totalPlots = $plotDeck->filterByTrait($trait)->countCards();
+					if($plotDeckSize != 12 || $totalPlots != 5) {
 						return 'agenda';
 					}
 					break;

@@ -61,4 +61,19 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
 	 * @return array
 	 */
 	public function getContent();
+	
+	/**
+	 *
+	 * @param string $faction_code
+	 * @return \AppBundle\Model\SlotCollectionDecorator
+	 */
+	public function filterByFaction($faction_code);
+	
+	/**
+	 *
+	 * @param string $trait
+	 * @return \AppBundle\Model\SlotCollectionDecorator
+	 */
+	public function filterByTrait($trait);
+	
 }
