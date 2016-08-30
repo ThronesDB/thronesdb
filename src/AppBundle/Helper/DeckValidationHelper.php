@@ -46,6 +46,7 @@ class DeckValidationHelper
 	{
 		$agenda = $deck->getSlots()->getAgenda();
 
+		$drawDeck = $deck->getSlots()->getDrawDeck();
 		$plotDeck = $deck->getSlots()->getPlotDeck();
 		$plotDeckSize = $plotDeck->countCards();
 
@@ -85,12 +86,10 @@ class DeckValidationHelper
 				case '01204':
 				case '01205': {
 					$minorFactionCode = $this->agenda_helper->getMinorFactionCode($agenda);
-					$minorFactionCards = F\select($deck->getSlots()->getDrawDeck(), function($slot) use($minorFactionCode) {
+					$minorFactionCards = new SlotCollectionDecorator($drawDeck->getSlots()->filter(function($slot) use($minorFactionCode) {
 						return $slot->getCard()->getFaction()->getCode()===$minorFactionCode;
-					});
-					$totalCards = F\reduce_left($minorFactionCards, function($slot, $index, $coll, $acc) {
-						return $acc + $slot->getQuantity();
-					}, 0);
+					}));
+					$totalCards = $minorFactionCards->countCards();
 					if($totalCards < 12) {
 						return 'agenda';
 					}
@@ -115,10 +114,6 @@ class DeckValidationHelper
 					$some = $plotDeck->getSlots()->filter(function($slot) use($trait) {
 						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
 					});
-					/*
-					$some = F\some($plotDeck, function($slot) use($trait) {
-						return preg_match("/$trait\\./", $slot->getCard()->getTraits());
-					});*/
 					if(count($some)) {
 						return 'agenda';
 					}
