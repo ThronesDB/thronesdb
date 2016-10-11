@@ -58,7 +58,7 @@ class CardsData
 	{
 		static $keywords = ['renown','intimidate','stealth','insight','limited','pillage','terminal','ambush'];
 
-		$locale = $this->request_stack->getCurrentRequest()->getLocale();
+		$locale = $this->request_stack->getCurrentRequest() ? $this->request_stack->getCurrentRequest()->getLocale() : 'en';
 
 		foreach($keywords as $keyword)
 		{
