@@ -92,6 +92,30 @@ class DefaultController extends Controller
     	return $response;
     }
 
+    function faqAction()
+    {
+    	$response = new Response();
+    	$response->setPublic();
+    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
+
+    	$page = $this->renderView('AppBundle:Default:faq.html.twig',
+    			array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "F.A.Q"));
+    	$response->setContent($page);
+    	return $response;
+    }
+
+    function tournamentregulationsAction()
+    {
+    	$response = new Response();
+    	$response->setPublic();
+    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
+
+    	$page = $this->renderView('AppBundle:Default:tournamentregulations.html.twig',
+    			array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Tournament Regulations"));
+    	$response->setContent($page);
+    	return $response;
+    }
+
     function aboutAction()
     {
     	$response = new Response();

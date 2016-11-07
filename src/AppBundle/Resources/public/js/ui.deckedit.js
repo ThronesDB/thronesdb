@@ -596,7 +596,7 @@ ui.setup_typeahead = function setup_typeahead() {
 		minLength: 2
 	},{
 		name : 'cardnames',
-		displayKey: 'name',
+		displayKey: 'label',
 		source: findMatches
 	});
 

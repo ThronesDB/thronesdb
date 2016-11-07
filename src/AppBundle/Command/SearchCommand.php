@@ -43,15 +43,22 @@ class SearchCommand extends ContainerAwareCommand
 
         $q = $service->buildQueryFromConditions($conditions);
         
+        $result = [];
+        
         $rows = $service->get_search_rows($conditions, 'set');
         foreach($rows as $card) {
             $cardinfo = $service->getCardInfo($card, false);
             $filtered = array_filter($cardinfo, function ($key) use ($fields) {
                 return in_array($key, $fields);
             }, ARRAY_FILTER_USE_KEY);
-            $output->writeln(implode(', ', $filtered));
+            $result[] = $filtered;
         }
 
+        $table = new \Symfony\Component\Console\Helper\Table($output);
+        $table->setRows($result);
+        $table->render();
         
+        $output->writeln('');
+        $output->writeln(count($rows). " cards");
     }
 }
