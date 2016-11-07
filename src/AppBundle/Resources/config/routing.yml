@@ -77,10 +77,20 @@ about:
     defaults:
         _controller: AppBundle:Default:about
 
-rules:
-    path: /rules
+rulesreference:
+    path: /rulesreference
     defaults:
-        _controller: AppBundle:Default:rules
+        _controller: AppBundle:Default:rulesreference
+
+faq:
+    path: /faq
+    defaults:
+        _controller: AppBundle:Default:faq
+
+tournamentregulations:
+    path: /tournamentregulations
+    defaults:
+        _controller: AppBundle:Default:tournamentregulations
 
 ffg:
     path: /ffg
