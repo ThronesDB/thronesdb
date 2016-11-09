@@ -80,7 +80,7 @@ class DefaultController extends Controller
         ], $response);
     }
 
-    function rulesAction()
+    function rulesreferenceAction()
     {
     	$response = new Response();
     	$response->setPublic();
