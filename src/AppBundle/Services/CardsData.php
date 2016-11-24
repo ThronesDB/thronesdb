@@ -475,7 +475,6 @@ class CardsData
 
 		if($api) {
 			unset($cardinfo['id']);
-			$cardinfo = array_filter($cardinfo, function ($var) { return isset($var); });
             $cardinfo['ci'] = $card->getCostIncome();
             $cardinfo['si'] = $card->getStrengthInitiative();
 		} else {
