@@ -919,4 +919,32 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     {
         $this->locale = $locale;
     }
+
+    /**
+     * @return int
+     */
+    public function getCostIncome()
+    {
+        $cost = $this->getCost();
+        $income = $this->getIncome();
+
+        if (is_null($cost) and is_null($income)) {
+            return -1;
+        }
+        return max($cost, $income);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrengthInitiative()
+    {
+        $strength = $this->getStrength();
+        $initiative = $this->getInitiative();
+
+        if (is_null($strength) and is_null($initiative)) {
+            return -1;
+        }
+        return max($strength, $initiative);
+    }
 }
