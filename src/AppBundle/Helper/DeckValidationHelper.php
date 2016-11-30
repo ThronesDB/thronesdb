@@ -62,7 +62,7 @@ class DeckValidationHelper
 				return 'too_few_plots';
 			}
 		}
-		if(count($plotDeck) < 6) {
+		if($agenda->getCode()!='05045' && count($plotDeck) < 6) {
 			return 'too_many_different_plots';
 		}
 		if($slots->getAgendas()->countCards() > 1) {
@@ -122,10 +122,13 @@ class DeckValidationHelper
 					if($plotDeckSize != 12 || $totalPlots != 5) {
 						return 'agenda';
 					}
-					break;
+                    if(count($plotDeck) < 11) {
+                        return 'too_many_different_plots';
+                    }
+                    break;
 				}
 			}
-	
+
 		}
 		return null;
 	}
