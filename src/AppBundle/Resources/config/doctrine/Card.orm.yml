@@ -95,7 +95,7 @@ AppBundle\Entity\Card:
         traits:
             type: string
             length: 255
-            nullable: true
+            nullable: false
             gedmo:
                 - translatable
         flavor:

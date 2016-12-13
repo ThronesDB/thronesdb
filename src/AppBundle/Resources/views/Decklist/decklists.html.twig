@@ -68,7 +68,9 @@ $(function () {
 <tr>
 <td class="decklist-faction-image hidden-xs">
 	<img src="/bundles/app/images/factions/{{ decklist.faction.code }}.png">
-	{% if decklist.slots.agenda %}<img src="/bundles/cards/{{ decklist.slots.agenda.code }}.png">{% endif %}
+        {% for agenda in decklist.slots.agendas %}
+            <img src="/bundles/cards/{{ agenda.card.code }}.png">
+        {% endfor %}
 </td>
 <td>
     <article>

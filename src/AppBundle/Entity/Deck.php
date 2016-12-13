@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Entity;
 
@@ -6,131 +6,146 @@ use AppBundle\Model\SlotCollectionProviderInterface;
 
 class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable, SlotCollectionProviderInterface
 {
-	/**
-	 * @return array
-	 */
-	public function getHistory()
-	{
-		$slots = $this->getSlots();
-		$cards = $slots->getContent();
-			
-		$snapshots = [];
-			
-		/**
-		 * All changes, with the newest at position 0
-		*/
-		$changes = $this->getChanges();
-			
-		/**
-		 * Saved changes, with the newest at position 0
-		 * @var $savedChanges Deckchange[]
-		*/
-		$savedChanges =[];
-			
-		/**
-		 * Unsaved changes, with the oldest at position 0
-		 * @var $unsavedChanges Deckchange[]
-		*/
-		$unsavedChanges =[];
-			
-		foreach($changes as $change) {
-			if($change->getIsSaved()) {
-				array_push($savedChanges, $change);
-			}
-			else {
-				array_unshift($unsavedChanges, $change);
-			}
-		}
-		$array['unsaved'] = count($unsavedChanges);
-			
-		// recreating the versions with the variation info, starting from $preversion
-		$preversion = $cards;
-		foreach ( $savedChanges as $change ) {
-			$variation = json_decode ( $change->getVariation(), TRUE );
-			$row = [
-					'variation' => $variation,
-					'is_saved' => $change->getIsSaved(),
-					'version' => $change->getVersion(),
-					'content' => $preversion,
-					'date_creation' => $change->getDateCreation()->format('c'),
-			];
-			array_unshift ( $snapshots, $row );
-				
-			// applying variation to create 'next' (older) preversion
-			foreach ( $variation[0] as $code => $qty ) {
-				$preversion[$code] = $preversion[$code] - $qty;
-				if ($preversion[$code] == 0) unset ( $preversion[$code] );
-			}
-			foreach ( $variation[1] as $code => $qty ) {
-				if (! isset ( $preversion[$code] )) $preversion[$code] = 0;
-				$preversion[$code] = $preversion[$code] + $qty;
-			}
-			ksort ( $preversion );
-		}
-			
-		// add last know version with empty diff
-		$row = [
-				'variation' => null,
-				'is_saved' => true,
-				'version' => "0.0",
-				'content' => $preversion,
-				'date_creation' => $this->getDateCreation()->format('c')
-		];
-		array_unshift ( $snapshots, $row );
-			
-		// recreating the snapshots with the variation info, starting from $postversion
-		$postversion = $cards;
-		foreach ( $unsavedChanges as $change ) {
-			$variation = json_decode ( $change->getVariation(), TRUE );
-			$row = [
-					'variation' => $variation,
-					'is_saved' => $change->getIsSaved(),
-					'version' => $change->getVersion(),
-					'date_creation' => $change->getDateCreation()->format('c'),
-			];
-				
-			// applying variation to postversion
-			foreach ( $variation[0] as $code => $qty ) {
-				if (! isset ( $postversion[$code] )) $postversion[$code] = 0;
-				$postversion[$code] = $postversion[$code] + $qty;
-			}
-			foreach ( $variation[1] as $code => $qty ) {
-				$postversion[$code] = $postversion[$code] - $qty;
-				if ($postversion[$code] == 0) unset ( $postversion[$code] );
-			}
-			ksort ( $postversion );
-				
-			// add postversion with variation that lead to it
-			$row['content'] = $postversion;
-			array_push ( $snapshots, $row );
-		}
-		
-		return $snapshots;
-	}
-	
-	public function jsonSerialize()
-	{
-		$array = parent::getArrayExport();
-		$array['problem'] = $this->getProblem();
-		$array['tags'] = $this->getTags();
-		
-		return $array;
-	}
-	
-	public function getIsUnsaved()
-	{
-		$changes = $this->getChanges();
 
-		foreach($changes as $change) {
-			if(!$change->getIsSaved()) {
-				return TRUE;
-			}
-		}
-		
-		return FALSE;
-	}
-	
-	/**
+    /**
+     * @return array
+     */
+    public function getHistory ()
+    {
+        $slots = $this->getSlots();
+        $cards = $slots->getContent();
+
+        $snapshots = [];
+
+        /**
+         * All changes, with the newest at position 0
+         */
+        $changes = $this->getChanges();
+
+        /**
+         * Saved changes, with the newest at position 0
+         * @var $savedChanges Deckchange[]
+         */
+        $savedChanges = [];
+
+        /**
+         * Unsaved changes, with the oldest at position 0
+         * @var $unsavedChanges Deckchange[]
+         */
+        $unsavedChanges = [];
+
+        foreach($changes as $change) {
+            if($change->getIsSaved()) {
+                array_push($savedChanges, $change);
+            } else {
+                array_unshift($unsavedChanges, $change);
+            }
+        }
+
+        // recreating the versions with the variation info, starting from $preversion
+        $preversion = $cards;
+
+        foreach($savedChanges as $change) {
+            $variation = json_decode($change->getVariation(), TRUE);
+
+            $row = [
+                'variation' => $variation,
+                'is_saved' => $change->getIsSaved(),
+                'version' => $change->getVersion(),
+                'content' => $preversion,
+                'date_creation' => $change->getDateCreation()->format('c'),
+            ];
+            array_unshift($snapshots, $row);
+
+            // applying variation to create 'next' (older) preversion
+            foreach($variation[0] as $code => $qty) {
+                if(!isset($preversion[$code])) {
+                    continue;
+                }
+                $preversion[$code] = $preversion[$code] - $qty;
+                if($preversion[$code] == 0) {
+                    unset($preversion[$code]);
+                }
+            }
+            foreach($variation[1] as $code => $qty) {
+                if(!isset($preversion[$code])) {
+                    $preversion[$code] = 0;
+                }
+                $preversion[$code] = $preversion[$code] + $qty;
+            }
+            ksort($preversion);
+        }
+
+        // add last know version with empty diff
+        $row = [
+            'variation' => null,
+            'is_saved' => true,
+            'version' => "0.0",
+            'content' => $preversion,
+            'date_creation' => $this->getDateCreation()->format('c')
+        ];
+        array_unshift($snapshots, $row);
+
+        // recreating the snapshots with the variation info, starting from $postversion
+        $postversion = $cards;
+        foreach($unsavedChanges as $change) {
+            $variation = json_decode($change->getVariation(), TRUE);
+            $row = [
+                'variation' => $variation,
+                'is_saved' => $change->getIsSaved(),
+                'version' => $change->getVersion(),
+                'date_creation' => $change->getDateCreation()->format('c'),
+            ];
+
+            // applying variation to postversion
+            foreach($variation[0] as $code => $qty) {
+                if(!isset($postversion[$code])) {
+                    $postversion[$code] = 0;
+                }                    
+                $postversion[$code] = $postversion[$code] + $qty;
+            }
+            foreach($variation[1] as $code => $qty) {
+                if(!isset($preversion[$code])) {
+                    continue;
+                }
+                $postversion[$code] = $postversion[$code] - $qty;
+                if($postversion[$code] == 0) {
+                    unset($postversion[$code]);
+                }                    
+            }
+            ksort($postversion);
+
+            // add postversion with variation that lead to it
+            $row['content'] = $postversion;
+            array_push($snapshots, $row);
+        }
+
+        return $snapshots;
+    }
+
+    public function jsonSerialize ()
+    {
+        $array = parent::getArrayExport();
+        $array['problem'] = $this->getProblem();
+        $array['tags'] = $this->getTags();
+
+        return $array;
+    }
+
+    public function getIsUnsaved ()
+    {
+        $changes = $this->getChanges();
+
+        foreach($changes as $change) {
+            if(!$change->getIsSaved()) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    /**
      * @var integer
      */
     private $id;
@@ -164,17 +179,17 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      * @var string
      */
     private $tags;
-    
+
     /**
      * @var integer
      */
     private $majorVersion;
-    
+
     /**
      * @var integer
      */
     private $minorVersion;
-    
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -213,7 +228,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct ()
     {
         $this->slots = new \Doctrine\Common\Collections\ArrayCollection();
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
@@ -227,7 +242,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return integer
      */
-    public function getId()
+    public function getId ()
     {
         return $this->id;
     }
@@ -239,7 +254,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setName($name)
+    public function setName ($name)
     {
         $this->name = $name;
 
@@ -251,7 +266,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return string
      */
-    public function getName()
+    public function getName ()
     {
         return $this->name;
     }
@@ -263,7 +278,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setDateCreation($dateCreation)
+    public function setDateCreation ($dateCreation)
     {
         $this->dateCreation = $dateCreation;
 
@@ -275,7 +290,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \DateTime
      */
-    public function getDateCreation()
+    public function getDateCreation ()
     {
         return $this->dateCreation;
     }
@@ -287,7 +302,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setDateUpdate($dateUpdate)
+    public function setDateUpdate ($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
 
@@ -299,7 +314,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \DateTime
      */
-    public function getDateUpdate()
+    public function getDateUpdate ()
     {
         return $this->dateUpdate;
     }
@@ -311,7 +326,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setDescriptionMd($descriptionMd)
+    public function setDescriptionMd ($descriptionMd)
     {
         $this->descriptionMd = $descriptionMd;
 
@@ -323,7 +338,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return string
      */
-    public function getDescriptionMd()
+    public function getDescriptionMd ()
     {
         return $this->descriptionMd;
     }
@@ -335,7 +350,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setProblem($problem)
+    public function setProblem ($problem)
     {
         $this->problem = $problem;
 
@@ -347,7 +362,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return string
      */
-    public function getProblem()
+    public function getProblem ()
     {
         return $this->problem;
     }
@@ -359,7 +374,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setTags($tags)
+    public function setTags ($tags)
     {
         $this->tags = $tags;
 
@@ -371,7 +386,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return string
      */
-    public function getTags()
+    public function getTags ()
     {
         return $this->tags;
     }
@@ -383,7 +398,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function addSlot(\AppBundle\Entity\Deckslot $slot)
+    public function addSlot (\AppBundle\Entity\Deckslot $slot)
     {
         $this->slots[] = $slot;
 
@@ -395,7 +410,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @param \AppBundle\Entity\Deckslot $slot
      */
-    public function removeSlot(\AppBundle\Entity\Deckslot $slot)
+    public function removeSlot (\AppBundle\Entity\Deckslot $slot)
     {
         $this->slots->removeElement($slot);
     }
@@ -405,7 +420,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \AppBundle\Model\SlotCollectionInterface
      */
-    public function getSlots()
+    public function getSlots ()
     {
         return new \AppBundle\Model\SlotCollectionDecorator($this->slots);
     }
@@ -417,7 +432,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function addChild(\AppBundle\Entity\Decklist $child)
+    public function addChild (\AppBundle\Entity\Decklist $child)
     {
         $this->children[] = $child;
 
@@ -429,7 +444,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @param \AppBundle\Entity\Decklist $child
      */
-    public function removeChild(\AppBundle\Entity\Decklist $child)
+    public function removeChild (\AppBundle\Entity\Decklist $child)
     {
         $this->children->removeElement($child);
     }
@@ -439,7 +454,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getChildren()
+    public function getChildren ()
     {
         return $this->children;
     }
@@ -451,7 +466,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function addChange(\AppBundle\Entity\Deckchange $change)
+    public function addChange (\AppBundle\Entity\Deckchange $change)
     {
         $this->changes[] = $change;
 
@@ -463,7 +478,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @param \AppBundle\Entity\Deckchange $change
      */
-    public function removeChange(\AppBundle\Entity\Deckchange $change)
+    public function removeChange (\AppBundle\Entity\Deckchange $change)
     {
         $this->changes->removeElement($change);
     }
@@ -473,7 +488,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getChanges()
+    public function getChanges ()
     {
         return $this->changes;
     }
@@ -485,7 +500,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser (\AppBundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -497,7 +512,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \AppBundle\Entity\User
      */
-    public function getUser()
+    public function getUser ()
     {
         return $this->user;
     }
@@ -509,7 +524,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setFaction(\AppBundle\Entity\Faction $faction = null)
+    public function setFaction (\AppBundle\Entity\Faction $faction = null)
     {
         $this->faction = $faction;
 
@@ -521,7 +536,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \AppBundle\Entity\Faction
      */
-    public function getFaction()
+    public function getFaction ()
     {
         return $this->faction;
     }
@@ -533,7 +548,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setLastPack(\AppBundle\Entity\Pack $lastPack = null)
+    public function setLastPack (\AppBundle\Entity\Pack $lastPack = null)
     {
         $this->lastPack = $lastPack;
 
@@ -545,7 +560,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \AppBundle\Entity\Pack
      */
-    public function getLastPack()
+    public function getLastPack ()
     {
         return $this->lastPack;
     }
@@ -557,7 +572,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setParent(\AppBundle\Entity\Decklist $parent = null)
+    public function setParent (\AppBundle\Entity\Decklist $parent = null)
     {
         $this->parent = $parent;
 
@@ -569,7 +584,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return \AppBundle\Entity\Decklist
      */
-    public function getParent()
+    public function getParent ()
     {
         return $this->parent;
     }
@@ -581,7 +596,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setMajorVersion($majorVersion)
+    public function setMajorVersion ($majorVersion)
     {
         $this->majorVersion = $majorVersion;
 
@@ -593,7 +608,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return integer
      */
-    public function getMajorVersion()
+    public function getMajorVersion ()
     {
         return $this->majorVersion;
     }
@@ -605,7 +620,7 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return Deck
      */
-    public function setMinorVersion($minorVersion)
+    public function setMinorVersion ($minorVersion)
     {
         $this->minorVersion = $minorVersion;
 
@@ -617,13 +632,14 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
      *
      * @return integer
      */
-    public function getMinorVersion()
+    public function getMinorVersion ()
     {
         return $this->minorVersion;
     }
-    
-    public function getVersion()
+
+    public function getVersion ()
     {
-    	return $this->majorVersion . "." . $this->minorVersion;
+        return $this->majorVersion . "." . $this->minorVersion;
     }
+
 }

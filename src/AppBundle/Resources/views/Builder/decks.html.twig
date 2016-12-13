@@ -73,9 +73,9 @@
 		<td><input type="checkbox"></td>
 		<td class="hidden-xs">
 			<img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}">
-			{% if deck.agenda_code is not null %}
-			<img src="{{ asset('/bundles/cards/' ~ deck.agenda_code ~ '.png') }}">
-			{% endif %}
+                        {% for agenda in deck.agendas %}
+                            <img src="{{ asset('/bundles/cards/' ~ agenda.card.code ~ '.png') }}">
+                        {% endfor %}
 		</td>
 		<td>
 			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}

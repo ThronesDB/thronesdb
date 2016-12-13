@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use \DateTime;
@@ -21,32 +22,33 @@ use AppBundle\Entity\Pack;
 
 class SocialController extends Controller
 {
+
     /**
      * Checks to see if a deck can be published in its current saved state
      * If it is, displays the decklist edit form for initial publication of a deck
      */
-    public function publishFormAction($deck_id, Request $request)
+    public function publishFormAction ($deck_id, Request $request)
     {
         $translator = $this->get('translator');
 
-    	/* @var $em \Doctrine\ORM\EntityManager */
-    	$em = $this->getDoctrine()->getManager();
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
 
         /* @var $user \AppBundle\Entity\User */
-    	$user = $this->getUser();
-    	if (! $user) {
-    		throw $this->createAccessDeniedException($translator->trans('login_required'));
-    	}
+        $user = $this->getUser();
+        if(!$user) {
+            throw $this->createAccessDeniedException($translator->trans('login_required'));
+        }
 
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-        if (! $deck || $deck->getUser()->getId() != $user->getId()) {
+        if(!$deck || $deck->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException($translator->trans('decklist.publish.errors.unauthorized'));
         }
 
         $yesterday = (new \DateTime())->modify('-24 hours');
         if($user->getDateCreation() > $yesterday) {
             $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.antispam.newbie'));
-            return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
         }
 
         $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user");
@@ -56,52 +58,52 @@ class SocialController extends Controller
 
         if($decklistsSinceYesterday > $user->getReputation()) {
             $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.antispam.limit'));
-            return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
         }
 
         $lastPack = $deck->getLastPack();
         if(!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new \DateTime()) {
-        	$this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.unreleased'));
-        	return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
+            $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.unreleased'));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
         }
-        
-    	$problem = $this->get('deck_validation_helper')->findProblem($deck);
-    	if ($problem) {
-    		$this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.invalid'));
-    		return $this->redirect($this->generateUrl('deck_view', [ 'deck_id' => $deck->getId() ]));
-    	}
-    	
-    	$new_content = json_encode($deck->getSlots()->getContent());
-    	$new_signature = md5($new_content);
-    	$old_decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->findBy([ 'signature' => $new_signature ]);
-    	
-    	/* @var $decklist \AppBundle\Entity\Decklist */
-    	foreach ($old_decklists as $decklist) {
-    		if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
-    			$url = $this->generateUrl('decklist_detail', array(
-    					'decklist_id' => $decklist->getId(),
-    					'decklist_name' => $decklist->getNameCanonical()
-    			));
-    			$this->get('session')->getFlashBag()->set('warning', $translator->trans('decklist.publish.warnings.published', array("%url%" => $url)));
-    		}
-    	}
-    	
-    	// decklist for the form ; won't be persisted
-    	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
-    	    	
-    	$tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
-    
-    	return $this->render('AppBundle:Decklist:decklist_edit.html.twig', [
-    			'url' => $this->generateUrl('decklist_create'),
-    			'deck' => $deck,
-    			'decklist' => $decklist,
-    			'tournaments' => $tournaments,
-    	]);
+
+        $problem = $this->get('deck_validation_helper')->findProblem($deck);
+        if($problem) {
+            $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.invalid'));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
+        }
+
+        $new_content = json_encode($deck->getSlots()->getContent());
+        $new_signature = md5($new_content);
+        $old_decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->findBy(['signature' => $new_signature]);
+
+        /* @var $decklist \AppBundle\Entity\Decklist */
+        foreach($old_decklists as $decklist) {
+            if(json_encode($decklist->getSlots()->getContent()) == $new_content) {
+                $url = $this->generateUrl('decklist_detail', array(
+                    'decklist_id' => $decklist->getId(),
+                    'decklist_name' => $decklist->getNameCanonical()
+                ));
+                $this->get('session')->getFlashBag()->set('warning', $translator->trans('decklist.publish.warnings.published', array("%url%" => $url)));
+            }
+        }
+
+        // decklist for the form ; won't be persisted
+        $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
+
+        $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
+
+        return $this->render('AppBundle:Decklist:decklist_edit.html.twig', [
+                    'url' => $this->generateUrl('decklist_create'),
+                    'deck' => $deck,
+                    'decklist' => $decklist,
+                    'tournaments' => $tournaments,
+        ]);
     }
-    
+
     /**
-	 * creates a new decklist from a deck (publish action)
-	 */
+     * creates a new decklist from a deck (publish action)
+     */
     public function createAction (Request $request)
     {
         $translator = $this->get("translator");
@@ -114,8 +116,8 @@ class SocialController extends Controller
         $yesterday = (new \DateTime())->modify('-24 hours');
         if($user->getDateCreation() > $yesterday) {
             return $this->render('AppBundle:Default:error.html.twig', [
-                'pagetitle' => $translator->trans('decklist.publish.errors.pagetitle.spam'),
-                'error' => $translator->trans('decklist.publish.errors.antispam.newbie'),
+                        'pagetitle' => $translator->trans('decklist.publish.errors.pagetitle.spam'),
+                        'error' => $translator->trans('decklist.publish.errors.antispam.newbie'),
             ]);
         }
 
@@ -126,19 +128,19 @@ class SocialController extends Controller
 
         if($decklistsSinceYesterday > $user->getReputation()) {
             return $this->render('AppBundle:Default:error.html.twig', [
-                'pagetitle' => $translator->trans('decklist.publish.errors.pagetitle.spam'),
-                'error' => $translator->trans('decklist.publish.errors.antispam.limit'),
+                        'pagetitle' => $translator->trans('decklist.publish.errors.pagetitle.spam'),
+                        'error' => $translator->trans('decklist.publish.errors.antispam.limit'),
             ]);
         }
 
         $deck_id = intval(filter_var($request->request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT));
-        
+
         /* @var $deck \AppBundle\Entity\Deck */
         $deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($deck_id);
-        if ($user->getId() !== $deck->getUser()->getId()) {
-        	throw $this->createAccessDeniedException("Access denied to this object.");
+        if($user->getId() !== $deck->getUser()->getId()) {
+            throw $this->createAccessDeniedException("Access denied to this object.");
         }
-        
+
         $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
         $descriptionMd = trim($request->request->get('descriptionMd'));
 
@@ -146,136 +148,126 @@ class SocialController extends Controller
         $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
 
         $precedent_id = trim($request->request->get('precedent'));
-        if(!preg_match('/^\d+$/', $precedent_id)) 
-        {
-        	// route decklist_detail hard-coded
-        	if(preg_match('/view\/(\d+)/', $precedent_id, $matches)) 
-        	{
-        		$precedent_id = $matches[1];
-        	}
-        	else 
-        	{
-        		$precedent_id = null;
-        	}
+        if(!preg_match('/^\d+$/', $precedent_id)) {
+            // route decklist_detail hard-coded
+            if(preg_match('/view\/(\d+)/', $precedent_id, $matches)) {
+                $precedent_id = $matches[1];
+            } else {
+                $precedent_id = null;
+            }
         }
         $precedent = $precedent_id ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
-        
-        try 
-        {
-        	$decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
+
+        try {
+            $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
+        } catch(\Exception $e) {
+            return $this->render('AppBundle:Default:error.html.twig', [
+                        'pagetitle' => "Error",
+                        'error' => $e
+            ]);
         }
-        catch(\Exception $e)
-        {
-        	return $this->render('AppBundle:Default:error.html.twig', [
-        			'pagetitle' => "Error",
-        			'error' => $e
-        	]);
-        }
-        
+
         $decklist->setTournament($tournament);
         $decklist->setPrecedent($precedent);
         $em->persist($decklist);
         $em->flush();
 
         return $this->redirect($this->generateUrl('decklist_detail', array(
-                'decklist_id' => $decklist->getId(),
-                'decklist_name' => $decklist->getNameCanonical()
+                            'decklist_id' => $decklist->getId(),
+                            'decklist_name' => $decklist->getNameCanonical()
         )));
     }
 
     /**
      * Displays the decklist edit form
      */
-    public function editFormAction($decklist_id, Request $request)
+    public function editFormAction ($decklist_id, Request $request)
     {
-    	/* @var $em \Doctrine\ORM\EntityManager */
-    	$em = $this->getDoctrine()->getManager();
-    
-    	/* @var $user \AppBundle\Entity\User */
-    	$user = $this->getUser();
-    	if (! $user) {
-    		throw $this->createAccessDeniedException("Anonymous access denied");
-    	}
-    
-    	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-    	if (! $decklist ) {
-    		throw $this->createNotFoundException("Decklist not found");
-    	}
-    	
-    	if ( !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId() ) {
-    		throw $this->createAccessDeniedException("Access denied");
-    	}
-    
-    	$tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
-    
-    	return $this->render('AppBundle:Decklist:decklist_edit.html.twig', [
-    			'url' => $this->generateUrl('decklist_save', [ 'decklist_id' => $decklist->getId() ]),
-    			'deck' => null,
-    			'decklist' => $decklist,
-    			'tournaments' => $tournaments,
-    	]);
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var $user \AppBundle\Entity\User */
+        $user = $this->getUser();
+        if(!$user) {
+            throw $this->createAccessDeniedException("Anonymous access denied");
+        }
+
+        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+        if(!$decklist) {
+            throw $this->createNotFoundException("Decklist not found");
+        }
+
+        if(!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId()) {
+            throw $this->createAccessDeniedException("Access denied");
+        }
+
+        $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
+
+        return $this->render('AppBundle:Decklist:decklist_edit.html.twig', [
+                    'url' => $this->generateUrl('decklist_save', ['decklist_id' => $decklist->getId()]),
+                    'deck' => null,
+                    'decklist' => $decklist,
+                    'tournaments' => $tournaments,
+        ]);
     }
-    
+
     /*
      * save the name and description of a decklist by its publisher
      */
+
     public function saveAction ($decklist_id, Request $request)
     {
-    	/* @var $em \Doctrine\ORM\EntityManager */
-    	$em = $this->getDoctrine()->getManager();
-    
-    	$user = $this->getUser();
-    	if (! $user) {
-    		throw $this->createAccessDeniedException("Anonymous access denied");
-    	}
-    	
-    	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-    	if (! $decklist ) {
-    		throw $this->createNotFoundException("Decklist not found");
-    	}
-    	 
-    	if ( !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId() ) {
-    		throw $this->createAccessDeniedException("Access denied");
-    	}
-    	
-    	$name = trim(filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
-    	$name = substr($name, 0, 60);
-    	if(empty($name)) $name = "Untitled";
-    	$descriptionMd = trim($request->request->get('descriptionMd'));
-    	$descriptionHtml = $this->get('texts')->markdown($descriptionMd);
-    
-    	$tournament_id = intval(filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT));
-    	$tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
-    
-    	$precedent_id = trim($request->request->get('precedent'));
-        if(!preg_match('/^\d+$/', $precedent_id)) 
-        {
-        	// route decklist_detail hard-coded
-        	if(preg_match('/view\/(\d+)/', $precedent_id, $matches)) 
-        	{
-        		$precedent_id = $matches[1];
-        	}
-        	else 
-        	{
-        		$precedent_id = null;
-        	}
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        if(!$user) {
+            throw $this->createAccessDeniedException("Anonymous access denied");
+        }
+
+        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+        if(!$decklist) {
+            throw $this->createNotFoundException("Decklist not found");
+        }
+
+        if(!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId()) {
+            throw $this->createAccessDeniedException("Access denied");
+        }
+
+        $name = trim(filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $name = substr($name, 0, 60);
+        if(empty($name))
+            $name = "Untitled";
+        $descriptionMd = trim($request->request->get('descriptionMd'));
+        $descriptionHtml = $this->get('texts')->markdown($descriptionMd);
+
+        $tournament_id = intval(filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT));
+        $tournament = $em->getRepository('AppBundle:Tournament')->find($tournament_id);
+
+        $precedent_id = trim($request->request->get('precedent'));
+        if(!preg_match('/^\d+$/', $precedent_id)) {
+            // route decklist_detail hard-coded
+            if(preg_match('/view\/(\d+)/', $precedent_id, $matches)) {
+                $precedent_id = $matches[1];
+            } else {
+                $precedent_id = null;
+            }
         }
         $precedent = ($precedent_id && $precedent_id != $decklist_id) ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
-    
-    	$decklist->setName($name);
-    	$decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
-    	$decklist->setDescriptionMd($descriptionMd);
-    	$decklist->setDescriptionHtml($descriptionHtml);
-    	$decklist->setPrecedent($precedent);
-    	$decklist->setTournament($tournament);
-    	$decklist->setDateUpdate(new \DateTime());
-    	$em->flush();
-    
-    	return $this->redirect($this->generateUrl('decklist_detail', array(
-    			'decklist_id' => $decklist_id,
-    			'decklist_name' => $decklist->getNameCanonical()
-    	)));
-    
+
+        $decklist->setName($name);
+        $decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
+        $decklist->setDescriptionMd($descriptionMd);
+        $decklist->setDescriptionHtml($descriptionHtml);
+        $decklist->setPrecedent($precedent);
+        $decklist->setTournament($tournament);
+        $decklist->setDateUpdate(new \DateTime());
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('decklist_detail', array(
+                            'decklist_id' => $decklist_id,
+                            'decklist_name' => $decklist->getNameCanonical()
+        )));
     }
 
     /**
@@ -283,46 +275,45 @@ class SocialController extends Controller
      */
     public function deleteAction ($decklist_id, Request $request)
     {
-    	/* @var $em \Doctrine\ORM\EntityManager */
-    	$em = $this->getDoctrine()->getManager();
-    
-    	$user = $this->getUser();
-    	if (! $user)
-    		throw new UnauthorizedHttpException("You must be logged in for this operation.");
-    
-    	$decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-    	if (! $decklist || $decklist->getUser()->getId() != $user->getId())
-    		throw new UnauthorizedHttpException("You don't have access to this decklist.");
-    
-    	if ($decklist->getnbVotes() || $decklist->getNbfavorites() || $decklist->getNbcomments())
-    		throw new UnauthorizedHttpException("Cannot delete this decklist.");
-    
-    	$precedent = $decklist->getPrecedent();
-    
-    	$children_decks = $decklist->getChildren();
-    	/* @var $children_deck Deck */
-    	foreach ($children_decks as $children_deck) {
-    		$children_deck->setParent($precedent);
-    	}
-    
-    	$successor_decklists = $decklist->getSuccessors();
-    	/* @var $successor_decklist Decklist */
-    	foreach ($successor_decklists as $successor_decklist) {
-    		$successor_decklist->setPrecedent($precedent);
-    	}
-    
-    	$em->remove($decklist);
-    	$em->flush();
-    
-    	return $this->redirect($this->generateUrl('decklists_list', array(
-    			'type' => 'mine'
-    	)));
-    
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        if(!$user)
+            throw new UnauthorizedHttpException("You must be logged in for this operation.");
+
+        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+        if(!$decklist || $decklist->getUser()->getId() != $user->getId())
+            throw new UnauthorizedHttpException("You don't have access to this decklist.");
+
+        if($decklist->getnbVotes() || $decklist->getNbfavorites() || $decklist->getNbcomments())
+            throw new UnauthorizedHttpException("Cannot delete this decklist.");
+
+        $precedent = $decklist->getPrecedent();
+
+        $children_decks = $decklist->getChildren();
+        /* @var $children_deck Deck */
+        foreach($children_decks as $children_deck) {
+            $children_deck->setParent($precedent);
+        }
+
+        $successor_decklists = $decklist->getSuccessors();
+        /* @var $successor_decklist Decklist */
+        foreach($successor_decklists as $successor_decklist) {
+            $successor_decklist->setPrecedent($precedent);
+        }
+
+        $em->remove($decklist);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('decklists_list', array(
+                            'type' => 'mine'
+        )));
     }
-    
-    private function searchForm(Request $request)
+
+    private function searchForm (Request $request)
     {
-    	$doctrine = $this->getDoctrine();
+        $doctrine = $this->getDoctrine();
         $dbh = $doctrine->getConnection();
         $em = $doctrine->getEntityManager();
 
@@ -338,24 +329,30 @@ class SocialController extends Controller
         }
 
         $categories = [];
-        $on = 0; $off = 0;
+        $on = 0;
+        $off = 0;
         $categories[] = array("label" => $this->get("translator")->trans('decklist.list.search.allowed.core'), "packs" => []);
         $list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findAll();
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
-            if($cycle->getPosition() == 0 || $size == 0) continue;
+            if($cycle->getPosition() == 0 || $size == 0)
+                continue;
             $first_pack = $cycle->getPacks()[0];
-            if($cycle->getCode() == 'core' || ($size === 1 && $first_pack->getName() == $cycle->getName()) ) {
+            if($cycle->getCode() == 'core' || ($size === 1 && $first_pack->getName() == $cycle->getName())) {
                 $checked = count($packs) ? in_array($first_pack->getId(), $packs) : true;
-                if($checked) $on++;
-                else $off++;
+                if($checked)
+                    $on++;
+                else
+                    $off++;
                 $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
             } else {
                 $category = array("label" => $cycle->getName(), "packs" => []);
                 foreach($cycle->getPacks() as $pack) {
                     $checked = count($packs) ? in_array($pack->getId(), $packs) : true;
-                    if($checked) $on++;
-                    else $off++;
+                    if($checked)
+                        $on++;
+                    else
+                        $off++;
                     $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
                 }
                 $categories[] = $category;
@@ -363,22 +360,22 @@ class SocialController extends Controller
         }
 
         $params = array(
-                'allowed' => $categories,
-                'on' => $on,
-                'off' => $off,
-                'author' => $author_name,
-                'name' => $decklist_name
+            'allowed' => $categories,
+            'on' => $on,
+            'off' => $off,
+            'author' => $author_name,
+            'name' => $decklist_name
         );
-        $params['sort_'.$sort] = ' selected="selected"';
+        $params['sort_' . $sort] = ' selected="selected"';
         $params['factions'] = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAllAndOrderByName();
         $params['faction_selected'] = $faction_code;
 
-        if (! empty($cards_code) && is_array($cards_code)) {
+        if(!empty($cards_code) && is_array($cards_code)) {
             $cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAllByCodes($cards_code);
 
             $params['cards'] = '';
             foreach($cards as $card) {
-            	$cardinfo = $this->get('cards_data')->getCardInfo($card);
+                $cardinfo = $this->get('cards_data')->getCardInfo($card);
                 $params['cards'] .= $this->renderView('AppBundle:Search:card.html.twig', $cardinfo);
             }
         }
@@ -387,8 +384,9 @@ class SocialController extends Controller
     }
 
     /*
-	 * displays the lists of decklists
-	 */
+     * displays the lists of decklists
+     */
+
     public function listAction ($type, $faction = null, $page = 1, Request $request)
     {
         $translator = $this->get('translator');
@@ -396,19 +394,19 @@ class SocialController extends Controller
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
-        
+
         /**
          * @var $decklist_manager DecklistManager
          */
         $decklist_manager = $this->get('decklist_manager');
         $decklist_manager->setLimit(30);
         $decklist_manager->setPage($page);
-        
+
         $request_attributes = $request->attributes->all();
-        
+
         $header = '';
 
-        switch ($type) {
+        switch($type) {
             case 'find':
                 $header = $this->searchForm($request);
                 $paginator = $decklist_manager->findDecklistsWithComplexSearch();
@@ -416,66 +414,59 @@ class SocialController extends Controller
             case 'favorites':
                 $response->setPrivate();
                 $user = $this->getUser();
-                if($user)
-                {
-                	$paginator = $decklist_manager->findDecklistsByFavorite($user);
-                }
-                else
-                {
-                	$paginator = $decklist_manager->getEmptyList();
+                if($user) {
+                    $paginator = $decklist_manager->findDecklistsByFavorite($user);
+                } else {
+                    $paginator = $decklist_manager->getEmptyList();
                 }
                 break;
             case 'mine':
                 $response->setPrivate();
                 $user = $this->getUser();
-                if($user)
-                {
-                	$paginator = $decklist_manager->findDecklistsByAuthor($user);
-                }
-                else
-                {
-                	$paginator = $decklist_manager->getEmptyList();
+                if($user) {
+                    $paginator = $decklist_manager->findDecklistsByAuthor($user);
+                } else {
+                    $paginator = $decklist_manager->getEmptyList();
                 }
                 break;
             case 'recent':
-            	$paginator = $decklist_manager->findDecklistsByAge(false);
+                $paginator = $decklist_manager->findDecklistsByAge(false);
                 break;
             case 'halloffame':
-            	$paginator = $decklist_manager->findDecklistsInHallOfFame();
+                $paginator = $decklist_manager->findDecklistsInHallOfFame();
                 break;
             case 'hottopics':
-            	$paginator = $decklist_manager->findDecklistsInHotTopic();
+                $paginator = $decklist_manager->findDecklistsInHotTopic();
                 break;
             case 'tournament':
-            	$paginator = $decklist_manager->findDecklistsInTournaments();
+                $paginator = $decklist_manager->findDecklistsInTournaments();
                 break;
             case 'popular':
             default:
                 $type = 'popular';
-            	$paginator = $decklist_manager->findDecklistsByPopularity();
+                $paginator = $decklist_manager->findDecklistsByPopularity();
                 break;
         }
 
-        $pagetitle = $translator->trans('decklist.list.titles.'.$type);
-        
-        return $this->render('AppBundle:Decklist:decklists.html.twig',
-                array(
-                        'pagetitle' => $pagetitle,
-                        'pagedescription' => "Browse the collection of thousands of premade decks.",
-                        'decklists' => $paginator,
-                        'url' => $request->getRequestUri(),
-                        'header' => $header,
-                        'type' => $type,
-                		'pages' => $decklist_manager->getClosePages(),
-                        'prevurl' => $decklist_manager->getPreviousUrl(),
-                        'nexturl' => $decklist_manager->getNextUrl(),
-                ), $response);
+        $pagetitle = $translator->trans('decklist.list.titles.' . $type);
 
+        return $this->render('AppBundle:Decklist:decklists.html.twig', array(
+                    'pagetitle' => $pagetitle,
+                    'pagedescription' => "Browse the collection of thousands of premade decks.",
+                    'decklists' => $paginator,
+                    'url' => $request->getRequestUri(),
+                    'header' => $header,
+                    'type' => $type,
+                    'pages' => $decklist_manager->getClosePages(),
+                    'prevurl' => $decklist_manager->getPreviousUrl(),
+                    'nexturl' => $decklist_manager->getNextUrl(),
+                        ), $response);
     }
 
     /*
-	 * displays the content of a decklist along with comments, siblings, similar, etc.
-	 */
+     * displays the content of a decklist along with comments, siblings, similar, etc.
+     */
+
     public function viewAction ($decklist_id, $decklist_name, Request $request)
     {
         $response = new Response();
@@ -491,29 +482,28 @@ class SocialController extends Controller
 
         $duplicate = $decklistRepo->findDuplicate($decklist);
         if($duplicate->getDateCreation() >= $decklist->getDateCreation() || $duplicate->getId() === $decklist->getId()) {
-        	$duplicate = null;
+            $duplicate = null;
         }
-        
-        $commenters = array_map(function ($comment) {
-        	return $comment->getUser()->getUsername();
-        }, $decklist->getComments()->getValues());
-        
-        $versions = $decklistRepo->findVersions($decklist);
-        
-        return $this->render('AppBundle:Decklist:decklist.html.twig',
-                array(
-                        'pagetitle' => $decklist->getName(),
-                        'decklist' => $decklist,
-                		'duplicate' => $duplicate,
-                		'commenters' => $commenters,
-                		'versions' => $versions,
-                ), $response);
 
+        $commenters = array_map(function ($comment) {
+            return $comment->getUser()->getUsername();
+        }, $decklist->getComments()->getValues());
+
+        $versions = $decklistRepo->findVersions($decklist);
+
+        return $this->render('AppBundle:Decklist:decklist.html.twig', array(
+                    'pagetitle' => $decklist->getName(),
+                    'decklist' => $decklist,
+                    'duplicate' => $duplicate,
+                    'commenters' => $commenters,
+                    'versions' => $versions,
+                        ), $response);
     }
 
     /*
-	 * adds a decklist to a user's list of favorites
-	 */
+     * adds a decklist to a user's list of favorites
+     */
+
     public function favoriteAction (Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -528,7 +518,7 @@ class SocialController extends Controller
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (! $decklist)
+        if(!$decklist)
             throw new NotFoundHttpException('Wrong id');
 
         $author = $decklist->getUser();
@@ -540,32 +530,32 @@ class SocialController extends Controller
 				join favorite f on f.decklist_id=d.id
 				where f.user_id=?
 				and d.id=?", array(
-                $user->getId(),
-                $decklist_id
-        ))
-            ->fetch(\PDO::FETCH_NUM)[0];
+                            $user->getId(),
+                            $decklist_id
+                        ))
+                        ->fetch(\PDO::FETCH_NUM)[0];
 
-        if ($is_favorite) {
+        if($is_favorite) {
             $decklist->setNbfavorites($decklist->getNbFavorites() - 1);
             $user->removeFavorite($decklist);
-            if ($author->getId() != $user->getId())
+            if($author->getId() != $user->getId())
                 $author->setReputation($author->getReputation() - 5);
         } else {
             $decklist->setNbfavorites($decklist->getNbFavorites() + 1);
             $user->addFavorite($decklist);
             $decklist->setDateUpdate(new \DateTime());
-            if ($author->getId() != $user->getId())
+            if($author->getId() != $user->getId())
                 $author->setReputation($author->getReputation() + 5);
         }
         $this->getDoctrine()->getManager()->flush();
 
         return new Response($decklist->getNbFavorites());
-
     }
 
     /*
-	 * records a user's comment
-	 */
+     * records a user's comment
+     */
+
     public function commentAction (Request $request)
     {
         /* @var $user User */
@@ -576,14 +566,13 @@ class SocialController extends Controller
 
         $decklist_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
         $decklist = $this->getDoctrine()
-            ->getRepository('AppBundle:Decklist')
-            ->find($decklist_id);
+                ->getRepository('AppBundle:Decklist')
+                ->find($decklist_id);
 
         $comment_text = trim($request->get('comment'));
-        if ($decklist && ! empty($comment_text)) {
+        if($decklist && !empty($comment_text)) {
             $comment_text = preg_replace(
-                    '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
-                    '[$1]($0)', $comment_text);
+                    '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu', '[$1]($0)', $comment_text);
 
             $mentionned_usernames = [];
             $matches = [];
@@ -603,14 +592,14 @@ class SocialController extends Controller
             $comment->setIsHidden(FALSE);
 
             $this->getDoctrine()
-                ->getManager()
-                ->persist($comment);
+                    ->getManager()
+                    ->persist($comment);
             $decklist->setDateUpdate($now);
             $decklist->setNbcomments($decklist->getNbcomments() + 1);
 
             $this->getDoctrine()
-            ->getManager()
-            ->flush();
+                    ->getManager()
+                    ->flush();
 
             // send emails
             $spool = [];
@@ -648,26 +637,25 @@ class SocialController extends Controller
             );
             foreach($spool as $email => $view) {
                 $message = \Swift_Message::newInstance()
-                ->setSubject("[thronesdb] New comment")
-                ->setFrom(array("alsciende@thronesdb.com" => $user->getUsername()))
-                ->setTo($email)
-                ->setBody($this->renderView($view, $email_data), 'text/html');
+                        ->setSubject("[thronesdb] New comment")
+                        ->setFrom(array("alsciende@thronesdb.com" => $user->getUsername()))
+                        ->setTo($email)
+                        ->setBody($this->renderView($view, $email_data), 'text/html');
                 $this->get('mailer')->send($message);
             }
-
         }
 
         return $this->redirect($this->generateUrl('decklist_detail', array(
-                'decklist_id' => $decklist_id,
-                'decklist_name' => $decklist->getNameCanonical()
+                            'decklist_id' => $decklist_id,
+                            'decklist_name' => $decklist->getNameCanonical()
         )));
-
     }
 
     /*
      * hides a comment, or if $hidden is false, unhide a comment
      */
-    public function hidecommentAction($comment_id, $hidden, Request $request)
+
+    public function hidecommentAction ($comment_id, $hidden, Request $request)
     {
         /* @var $user User */
         $user = $this->getUser();
@@ -694,8 +682,9 @@ class SocialController extends Controller
     }
 
     /*
-	 * records a user's vote
-	 */
+     * records a user's vote
+     */
+
     public function voteAction (Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
@@ -710,19 +699,18 @@ class SocialController extends Controller
 
         $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
 
-        if($decklist->getUser()->getId() != $user->getId())
-        {
+        if($decklist->getUser()->getId() != $user->getId()) {
             $query = $em->getRepository('AppBundle:Decklist')
-                ->createQueryBuilder('d')
-                ->innerJoin('d.votes', 'u')
-                ->where('d.id = :decklist_id')
-                ->andWhere('u.id = :user_id')
-                ->setParameter('decklist_id', $decklist_id)
-                ->setParameter('user_id', $user->getId())
-                ->getQuery();
+                    ->createQueryBuilder('d')
+                    ->innerJoin('d.votes', 'u')
+                    ->where('d.id = :decklist_id')
+                    ->andWhere('u.id = :user_id')
+                    ->setParameter('decklist_id', $decklist_id)
+                    ->setParameter('user_id', $user->getId())
+                    ->getQuery();
 
             $result = $query->getResult();
-            if (empty($result)) {
+            if(empty($result)) {
                 $user->addVote($decklist);
                 $author = $decklist->getUser();
                 $author->setReputation($author->getReputation() + 1);
@@ -732,19 +720,19 @@ class SocialController extends Controller
             }
         }
         return new Response($decklist->getNbVotes());
-
     }
 
     /*
-	 * (unused) returns an ordered list of decklists similar to the one given
-	 */
+     * (unused) returns an ordered list of decklists similar to the one given
+     */
+
     public function findSimilarDecklists ($decklist_id, $number)
     {
 
         $dbh = $this->getDoctrine()->getConnection();
 
         $list = $dbh->executeQuery(
-                "SELECT
+                        "SELECT
     			l.id,
     			(
     				SELECT COUNT(s.id)
@@ -771,13 +759,13 @@ class SocialController extends Controller
     			WHERE l.id!=?
     			ORDER BY difference ASC
     			LIMIT 0,$number", array(
-                        $decklist_id,
-                        $decklist_id,
-                        $decklist_id
+                    $decklist_id,
+                    $decklist_id,
+                    $decklist_id
                 ))->fetchAll();
 
         $arr = [];
-        foreach ($list as $item) {
+        foreach($list as $item) {
 
             $dbh = $this->getDoctrine()->getConnection();
             $rows = $dbh->executeQuery("SELECT
@@ -790,19 +778,19 @@ class SocialController extends Controller
 					from decklist d
 					where d.id=?
 					", array(
-                    $item["id"]
-            ))->fetchAll();
+                        $item["id"]
+                    ))->fetchAll();
 
             $decklist = $rows[0];
             $arr[] = $decklist;
         }
         return $arr;
-
     }
 
     /*
-	 * returns a text file with the content of a decklist
-	 */
+     * returns a text file with the content of a decklist
+     */
+
     public function textexportAction ($decklist_id, Request $request)
     {
         $response = new Response();
@@ -814,20 +802,19 @@ class SocialController extends Controller
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (! $decklist)
+        if(!$decklist)
             throw new NotFoundHttpException("Unable to find decklist.");
 
         $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
-        	"deck" => $decklist->getTextExport()
-      	]);
+            "deck" => $decklist->getTextExport()
+        ]);
         $content = str_replace("\n", "\r\n", $content);
 
         $response = new Response();
 
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-        		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$decklist->getNameCanonical() . '.txt'
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT, $decklist->getNameCanonical() . '.txt'
         ));
 
         $response->setContent($content);
@@ -835,8 +822,9 @@ class SocialController extends Controller
     }
 
     /*
-	 * returns a octgn file with the content of a decklist
-	 */
+     * returns a octgn file with the content of a decklist
+     */
+
     public function octgnexportAction ($decklist_id, Request $request)
     {
         $response = new Response();
@@ -848,19 +836,18 @@ class SocialController extends Controller
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (! $decklist)
+        if(!$decklist)
             throw new NotFoundHttpException("Unable to find decklist.");
 
         $content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
-        	"deck" => $decklist->getTextExport()
-      	]);
+            "deck" => $decklist->getTextExport()
+        ]);
 
         $response = new Response();
 
         $response->headers->set('Content-Type', 'application/octgn');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-        		ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-        		$decklist->getNameCanonical() . '.o8d'
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT, $decklist->getNameCanonical() . '.o8d'
         ));
 
         $response->setContent($content);
@@ -876,7 +863,7 @@ class SocialController extends Controller
         $user = $this->getUser();
 
         $limit = 100;
-        if ($page < 1)
+        if($page < 1)
             $page = 1;
         $start = ($page - 1) * $limit;
 
@@ -884,7 +871,7 @@ class SocialController extends Controller
         $dbh = $this->getDoctrine()->getConnection();
 
         $comments = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
+                        "SELECT SQL_CALC_FOUND_ROWS
 				c.id,
 				c.text,
 				c.date_creation,
@@ -896,9 +883,9 @@ class SocialController extends Controller
 				where c.user_id=?
 				order by date_creation desc
 				limit $start, $limit", array(
-                        $user->getId()
+                    $user->getId()
                 ))
-            ->fetchAll(\PDO::FETCH_ASSOC);
+                ->fetchAll(\PDO::FETCH_ASSOC);
 
         $maxcount = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
 
@@ -913,32 +900,30 @@ class SocialController extends Controller
         $route = $request->get('_route');
 
         $pages = [];
-        for ($page = 1; $page <= $nbpages; $page ++) {
+        for($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
-                    "numero" => $page,
-                    "url" => $this->generateUrl($route, array(
-                            "page" => $page
-                    )),
-                    "current" => $page == $currpage
+                "numero" => $page,
+                "url" => $this->generateUrl($route, array(
+                    "page" => $page
+                )),
+                "current" => $page == $currpage
             );
         }
 
-        return $this->render('AppBundle:Default:usercomments.html.twig',
-                array(
-                        'user' => $user,
-                        'comments' => $comments,
-                        'url' => $request
+        return $this->render('AppBundle:Default:usercomments.html.twig', array(
+                    'user' => $user,
+                    'comments' => $comments,
+                    'url' => $request
                             ->getRequestUri(),
-                        'route' => $route,
-                        'pages' => $pages,
-                        'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, array(
-                                "page" => $prevpage
-                        )),
-                        'nexturl' => $currpage == $nbpages ? null : $this->generateUrl($route, array(
-                                "page" => $nextpage
-                        ))
-                ), $response);
-
+                    'route' => $route,
+                    'pages' => $pages,
+                    'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, array(
+                        "page" => $prevpage
+                    )),
+                    'nexturl' => $currpage == $nbpages ? null : $this->generateUrl($route, array(
+                        "page" => $nextpage
+                    ))
+                        ), $response);
     }
 
     public function commentsAction ($page, Request $request)
@@ -948,7 +933,7 @@ class SocialController extends Controller
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
         $limit = 100;
-        if ($page < 1)
+        if($page < 1)
             $page = 1;
         $start = ($page - 1) * $limit;
 
@@ -956,7 +941,7 @@ class SocialController extends Controller
         $dbh = $this->getDoctrine()->getConnection();
 
         $comments = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
+                        "SELECT SQL_CALC_FOUND_ROWS
 				c.id,
 				c.text,
 				c.date_creation,
@@ -984,31 +969,29 @@ class SocialController extends Controller
         $route = $request->get('_route');
 
         $pages = [];
-        for ($page = 1; $page <= $nbpages; $page ++) {
+        for($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
-                    "numero" => $page,
-                    "url" => $this->generateUrl($route, array(
-                            "page" => $page
-                    )),
-                    "current" => $page == $currpage
+                "numero" => $page,
+                "url" => $this->generateUrl($route, array(
+                    "page" => $page
+                )),
+                "current" => $page == $currpage
             );
         }
 
-        return $this->render('AppBundle:Default:allcomments.html.twig',
-                array(
-                        'comments' => $comments,
-                        'url' => $request
+        return $this->render('AppBundle:Default:allcomments.html.twig', array(
+                    'comments' => $comments,
+                    'url' => $request
                             ->getRequestUri(),
-                        'route' => $route,
-                        'pages' => $pages,
-                        'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, array(
-                                "page" => $prevpage
-                        )),
-                        'nexturl' => $currpage == $nbpages ? null : $this->generateUrl($route, array(
-                                "page" => $nextpage
-                        ))
-                ), $response);
-
+                    'route' => $route,
+                    'pages' => $pages,
+                    'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, array(
+                        "page" => $prevpage
+                    )),
+                    'nexturl' => $currpage == $nbpages ? null : $this->generateUrl($route, array(
+                        "page" => $nextpage
+                    ))
+                        ), $response);
     }
 
     public function searchAction (Request $request)
@@ -1021,53 +1004,57 @@ class SocialController extends Controller
 
         $factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAllAndOrderByName();
 
-        $categories = []; $on = 0; $off = 0;
+        $categories = [];
+        $on = 0;
+        $off = 0;
         $categories[] = array("label" => $translator->trans("decklist.list.search.allowed.core"), "packs" => []);
         $list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findAll();
         foreach($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
-            if($cycle->getPosition() == 0 || $size == 0) continue;
+            if($cycle->getPosition() == 0 || $size == 0)
+                continue;
             $first_pack = $cycle->getPacks()[0];
-            if($cycle->getCode() === 'core' || ($size === 1 && $first_pack->getName() == $cycle->getName()) ) {
+            if($cycle->getCode() === 'core' || ($size === 1 && $first_pack->getName() == $cycle->getName())) {
                 $checked = $first_pack->getDateRelease() !== NULL;
-                if($checked) $on++;
-                else $off++;
+                if($checked)
+                    $on++;
+                else
+                    $off++;
                 $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === NULL);
             } else {
                 $category = array("label" => $cycle->getName(), "packs" => []);
                 foreach($cycle->getPacks() as $pack) {
                     $checked = $pack->getDateRelease() !== NULL;
-                    if($checked) $on++;
-                    else $off++;
+                    if($checked)
+                        $on++;
+                    else
+                        $off++;
                     $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === NULL);
                 }
                 $categories[] = $category;
             }
         }
-        
-        $searchForm = $this->renderView('AppBundle:Search:form.html.twig',
-                            array(
-                                'factions' => $factions,
-                                'allowed' => $categories,
-                                'on' => $on,
-                                'off' => $off,
-                                'author' => '',
-                                'name' => '',
-                            )
-                        );
 
-        return $this->render('AppBundle:Decklist:decklists.html.twig',
-        		array(
-        				'pagetitle' => $translator->trans('decklist.list.titles.search'),
-        				'decklists' => null,
-        				'url' => $request->getRequestUri(),
-        				'header' => $searchForm,
-        				'type' => 'find',
-        				'pages' => null,
-        				'prevurl' => null,
-        				'nexturl' => null,
-        		), $response);	
-        
+        $searchForm = $this->renderView('AppBundle:Search:form.html.twig', array(
+            'factions' => $factions,
+            'allowed' => $categories,
+            'on' => $on,
+            'off' => $off,
+            'author' => '',
+            'name' => '',
+                )
+        );
+
+        return $this->render('AppBundle:Decklist:decklists.html.twig', array(
+                    'pagetitle' => $translator->trans('decklist.list.titles.search'),
+                    'decklists' => null,
+                    'url' => $request->getRequestUri(),
+                    'header' => $searchForm,
+                    'type' => 'find',
+                    'pages' => null,
+                    'prevurl' => null,
+                    'nexturl' => null,
+                        ), $response);
     }
 
     public function donatorsAction (Request $request)
@@ -1081,11 +1068,10 @@ class SocialController extends Controller
 
         $users = $dbh->executeQuery("SELECT * FROM user WHERE donation>0 ORDER BY donation DESC, username", [])->fetchAll(\PDO::FETCH_ASSOC);
 
-        return $this->render('AppBundle:Default:donators.html.twig',
-                array(
-                        'pagetitle' => 'The Gracious Donators',
-                        'donators' => $users
-                ), $response);
+        return $this->render('AppBundle:Default:donators.html.twig', array(
+                    'pagetitle' => 'The Gracious Donators',
+                    'donators' => $users
+                        ), $response);
     }
 
 }

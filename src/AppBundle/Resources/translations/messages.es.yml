@@ -54,11 +54,6 @@ decks:
     too_many_copies: Contiene demasiadas copias de la misma carta (por título)
     invalid_cards: Contiene cartas prohibidas (cartas no permitidas por la Facción o la Estrategia)
     agenda: No se ajusta a las condiciones de la Estrategia
-  problems_info:
-    traits:
-      summer: Verano
-      winter: Invierno
-      scheme: Conspiración
   build:
     choose:
       faction: Elige tu Facción
@@ -359,6 +354,11 @@ pag:
   cardscount: "{0} No hay cartas | {1} Una carta | ]1,Inf] %count% cartas"
 
 card:
+  traits:
+    summer: Verano
+    winter: Invierno
+    scheme: Conspiración
+    banner: Estandarte
   reviews: 
     title: Reseñas
     none: Aún no hay reseñas para esta carta.

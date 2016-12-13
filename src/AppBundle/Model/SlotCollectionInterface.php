@@ -44,11 +44,11 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
 	 */
 	public function getAgendas();
 	
-	/**
-	 * Get one agenda
-	 * @return \AppBundle\Entity\Card
-	 */
-	public function getAgenda();
+        /**
+         * Return true is agenda is Alliance (06018)
+         * @return boolean
+         */
+        public function isAlliance();
 
 	/**
 	 * Get the draw deck
@@ -68,6 +68,13 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
 	 * @return \AppBundle\Model\SlotCollectionDecorator
 	 */
 	public function filterByFaction($faction_code);
+	
+	/**
+	 *
+	 * @param string $type_code
+	 * @return \AppBundle\Model\SlotCollectionDecorator
+	 */
+	public function filterByType($type_code);
 	
 	/**
 	 *
