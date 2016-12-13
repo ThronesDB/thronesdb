@@ -385,7 +385,7 @@ deck.get_problem = function get_problem() {
 	}
 
 	// at least 6 different plots
-	if(deck.get_plot_deck_variety() < 6) {
+	if(agenda.code != '05045' && deck.get_plot_deck_variety() < 6) {
 		return 'too_many_different_plots';
 	}
 
@@ -445,6 +445,9 @@ deck.get_problem = function get_problem() {
 		if(deck.get_plot_deck_size() != 12 || schemes != 5) {
 			return 'agenda';
 		}
+		if (deck.get_plot_deck_variety() < 11) {
+      return 'too_many_different_plots';
+    }
 		break;
 	}
 }
