@@ -359,45 +359,45 @@
             return false;
 
         var updated_other_card = false;
-
-        // card-specific rules
-        switch(card.type_code) {
-            case 'agenda':
-                // is deck alliance before the change
-                var is_alliance = deck.is_alliance();
-                // is deck alliance with the new card
-                if(card.traits.indexOf(Translator.trans('card.traits.banner')) === -1) {
-                    is_alliance = false;
-                } else {
-                    var nb_banners = deck.get_nb_cards(deck.get_cards(null, {type_code: 'agenda', traits: new RegExp(Translator.trans('card.traits.banner') + '\\.')}));
-                    if(nb_banners >= 2)
+        if(nb_copies > 0) {
+            // card-specific rules
+            switch(card.type_code) {
+                case 'agenda':
+                    // is deck alliance before the change
+                    var is_alliance = deck.is_alliance();
+                    // is deck alliance with the new card
+                    if(card.traits.indexOf(Translator.trans('card.traits.banner')) === -1) {
                         is_alliance = false;
-                }
-                if(card.code === '06018')
-                    is_alliance = true;
-                if(is_alliance) {
-                    deck.get_agendas().forEach(function (agenda)
-                    {
-                        if(agenda.code !== '06018' && agenda.traits.indexOf(Translator.trans('card.traits.banner')) === -1) {
-                            app.data.cards.update({
-                                code: agenda.code
-                            }, {
-                                indeck: 0
-                            });
-                            updated_other_card = true;
-                        }
-                    });
-                } else {
-                    app.data.cards.update({
-                        type_code: 'agenda'
-                    }, {
-                        indeck: 0
-                    });
-                    updated_other_card = true;
-                }
-                break;
+                    } else {
+                        var nb_banners = deck.get_nb_cards(deck.get_cards(null, {type_code: 'agenda', traits: new RegExp(Translator.trans('card.traits.banner') + '\\.')}));
+                        if(nb_banners >= 2)
+                            is_alliance = false;
+                    }
+                    if(card.code === '06018')
+                        is_alliance = true;
+                    if(is_alliance) {
+                        deck.get_agendas().forEach(function (agenda)
+                        {
+                            if(agenda.code !== '06018' && agenda.traits.indexOf(Translator.trans('card.traits.banner')) === -1) {
+                                app.data.cards.update({
+                                    code: agenda.code
+                                }, {
+                                    indeck: 0
+                                });
+                                updated_other_card = true;
+                            }
+                        });
+                    } else {
+                        app.data.cards.update({
+                            type_code: 'agenda'
+                        }, {
+                            indeck: 0
+                        });
+                        updated_other_card = true;
+                    }
+                    break;
+            }
         }
-
         app.data.cards.updateById(card_code, {
             indeck: nb_copies
         });
