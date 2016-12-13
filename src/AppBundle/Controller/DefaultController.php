@@ -60,7 +60,7 @@ class DefaultController extends Controller
                     if($minor_faction) {
                     	$factions[] = $minor_faction->getName();
                     } else {
-                        $factions[] = $agenda->getName();
+                        $factions[] = $agenda->getCard()->getName();
                     }
                 }
                 $array['factions'] = join(' / ', $factions);
