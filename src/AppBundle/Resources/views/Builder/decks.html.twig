@@ -73,8 +73,8 @@
 		<td><input type="checkbox"></td>
 		<td class="hidden-xs">
 			<img src="{{ asset('/bundles/app/images/factions/' ~ deck.faction_code ~ '.png') }}">
-                        {% for agenda in deck.agendas %}
-                            <img src="{{ asset('/bundles/cards/' ~ agenda.card.code ~ '.png') }}">
+                        {% for agenda_code in deck.agendas %}
+                            <img src="{{ asset('/bundles/cards/' ~ agenda_code ~ '.png') }}">
                         {% endfor %}
 		</td>
 		<td>
