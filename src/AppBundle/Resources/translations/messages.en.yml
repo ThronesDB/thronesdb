@@ -57,11 +57,6 @@ decks:
     too_many_copies: Contains too many copies of a card (by title)
     invalid_cards: Contains forbidden cards (cards no permitted by Faction or Agenda)
     agenda: Doesn't comply with the Agenda conditions
-  problems_info:
-    traits:
-      summer: Summer
-      winter: Winter
-      scheme: Scheme
   build:
     choose:
       faction: Choose your faction
@@ -362,6 +357,11 @@ pag:
   cardscount: "{0} There is no cards | {1} One card | ]1,Inf] %count% cards"
 
 card:
+  traits:
+    summer: Summer
+    winter: Winter
+    scheme: Scheme
+    banner: Banner
   reviews:
     title: Reviews
     none: No review yet for this card.

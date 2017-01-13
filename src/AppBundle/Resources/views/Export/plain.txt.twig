@@ -1,7 +1,9 @@
 {{ deck.name }}
 
 {{ deck.faction.name }}
-{% if deck.agenda %}{{ deck.agenda.name }}{% endif %}
+{% for agenda in deck.agendas %}
+{{ agenda.card.name }}
+{% endfor %}
 
 
 {% set first_pack = deck.included_packs|first %}

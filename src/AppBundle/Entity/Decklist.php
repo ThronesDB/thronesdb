@@ -7,13 +7,11 @@ use AppBundle\Model\SlotCollectionProviderInterface;
 class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializable, SlotCollectionProviderInterface
 {
 
-	public function jsonSerialize()
-	{
-		$array = parent::getArrayExport();
-	
-		return $array;
-	}
-	
+    public function jsonSerialize ()
+    {
+        return parent::getArrayExport();
+    }
+
     /**
      * @var integer
      */
@@ -137,7 +135,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct ()
     {
         $this->slots = new \Doctrine\Common\Collections\ArrayCollection();
         $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
@@ -152,7 +150,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return integer
      */
-    public function getId()
+    public function getId ()
     {
         return $this->id;
     }
@@ -164,7 +162,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setName($name)
+    public function setName ($name)
     {
         $this->name = $name;
 
@@ -176,7 +174,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return string
      */
-    public function getName()
+    public function getName ()
     {
         return $this->name;
     }
@@ -188,7 +186,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setNameCanonical($nameCanonical)
+    public function setNameCanonical ($nameCanonical)
     {
         $this->nameCanonical = $nameCanonical;
 
@@ -200,7 +198,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return string
      */
-    public function getNameCanonical()
+    public function getNameCanonical ()
     {
         return $this->nameCanonical;
     }
@@ -212,7 +210,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setDateCreation($dateCreation)
+    public function setDateCreation ($dateCreation)
     {
         $this->dateCreation = $dateCreation;
 
@@ -224,7 +222,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \DateTime
      */
-    public function getDateCreation()
+    public function getDateCreation ()
     {
         return $this->dateCreation;
     }
@@ -236,7 +234,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setDateUpdate($dateUpdate)
+    public function setDateUpdate ($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
 
@@ -248,7 +246,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \DateTime
      */
-    public function getDateUpdate()
+    public function getDateUpdate ()
     {
         return $this->dateUpdate;
     }
@@ -260,7 +258,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setDescriptionMd($descriptionMd)
+    public function setDescriptionMd ($descriptionMd)
     {
         $this->descriptionMd = $descriptionMd;
 
@@ -272,7 +270,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return string
      */
-    public function getDescriptionMd()
+    public function getDescriptionMd ()
     {
         return $this->descriptionMd;
     }
@@ -284,7 +282,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setDescriptionHtml($descriptionHtml)
+    public function setDescriptionHtml ($descriptionHtml)
     {
         $this->descriptionHtml = $descriptionHtml;
 
@@ -296,7 +294,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return string
      */
-    public function getDescriptionHtml()
+    public function getDescriptionHtml ()
     {
         return $this->descriptionHtml;
     }
@@ -308,7 +306,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setSignature($signature)
+    public function setSignature ($signature)
     {
         $this->signature = $signature;
 
@@ -320,7 +318,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return string
      */
-    public function getSignature()
+    public function getSignature ()
     {
         return $this->signature;
     }
@@ -332,7 +330,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setNbVotes($nbVotes)
+    public function setNbVotes ($nbVotes)
     {
         $this->nbVotes = $nbVotes;
 
@@ -344,7 +342,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return integer
      */
-    public function getnbVotes()
+    public function getnbVotes ()
     {
         return $this->nbVotes;
     }
@@ -356,7 +354,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setNbFavorites($nbFavorites)
+    public function setNbFavorites ($nbFavorites)
     {
         $this->nbFavorites = $nbFavorites;
 
@@ -368,7 +366,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return integer
      */
-    public function getNbFavorites()
+    public function getNbFavorites ()
     {
         return $this->nbFavorites;
     }
@@ -380,7 +378,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setNbComments($nbComments)
+    public function setNbComments ($nbComments)
     {
         $this->nbComments = $nbComments;
 
@@ -392,7 +390,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return integer
      */
-    public function getNbComments()
+    public function getNbComments ()
     {
         return $this->nbComments;
     }
@@ -404,7 +402,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function addSlot(\AppBundle\Entity\Decklistslot $slot)
+    public function addSlot (\AppBundle\Entity\Decklistslot $slot)
     {
         $this->slots[] = $slot;
 
@@ -416,7 +414,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @param \AppBundle\Entity\Decklistslot $slot
      */
-    public function removeSlot(\AppBundle\Entity\Decklistslot $slot)
+    public function removeSlot (\AppBundle\Entity\Decklistslot $slot)
     {
         $this->slots->removeElement($slot);
     }
@@ -426,7 +424,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \AppBundle\Model\SlotCollectionInterface
      */
-    public function getSlots()
+    public function getSlots ()
     {
         return new \AppBundle\Model\SlotCollectionDecorator($this->slots);
     }
@@ -438,7 +436,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function addComment(\AppBundle\Entity\Comment $comment)
+    public function addComment (\AppBundle\Entity\Comment $comment)
     {
         $this->comments[] = $comment;
 
@@ -450,7 +448,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @param \AppBundle\Entity\Comment $comment
      */
-    public function removeComment(\AppBundle\Entity\Comment $comment)
+    public function removeComment (\AppBundle\Entity\Comment $comment)
     {
         $this->comments->removeElement($comment);
     }
@@ -460,7 +458,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getComments()
+    public function getComments ()
     {
         return $this->comments;
     }
@@ -472,7 +470,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function addSuccessor(\AppBundle\Entity\Decklist $successor)
+    public function addSuccessor (\AppBundle\Entity\Decklist $successor)
     {
         $this->successors[] = $successor;
 
@@ -484,7 +482,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @param \AppBundle\Entity\Decklist $successor
      */
-    public function removeSuccessor(\AppBundle\Entity\Decklist $successor)
+    public function removeSuccessor (\AppBundle\Entity\Decklist $successor)
     {
         $this->successors->removeElement($successor);
     }
@@ -494,7 +492,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getSuccessors()
+    public function getSuccessors ()
     {
         return $this->successors;
     }
@@ -506,7 +504,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function addChild(\AppBundle\Entity\Deck $child)
+    public function addChild (\AppBundle\Entity\Deck $child)
     {
         $this->children[] = $child;
 
@@ -518,7 +516,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @param \AppBundle\Entity\Deck $child
      */
-    public function removeChild(\AppBundle\Entity\Deck $child)
+    public function removeChild (\AppBundle\Entity\Deck $child)
     {
         $this->children->removeElement($child);
     }
@@ -528,7 +526,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getChildren()
+    public function getChildren ()
     {
         return $this->children;
     }
@@ -540,7 +538,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser (\AppBundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -552,7 +550,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \AppBundle\Entity\User
      */
-    public function getUser()
+    public function getUser ()
     {
         return $this->user;
     }
@@ -564,7 +562,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setFaction(\AppBundle\Entity\Faction $faction = null)
+    public function setFaction (\AppBundle\Entity\Faction $faction = null)
     {
         $this->faction = $faction;
 
@@ -576,7 +574,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \AppBundle\Entity\Faction
      */
-    public function getFaction()
+    public function getFaction ()
     {
         return $this->faction;
     }
@@ -588,7 +586,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setLastPack(\AppBundle\Entity\Pack $lastPack = null)
+    public function setLastPack (\AppBundle\Entity\Pack $lastPack = null)
     {
         $this->lastPack = $lastPack;
 
@@ -600,7 +598,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \AppBundle\Entity\Pack
      */
-    public function getLastPack()
+    public function getLastPack ()
     {
         return $this->lastPack;
     }
@@ -612,7 +610,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setParent(\AppBundle\Entity\Deck $parent = null)
+    public function setParent (\AppBundle\Entity\Deck $parent = null)
     {
         $this->parent = $parent;
 
@@ -624,7 +622,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \AppBundle\Entity\Deck
      */
-    public function getParent()
+    public function getParent ()
     {
         return $this->parent;
     }
@@ -636,7 +634,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setPrecedent(\AppBundle\Entity\Decklist $precedent = null)
+    public function setPrecedent (\AppBundle\Entity\Decklist $precedent = null)
     {
         $this->precedent = $precedent;
 
@@ -648,7 +646,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \AppBundle\Entity\Decklist
      */
-    public function getPrecedent()
+    public function getPrecedent ()
     {
         return $this->precedent;
     }
@@ -660,7 +658,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setTournament(\AppBundle\Entity\Tournament $tournament = null)
+    public function setTournament (\AppBundle\Entity\Tournament $tournament = null)
     {
         $this->tournament = $tournament;
 
@@ -672,7 +670,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \AppBundle\Entity\Tournament
      */
-    public function getTournament()
+    public function getTournament ()
     {
         return $this->tournament;
     }
@@ -684,7 +682,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function addFavorite(\AppBundle\Entity\User $favorite)
+    public function addFavorite (\AppBundle\Entity\User $favorite)
     {
         $this->favorites[] = $favorite;
 
@@ -696,7 +694,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @param \AppBundle\Entity\User $favorite
      */
-    public function removeFavorite(\AppBundle\Entity\User $favorite)
+    public function removeFavorite (\AppBundle\Entity\User $favorite)
     {
         $this->favorites->removeElement($favorite);
     }
@@ -706,7 +704,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getFavorites()
+    public function getFavorites ()
     {
         return $this->favorites;
     }
@@ -718,7 +716,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function addVote(\AppBundle\Entity\User $vote)
+    public function addVote (\AppBundle\Entity\User $vote)
     {
         $this->votes[] = $vote;
 
@@ -730,7 +728,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @param \AppBundle\Entity\User $vote
      */
-    public function removeVote(\AppBundle\Entity\User $vote)
+    public function removeVote (\AppBundle\Entity\User $vote)
     {
         $this->votes->removeElement($vote);
     }
@@ -740,7 +738,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getVotes()
+    public function getVotes ()
     {
         return $this->votes;
     }
@@ -752,7 +750,7 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return Decklist
      */
-    public function setVersion($version)
+    public function setVersion ($version)
     {
         $this->version = $version;
 
@@ -764,8 +762,9 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion ()
     {
         return $this->version;
     }
+
 }

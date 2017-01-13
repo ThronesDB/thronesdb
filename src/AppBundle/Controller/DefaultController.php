@@ -55,13 +55,12 @@ class DefaultController extends Controller
                 $array['count_by_type'] = join(' &bull; ', $counts);
 
                 $factions = [ $faction->getName() ];
-                $agenda = $decklist->getSlots()->getAgenda();
-                if($agenda) {
-                    $minor_faction = $this->get('agenda_helper')->getMinorFaction($agenda);
+                foreach($decklist->getSlots()->getAgendas() as $agenda) {
+                    $minor_faction = $this->get('agenda_helper')->getMinorFaction($agenda->getCard());
                     if($minor_faction) {
                     	$factions[] = $minor_faction->getName();
                     } else {
-                        $factions[] = $agenda->getName();
+                        $factions[] = $agenda->getCard()->getName();
                     }
                 }
                 $array['factions'] = join(' / ', $factions);
@@ -80,7 +79,7 @@ class DefaultController extends Controller
         ], $response);
     }
 
-    function rulesAction()
+    function rulesreferenceAction()
     {
     	$response = new Response();
     	$response->setPublic();
