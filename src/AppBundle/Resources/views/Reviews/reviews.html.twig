@@ -56,7 +56,7 @@
        {% if review.comments|length %}
 
        {% for comment in review.comments %}
-       <div class="review-comment text-muted small">{{ comment.text }}
+       <div class="review-comment text-muted small">{{ comment.text|raw }}
        &mdash;
        <a title="{{ comment.user.reputation }} reputation" href="{{ path('user_profile_public', {user_id:comment.user.id,user_name:comment.user.username|e('url')}) }}" rel="author" class="username {{ comment.user.color }}">{{ comment.user.username }}</a>
            {% if comment.user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
@@ -65,10 +65,6 @@
        {% endfor %}
 
        {% endif %}
-       <form action="{{ path('card_reviewcomment_post') }}" method="POST" class="form-comment">
-       <input type="hidden" name="comment_review_id" value="{{ review.id }}">
-       <button class="btn btn-link btn-write-comment">Add a comment</button  >
-       </form>
        </div>
     </article>
 </div></div>
