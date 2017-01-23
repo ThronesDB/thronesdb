@@ -42,12 +42,12 @@ class ReviewController extends Controller
         {
         	throw new \Exception("This card does not exist.");
         }
-        
+        /*
         if(!$card->getPack()->getDateRelease()) 
         {
         	throw new \Exception("You may not write a review for an unreleased card.");
         }
-
+        */
         // checking the user didn't already write a review for that card
         $review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'user' => $user));
         if($review) 
