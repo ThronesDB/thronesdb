@@ -31,11 +31,10 @@ body {
     margin: 6px;
 }
 .card-flavor {
-    font: 16px/20px 'Dancing Script', serif;
+    font-style: italic;
 }
 .card-flavor cite {
     white-space: nowrap;
-    font-style: normal;
 }
 .card-flavor cite::before {
     /* en dash followed by non-breaking zero-width space */
