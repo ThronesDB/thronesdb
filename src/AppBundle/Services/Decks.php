@@ -67,21 +67,20 @@ class Decks
             $card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array(
                 "code" => $card_code
                     ));
-            if(!$card)
-                continue;
+            if(!$card) continue;
+                
+            $cards [$card_code] = $card;
+
             $pack = $card->getPack();
             if(!$latestPack) {
                 $latestPack = $pack;
-            } else {
-                if($latestPack->getCycle()->getPosition() < $pack->getCycle()->getPosition()) {
-                    $latestPack = $pack;
-                } else {
-                    if($latestPack->getCycle()->getPosition() == $pack->getCycle()->getPosition() && $latestPack->getPosition() < $pack->getPosition()) {
-                        $latestPack = $pack;
-                    }
-                }
+            } else if (empty($pack->getDateRelease())) {
+                $latestPack = $pack;
+            } else if (empty($latestPack->getDateRelease())) {
+                
+            } else if ($latestPack->getDateRelease() < $pack->getDateRelease()) {
+                $latestPack = $pack;
             }
-            $cards [$card_code] = $card;
         }
         $deck->setLastPack($latestPack);
         if(empty($tags)) {
