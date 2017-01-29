@@ -4,122 +4,122 @@
 body {
 }
 .card-content {
-	font: 16px/20px 'Amiri', serif
+    font: 16px/20px 'Crimson Text', serif;
 }
 .card-content abbr[title] {
-	border-bottom: none;
+    border-bottom: none;
 }
 .card-name {
-	font-family: 'Julius Sans One', sans-serif;
-	font-weight: 700;
+    font-family: 'Julius Sans One', sans-serif;
+    font-weight: 700;
 }
 .card-preview {
     color: red;
 }
 .card-type {
-	font-weight: 700;
+    font-weight: 700;
 }
 .card-traits, .card-text i {
-	font-weight: 700;
-	font-style: italic;
+    font-weight: 700;
+    font-style: italic;
 }
 .card-text {
-	border-left-width: 2px;
-	border-left-style: solid;
+    border-left-width: 2px;
+    border-left-style: solid;
 }
 .card-text p {
-	margin: 6px;
+    margin: 6px;
 }
 .card-flavor {
-	font-style: italic;
+    font-style: italic;
 }
 .card-flavor cite {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 .card-flavor cite::before {
-	/* en dash followed by non-breaking zero-width space */
-	content: "\2013\FEFF";
+    /* en dash followed by non-breaking zero-width space */
+    content: "\2013\FEFF";
 }
 
 .color-military {
-	color: #c8232a;
+    color: #c8232a;
 }
 .color-intrigue {
-	color: #13522f;
+    color: #13522f;
 }
 .color-power {
-	color: #292e5f;
+    color: #292e5f;
 }
 
 .table-expanded>thead>tr>th, .table-expanded>tbody>tr>th, .table-expanded>tfoot>tr>th, .table-expanded>thead>tr>td, .table-expanded>tbody>tr>td, .table-expanded>tfoot>tr>td {
-	padding: 16px 8px;
+    padding: 16px 8px;
 }
 .navbar-static-top {
-	z-index: auto;
+    z-index: auto;
 }
 
 .display-spoiler-card {
-	margin-bottom: 1em;
+    margin-bottom: 1em;
 }
 .display-spoiler-card h4 {
-	border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
 .deck-loading {
-	padding: 50px 0;
-	text-align: center;
+    padding: 50px 0;
+    text-align: center;
 }
 .tab-content {
-	padding-top: 15px;
+    padding-top: 15px;
 }
 .dropdown-menu label {
-  margin: 0;
+    margin: 0;
 }
 .dropdown-menu input[type=checkbox], .dropdown-menu input[type=radio] {
-  margin: -4px 8px 0 -6px;
+    margin: -4px 8px 0 -6px;
 }
 
 html, body {
-	height: 100%;
-	min-height: 100%;
+    height: 100%;
+    min-height: 100%;
 }
 td.type, td.faction {
-	text-align:center;
+    text-align:center;
 }
 .container.main {
-	margin-bottom: 20px;
-	padding-top: 20px;
-	padding-bottom: 20px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 .container.main.white {
-	background-color: #fff;
+    background-color: #fff;
 }
 .container.main.admin {
-	background-color: #fff;
-	border: 1px solid red;
+    background-color: #fff;
+    border: 1px solid red;
 }
 #wrapper {
-	min-height: 100%;
-	border-bottom: 10px solid #c0392b;
-	padding-bottom: 100px;
+    min-height: 100%;
+    border-bottom: 10px solid #c0392b;
+    padding-bottom: 100px;
 }
 footer {
-	padding-top: 20px;
-	background-color: #95a5a6;
+    padding-top: 20px;
+    background-color: #95a5a6;
 }
 .navbar-default {
-	font-size: 16px;
+    font-size: 16px;
 }
 
 div.tags span.tag {
-	font-size: 75%;
-	color: darkgray;
+    font-size: 75%;
+    color: darkgray;
 }
 div.tags span.tag:not(:first-child)::before {
-	content: " - ";
+    content: " - ";
 }
 
 .decks-actions .btn{
-	margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 
 .social-icons>*{margin-left:5px}
@@ -142,31 +142,31 @@ ol {
 /********** icon-bg ***********/
 
 .icon-bg:before {
-	width: 100%;
-	height: 100%;
-	font-size: 5em;
-	text-align: center;
-	display: block;
-	position: absolute;
-	line-height:4em;
-	left: 0;
-	opacity: 0.1;
+    width: 100%;
+    height: 100%;
+    font-size: 5em;
+    text-align: center;
+    display: block;
+    position: absolute;
+    line-height:4em;
+    left: 0;
+    opacity: 0.1;
     z-index: 0;
 }
 
 /********* ONE DECK *********/
 
 .deck-intro .media-left {
-	font-size: 96px;
+    font-size: 96px;
 }
 .deck-intro .media-left span {
-	padding: 10px;
+    padding: 10px;
 }
 .deck-content {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 .deck-content .invalid-card {
-	text-decoration: line-through;
+    text-decoration: line-through;
 }
 
 /********** DECK EDITOR ************/
@@ -181,21 +181,21 @@ ol {
     height: 100px;
 }
 #collection-grid .col-sm-4 .media-object {
-	height: 70px;
+    height: 70px;
 }
 
 /********* LIST OF DECKS ************/
 
 .list-decks>tbody>tr>td {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 .list-decks img {
-	height: 63px;
-	width: 45px;
+    height: 63px;
+    width: 45px;
 }
 #tag_toggles button {
-	margin-bottom: 4px;
-	margin-right: 4px;
+    margin-bottom: 4px;
+    margin-right: 4px;
 }
 
 /********** NEW DECK **********/
@@ -281,17 +281,17 @@ ol {
 /************** INDEX PAGE ***************/
 
 h1.site-title {
-	font-family: 'Julius Sans One', sans-serif;
-	position:relative;
-	font-size:116px;
-	text-align:center;
-	margin-top: 0;
+    font-family: 'Julius Sans One', sans-serif;
+    position:relative;
+    font-size:116px;
+    text-align:center;
+    margin-top: 0;
 }
 div.site-slogan {
-	font-family: 'Open Sans Condensed', sans-serif;
-	position:relative;
-	font-size:40px;
-	text-align:center;
+    font-family: 'Open Sans Condensed', sans-serif;
+    position:relative;
+    font-size:40px;
+    text-align:center;
 }
 
 /************ LIST OF DECKLISTS **************/
@@ -303,184 +303,184 @@ div.site-slogan {
 /************* DECKLIST *********************/
 
 .row.title {
-	padding-top:20px;
-	padding-bottom:10px
+    padding-top:20px;
+    padding-bottom:10px
 }
 #deck-description h1 {
-	font-size: 171%;
+    font-size: 171%;
 }
 #deck-description h2 {
-	font-size: 143%;
+    font-size: 143%;
 }
 #deck-description h3 {
-	font-size: 121%;
+    font-size: 121%;
 }
 #deck-description h4 {
-	font-size: 107%;
+    font-size: 107%;
 }
 
 /************** FACTIONS COLORS **************/
 .bg-faction a, .bg-faction span {
-	color: inherit;
+    color: inherit;
 }
 .bg-targaryen {
-	background-color: #1c1c1c !important;
-	color: white !important;
+    background-color: #1c1c1c !important;
+    color: white !important;
 }
 .bg-baratheon {
-	background-color: #e3d852 !important;
+    background-color: #e3d852 !important;
 }
 .bg-stark {
-	background-color: #cfcfcf !important;
+    background-color: #cfcfcf !important;
 }
 .bg-greyjoy {
-	background-color: #1d7a99 !important;
-	color: white !important;
+    background-color: #1d7a99 !important;
+    color: white !important;
 }
 .bg-lannister {
-	background-color: #c00106 !important;
-	color: white !important;
+    background-color: #c00106 !important;
+    color: white !important;
 }
 .bg-tyrell {
-	background-color: #509f16 !important;
-	color: white !important;
+    background-color: #509f16 !important;
+    color: white !important;
 }
 .bg-thenightswatch {
-	background-color: #7a7a7a !important;
+    background-color: #7a7a7a !important;
 }
 .bg-martell {
-	background-color: #e89521 !important;
+    background-color: #e89521 !important;
 }
 .bg-neutral {
-	background-color: #a99560 !important;
+    background-color: #a99560 !important;
 }
 
 .fg-targaryen {
-	color: #1c1c1c !important;
+    color: #1c1c1c !important;
 }
 .fg-baratheon {
-	color: #e3d852 !important;
+    color: #e3d852 !important;
 }
 .fg-stark {
-	color: #cfcfcf !important;
+    color: #cfcfcf !important;
 }
 .fg-greyjoy {
-	color: #1d7a99 !important;
+    color: #1d7a99 !important;
 }
 .fg-lannister {
-	color: #c00106 !important;
+    color: #c00106 !important;
 }
 .fg-tyrell {
-	color: #509f16 !important;
+    color: #509f16 !important;
 }
 .fg-thenightswatch {
-	color: #7a7a7a !important;
+    color: #7a7a7a !important;
 }
 .fg-martell {
-	color: #e89521 !important;
+    color: #e89521 !important;
 }
 .fg-neutral {
-	color: #a99560 !important;
+    color: #a99560 !important;
 }
 
 .border-targaryen {
-	border-color: #1c1c1c !important;
+    border-color: #1c1c1c !important;
 }
 .border-baratheon {
-	border-color: #e3d852 !important;
+    border-color: #e3d852 !important;
 }
 .border-stark {
-	border-color: #cfcfcf !important;
+    border-color: #cfcfcf !important;
 }
 .border-greyjoy {
-	border-color: #1d7a99 !important;
+    border-color: #1d7a99 !important;
 }
 .border-lannister {
-	border-color: #c00106 !important;
+    border-color: #c00106 !important;
 }
 .border-tyrell {
-	border-color: #509f16 !important;
+    border-color: #509f16 !important;
 }
 .border-thenightswatch {
-	border-color: #7a7a7a !important;
+    border-color: #7a7a7a !important;
 }
 .border-martell {
-	border-color: #e89521 !important;
+    border-color: #e89521 !important;
 }
 .border-neutral {
-	border-color: #a99560 !important;
+    border-color: #a99560 !important;
 }
 
 /**************** REVIEW ON CARD PAGE ******************/
 
 article.review {
-	margin-top: 2em;
-	padding-top: 2em;
-	border-top: 1px solid #ddd;
+    margin-top: 2em;
+    padding-top: 2em;
+    border-top: 1px solid #ddd;
 }
 article.review:first-child {
-	margin-top: 0;
+    margin-top: 0;
 }
 article.review .review-like { 
-	float:left; 
-	font-size: 120%; 
-	width:50px 
+    float:left; 
+    font-size: 120%; 
+    width:50px 
 }
 article.review .review-content { 
-	margin-left: 50px 
+    margin-left: 50px 
 }
 article.review .review-text :first-child { 
-	margin-top: 0px 
+    margin-top: 0px 
 }
 article.review .review-date { 
-	clear: both; 
-	text-align: right 
+    clear: both; 
+    text-align: right 
 }
 article.review .review-author { 
-	text-align: right 
+    text-align: right 
 }
 article.review .review-comment { 
-	border-top: 1px solid #ddd; 
-	padding: 0.5em; 
+    border-top: 1px solid #ddd; 
+    padding: 0.5em; 
 }
 
 /****************** BOOTSTRAP MARKDOWN *******************/
 
 .md-editor.md-fullscreen-mode {
-	z-index: 99;
+    z-index: 99;
 }
 
 /* PRINT STYLESHEETS */
 
 @media print {
-	h1 {
-		font-size: 24px;
-	}
-  a[href]:after {
-    content: none !important;
-  }
-  #wrapper {
-  	border: none;
-  	padding: 0;
-  	min-height: auto;
-  }
-  
-	.col-print-1 {width:8%;  float:left;}
-	.col-print-2 {width:16%; float:left;}
-	.col-print-3 {width:25%; float:left;}
-	.col-print-4 {width:33%; float:left;}
-	.col-print-5 {width:42%; float:left;}
-	.col-print-6 {width:50%; float:left;}
-	.col-print-7 {width:58%; float:left;}
-	.col-print-8 {width:66%; float:left;}
-	.col-print-9 {width:75%; float:left;}
-	.col-print-10{width:83%; float:left;}
-	.col-print-11{width:92%; float:left;}
-	.col-print-12{width:100%; float:left;}
+    h1 {
+        font-size: 24px;
+    }
+    a[href]:after {
+        content: none !important;
+    }
+    #wrapper {
+        border: none;
+        padding: 0;
+        min-height: auto;
+    }
+
+    .col-print-1 {width:8%;  float:left;}
+    .col-print-2 {width:16%; float:left;}
+    .col-print-3 {width:25%; float:left;}
+    .col-print-4 {width:33%; float:left;}
+    .col-print-5 {width:42%; float:left;}
+    .col-print-6 {width:50%; float:left;}
+    .col-print-7 {width:58%; float:left;}
+    .col-print-8 {width:66%; float:left;}
+    .col-print-9 {width:75%; float:left;}
+    .col-print-10{width:83%; float:left;}
+    .col-print-11{width:92%; float:left;}
+    .col-print-12{width:100%; float:left;}
 }
 
 /*************** DECK(LIST) COMPARE *****************/
 
 .diff {
-	background: rgba(255,0,0,.5);
+    background: rgba(255,0,0,.5);
 }

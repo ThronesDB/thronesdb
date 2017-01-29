@@ -6,7 +6,9 @@
 	<script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	<script type="text/javascript">
+            {% if cards is not empty %}
 	app.user.params.card_id = {{ cards[0].id }};
+        {% endif %}
 	</script>
 {% endblock %}
 
@@ -32,6 +34,7 @@
 							{% include 'AppBundle:Search:card-pack.html.twig' %}
         				</div>
         			</div>
+                                <p>Link: <a href="{{ path('decklists_list',{type:'find',_locale:app.request.locale,'cards[]':card.code}) }}">Decklists</a></p>
         		</div>
         	</div>
         	<div class="col-sm-5" style="margin-bottom:2em">
