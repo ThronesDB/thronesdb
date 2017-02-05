@@ -86,7 +86,6 @@ decks:
           onlyused: Sólo mostrar cartas usadas
         display: "{1} Mostrar en 1 columna | ]1, Inf] Mostrar en %cols% columnas"
         usecore: "{1} Usar 1 Caja básica | ]1, Inf] Usar %core% Cajas básicas"
-        suggestions: "{0} No mostrar sugerencias | {1} Mostrar %count% sugerencia | ]1, Inf] Mostrar %count% sugerencias"
         factype:
           cumulative: Facción/Tipo acumulativo
           exclusive: Facción/Tipo exclusivo
@@ -157,8 +156,6 @@ decks:
       clear:
         question: ¿Estás seguro de que deseas quitar todas las etiquetas de los mazos seleccionados?
         confirm: Sí, quítalas
-  suggestions:
-    title: Sugerencias de cartas
   published:
     title: Versiones publicadas
     none: Ninguna

@@ -143,6 +143,7 @@
     {% endjavascripts %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/forerunnerdb/1.4.40/fdb-all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.jquery.min.js"></script>
@@ -179,23 +180,22 @@
 
 	{% javascripts filter="?jsqueeze" output="js/app.js"
 		'@AppBundle/Resources/public/js/bootstrap.js'
-		'@AppBundle/Resources/public/js/fdb-all.min.js'
 		'@AppBundle/Resources/public/js/jquery.toc.min.js'
 		'@AppBundle/Resources/public/js/app.data.js'
 		'@AppBundle/Resources/public/js/app.format.js'
 		'@AppBundle/Resources/public/js/app.tip.js'
 		'@AppBundle/Resources/public/js/app.card_modal.js'
 		'@AppBundle/Resources/public/js/app.user.js'
-        '@AppBundle/Resources/public/js/app.binomial.js'
-        '@AppBundle/Resources/public/js/app.hypergeometric.js'
-        '@AppBundle/Resources/public/js/app.draw_simulator.js'
-        '@AppBundle/Resources/public/js/app.textcomplete.js'
-        '@AppBundle/Resources/public/js/app.markdown.js'
-        '@AppBundle/Resources/public/js/app.smart_filter.js'
-        '@AppBundle/Resources/public/js/app.deck.js'
-        '@AppBundle/Resources/public/js/app.diff.js'
-        '@AppBundle/Resources/public/js/app.deck_history.js'
-        '@AppBundle/Resources/public/js/app.deck_charts.js'
+                '@AppBundle/Resources/public/js/app.binomial.js'
+                '@AppBundle/Resources/public/js/app.hypergeometric.js'
+                '@AppBundle/Resources/public/js/app.draw_simulator.js'
+                '@AppBundle/Resources/public/js/app.textcomplete.js'
+                '@AppBundle/Resources/public/js/app.markdown.js'
+                '@AppBundle/Resources/public/js/app.smart_filter.js'
+                '@AppBundle/Resources/public/js/app.deck.js'
+                '@AppBundle/Resources/public/js/app.diff.js'
+                '@AppBundle/Resources/public/js/app.deck_history.js'
+                '@AppBundle/Resources/public/js/app.deck_charts.js'
 		'@AppBundle/Resources/public/js/app.ui.js'
     %}
 	<script src="{{ asset_url }}"></script>

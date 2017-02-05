@@ -26,7 +26,6 @@
             'show-only-deck': false,
             'display-column': 1,
             'core-set': 3,
-            'show-suggestions': 0,
             'buttons-behavior': 'cumulative'
         }, Config || {});
     };
@@ -49,7 +48,7 @@
     ui.init_config_buttons = function init_config_buttons()
     {
         // radio
-        ['display-column', 'core-set', 'show-suggestions', 'buttons-behavior'].forEach(function (radio)
+        ['display-column', 'core-set', 'buttons-behavior'].forEach(function (radio)
         {
             $('input[name=' + radio + '][value=' + Config[radio] + ']').prop('checked', true);
         });
@@ -293,21 +292,8 @@
                 ui.update_list_template();
                 ui.refresh_list();
                 break;
-            case 'show-suggestions':
-                ui.toggle_suggestions();
-                ui.refresh_list();
-                break;
             default:
                 ui.refresh_list();
-        }
-    };
-
-    ui.toggle_suggestions = function toggle_suggestions()
-    {
-        if(Config['show-suggestions'] == 0) {
-            $('#table-suggestions').hide();
-        } else {
-            $('#table-suggestions').show();
         }
     };
 
@@ -630,7 +616,6 @@
     {
         ui.refresh_deck();
         ui.refresh_list();
-        app.suggestions && app.suggestions.compute();
     };
 
 
@@ -710,7 +695,6 @@
         ui.init_config_buttons();
         ui.init_filter_help();
         ui.update_sort_caret();
-        ui.toggle_suggestions();
         ui.setup_event_handlers();
         app.textcomplete && app.textcomplete.setup('#description');
         app.markdown && app.markdown.setup('#description', '#description-preview');
