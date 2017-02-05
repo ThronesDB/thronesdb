@@ -6,16 +6,21 @@
     var force_refresh = false;
     var database_changed = false;
     var locale_changed = false;
+
     var fdb = new ForerunnerDB();
     var database = fdb.db('thronesdb');
-
-    var masters;
-
-    var dfd = {
-        packs: new $.Deferred(),
-        cards: new $.Deferred()
+    var masters = {
+        packs: database.collection('master_pack', {primaryKey: 'code'}),
+        cards: database.collection('master_card', {primaryKey: 'code'})
     };
-    $.when(dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+    masters.packs.on("insert", onCollectionChange).on("update", onCollectionChange);
+    masters.cards.on("insert", onCollectionChange).on("update", onCollectionChange);
+
+    var dfd;
+
+    function onCollectionChange() {
+        database_changed = true;
+    }
 
     /**
      * loads the database from local
@@ -23,11 +28,11 @@
      * @memberOf data
      */
     function load() {
-
-        masters = {
-            packs: database.collection('master_pack', {primaryKey: 'code', changeTimestamp: true}),
-            cards: database.collection('master_card', {primaryKey: 'code', changeTimestamp: true})
+        dfd = {
+            packs: new $.Deferred(),
+            cards: new $.Deferred()
         };
+        $.when(dfd.packs, dfd.cards).done(update_done).fail(update_fail);
 
         masters.packs.load(function (err) {
             if (err) {
@@ -98,9 +103,7 @@
      * @memberOf data
      */
     function update() {
-        _.each(masters, function (collection) {
-            collection.drop();
-        });
+        force_update = true;
         force_refresh = true;
         load();
     }
@@ -180,12 +183,13 @@
      */
     function update_collection(data, collection, locale, deferred) {
         // we update the database and Forerunner will tell us if the data is actually different
-        collection.on("setData", function (newData, oldData) {
-            if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
-                console.log("data has changed for " + collection.name());
-                database_changed = true;
+        data.forEach(function (row) {
+            if(collection.findById(row.code)) {
+                collection.update({code: row.code}, row);
+            } else {
+                collection.insert(row);
             }
-        }).setData(data);
+        });
 
         // we update the locale
         if (locale !== collection.metaData().locale) {
