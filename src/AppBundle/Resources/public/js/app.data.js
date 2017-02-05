@@ -2,8 +2,6 @@
 
     data.isLoaded = false;
 
-    var force_update = false;
-    var force_refresh = false;
     var database_changed = false;
     var locale_changed = false;
 
@@ -13,12 +11,14 @@
         packs: database.collection('master_pack', {primaryKey: 'code'}),
         cards: database.collection('master_card', {primaryKey: 'code'})
     };
-    masters.packs.on("insert", onCollectionChange).on("update", onCollectionChange);
-    masters.cards.on("insert", onCollectionChange).on("update", onCollectionChange);
 
     var dfd;
 
-    function onCollectionChange() {
+    function onCollectionUpdate(updated) {
+        database_changed = true;
+    }
+
+    function onCollectionInsert(inserted, failed) {
         database_changed = true;
     }
 
@@ -28,49 +28,30 @@
      * @memberOf data
      */
     function load() {
-        dfd = {
-            packs: new $.Deferred(),
-            cards: new $.Deferred()
-        };
-        $.when(dfd.packs, dfd.cards).done(update_done).fail(update_fail);
-
         masters.packs.load(function (err) {
             if (err) {
                 console.log('error when loading packs', err);
-                force_update = true;
             }
             masters.cards.load(function (err) {
                 if (err) {
                     console.log('error when loading cards', err);
-                    force_update = true;
                 }
 
                 /*
                  * data has been fetched from local store
                  */
+                
+                /*
+                 * we set up insert and update listeners now
+                 * if we did it before, .load() would have called onInsert
+                 */
+                masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
 
                 /*
-                 * if database is older than 10 days, we assume it's obsolete and delete it
+                 * if database is not empty, use it for now
                  */
-                var age_of_database = new Date() - new Date(masters.cards.metaData().lastChange);
-                if (age_of_database > 864000000) {
-                    console.log('database is older than 10 days => refresh it');
-                    masters.packs.setData([]);
-                    masters.cards.setData([]);
-                }
-
-                /*
-                 * if database is empty, we will wait for the new data
-                 */
-                if (masters.packs.count() === 0 || masters.cards.count() === 0) {
-                    console.log('database is empty => load it');
-                    force_update = true;
-                }
-
-                /*
-                 * triggering event that data is loaded
-                 */
-                if (!force_update) {
+                if (masters.packs.count() > 0 && masters.cards.count() > 0) {
                     release();
                 }
 
@@ -99,23 +80,18 @@
     }
 
     /**
-     * triggers a forced update of the database
-     * @memberOf data
-     */
-    function update() {
-        force_update = true;
-        force_refresh = true;
-        load();
-    }
-
-    /**
      * queries the server to update data
      * @memberOf data
      */
     function query() {
+        dfd = {
+            packs: new $.Deferred(),
+            cards: new $.Deferred()
+        };
+        $.when(dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+
         $.ajax({
             url: Routing.generate('api_packs'),
-            cache: !force_refresh,
             success: parse_packs,
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('error when requesting packs', errorThrown);
@@ -125,7 +101,6 @@
 
         $.ajax({
             url: Routing.generate('api_cards'),
-            cache: !force_refresh,
             success: parse_cards,
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('error when requesting cards', errorThrown);
@@ -152,9 +127,8 @@
         }
 
         // if it is a force update, we haven't release the data yet
-        if (force_update) {
+        if (!data.isLoaded) {
             release();
-            return;
         }
     }
 
@@ -228,7 +202,5 @@
     $(function () {
         load();
     });
-
-    data.update = update;
 
 })(app.data = {}, jQuery);
