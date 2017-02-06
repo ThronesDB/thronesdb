@@ -287,7 +287,7 @@ class BuilderController extends Controller
         $cancel_edits = (boolean) filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if ($cancel_edits) {
             if ($deck)
-                $this->get('decks')->revertDeck($deck);
+                $this->get('deck_manager')->revert($deck);
             return $this->redirect($this->generateUrl('decks_list'));
         }
 
@@ -306,7 +306,7 @@ class BuilderController extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck ? $source_deck : null);
+        $this->get('deck_manager')->save($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck ? $source_deck : null);
         $em->flush();
 
         return $this->redirect($this->generateUrl('decks_list'));
