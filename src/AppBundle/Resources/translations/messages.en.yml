@@ -439,7 +439,7 @@ keyword:
     title: "After you win a challenge in which this character is participating, he may gain 1 power."
   intimidate:
     name: Intimidate
-    title: "After you win a challenge in which this character is participating, you may choose and kneel a character, controlled by the losing opponent, with equal or lower STR than the amount of STR by which the challenge was won."
+    title: "After you win a challenge in which this character is participating as an attacker, you may choose and kneel a character, controlled by the losing opponent, with equal or lower STR than the amount of STR by which the challenge was won."
   stealth:
     name: Stealth
     title: "When you declare this character as an attacker, you may choose a character without stealth controlled by the defending opponent. That character cannot be declared as a defender for this challenge."
