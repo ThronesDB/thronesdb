@@ -458,3 +458,7 @@ keyword:
   ambush:
     name: Ambush
     title: "You may pay X gold to put this card into play from your hand during the challenges phase."
+  bestow:
+    name: Bestow
+    title: "When this card enters play, move up to X gold from your gold pool to this card."
+  
