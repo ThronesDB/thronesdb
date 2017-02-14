@@ -181,7 +181,7 @@ class Oauth2Controller extends Controller
 		$description = trim($request->get('description'));
 		$tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 		
-		$this->get('decks')->saveDeck($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $slots, null);
+		$this->get('deck_manager')->save($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $slots, null);
 		
 		$this->getDoctrine()->getManager()->flush();
 		

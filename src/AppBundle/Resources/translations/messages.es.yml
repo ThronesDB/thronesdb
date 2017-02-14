@@ -12,7 +12,11 @@ nav:
   mydecks: Mis mazos
   decklists: Mazos
   cards: Cartas
+  reviews: Reseñas
   rules: Reglas
+  rulesreference: Guía de referencia
+  faq: F.A.Q.
+  tournamentregulations: Normativa para torneos
   advancedsearch: Búsqueda avanzada
   cardsearch: Buscar carta
   user:
@@ -86,7 +90,6 @@ decks:
           onlyused: Sólo mostrar cartas usadas
         display: "{1} Mostrar en 1 columna | ]1, Inf] Mostrar en %cols% columnas"
         usecore: "{1} Usar 1 Caja básica | ]1, Inf] Usar %core% Cajas básicas"
-        suggestions: "{0} No mostrar sugerencias | {1} Mostrar %count% sugerencia | ]1, Inf] Mostrar %count% sugerencias"
         factype:
           cumulative: Facción/Tipo acumulativo
           exclusive: Facción/Tipo exclusivo
@@ -157,8 +160,6 @@ decks:
       clear:
         question: ¿Estás seguro de que deseas quitar todas las etiquetas de los mazos seleccionados?
         confirm: Sí, quítalas
-  suggestions:
-    title: Sugerencias de cartas
   published:
     title: Versiones publicadas
     none: Ninguna
@@ -438,7 +439,7 @@ keyword:
     title: "Después de que ganes un reto en el que esté participando este Personaje, puedes ganar 1 de Poder para este Personaje."
   intimidate:
     name: Intimidación
-    title: "Después de que ganes un Reto en el que participe este Personaje, puedes elegir y arrodillar un Personaje controlado por el adversario derrotado cuya FUE sea igual o inferior a la diferencia de FUE por la que has ganado el reto."
+    title: "Después de que ganes un Reto en el que participe este Personaje como atacante, puedes elegir y arrodillar un Personaje controlado por el adversario derrotado cuya FUE sea igual o inferior a la diferencia de FUE por la que has ganado el reto."
   stealth:
     name: Sigilo
     title: "Cuando este Personaje sea declarado como atacante, puedes elegir un Personaje sin Sigilo controlado por el jugador defensor. Ese Personaje no puede ser declaro defensor para este reto."

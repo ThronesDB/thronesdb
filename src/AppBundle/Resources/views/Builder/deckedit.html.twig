@@ -26,9 +26,7 @@
 <div id="deck" class="deck-loading">
 	<i class="fa fa-spinner fa-spin fa-5x"></i>
 </div>
-{#
-{% include 'AppBundle:Builder:table-suggestions.html.twig' %}
-#}
+
 <form method="POST" action="{{ path('deck_save') }}" id="save_form" role="form" style="margin-bottom:1em">
 	<input type="hidden" id="deck-save-id" name="id" value="{{ deck.id }}">
 	<input type="hidden" id="deck-save-as-copy" name="copy" value="0">
@@ -101,12 +99,6 @@
 <!-- Right-side Column -->
 
 </div><!-- .row -->
-
-<div class="row">
-	<p class="text-center text-muted small">
-		<a href="#" class="data-update">{{ 'decks.edit.refresh' | trans }}</a>
-	</p>
-</div>
 </div><!-- .container -->
 
 {% include 'AppBundle:Modale:odds.html.twig' %}
