@@ -3,6 +3,8 @@
 
 body {
 }
+
+
 .card-content {
     font: 16px/20px 'Crimson Text', serif;
 }
@@ -61,6 +63,19 @@ body {
 .display-spoiler-card {
     margin-bottom: 1em;
 }
+
+.display-spoiler-card .faction-icon {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 8em;
+    left: 0;
+    z-index: 0;
+    opacity: 0.1;
+}
+
 .display-spoiler-card h4 {
     border-bottom: 1px solid #ddd;
 }
