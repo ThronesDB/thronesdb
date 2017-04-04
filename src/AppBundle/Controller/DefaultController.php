@@ -59,7 +59,7 @@ class DefaultController extends Controller
                     $minor_faction = $this->get('agenda_helper')->getMinorFaction($agenda->getCard());
                     if($minor_faction) {
                     	$factions[] = $minor_faction->getName();
-                    } else {
+                    } else if($agenda->getCard()->getCode() != '06018') { // prevent Alliance agenda to show up
                         $factions[] = $agenda->getCard()->getName();
                     }
                 }
