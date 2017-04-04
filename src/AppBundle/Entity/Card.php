@@ -19,6 +19,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'position',
 				'quantity',
 				'name',
+				'traits',
 				'is_loyal',
 				'is_unique'
 		];
@@ -26,7 +27,6 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 		$optionalFields = [
 				'illustrator',
 				'flavor',
-				'traits',
 				'text',
 				'cost',
 				'octgn_id'
