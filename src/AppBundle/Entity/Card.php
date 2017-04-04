@@ -21,7 +21,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'name',
 				'traits',
 				'is_loyal',
-				'is_unique'
+				'is_unique',
+                                'octgn_id',
 		];
 	
 		$optionalFields = [
@@ -29,7 +30,6 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'flavor',
 				'text',
 				'cost',
-				'octgn_id'
 		];
 	
 		$externalFields = [

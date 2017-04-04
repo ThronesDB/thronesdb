@@ -32,10 +32,10 @@ class ImportImagesCommand extends ContainerAwareCommand
 		foreach($cards as $card) {
 			$card_code = $card->getCode();
 			
-			if(!$card->getPack()->getDateRelease()) {
-				$output->writeln("Skip $card_code because it's not released");
-				continue;
-			}
+//			if(!$card->getPack()->getDateRelease()) {
+//				$output->writeln("Skip $card_code because it's not released");
+//				continue;
+//			}
 			
 			if(!$card->getPack()->getCgdbId()) {
 				$output->writeln("Skip $card_code because its cgdb_id is not defined");
@@ -54,7 +54,7 @@ class ImportImagesCommand extends ContainerAwareCommand
 				$dirname = dirname($imagepath);
 				$outputfile = $dirname . DIRECTORY_SEPARATOR . $card_code . ".jpg";
 
-				$image = file_get_contents($cgdburl);
+				$image = @file_get_contents($cgdburl);
 				if($image !== FALSE) {
 					file_put_contents($outputfile, $image);
 					$output->writeln("New file at $outputfile");
