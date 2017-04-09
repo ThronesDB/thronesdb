@@ -4,6 +4,7 @@
 /app/config/parameters.yml
 /app/logs/*
 !app/logs/.gitkeep
+/app/sessions/*
 /app/phpunit.xml
 /bin/
 /composer.phar

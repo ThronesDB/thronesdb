@@ -465,6 +465,8 @@
     {
         var agendas = deck.get_agendas();
         var expectedPlotDeckSize = 7;
+        var expectedMaxAgendaCount = 1;
+        var expectedMinCardCount = 60;
         agendas.forEach(function (agenda) {
             if(agenda && agenda.code === '05045') {
                 expectedPlotDeckSize = 12;
@@ -486,6 +488,8 @@
 
         // no more than 1 agenda, unless Alliance
         if(deck.is_alliance()) {
+            expectedMaxAgendaCount = 3;
+            expectedMinCardCount = 75;
             var unwanted = _.find(deck.get_agendas(), function (agenda)
             {
                 return agenda.code !== '06018' && agenda.traits.indexOf(Translator.trans('card.traits.banner')) === -1;
@@ -493,14 +497,15 @@
             if(unwanted) {
                 return 'too_many_agendas';
             }
-        } else {
-            if(deck.get_nb_cards(deck.get_agendas()) > 1) {
-                return 'too_many_agendas';
-            }
+        }
+        
+        // no more than 1 agenda
+        if(deck.get_nb_cards(deck.get_agendas()) > expectedMaxAgendaCount) {
+            return 'too_many_agendas';
         }
 
         // at least 60 others cards
-        if(deck.get_draw_deck_size() < 60) {
+        if(deck.get_draw_deck_size() < expectedMinCardCount) {
             return 'too_few_cards';
         }
 

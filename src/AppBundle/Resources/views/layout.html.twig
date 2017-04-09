@@ -79,7 +79,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="fa fa-search"></span></a>
                 <div class="dropdown-menu">
                   <form action="{{ path('cards_find') }}" target="_blank">
-                    <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}" class="form-control" name="q">
+                    <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}" class="form-control smart-filter-help" name="q">
                   </form>
               </div>
             </li>
@@ -110,7 +110,7 @@
           </ul>
           <form class="navbar-form navbar-right visible-lg-block visible-xs-block external" action="{{ path('cards_find') }}" target="_blank">
             <div class="form-group">
-              <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}" class="form-control" name="q">
+              <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}" class="form-control smart-filter-help" name="q">
             </div>
           </form>
         </div><!--/.navbar-collapse -->

@@ -58,7 +58,7 @@ class CardsData
      */
     public function addAbbrTags ($text)
     {
-        static $keywords = ['renown', 'intimidate', 'stealth', 'insight', 'limited', 'pillage', 'terminal', 'ambush'];
+        static $keywords = ['renown', 'intimidate', 'stealth', 'insight', 'limited', 'pillage', 'terminal', 'ambush', 'bestow'];
 
         $locale = $this->request_stack->getCurrentRequest() ? $this->request_stack->getCurrentRequest()->getLocale() : 'en';
 

@@ -458,3 +458,6 @@ keyword:
   ambush:
     name: Emboscada
     title: "Puedes pagar X de Oro para poner esta carta en juego desde tu mano durante la fase de Reto."
+  bestow:
+    name: Encomienda
+    title: "Cuando esta carta entre en juego, traslada hasta X de Oro de tu suministro de Oro hasta esta carta."

@@ -71,13 +71,15 @@ class DeckValidationHelper
             return 'too_many_different_plots';
         }
         $expectedMaxAgendaCount = 1;
+        $expectedMinCardCount = 60;
         if($slots->isAlliance()) {
             $expectedMaxAgendaCount = 3;
+            $expectedMinCardCount = 75;
         }
         if($slots->getAgendas()->countCards() > $expectedMaxAgendaCount) {
             return 'too_many_agendas';
         }
-        if($slots->getDrawDeck()->countCards() < 60) {
+        if($slots->getDrawDeck()->countCards() < $expectedMinCardCount) {
             return 'too_few_cards';
         }
         foreach($slots->getCopiesAndDeckLimit() as $cardName => $value) {

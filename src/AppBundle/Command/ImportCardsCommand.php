@@ -136,7 +136,7 @@ class ImportCardsCommand extends ContainerAwareCommand
           $text = str_replace(['<br />'], ["\n"], $text);
           $text = preg_replace("/<strong class='bbc'>([^<]+)<\/strong>/", "<b>\\1</b>", $text);
           $text = str_replace("</b>: ", ":</b> ", $text);
-          $text = preg_replace("/<em class='bbc'><b>([^<]+)<\/b><\/em>/", "<i>\\1</i>", $text);
+          $text = preg_replace("/<em class='bbc'><b>([^<]+?)( ?)<\/b><\/em>/", "<i>\\1</i>\\2", $text);
           $text = preg_replace("/<em class='bbc'>([^<]+)<\/em>/", "", $text);
           $text = preg_replace_callback("/\[(.*?)\]/", function ($matches) use ($allFactions) {
           	$token = str_replace(['“', '”', '’', '&rsquo;'], ['"', '"', '\'', '\''], $matches[1]);

@@ -19,17 +19,17 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
 				'position',
 				'quantity',
 				'name',
+				'traits',
 				'is_loyal',
-				'is_unique'
+				'is_unique',
+                                'octgn_id',
 		];
 	
 		$optionalFields = [
 				'illustrator',
 				'flavor',
-				'traits',
 				'text',
 				'cost',
-				'octgn_id'
 		];
 	
 		$externalFields = [
