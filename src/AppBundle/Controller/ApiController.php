@@ -424,7 +424,7 @@ class ApiController extends Controller
             return $response;
         }
 
-        $content = json_encode($decklists);
+        $content = json_encode($decklists->toArray());
 
         if(isset($jsonp)) {
             $content = "$jsonp($content)";
