@@ -163,8 +163,10 @@ class DeckValidationHelper
     public function validateRains (\AppBundle\Model\SlotCollectionInterface $slots, \AppBundle\Entity\Card $agenda)
     {
         $trait = $this->translator->trans('card.traits.scheme');
-        $matchingTraitPlots = $slots->getPlotDeck()->filterByTrait($trait)->countCards();
-        if($matchingTraitPlots !== 5) {
+        $matchingTraitPlots = $slots->getPlotDeck()->filterByTrait($trait);
+        $matchingTraitPlotsUniqueCount = $matchingTraitPlots->count();
+        $matchingTraitPlotsTotalCount = $matchingTraitPlots->countCards();
+        if($matchingTraitPlotsUniqueCount !== 5 || $matchingTraitPlotsTotalCount !== 5) {
             return false;
         }
         return true;
