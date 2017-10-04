@@ -120,6 +120,8 @@ class DeckValidationHelper
                 return $this->validateRains($slots, $agenda);
             case '06018':
                 return $this->validateAlliance($slots, $agenda);
+            case '06119':
+                return $this->validateBrotherhood($slots, $agenda);
             default:
                 return true;
         }
@@ -177,6 +179,16 @@ class DeckValidationHelper
         $matchingTraitAgendas = $agendas->filterByTrait($trait);
         if($agendas->countCards() - $matchingTraitAgendas->countCards() !== 1) {
             return false;
+        }
+        return true;
+    }
+
+    public function validateBrotherhood(\AppBundle\Model\SlotCollectionInterface $slots, \AppBundle\Entity\Card $agenda)
+    {
+        foreach($slots->getSlots() as $slot)
+        {
+            if($slot->getCard()->getIsLoyal())
+                return false;
         }
         return true;
     }

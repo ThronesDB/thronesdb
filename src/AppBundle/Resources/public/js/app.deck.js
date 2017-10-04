@@ -575,6 +575,12 @@
                     return false;
                 }
                 break;
+            case '06119':
+                var loyalCards = deck.get_nb_cards(deck.get_cards(null, {is_loyal: true}));
+                if(loyalCards > 0) {
+                    return false;
+                }
+                break;
         }
         return true;
     };
