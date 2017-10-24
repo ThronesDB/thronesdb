@@ -563,8 +563,10 @@
                 }
                 break;
             case '05045':
-                var schemes = deck.get_nb_cards(deck.get_cards(null, {type_code: 'plot', traits: new RegExp(Translator.trans('card.traits.scheme') + '\\.')}));
-                if(schemes !== 5) {
+                var schemeCards = deck.get_cards(null, {type_code: 'plot', traits: new RegExp(Translator.trans('card.traits.scheme') + '\\.')});
+                var totalSchemes = deck.get_nb_cards(schemeCards);
+                var uniqueSchemes = schemeCards.length;
+                if(totalSchemes !== 5 || uniqueSchemes !== 5) {
                     return false;
                 }
                 break;
@@ -572,6 +574,12 @@
                 var agendas = deck.get_nb_cards(deck.get_cards(null, {type_code: 'agenda'}));
                 var banners = deck.get_nb_cards(deck.get_cards(null, {type_code: 'agenda', traits: new RegExp(Translator.trans('card.traits.banner') + '\\.')}));
                 if(agendas - banners !== 1) {
+                    return false;
+                }
+                break;
+            case '06119':
+                var loyalCharacters = deck.get_nb_cards(deck.get_cards(null, {type_code: 'character', is_loyal: true}));
+                if(loyalCharacters > 0) {
                     return false;
                 }
                 break;

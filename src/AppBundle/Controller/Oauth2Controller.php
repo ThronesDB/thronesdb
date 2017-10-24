@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,28 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Oauth2Controller extends Controller
 {
+    public function userAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $data = [
+            'id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'reputation' => $user->getReputation()
+        ];
+        $content = json_encode([
+            'data' => [$data]
+        ]);
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($content);
+        return $response;
+    }
+
 	/**
 	 * Get the description of all the Decks of the authenticated user
 	 *

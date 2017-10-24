@@ -1,3 +1,8 @@
+api_oauth2_user:
+    path: /user
+    methods: [GET]
+    defaults:
+        _controller: AppBundle:Oauth2:user
 
 api_oauth2_decks:
     path: /decks
