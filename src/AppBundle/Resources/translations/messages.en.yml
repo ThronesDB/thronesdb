@@ -360,6 +360,7 @@ card:
     winter: Winter
     scheme: Scheme
     banner: Banner
+    maester: Maester
   reviews:
     title: Reviews
     none: No review yet for this card.
