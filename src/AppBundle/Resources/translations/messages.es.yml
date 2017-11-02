@@ -360,7 +360,8 @@ card:
     winter: Invierno
     scheme: Conspiración
     banner: Estandarte
-  reviews: 
+    maester: Maestre
+  reviews:
     title: Reseñas
     none: Aún no hay reseñas para esta carta.
     unreleased: Las reseñas para esta carta se habilitarán cuando ésta sea publicada oficialmente.
