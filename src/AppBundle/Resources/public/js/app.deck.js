@@ -583,6 +583,12 @@
                     return false;
                 }
                 break;
+            case '09045':
+                var maesters = deck.get_nb_cards(deck.get_cards(null, {type_code: 'character', traits: new RegExp(Translator.trans('card.traits.maester') + '\\.')}));
+                if(maesters < 12) {
+                    return false;
+                }
+                break;
         }
         return true;
     };
@@ -647,10 +653,10 @@
         if(card.is_loyal)
             return false;
 
-        // minor faction => yes
-        var minor_faction_codes = deck.get_minor_faction_codes();
-        for(var i = 0; i < minor_faction_codes.length; i++) {
-            if(minor_faction_codes[i] === card.faction_code) {
+        // agenda => yes
+        var agendas = deck.get_agendas();
+        for(var i = 0; i < agendas.length; i++) {
+            if(deck.card_allowed_by_agenda(agendas[i], card)) {
                 return true;
             }
         }
@@ -658,5 +664,25 @@
         // if none above => no
         return false;
     };
+
+    /**
+     * returns true if the agenda for the deck allows the passed card
+     * @memberOfdeck
+     */
+    deck.card_allowed_by_agenda = function card_allowed_by_agenda(agenda, card) {
+        switch(agenda.code) {
+            case '01198':
+            case '01199':
+            case '01200':
+            case '01201':
+            case '01202':
+            case '01203':
+            case '01204':
+            case '01205':
+                return card.faction_code === deck.get_minor_faction_code(agenda);
+            case '09045':
+                return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.maester')) !== -1;
+        }
+    }
 
 })(app.deck = {}, jQuery);
