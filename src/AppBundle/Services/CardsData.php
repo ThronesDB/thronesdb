@@ -318,7 +318,7 @@ class CardsData
                                     $or = [];
                                     foreach($condition as $arg) {
                                         switch($operator) {
-                                            case ':': $or[] = "(c.text like ?$i or c.designer like ?$i)";
+                                            case ':': $or[] = "(c.text like ?$i)";
                                                 break;
                                             case '!': $or[] = "(c.text is null or c.text not like ?$i)";
                                                 break;
@@ -382,6 +382,21 @@ class CardsData
                                     $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
                                     break;
                                 }
+                            case 'd': // designer
+                            {
+                                $or = [];
+                                foreach($condition as $arg) {
+                                    switch($operator) {
+                                        case ':': $or[] = "(c.designer like ?$i)";
+                                            break;
+                                        case '!': $or[] = "(c.designer is null or c.designer not like ?$i)";
+                                            break;
+                                    }
+                                    $qb->setParameter($i++, "%$arg%");
+                                }
+                                $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                                break;
+                            }
                             case 'r': // release
                                 {
                                     $or = [];

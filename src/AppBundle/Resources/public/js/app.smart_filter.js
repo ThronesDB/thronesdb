@@ -11,6 +11,7 @@
         g: [add_boolean_sf, 'is_intrigue', Translator.trans('decks.smartfilter.filters.is_intrigue')],
         h: [add_integer_sf, 'reserve', Translator.trans('decks.smartfilter.filters.reserve')],
         i: [add_string_sf, 'illustrator', Translator.trans('decks.smartfilter.filters.illustrator')],
+        d: [add_string_sf, 'designer', Translator.trans('decks.smartfilter.filters.designer')],
         k: [add_string_sf, 'traits', Translator.trans('decks.smartfilter.filters.traits')],
         l: [add_boolean_sf, 'is_loyal', Translator.trans('decks.smartfilter.filters.is_loyal')],
         m: [add_boolean_sf, 'is_military', Translator.trans('decks.smartfilter.filters.is_military')],
