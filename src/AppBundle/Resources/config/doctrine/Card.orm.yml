@@ -89,6 +89,12 @@ AppBundle\Entity\Card:
             type: smallint
             nullable: true
             column: deck_limit
+        designer:
+            type: text
+            length: 255
+            nullable: true
+            gedmo:
+                - translatable
         strength:
             type: smallint
             nullable: true

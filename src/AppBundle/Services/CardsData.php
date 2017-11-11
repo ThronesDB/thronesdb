@@ -318,7 +318,7 @@ class CardsData
                                     $or = [];
                                     foreach($condition as $arg) {
                                         switch($operator) {
-                                            case ':': $or[] = "(c.text like ?$i)";
+                                            case ':': $or[] = "(c.text like ?$i or c.designer like ?$i)";
                                                 break;
                                             case '!': $or[] = "(c.text is null or c.text not like ?$i)";
                                                 break;

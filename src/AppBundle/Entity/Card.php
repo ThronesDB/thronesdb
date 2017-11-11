@@ -947,4 +947,33 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
         }
         return max($strength, $initiative);
     }
+    /**
+     * @var string
+     */
+    private $designer;
+
+
+    /**
+     * Set designer
+     *
+     * @param string $designer
+     *
+     * @return Card
+     */
+    public function setDesigner($designer)
+    {
+        $this->designer = $designer;
+
+        return $this;
+    }
+
+    /**
+     * Get designer
+     *
+     * @return string
+     */
+    public function getDesigner()
+    {
+        return $this->designer;
+    }
 }
