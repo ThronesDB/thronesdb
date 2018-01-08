@@ -194,6 +194,7 @@ decks:
       initiative: Initiative value
       text: Text
       quantity: Quantity in pack
+      designer: Designer
   charts:
     faction:
       title: Card Factions
@@ -360,6 +361,7 @@ card:
     winter: Winter
     scheme: Scheme
     banner: Banner
+    maester: Maester
   reviews:
     title: Reviews
     none: No review yet for this card.

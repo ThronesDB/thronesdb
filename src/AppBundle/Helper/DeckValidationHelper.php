@@ -37,11 +37,33 @@ class DeckValidationHelper
             return false;
         }
         foreach($deck->getSlots()->getAgendas() as $slot) {
-            if($this->agenda_helper->getMinorFactionCode($slot->getCard()) === $card->getFaction()->getCode()) {
+            if($this->isCardAllowedByAgenda($slot->getCard(), $card)) {
                 return true;
             }
         }
-        
+
+        return false;
+    }
+
+    public function isCardAllowedByAgenda($agenda, $card) {
+        switch($agenda->getCode()) {
+            case '01198':
+            case '01199':
+            case '01200':
+            case '01201':
+            case '01202':
+            case '01203':
+            case '01204':
+            case '01205':
+                return $this->agenda_helper->getMinorFactionCode($agenda) === $card->getFaction()->getCode();
+            case '09045':
+                $trait = $this->translator->trans('card.traits.maester');
+                if(preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
+        }
+
         return false;
     }
 
@@ -122,6 +144,8 @@ class DeckValidationHelper
                 return $this->validateAlliance($slots, $agenda);
             case '06119':
                 return $this->validateBrotherhood($slots, $agenda);
+            case '09045':
+                return $this->validateConclave($slots, $agenda);
             default:
                 return true;
         }
@@ -165,8 +189,10 @@ class DeckValidationHelper
     public function validateRains (\AppBundle\Model\SlotCollectionInterface $slots, \AppBundle\Entity\Card $agenda)
     {
         $trait = $this->translator->trans('card.traits.scheme');
-        $matchingTraitPlots = $slots->getPlotDeck()->filterByTrait($trait)->countCards();
-        if($matchingTraitPlots !== 5) {
+        $matchingTraitPlots = $slots->getPlotDeck()->filterByTrait($trait);
+        $matchingTraitPlotsUniqueCount = $matchingTraitPlots->count();
+        $matchingTraitPlotsTotalCount = $matchingTraitPlots->countCards();
+        if($matchingTraitPlotsUniqueCount !== 5 || $matchingTraitPlotsTotalCount !== 5) {
             return false;
         }
         return true;
@@ -183,12 +209,23 @@ class DeckValidationHelper
         return true;
     }
 
-    public function validateBrotherhood(\AppBundle\Model\SlotCollectionInterface $slots, \AppBundle\Entity\Card $agenda)
+    public function validateBrotherhood (\AppBundle\Model\SlotCollectionInterface $slots, \AppBundle\Entity\Card $agenda)
     {
-        foreach($slots->getSlots() as $slot)
-        {
-            if($slot->getCard()->getIsLoyal())
+        foreach($slots->getDrawDeck()->getSlots() as $slot) {
+            $card = $slot->getCard();
+            if($card->getIsLoyal() && $card->getType()->getCode() === 'character') {
                 return false;
+            }
+        }
+        return true;
+    }
+
+    public function validateConclave (\AppBundle\Model\SlotCollectionInterface $slots, \AppBundle\Entity\Card $agenda)
+    {
+        $trait = $this->translator->trans('card.traits.maester');
+        $matchingMaesters = $slots->getDrawDeck()->filterByTrait($trait)->countCards();
+        if($matchingMaesters < 12) {
+            return false;
         }
         return true;
     }

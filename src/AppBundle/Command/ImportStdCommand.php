@@ -238,6 +238,7 @@ class ImportStdCommand extends ContainerAwareCommand
 					'pack_code',
 					'type_code'
 			], [
+					'designer',
 					'illustrator',
 					'flavor',
 					'traits',
