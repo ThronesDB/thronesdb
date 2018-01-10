@@ -1,7 +1,7 @@
 parameters:
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
+    database_name:     thronesdb
     database_user:     root
     database_password: ~
 
@@ -21,10 +21,10 @@ parameters:
     email_sender_name: ~
     
     # Branding
-    website_name: ~
-    website_url: ~
-    game_name: ~
-    publisher_name: ~
+    website_name: ThronesDB
+    website_url: thronesdb.com
+    game_name: A Game of Thrones
+    publisher_name: Fantasy Flight Games
     
     # Analytics & AdSense
     google_analytics_tracking_code: UA-00000000-1
