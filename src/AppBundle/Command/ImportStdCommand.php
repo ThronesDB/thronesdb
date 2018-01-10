@@ -231,6 +231,8 @@ class ImportStdCommand extends ContainerAwareCommand
 					'position',
 					'quantity',
 					'name',
+					'text',
+					'flavor',
 					'is_loyal',
 					'is_unique'
 			], [
@@ -240,9 +242,7 @@ class ImportStdCommand extends ContainerAwareCommand
 			], [
 					'designer',
 					'illustrator',
-					'flavor',
 					'traits',
-					'text',
 					'cost',
 					'octgn_id'
 			]);

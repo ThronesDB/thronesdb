@@ -53,7 +53,7 @@ AppBundle\Entity\Card:
             nullable: true
         text:
             type: text
-            nullable: true
+            nullable: false
             gedmo:
                 - translatable
         dateCreation:
@@ -106,7 +106,7 @@ AppBundle\Entity\Card:
                 - translatable
         flavor:
             type: text
-            nullable: true
+            nullable: false
             gedmo:
                 - translatable
         illustrator:
