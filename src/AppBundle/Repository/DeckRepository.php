@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace AppBundle\Repository;
 
@@ -9,7 +9,10 @@ class DeckRepository extends TranslatableRepository
 		parent::__construct($entityManager, $entityManager->getClassMetadata('AppBundle\Entity\Deck'));
 	}
 
-	public function find($id)
+	/**
+	 * @inheritdoc
+	 */
+	public function find($id, $lockMode = null, $lockVersion = null)
 	{
 		$qb = $this->createQueryBuilder('d')
 			->select('d, f, ds, c')
