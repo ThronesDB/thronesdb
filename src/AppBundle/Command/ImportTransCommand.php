@@ -114,6 +114,7 @@ class ImportTransCommand extends ContainerAwareCommand
 					'code',
 					'name'
 			], [
+					'designer',
 					'flavor',
 					'traits',
 					'text'
