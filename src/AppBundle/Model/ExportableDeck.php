@@ -37,6 +37,7 @@ class ExportableDeck
         $slots = $this->getSlots();
         return [
             'name' => $this->getName(),
+            'version' => $this->getVersion(),
             'agendas' => $slots->getAgendas(),
             'faction' => $this->getFaction(),
             'draw_deck_size' => $slots->getDrawDeck()->countCards(),
