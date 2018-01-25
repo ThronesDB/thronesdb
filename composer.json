@@ -67,7 +67,11 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "platform": {
+            "php": "5.5.9"
+        },
+        "sort-packages": true
     },
     "extra": {
         "symfony-app-dir": "app",
