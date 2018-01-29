@@ -123,10 +123,10 @@ class TranslatableRepository extends EntityRepository
 	 */
 	protected function getTranslatedQuery(QueryBuilder $qb, $locale = null)
 	{
-		$locale = null === $locale ? $this->defaultLocale : $locale;
 
 		$query = $qb->getQuery();
-
+/* disabled because of performance issues
+		$locale = null === $locale ? $this->defaultLocale : $locale;
 		$query->setHint(
 				Query::HINT_CUSTOM_OUTPUT_WALKER,
 				'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
@@ -138,7 +138,7 @@ class TranslatableRepository extends EntityRepository
 			TranslatableListener::HINT_FALLBACK, 
 			1
 		);
-
+*/
 		return $query;
 	}
 }
