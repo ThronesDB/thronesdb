@@ -61,6 +61,17 @@ twig:
     form_themes:
         - 'bootstrap_3_layout.html.twig'
 
+# Assetic Configuration
+assetic:
+    debug: "%kernel.debug%"
+    use_controller: false
+    bundles: [ AppBundle ]
+    filters:
+        cssrewrite: ~
+        scssphp:
+            formatter: 'Leafo\ScssPhp\Formatter\Compressed'
+        jsqueeze: ~
+
 # Doctrine Configuration
 doctrine:
     dbal:
@@ -89,6 +100,16 @@ doctrine:
                 alias: GedmoTranslatable # (optional) it will default to the name set for the mapping
                 is_bundle: false
 
+# JMSI18nRoutingBundle Configuration
+jms_i18n_routing:
+    default_locale: '%kernel.default_locale%'
+    locales: '%supported_locales%'
+    strategy: custom
+    hosts:
+        en: "%website_url%"
+        es: "es.%website_url%"
+    redirect_to_host: true
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: '%mailer_transport%'
@@ -97,6 +118,7 @@ swiftmailer:
     password: '%mailer_password%'
     spool: { type: memory }
 
+# FOSUserBundle Configuration
 fos_user:
     db_driver: orm
     firewall_name: main
@@ -110,29 +132,15 @@ fos_user:
     service:
         mailer: fos_user.mailer.twig_swift
 
+# FOSJsRoutingBundle Configuration
+fos_js_routing:
+    routes_to_expose: [ '.*' ]
+
+# NelmioApiDocBundle Configuration
 nelmio_api_doc:
     documentation:
         info:
             title: ThronesDB
-
-assetic:
-    debug: "%kernel.debug%"
-    use_controller: false
-    bundles: [ AppBundle ]
-    filters:
-        cssrewrite: ~
-        scssphp:
-            formatter: 'Leafo\ScssPhp\Formatter\Compressed'
-        jsqueeze: ~
-
-# JsTranslationBundle
-bazinga_js_translation:
-    locale_fallback: '%kernel.default_locale%'
-    active_locales: '%supported_locales%'
-
-# FOSJsRoutingBundle
-fos_js_routing:
-    routes_to_expose: [ '.*' ]
 
 # FOSOAuthServerBundle
 fos_oauth_server:
@@ -144,15 +152,10 @@ fos_oauth_server:
     service:
         user_provider: fos_user.user_provider.username
 
-# JMSI18nRoutingBundle
-jms_i18n_routing:
-    default_locale: '%kernel.default_locale%'
-    locales: '%supported_locales%'
-    strategy: custom
-    hosts:
-        en: "%website_url%"
-        es: "es.%website_url%"
-    redirect_to_host: true
+# JsTranslationBundle Configuration
+bazinga_js_translation:
+    locale_fallback: '%kernel.default_locale%'
+    active_locales: '%supported_locales%'
 
 # DoctrineExtensions Configuration
 stof_doctrine_extensions:
