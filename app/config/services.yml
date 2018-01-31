@@ -7,12 +7,12 @@ services:
     # default configuration for services in *this* file
     _defaults:
         # automatically injects dependencies in your services
-        autowire: true
+        autowire: false
         # automatically registers your services as commands, event subscribers, etc.
-        autoconfigure: true
+        autoconfigure: false
         # this means you cannot fetch services directly from the container via $container->get()
         # if you need to do this, you can override this setting on individual services
-        public: false
+        public: true
 
     # makes classes in src/AppBundle available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -29,7 +29,45 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
-    # add more services, or override services that need manual wiring
-    # AppBundle\Service\ExampleService:
-    #     arguments:
-    #         $someArgument: 'some_value'
+    # core exception listener
+    core_exception_listener:
+        class: AppBundle\Listener\CoreExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
+
+    deck_import_service:
+        public: true
+        class: AppBundle\Services\DeckImportService
+        arguments: ["@doctrine.orm.entity_manager"]
+    deck_manager:
+        public: true
+        class: AppBundle\Services\DeckManager
+        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
+    reviews:
+        class: AppBundle\Services\Reviews
+        arguments: ["@doctrine.orm.entity_manager"]
+    texts:
+        class: AppBundle\Services\Texts
+        arguments: ["%kernel.root_dir%"]
+    diff:
+        class: AppBundle\Services\Diff
+        arguments: ["@doctrine.orm.entity_manager"]
+    cards_data:
+        public: true
+        class: AppBundle\Services\CardsData
+        arguments: ["@doctrine", "@request_stack", "@router", "@assets.packages", "@translator", "%kernel.root_dir%"]
+    decklist_manager:
+        class: AppBundle\Model\DecklistManager
+        shared: false
+        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
+    decklist_factory:
+        public: true
+        class: AppBundle\Model\DecklistFactory
+        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@texts"]
+    agenda_helper:
+        class: AppBundle\Helper\AgendaHelper
+        arguments: ["@doctrine.orm.entity_manager"]
+    deck_validation_helper:
+        public: true
+        class: AppBundle\Helper\DeckValidationHelper
+        arguments: ["@agenda_helper", "@translator"]
