@@ -9,22 +9,21 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class SearchCommand extends ContainerAwareCommand
 {
-
     protected function configure()
     {
         $this
         ->setName('app:search')
         ->setDescription('Search cards')
         ->addArgument(
-                'query', 
-                \Symfony\Component\Console\Input\InputArgument::REQUIRED, 
+                'query',
+                \Symfony\Component\Console\Input\InputArgument::REQUIRED,
                 "Search query, eg e:core"
         )
         ->addOption(
-                'output', 
-                'o', 
-                \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED, 
-                "Properties of each card to output (comma-separated list)", 
+                'output',
+                'o',
+                \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED,
+                "Properties of each card to output (comma-separated list)",
                 'name'
         )
         ;
@@ -46,7 +45,7 @@ class SearchCommand extends ContainerAwareCommand
         $result = [];
         
         $rows = $service->get_search_rows($conditions, 'set');
-        foreach($rows as $card) {
+        foreach ($rows as $card) {
             $cardinfo = $service->getCardInfo($card, false);
             $filtered = array_filter($cardinfo, function ($key) use ($fields) {
                 return in_array($key, $fields);

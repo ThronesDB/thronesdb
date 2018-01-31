@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 class Decklistslot implements \AppBundle\Model\SlotInterface
 {
-	
+    
     /**
      * @var integer
      */

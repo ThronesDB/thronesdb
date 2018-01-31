@@ -16,8 +16,7 @@ use AppBundle\Entity\Deckchange;
 
 class BuilderController extends Controller
 {
-
-    public function buildformAction (Request $request)
+    public function buildformAction(Request $request)
     {
         $response = new Response();
         $response->setPublic();
@@ -36,7 +35,7 @@ class BuilderController extends Controller
                         ], $response);
     }
 
-    public function initbuildAction (Request $request)
+    public function initbuildAction(Request $request)
     {
         $translator = $this->get('translator');
 
@@ -59,7 +58,7 @@ class BuilderController extends Controller
         $tags = [$faction_code];
 
         if (!$agenda_code) {
-            $agenda = NULL;
+            $agenda = null;
             $name = $translator->trans("decks.build.newname.noagenda", array(
                 "%faction%" => $faction->getName()
             ));
@@ -98,7 +97,7 @@ class BuilderController extends Controller
         return $this->redirect($this->get('router')->generate('deck_edit', ['deck_id' => $deck->getId()]));
     }
 
-    public function importAction ()
+    public function importAction()
     {
         $response = new Response();
         $response->setPublic();
@@ -109,12 +108,12 @@ class BuilderController extends Controller
         return $this->render('AppBundle:Builder:directimport.html.twig', array(
                     'pagetitle' => "Import a deck",
                     'factions' => array_map(function ($faction) {
-                                return ['code' => $faction->getCode(), 'name' => $faction->getName()];
-                            }, $factions)
+                        return ['code' => $faction->getCode(), 'name' => $faction->getName()];
+                    }, $factions)
                         ), $response);
     }
 
-    public function fileimportAction (Request $request)
+    public function fileimportAction(Request $request)
     {
         $filetype = filter_var($request->get('type'), FILTER_SANITIZE_STRING);
         $uploadedFile = $request->files->get('upfile');
@@ -145,7 +144,7 @@ class BuilderController extends Controller
             $data = $service->parseTextImport(file_get_contents($filename));
         }
 
-        if(empty($data['faction'])) {
+        if (empty($data['faction'])) {
             return $this->render('AppBundle:Default:error.html.twig', [
                 'error' => "Unable to recognize the Faction of the deck."
             ]);
@@ -158,7 +157,7 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function textexportAction ($deck_id)
+    public function textexportAction($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -169,7 +168,8 @@ class BuilderController extends Controller
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
                             )
@@ -184,14 +184,15 @@ class BuilderController extends Controller
         $response = new Response();
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT, $this->get('texts')->slugify($deck->getName()) . '.txt'
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $this->get('texts')->slugify($deck->getName()) . '.txt'
         ));
 
         $response->setContent($content);
         return $response;
     }
 
-    public function octgnexportAction ($deck_id)
+    public function octgnexportAction($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -202,7 +203,8 @@ class BuilderController extends Controller
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
                             )
@@ -217,14 +219,15 @@ class BuilderController extends Controller
 
         $response->headers->set('Content-Type', 'application/octgn');
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT, $this->get('texts')->slugify($deck->getName()) . '.o8d'
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $this->get('texts')->slugify($deck->getName()) . '.o8d'
         ));
 
         $response->setContent($content);
         return $response;
     }
 
-    public function cloneAction ($deck_id)
+    public function cloneAction($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -235,7 +238,8 @@ class BuilderController extends Controller
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
                             )
@@ -254,15 +258,16 @@ class BuilderController extends Controller
         ));
     }
 
-    public function saveAction (Request $request)
+    public function saveAction(Request $request)
     {
 
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
-        if (count($user->getDecks()) > $user->getMaxNbDecks())
+        if (count($user->getDecks()) > $user->getMaxNbDecks()) {
             return new Response('You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.');
+        }
 
         $id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
         $deck = null;
@@ -286,8 +291,9 @@ class BuilderController extends Controller
 
         $cancel_edits = (boolean) filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if ($cancel_edits) {
-            if ($deck)
+            if ($deck) {
                 $this->get('deck_manager')->revert($deck);
+            }
             return $this->redirect($this->generateUrl('decks_list'));
         }
 
@@ -312,17 +318,19 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function deleteAction (Request $request)
+    public function deleteAction(Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $deck_id = filter_var($request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
         $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-        if (!$deck)
+        if (!$deck) {
             return $this->redirect($this->generateUrl('decks_list'));
-        if ($this->getUser()->getId() != $deck->getUser()->getId())
+        }
+        if ($this->getUser()->getId() != $deck->getUser()->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this deck.");
+        }
 
         foreach ($deck->getChildren() as $decklist) {
             $decklist->setParent(null);
@@ -337,7 +345,7 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function deleteListAction (Request $request)
+    public function deleteListAction(Request $request)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -347,10 +355,12 @@ class BuilderController extends Controller
         foreach ($list_id as $id) {
             /* @var $deck Deck */
             $deck = $em->getRepository('AppBundle:Deck')->find($id);
-            if (!$deck)
+            if (!$deck) {
                 continue;
-            if ($this->getUser()->getId() != $deck->getUser()->getId())
+            }
+            if ($this->getUser()->getId() != $deck->getUser()->getId()) {
                 continue;
+            }
 
             foreach ($deck->getChildren() as $decklist) {
                 $decklist->setParent(null);
@@ -366,14 +376,14 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function editAction ($deck_id)
+    public function editAction($deck_id)
     {
-
         $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
 
         if ($this->getUser()->getId() != $deck->getUser()->getId()) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'You are not allowed to view this deck.'
                             )
@@ -381,20 +391,22 @@ class BuilderController extends Controller
         }
 
         return $this->render(
-                        'AppBundle:Builder:deckedit.html.twig', array(
+                        'AppBundle:Builder:deckedit.html.twig',
+            array(
                     'pagetitle' => "Deckbuilder",
                     'deck' => $deck,
                         )
         );
     }
 
-    public function viewAction ($deck_id)
+    public function viewAction($deck_id)
     {
         $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
 
         if (!$deck) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => "This deck doesn't exist."
                             )
@@ -404,7 +416,8 @@ class BuilderController extends Controller
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
                             )
@@ -414,7 +427,8 @@ class BuilderController extends Controller
         $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
 
         return $this->render(
-                        'AppBundle:Builder:deckview.html.twig', array(
+                        'AppBundle:Builder:deckview.html.twig',
+            array(
                     'pagetitle' => "Deckbuilder",
                     'deck' => $deck,
                     'deck_id' => $deck_id,
@@ -424,7 +438,7 @@ class BuilderController extends Controller
         );
     }
 
-    public function compareAction ($deck1_id, $deck2_id, Request $request)
+    public function compareAction($deck1_id, $deck2_id, Request $request)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -436,7 +450,8 @@ class BuilderController extends Controller
 
         if (!$deck1 || !$deck2) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'This deck cannot be found.'
                             )
@@ -446,7 +461,8 @@ class BuilderController extends Controller
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck1->getUser()->getId();
         if (!$deck1->getUser()->getIsShareDecks() && !$is_owner) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
                             )
@@ -456,7 +472,8 @@ class BuilderController extends Controller
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck2->getUser()->getId();
         if (!$deck2->getUser()->getIsShareDecks() && !$is_owner) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig', array(
+                            'AppBundle:Default:error.html.twig',
+                array(
                         'pagetitle' => "Error",
                         'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
                             )
@@ -475,19 +492,20 @@ class BuilderController extends Controller
         ]);
     }
 
-    public function listAction ()
+    public function listAction()
     {
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
 
-        $decks = $this->get('deck_manager')->getByUser($user, FALSE);
+        $decks = $this->get('deck_manager')->getByUser($user, false);
 
         $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
                         "SELECT
 					t.id,
 					t.description
                 FROM tournament t
-                ORDER BY t.description desc")->fetchAll();
+                ORDER BY t.description desc"
+        )->fetchAll();
 
         if (count($decks)) {
             $tags = [];
@@ -515,7 +533,7 @@ class BuilderController extends Controller
         }
     }
 
-    public function copyAction ($decklist_id)
+    public function copyAction($decklist_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -535,29 +553,31 @@ class BuilderController extends Controller
         ));
     }
 
-    public function downloadallAction ()
+    public function downloadallAction()
     {
         /* @var $user \AppBundle\Entity\User */
         $user = $this->getUser();
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $decks = $this->get('deck_manager')->getByUser($user, FALSE);
+        $decks = $this->get('deck_manager')->getByUser($user, false);
 
         $file = tempnam("tmp", "zip");
         $zip = new \ZipArchive();
         $res = $zip->open($file, \ZipArchive::OVERWRITE);
-        if ($res === TRUE) {
+        if ($res === true) {
             foreach ($decks as $deck) {
                 $content = [];
                 foreach ($deck['cards'] as $slot) {
                     $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $slot['card_code']));
-                    if (!$card)
+                    if (!$card) {
                         continue;
+                    }
                     $cardname = $card->getName();
                     $packname = $card->getPack()->getName();
-                    if ($packname == 'Core Set')
+                    if ($packname == 'Core Set') {
                         $packname = 'Core';
+                    }
                     $qty = $slot['qty'];
                     $content[] = "$cardname ($packname) x$qty";
                 }
@@ -570,7 +590,8 @@ class BuilderController extends Controller
         $response->headers->set('Content-Type', 'application/zip');
         $response->headers->set('Content-Length', filesize($file));
         $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT, $this->get('texts')->slugify('thronesdb') . '.zip'
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $this->get('texts')->slugify('thronesdb') . '.zip'
         ));
 
         $response->setContent(file_get_contents($file));
@@ -578,14 +599,15 @@ class BuilderController extends Controller
         return $response;
     }
 
-    public function uploadallAction (Request $request)
+    public function uploadallAction(Request $request)
     {
         // time-consuming task
         ini_set('max_execution_time', 300);
 
         $uploadedFile = $request->files->get('uparchive');
-        if (!isset($uploadedFile))
+        if (!isset($uploadedFile)) {
             return new Response('No file');
+        }
 
         $filename = $uploadedFile->getPathname();
 
@@ -594,13 +616,14 @@ class BuilderController extends Controller
             $finfo = finfo_open(FILEINFO_MIME);
 
             // check to see if the mime-type is 'zip'
-            if (substr(finfo_file($finfo, $filename), 0, 15) !== 'application/zip')
+            if (substr(finfo_file($finfo, $filename), 0, 15) !== 'application/zip') {
                 return new Response('Bad file');
+            }
         }
 
         $zip = new \ZipArchive;
         $res = $zip->open($filename);
-        if ($res === TRUE) {
+        if ($res === true) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $name = $zip->getNameIndex($i);
                 $parse = $this->parseTextImport($zip->getFromIndex($i));
@@ -621,7 +644,7 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function autosaveAction (Request $request)
+    public function autosaveAction(Request $request)
     {
         $user = $this->getUser();
 
@@ -648,12 +671,11 @@ class BuilderController extends Controller
             $change = new Deckchange();
             $change->setDeck($deck);
             $change->setVariation(json_encode($diff));
-            $change->setIsSaved(FALSE);
+            $change->setIsSaved(false);
             $em->persist($change);
             $em->flush();
         }
 
         return new Response($change->getDatecreation()->format('c'));
     }
-
 }

@@ -16,12 +16,12 @@ class DeckImportService
      */
     public $em;
 
-    public function __construct (\Doctrine\ORM\EntityManager $em)
+    public function __construct(\Doctrine\ORM\EntityManager $em)
     {
         $this->em = $em;
     }
 
-    public function parseTextImport ($text)
+    public function parseTextImport($text)
     {
         $data = [
             'content' => [],
@@ -36,10 +36,10 @@ class DeckImportService
             if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
-            } else if (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {
+            } elseif (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {
                 $quantity = intval($matches[2]);
                 $name = trim($matches[1]);
-            } else if (preg_match('/^([^\(]+)/', $line, $matches)) {
+            } elseif (preg_match('/^([^\(]+)/', $line, $matches)) {
                 $quantity = 1;
                 $name = trim($matches[1]);
             } else {
@@ -63,7 +63,7 @@ class DeckImportService
         return $data;
     }
 
-    public function parseOctgnImport ($octgn)
+    public function parseOctgnImport($octgn)
     {
         $data = [
             'content' => [],
@@ -107,5 +107,4 @@ class DeckImportService
 
         return $data;
     }
-
 }

@@ -4,20 +4,23 @@ namespace AppBundle\Entity;
 
 class Faction implements \Gedmo\Translatable\Translatable, \Serializable
 {
-	public function serialize() {
-		return [
-				'code' => $this->code,
-				'name' => $this->name,
-				'is_primary' => $this->isPrimary,
-				'octgn_id' => $this->octgnId
-		];
-	}
-	
-	public function unserialize($serialized) {
-		throw new \Exception("unserialize() method unsupported");
-	}
-	
-    public function toString() {
+    public function serialize()
+    {
+        return [
+                'code' => $this->code,
+                'name' => $this->name,
+                'is_primary' => $this->isPrimary,
+                'octgn_id' => $this->octgnId
+        ];
+    }
+    
+    public function unserialize($serialized)
+    {
+        throw new \Exception("unserialize() method unsupported");
+    }
+    
+    public function toString()
+    {
         return $this->name;
     }
     

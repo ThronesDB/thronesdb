@@ -19,27 +19,26 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ReviewController extends Controller
 {
-
-    public function postAction (Request $request)
+    public function postAction(Request $request)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         /* @var $user User */
         $user = $this->getUser();
-        if(!$user) {
+        if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         // a user cannot post more reviews than her reputation
-        if(count($user->getReviews()) >= $user->getReputation()) {
+        if (count($user->getReviews()) >= $user->getReputation()) {
             throw new \Exception("Your reputation doesn't allow you to write more reviews.");
         }
 
         $card_id = filter_var($request->get('card_id'), FILTER_SANITIZE_NUMBER_INT);
         /* @var $card Card */
         $card = $em->getRepository('AppBundle:Card')->find($card_id);
-        if(!$card) {
+        if (!$card) {
             throw new \Exception("This card does not exist.");
         }
         /*
@@ -50,17 +49,20 @@ class ReviewController extends Controller
          */
         // checking the user didn't already write a review for that card
         $review = $em->getRepository('AppBundle:Review')->findOneBy(array('card' => $card, 'user' => $user));
-        if($review) {
+        if ($review) {
             throw new \Exception("You cannot write more than 1 review for a given card.");
         }
 
         $review_raw = trim($request->get('review'));
 
         $review_raw = preg_replace(
-                '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu', '[$1]($0)', $review_raw);
+                '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
+            '[$1]($0)',
+            $review_raw
+        );
 
         $review_html = $this->get('texts')->markdown($review_raw);
-        if(!$review_html) {
+        if (!$review_html) {
             throw new \Exception("Your review is empty.");
         }
 
@@ -76,11 +78,11 @@ class ReviewController extends Controller
         $em->flush();
 
         return new JsonResponse([
-            'success' => TRUE
+            'success' => true
         ]);
     }
 
-    public function editAction (Request $request)
+    public function editAction(Request $request)
     {
 
         /* @var $em EntityManager */
@@ -88,27 +90,30 @@ class ReviewController extends Controller
 
         /* @var $user User */
         $user = $this->getUser();
-        if(!$user) {
+        if (!$user) {
             throw new UnauthorizedHttpException("You are not logged in.");
         }
 
         $review_id = filter_var($request->get('review_id'), FILTER_SANITIZE_NUMBER_INT);
         /* @var $review Review */
         $review = $em->getRepository('AppBundle:Review')->find($review_id);
-        if(!$review) {
+        if (!$review) {
             throw new BadRequestHttpException("Unable to find review.");
         }
-        if($review->getUser()->getId() !== $user->getId()) {
+        if ($review->getUser()->getId() !== $user->getId()) {
             throw new UnauthorizedHttpException("You cannot edit this review.");
         }
 
         $review_raw = trim($request->get('review'));
 
         $review_raw = preg_replace(
-                '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu', '[$1]($0)', $review_raw);
+                '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
+            '[$1]($0)',
+            $review_raw
+        );
 
         $review_html = $this->get('texts')->markdown($review_raw);
-        if(!$review_html) {
+        if (!$review_html) {
             return new Response('Your review is empty.');
         }
 
@@ -118,29 +123,29 @@ class ReviewController extends Controller
         $em->flush();
 
         return new JsonResponse([
-            'success' => TRUE
+            'success' => true
         ]);
     }
 
-    public function likeAction (Request $request)
+    public function likeAction(Request $request)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
-        if(!$user) {
+        if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         $review_id = filter_var($request->request->get('id'), FILTER_SANITIZE_NUMBER_INT);
         /* @var $review Review */
         $review = $em->getRepository('AppBundle:Review')->find($review_id);
-        if(!$review) {
+        if (!$review) {
             throw new \Exception("Unable to find review.");
         }
 
         // a user cannot vote on her own review
-        if($review->getUser()->getId() != $user->getId()) {
+        if ($review->getUser()->getId() != $user->getId()) {
             // checking if the user didn't already vote on that review
             $query = $em->getRepository('AppBundle:Review')
                     ->createQueryBuilder('r')
@@ -152,7 +157,7 @@ class ReviewController extends Controller
                     ->getQuery();
 
             $result = $query->getResult();
-            if(empty($result)) {
+            if (empty($result)) {
                 $author = $review->getUser();
                 $author->setReputation($author->getReputation() + 1);
                 $user->addReviewVote($review);
@@ -161,49 +166,50 @@ class ReviewController extends Controller
             }
         }
         return new JsonResponse([
-            'success' => TRUE,
+            'success' => true,
             'nbVotes' => $review->getNbVotes()
         ]);
     }
 
-    public function removeAction ($id, Request $request)
+    public function removeAction($id, Request $request)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
-        if(!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
+        if (!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             throw $this->createAccessDeniedException('No user or not admin');
         }
 
         $review_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
         /* @var $review Review */
         $review = $em->getRepository('AppBundle:Review')->find($review_id);
-        if(!$review) {
+        if (!$review) {
             throw new \Exception("Unable to find review.");
         }
 
         $votes = $review->getVotes();
-        foreach($votes as $vote) {
+        foreach ($votes as $vote) {
             $review->removeVote($vote);
         }
         $em->remove($review);
         $em->flush();
 
         return new JsonResponse([
-            'success' => TRUE
+            'success' => true
         ]);
     }
 
-    public function listAction ($page = 1, Request $request)
+    public function listAction($page = 1, Request $request)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
         $limit = 5;
-        if($page < 1)
+        if ($page < 1) {
             $page = 1;
+        }
         $start = ($page - 1) * $limit;
 
         $pagetitle = "Card Reviews";
@@ -218,7 +224,7 @@ class ReviewController extends Controller
         $maxcount = count($paginator);
 
         $reviews = [];
-        foreach($paginator as $review) {
+        foreach ($paginator as $review) {
             $reviews[] = $review;
         }
 
@@ -235,7 +241,7 @@ class ReviewController extends Controller
         $params = $request->query->all();
 
         $pages = [];
-        for($page = 1; $page <= $nbpages; $page ++) {
+        for ($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
                 "numero" => $page,
                 "url" => $this->generateUrl($route, $params + array(
@@ -261,15 +267,16 @@ class ReviewController extends Controller
                         ), $response);
     }
 
-    public function byauthorAction ($user_id, $page = 1, Request $request)
+    public function byauthorAction($user_id, $page = 1, Request $request)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
         $limit = 5;
-        if($page < 1)
+        if ($page < 1) {
             $page = 1;
+        }
         $start = ($page - 1) * $limit;
 
         /* @var $em EntityManager */
@@ -286,7 +293,7 @@ class ReviewController extends Controller
         $maxcount = count($paginator);
 
         $reviews = [];
-        foreach($paginator as $review) {
+        foreach ($paginator as $review) {
             $reviews[] = $review;
         }
 
@@ -303,7 +310,7 @@ class ReviewController extends Controller
         $params = $request->query->all();
 
         $pages = [];
-        for($page = 1; $page <= $nbpages; $page ++) {
+        for ($page = 1; $page <= $nbpages; $page ++) {
             $pages[] = array(
                 "numero" => $page,
                 "url" => $this->generateUrl($route, $params + array(
@@ -332,7 +339,7 @@ class ReviewController extends Controller
                         ), $response);
     }
 
-    public function commentAction (Request $request)
+    public function commentAction(Request $request)
     {
 
         /* @var $em EntityManager */
@@ -340,20 +347,20 @@ class ReviewController extends Controller
 
         /* @var $user User */
         $user = $this->getUser();
-        if(!$user) {
+        if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         $review_id = filter_var($request->get('comment_review_id'), FILTER_SANITIZE_NUMBER_INT);
         /* @var $review Review */
         $review = $em->getRepository('AppBundle:Review')->find($review_id);
-        if(!$review) {
+        if (!$review) {
             throw new \Exception("Unable to find review.");
         }
 
         $comment_text = trim($request->get('comment'));
         $comment_text = htmlspecialchars($comment_text);
-        if(!$comment_text) {
+        if (!$comment_text) {
             throw new \Exception('Your comment is empty.');
         }
 
@@ -368,8 +375,8 @@ class ReviewController extends Controller
 
         // send emails
         $spool = [];
-        if($review->getUser()->getIsNotifAuthor()) {
-            if(!isset($spool[$review->getUser()->getEmail()])) {
+        if ($review->getUser()->getIsNotifAuthor()) {
+            if (!isset($spool[$review->getUser()->getEmail()])) {
                 $spool[$review->getUser()->getEmail()] = 'AppBundle:Emails:newreviewcomment_author.html.twig';
             }
         }
@@ -382,7 +389,7 @@ class ReviewController extends Controller
             'comment' => $comment->getText(),
             'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL)
         );
-        foreach($spool as $email => $view) {
+        foreach ($spool as $email => $view) {
             $message = Swift_Message::newInstance()
                     ->setSubject("[thronesdb] New review comment")
                     ->setFrom(array("alsciende@thronesdb.com" => $user->getUsername()))
@@ -392,8 +399,7 @@ class ReviewController extends Controller
         }
 
         return new JsonResponse([
-            'success' => TRUE
+            'success' => true
         ]);
     }
-
 }

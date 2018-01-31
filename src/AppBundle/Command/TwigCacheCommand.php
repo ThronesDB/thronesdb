@@ -2,7 +2,7 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Command\Command; 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -12,7 +12,6 @@ use Symfony\Component\Console\Output\Output;
 
 class TwigCacheCommand extends ContainerAwareCommand
 {
-
     public function configure()
     {
         $this->setName('app:twig')
@@ -23,16 +22,16 @@ class TwigCacheCommand extends ContainerAwareCommand
             InputArgument::IS_ARRAY,
                'Example AppBundle:Default:footer.html.twig',
                 null
-        )->addOption('clear','c', InputOption::VALUE_NONE, 'delete cache files' );
+        )->addOption('clear', 'c', InputOption::VALUE_NONE, 'delete cache files');
     }
 
-    public function write($output, $text) {
+    public function write($output, $text)
+    {
         $output->writeln($text);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-
         $environment = $this->getContainer()->get('twig');
         $names = $input->getArgument('names');
 
@@ -46,12 +45,10 @@ class TwigCacheCommand extends ContainerAwareCommand
         } else {
             $actionName="path:";
             $action = function ($filename) {
-
             };
         }
 
         foreach ($names as $name) {
-
             $fileName = $environment->getCacheFilename($name);
 
             if (file_exists($fileName)) {

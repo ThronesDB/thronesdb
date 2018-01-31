@@ -1,84 +1,85 @@
 {
-    "name": "alsciende/thronesdb",
-    "description": "A Game of Thrones LCG deckbuilder",
+    "name": "cedric/thronesdb3",
     "license": "proprietary",
     "type": "project",
     "autoload": {
         "psr-4": {
-            "": "src/",
-            "SymfonyStandard\\": "app/"
-        }
+            "AppBundle\\": "src/AppBundle"
+        },
+        "classmap": [
+            "app/AppKernel.php",
+            "app/AppCache.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": [
+            "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
+        ]
     },
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "^2.7",
-        "symfony/assetic-bundle": "~2.3",
-        "symfony/swiftmailer-bundle": "~2.3",
-        "symfony/monolog-bundle": "~2.4",
-        "sensio/distribution-bundle": "~3.0,>=3.0.12",
-        "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
-        "incenteev/composer-parameter-handler": "~2.0",
-        "friendsofsymfony/user-bundle": "2.0.*@dev",
-        "doctrine/dbal": "^2.5",
+        "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
-        "doctrine/doctrine-bundle": "^1.5",
-        "liuggio/ExcelBundle": "^2.0",
-        "friendsofsymfony/jsrouting-bundle": "^1.5",
-        "twig/extensions": "^1.2",
-        "ezyang/htmlpurifier": "^4.6",
-        "leafo/scssphp": "^0.2.0",
-        "patchwork/jsqueeze": "~1.0",
-        "friendsofsymfony/oauth-server-bundle": "^1.4",
-        "phpunit/phpunit": "4.8.*",
-        "nelmio/api-doc-bundle": "^2.9",
         "erusev/parsedown": "^1.6",
-        "stof/doctrine-extensions-bundle": "^1.2",
-        "willdurand/js-translation-bundle": "^2.5",
-        "jms/i18n-routing-bundle": "^2.0"
+        "ezyang/htmlpurifier": "^4.9",
+        "friendsofsymfony/jsrouting-bundle": "^2.1",
+        "friendsofsymfony/oauth-server-bundle": "^1.5",
+        "friendsofsymfony/user-bundle": "^2.0",
+        "incenteev/composer-parameter-handler": "^2.0",
+        "jms/i18n-routing-bundle": "^2.0.1",
+        "leafo/scssphp": "^0.7.4",
+        "nelmio/api-doc-bundle": "^3.0",
+        "patchwork/jsqueeze": "^2.0",
+        "sensio/distribution-bundle": "^5.0.19",
+        "sensio/framework-extra-bundle": "^5.0.0",
+        "stof/doctrine-extensions-bundle": "^1.3",
+        "symfony/asset": "^4.0",
+        "symfony/assetic-bundle": "^2.8",
+        "symfony/monolog-bundle": "^3.1.0",
+        "symfony/polyfill-apcu": "^1.0",
+        "symfony/swiftmailer-bundle": "^2.6.4",
+        "symfony/symfony": "3.4.*",
+        "symfony/templating": "^3",
+        "twig/twig": "^2.4",
+        "willdurand/js-translation-bundle": "^2.6"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "phpunit/phpunit": "^6.5",
+        "sensio/generator-bundle": "^3.0",
+        "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {
-        "post-root-package-install": [
-            "SymfonyStandard\\Composer::hookRootPackageInstall"
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "php app/console bazinga:js-translation:dump",
-            "php app/console assetic:dump",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "@symfony-scripts"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "php app/console bazinga:js-translation:dump",
-            "php app/console assetic:dump",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "@symfony-scripts"
         ]
     },
     "config": {
-        "bin-dir": "bin",
-        "platform": {
-            "php": "5.5.9"
-        },
         "sort-packages": true
     },
     "extra": {
         "symfony-app-dir": "app",
+        "symfony-bin-dir": "bin",
+        "symfony-var-dir": "var",
         "symfony-web-dir": "web",
+        "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
-        }
+        },
+        "branch-alias": null
     }
 }

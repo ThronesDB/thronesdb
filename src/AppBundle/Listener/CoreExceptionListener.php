@@ -10,15 +10,15 @@ class CoreExceptionListener
      *
      * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event An GetResponseForExceptionEvent instance
      */
-    public function onCoreException (\Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event)
+    public function onCoreException(\Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
         $request = $event->getRequest();
-        if(!$request->isXmlHttpRequest()) {
+        if (!$request->isXmlHttpRequest()) {
             return;
         }
         $statusCode = $exception->getCode();
-        if(!array_key_exists($statusCode, \Symfony\Component\HttpFoundation\Response::$statusTexts)) {
+        if (!array_key_exists($statusCode, \Symfony\Component\HttpFoundation\Response::$statusTexts)) {
             $statusCode = 500;
         }
         $content = [
@@ -28,5 +28,4 @@ class CoreExceptionListener
         $response = new \Symfony\Component\HttpFoundation\JsonResponse($content, $statusCode, array('Content-Type' => 'application/json'));
         $event->setResponse($response);
     }
-
 }

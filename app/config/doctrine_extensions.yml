@@ -1,9 +1,0 @@
-# services to handle doctrine extensions
-# import it in config.yml
-# DoctrineExtensions Configuration
-stof_doctrine_extensions:
-    default_locale: "%locale%"
-    orm:
-        default:
-            timestampable: true
-            translatable: true

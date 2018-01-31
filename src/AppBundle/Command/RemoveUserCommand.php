@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class RemoveUserCommand extends ContainerAwareCommand
 {
-
     protected function configure()
     {
         $this
@@ -31,7 +30,7 @@ class RemoveUserCommand extends ContainerAwareCommand
         $user_id = $input->getArgument('user_id');
         $user = $em->getRepository('AppBundle:User')->find($user_id);
 
-        if(!$user) {
+        if (!$user) {
             $output->writeln("User not found");
             return;
         }
@@ -44,12 +43,11 @@ class RemoveUserCommand extends ContainerAwareCommand
 
         $output->writeln(count($decks)." decks");
 
-        foreach($decks as $deck)
-        {
+        foreach ($decks as $deck) {
             $children = $em->getRepository('AppBundle:Decklist')->findBy(array(
                 'parent' => $deck
             ));
-            foreach($children as $child) {
+            foreach ($children as $child) {
                 $child->setParent(null);
             }
             $em->remove($deck);
@@ -63,12 +61,11 @@ class RemoveUserCommand extends ContainerAwareCommand
 
         $output->writeln(count($decklists)." decklists");
 
-        foreach($decklists as $decklist)
-        {
+        foreach ($decklists as $decklist) {
             $successors = $em->getRepository('AppBundle:Decklist')->findBy(array(
                 'precedent' => $decklist
             ));
-            foreach($successors as $successor) {
+            foreach ($successors as $successor) {
                 /* @var $successor \AppBundle\Entity\Decklist */
                 $successor->setPrecedent(null);
             }
@@ -76,7 +73,7 @@ class RemoveUserCommand extends ContainerAwareCommand
             $children = $em->getRepository('AppBundle:Deck')->findBy(array(
                 'parent' => $decklist
             ));
-            foreach($children as $child) {
+            foreach ($children as $child) {
                 /* @var $child \AppBundle\Entity\Deck */
                 $child->setParent(null);
             }
@@ -86,7 +83,7 @@ class RemoveUserCommand extends ContainerAwareCommand
 
         $output->writeln("Decklists deleted");
 
-        $user->setLocked(TRUE);
+        $user->setLocked(true);
 
         $output->writeln("User locked");
 

@@ -15,13 +15,15 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CardsData
 {
+    /** @var \Symfony\Component\Asset\Packages $packages */
+    private $packages;
 
-    public function __construct (Registry $doctrine, RequestStack $request_stack, Router $router, AssetsHelper $assets_helper, TranslatorInterface $translator, $rootDir)
+    public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, \Symfony\Component\Asset\Packages $packages, TranslatorInterface $translator, $rootDir)
     {
         $this->doctrine = $doctrine;
         $this->request_stack = $request_stack;
         $this->router = $router;
-        $this->assets_helper = $assets_helper;
+        $this->packages = $packages;
         $this->translator = $translator;
         $this->rootDir = $rootDir;
     }
@@ -31,7 +33,7 @@ class CardsData
      * @param string $text
      * @return string
      */
-    public function replaceSymbols ($text)
+    public function replaceSymbols($text)
     {
         static $displayTextReplacements = [
             '[baratheon]' => '<span class="icon-baratheon"></span>',
@@ -56,13 +58,13 @@ class CardsData
      * @param string $text
      * @return string
      */
-    public function addAbbrTags ($text)
+    public function addAbbrTags($text)
     {
         static $keywords = ['renown', 'intimidate', 'stealth', 'insight', 'limited', 'pillage', 'terminal', 'ambush', 'bestow'];
 
         $locale = $this->request_stack->getCurrentRequest() ? $this->request_stack->getCurrentRequest()->getLocale() : 'en';
 
-        foreach($keywords as $keyword) {
+        foreach ($keywords as $keyword) {
             $translated = $this->translator->trans('keyword.' . $keyword . ".name", array(), "messages", $locale);
 
             $text = preg_replace_callback("/\b($translated)\b/i", function ($matches) use ($keyword) {
@@ -75,33 +77,34 @@ class CardsData
         return $text;
     }
 
-    public function splitInParagraphs ($text)
+    public function splitInParagraphs($text)
     {
-        if(empty($text))
+        if (empty($text)) {
             return '';
+        }
         return implode(array_map(function ($l) {
-                    return "<p>$l</p>";
-                }, preg_split('/[\r\n]+/', $text)));
+            return "<p>$l</p>";
+        }, preg_split('/[\r\n]+/', $text)));
     }
 
-    public function allsetsdata ()
+    public function allsetsdata()
     {
         $list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findAll();
         $lines = [];
         /* @var $cycle \AppBundle\Entity\Cycle */
-        foreach($list_cycles as $cycle) {
+        foreach ($list_cycles as $cycle) {
             $packs = $cycle->getPacks();
             /* @var $pack \AppBundle\Entity\Pack */
-            foreach($packs as $pack) {
+            foreach ($packs as $pack) {
                 $known = count($pack->getCards());
                 $max = $pack->getSize();
 
-                if($cycle->getSize() === 1) {
+                if ($cycle->getSize() === 1) {
                     $label = $pack->getName();
                 } else {
                     $label = $pack->getPosition() . '. ' . $pack->getName();
                 }
-                if($known < $max) {
+                if ($known < $max) {
                     $label = sprintf("%s (%d/%d)", $label, $known, $max);
                 }
 
@@ -116,24 +119,24 @@ class CardsData
         return $lines;
     }
 
-    public function allsetsdatathreaded ()
+    public function allsetsdatathreaded()
     {
         $list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
         $cycles = [];
 
         /* @var $cycle \AppBundle\Entity\Cycle */
-        foreach($list_cycles as $cycle) {
+        foreach ($list_cycles as $cycle) {
             $list_packs = $cycle->getPacks();
             $packs = [];
 
             /* @var $pack \AppBundle\Entity\Pack */
-            foreach($list_packs as $pack) {
+            foreach ($list_packs as $pack) {
                 $known = count($pack->getCards());
                 $max = $pack->getSize();
 
                 $label = $pack->getName();
 
-                if($known < $max) {
+                if ($known < $max) {
                     $label = sprintf("%s (%d/%d)", $label, $known, $max);
                 }
 
@@ -145,11 +148,9 @@ class CardsData
                 ];
             }
 
-            if($cycle->getSize() === 1) {
-
+            if ($cycle->getSize() === 1) {
                 $cycles[] = $packs[0];
             } else {
-
                 $cycles[] = [
                     "code" => $cycle->getCode(),
                     "label" => $cycle->getName(),
@@ -162,13 +163,13 @@ class CardsData
         return $cycles;
     }
 
-    public function getPrimaryFactions ()
+    public function getPrimaryFactions()
     {
         $factions = $this->doctrine->getRepository('AppBundle:Faction')->findPrimaries();
         return $factions;
     }
 
-    public function get_search_rows ($conditions, $sortorder, $forceempty = false)
+    public function get_search_rows($conditions, $sortorder, $forceempty = false)
     {
         $i = 0;
 
@@ -183,17 +184,17 @@ class CardsData
         $qb2 = null;
         $qb3 = null;
 
-        foreach($conditions as $condition) {
+        foreach ($conditions as $condition) {
             $searchCode = array_shift($condition);
             $searchName = \AppBundle\Controller\SearchController::$searchKeys[$searchCode];
             $searchType = \AppBundle\Controller\SearchController::$searchTypes[$searchCode];
             $operator = array_shift($condition);
 
-            switch($searchType) {
+            switch ($searchType) {
                 case 'boolean': {
-                        switch($searchCode) {
+                        switch ($searchCode) {
                             default: {
-                                    if(($operator == ':' && $condition[0]) || ($operator == '!' && !$condition[0])) {
+                                    if (($operator == ':' && $condition[0]) || ($operator == '!' && !$condition[0])) {
                                         $qb->andWhere("(c.$searchName = 1)");
                                     } else {
                                         $qb->andWhere("(c.$searchName = 0)");
@@ -205,12 +206,12 @@ class CardsData
                         break;
                     }
                 case 'integer': {
-                        switch($searchCode) {
+                        switch ($searchCode) {
                             case 'c': // cycle
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':': $or[] = "(y.position = ?$i)";
                                                 break;
                                             case '!': $or[] = "(y.position != ?$i)";
@@ -223,8 +224,8 @@ class CardsData
                                 }
                             default: {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':': $or[] = "(c.$searchName = ?$i)";
                                                 break;
                                             case '!': $or[] = "(c.$searchName != ?$i)";
@@ -243,23 +244,23 @@ class CardsData
                         break;
                     }
                 case 'code': {
-                        switch($searchCode) {
+                        switch ($searchCode) {
                             case 'e': {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':': $or[] = "(p.code = ?$i)";
                                                 break;
                                             case '!': $or[] = "(p.code != ?$i)";
                                                 break;
                                             case '<':
-                                                if(!isset($qb2)) {
+                                                if (!isset($qb2)) {
                                                     $qb2 = $this->doctrine->getRepository('AppBundle:Pack')->createQueryBuilder('p2');
                                                     $or[] = $qb->expr()->lt('p.dateRelease', '(' . $qb2->select('p2.dateRelease')->where("p2.code = ?$i")->getDql() . ')');
                                                 }
                                                 break;
                                             case '>':
-                                                if(!isset($qb3)) {
+                                                if (!isset($qb3)) {
                                                     $qb3 = $this->doctrine->getRepository('AppBundle:Pack')->createQueryBuilder('p3');
                                                     $or[] = $qb->expr()->gt('p.dateRelease', '(' . $qb3->select('p3.dateRelease')->where("p3.code = ?$i")->getDql() . ')');
                                                 }
@@ -273,8 +274,8 @@ class CardsData
                             default: // type and faction
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':': $or[] = "($searchCode.code = ?$i)";
                                                 break;
                                             case '!': $or[] = "($searchCode.code != ?$i)";
@@ -289,17 +290,17 @@ class CardsData
                         break;
                     }
                 case 'string': {
-                        switch($searchCode) {
+                        switch ($searchCode) {
                             case '': // name or index
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
+                                    foreach ($condition as $arg) {
                                         $code = preg_match('/^\d\d\d\d\d$/u', $arg);
                                         $acronym = preg_match('/^[A-Z]{2,}$/', $arg);
-                                        if($code) {
+                                        if ($code) {
                                             $or[] = "(c.code = ?$i)";
                                             $qb->setParameter($i++, $arg);
-                                        } else if($acronym) {
+                                        } elseif ($acronym) {
                                             $or[] = "(BINARY(c.name) like ?$i)";
                                             $qb->setParameter($i++, "%$arg%");
                                             $like = implode('% ', str_split($arg));
@@ -316,8 +317,8 @@ class CardsData
                             case 'x': // text
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':': $or[] = "(c.text like ?$i)";
                                                 break;
                                             case '!': $or[] = "(c.text is null or c.text not like ?$i)";
@@ -331,8 +332,8 @@ class CardsData
                             case 'a': // flavor
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':': $or[] = "(c.flavor like ?$i)";
                                                 break;
                                             case '!': $or[] = "(c.flavor is null or c.flavor not like ?$i)";
@@ -346,8 +347,8 @@ class CardsData
                             case 'k': // subtype (traits)
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':':
                                                 $or[] = "((c.traits = ?$i) or (c.traits like ?" . ($i + 1) . ") or (c.traits like ?" . ($i + 2) . ") or (c.traits like ?" . ($i + 3) . "))";
                                                 $qb->setParameter($i++, "$arg.");
@@ -370,8 +371,8 @@ class CardsData
                             case 'i': // illustrator
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case ':': $or[] = "(c.illustrator = ?$i)";
                                                 break;
                                             case '!': $or[] = "(c.illustrator != ?$i)";
@@ -385,8 +386,8 @@ class CardsData
                             case 'd': // designer
                             {
                                 $or = [];
-                                foreach($condition as $arg) {
-                                    switch($operator) {
+                                foreach ($condition as $arg) {
+                                    switch ($operator) {
                                         case ':': $or[] = "(c.designer like ?$i)";
                                             break;
                                         case '!': $or[] = "(c.designer is null or c.designer not like ?$i)";
@@ -400,17 +401,18 @@ class CardsData
                             case 'r': // release
                                 {
                                     $or = [];
-                                    foreach($condition as $arg) {
-                                        switch($operator) {
+                                    foreach ($condition as $arg) {
+                                        switch ($operator) {
                                             case '<': $or[] = "(p.dateRelease <= ?$i)";
                                                 break;
                                             case '>': $or[] = "(p.dateRelease > ?$i or p.dateRelease IS NULL)";
                                                 break;
                                         }
-                                        if($arg == "now")
+                                        if ($arg == "now") {
                                             $qb->setParameter($i++, new \DateTime());
-                                        else
+                                        } else {
                                             $qb->setParameter($i++, new \DateTime($arg));
+                                        }
                                     }
                                     $qb->andWhere(implode(" or ", $or));
                                     break;
@@ -421,10 +423,10 @@ class CardsData
             }
         }
 
-        if(!$i && !$forceempty) {
+        if (!$i && !$forceempty) {
             return;
         }
-        switch($sortorder) {
+        switch ($sortorder) {
             case 'set': $qb->orderBy('y.position')->addOrderBy('p.position')->addOrderBy('c.position');
                 break;
             case 'faction': $qb->orderBy('c.faction')->addOrderBy('c.type');
@@ -449,7 +451,7 @@ class CardsData
      * @param string $api
      * @return multitype:multitype: string number mixed NULL unknown
      */
-    public function getCardInfo ($card, $api = false)
+    public function getCardInfo($card, $api = false)
     {
         $cardinfo = [];
 
@@ -457,22 +459,23 @@ class CardsData
         $fieldNames = $metadata->getFieldNames();
         $associationMappings = $metadata->getAssociationMappings();
 
-        foreach($associationMappings as $fieldName => $associationMapping) {
-            if($associationMapping['isOwningSide']) {
+        foreach ($associationMappings as $fieldName => $associationMapping) {
+            if ($associationMapping['isOwningSide']) {
                 $getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
                 $associationEntity = $card->$getter();
-                if(!$associationEntity)
+                if (!$associationEntity) {
                     continue;
+                }
 
                 $cardinfo[$fieldName . '_code'] = $associationEntity->getCode();
                 $cardinfo[$fieldName . '_name'] = $associationEntity->getName();
             }
         }
 
-        foreach($fieldNames as $fieldName) {
+        foreach ($fieldNames as $fieldName) {
             $getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
             $value = $card->$getter();
-            switch($metadata->getTypeOfField($fieldName)) {
+            switch ($metadata->getTypeOfField($fieldName)) {
                 case 'datetime':
                 case 'date':
                     continue 2;
@@ -486,9 +489,9 @@ class CardsData
         }
 
         $cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), UrlGeneratorInterface::ABSOLUTE_URL);
-        $imageurl = $this->assets_helper->getUrl('bundles/cards/' . $card->getCode() . '.png');
+        $imageurl = $this->packages->getUrl('bundles/cards/' . $card->getCode() . '.png');
         $imagepath = $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
-        if(file_exists($imagepath)) {
+        if (file_exists($imagepath)) {
             $cardinfo['imagesrc'] = $imageurl;
         } else {
             $cardinfo['imagesrc'] = null;
@@ -496,13 +499,13 @@ class CardsData
 
         // look for another card with the same name to set the label
         $homonyms = $this->doctrine->getRepository('AppBundle:Card')->findBy(['name' => $card->getName()]);
-        if(count($homonyms) > 1) {
+        if (count($homonyms) > 1) {
             $cardinfo['label'] = $card->getName() . ' (' . $card->getPack()->getCode() . ')';
         } else {
             $cardinfo['label'] = $card->getName();
         }
 
-        if($api) {
+        if ($api) {
             unset($cardinfo['id']);
             $cardinfo['ci'] = $card->getCostIncome();
             $cardinfo['si'] = $card->getStrengthInitiative();
@@ -517,7 +520,7 @@ class CardsData
         return $cardinfo;
     }
 
-    public function syntax ($query)
+    public function syntax($query)
     {
         // renvoie une liste de conditions (array)
         // chaque condition est un tableau à n>1 éléments
@@ -535,14 +538,14 @@ class CardsData
         // 4:erreur de parsing, on recherche la prochaine condition
         // s'il tombe sur un argument alors qu'il est en recherche de type, alors le type est vide
         $etat = 1;
-        while($query != "") {
-            if($etat == 1) {
-                if(isset($cond) && $etat != 4 && count($cond) > 2) {
+        while ($query != "") {
+            if ($etat == 1) {
+                if (isset($cond) && $etat != 4 && count($cond) > 2) {
                     $list[] = $cond;
                 }
                 // on commence par rechercher un type de condition
                 $match = [];
-                if(preg_match('/^(\p{L})([:<>!])(.*)/u', $query, $match)) { // jeton "condition:"
+                if (preg_match('/^(\p{L})([:<>!])(.*)/u', $query, $match)) { // jeton "condition:"
                     $cond = array(mb_strtolower($match[1]), $match[2]);
                     $query = $match[3];
                 } else {
@@ -550,10 +553,10 @@ class CardsData
                 }
                 $etat = 2;
             } else {
-                if(preg_match('/^"([^"]*)"(.*)/u', $query, $match) // jeton "texte libre entre guillements"
+                if (preg_match('/^"([^"]*)"(.*)/u', $query, $match) // jeton "texte libre entre guillements"
                         || preg_match('/^([\p{L}\p{N}\-\&]+)(.*)/u', $query, $match) // jeton "texte autorisé sans guillements"
                 ) {
-                    if(($etat == 2 && count($cond) == 2) || $etat == 3) {
+                    if (($etat == 2 && count($cond) == 2) || $etat == 3) {
                         $cond[] = $match[1];
                         $query = $match[2];
                         $etat = 2;
@@ -562,8 +565,8 @@ class CardsData
                         $query = $match[2];
                         $etat = 4;
                     }
-                } else if(preg_match('/^\|(.*)/u', $query, $match)) { // jeton "|"
-                    if(($cond[1] == ':' || $cond[1] == '!') && (($etat == 2 && count($cond) > 2) || $etat == 3)) {
+                } elseif (preg_match('/^\|(.*)/u', $query, $match)) { // jeton "|"
+                    if (($cond[1] == ':' || $cond[1] == '!') && (($etat == 2 && count($cond) > 2) || $etat == 3)) {
                         $query = $match[1];
                         $etat = 3;
                     } else {
@@ -571,7 +574,7 @@ class CardsData
                         $query = $match[1];
                         $etat = 4;
                     }
-                } else if(preg_match('/^ (.*)/u', $query, $match)) { // jeton " "
+                } elseif (preg_match('/^ (.*)/u', $query, $match)) { // jeton " "
                     $query = $match[1];
                     $etat = 1;
                 } else {
@@ -581,22 +584,22 @@ class CardsData
                 }
             }
         }
-        if(isset($cond) && $etat != 4 && count($cond) > 2) {
+        if (isset($cond) && $etat != 4 && count($cond) > 2) {
             $list[] = $cond;
         }
         return $list;
     }
 
-    public function validateConditions ($conditions)
+    public function validateConditions($conditions)
     {
         // suppression des conditions invalides
         $numeric = array('<', '>');
 
-        foreach($conditions as $i => $l) {
+        foreach ($conditions as $i => $l) {
             $searchCode = $l[0];
             $searchOp = $l[1];
 
-            if(in_array($searchOp, $numeric) && \AppBundle\Controller\SearchController::$searchTypes[$searchCode] !== 'integer') {
+            if (in_array($searchOp, $numeric) && \AppBundle\Controller\SearchController::$searchTypes[$searchCode] !== 'integer') {
                 // operator is numeric but searched property is not
                 unset($conditions[$i]);
             }
@@ -605,22 +608,24 @@ class CardsData
         return array_values($conditions);
     }
 
-    public function buildQueryFromConditions ($conditions)
+    public function buildQueryFromConditions($conditions)
     {
         // reconstruction de la bonne chaine de recherche pour affichage
         return implode(" ", array_map(
                         function ($l) {
-                    return ($l[0] ? $l[0] . $l[1] : "")
+                            return ($l[0] ? $l[0] . $l[1] : "")
                             . implode("|", array_map(
                                             function ($s) {
-                                        return preg_match("/^[\p{L}\p{N}\-\&]+$/u", $s) ? $s : "\"$s\"";
-                                    }, array_slice($l, 2)
+                                                return preg_match("/^[\p{L}\p{N}\-\&]+$/u", $s) ? $s : "\"$s\"";
+                                            },
+                                array_slice($l, 2)
                     ));
-                }, $conditions
+                        },
+            $conditions
         ));
     }
 
-    public function get_reviews ($card)
+    public function get_reviews($card)
     {
         $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
 
@@ -629,7 +634,7 @@ class CardsData
         return $response;
     }
 
-    public function getDistinctTraits ()
+    public function getDistinctTraits()
     {
         /**
          * @var $em \Doctrine\ORM\EntityManager
@@ -642,12 +647,11 @@ class CardsData
         $result = $qb->getQuery()->getResult();
 
         $traits = [];
-        foreach($result as $card) {
+        foreach ($result as $card) {
             $subs = explode('.', $card["traits"]);
-            foreach($subs as $sub) {
+            foreach ($subs as $sub) {
                 $traits[trim($sub)] = 1;
             }
         }
     }
-
 }

@@ -4,22 +4,25 @@ namespace AppBundle\Entity;
 
 class Type implements \Gedmo\Translatable\Translatable, \Serializable
 {
-	public function serialize() {
-		return [
-				'code' => $this->code,
-				'name' => $this->name
-		];
-	}
-	
-	public function unserialize($serialized) {
-		throw new \Exception("unserialize() method unsupported");
-	}
+    public function serialize()
+    {
+        return [
+                'code' => $this->code,
+                'name' => $this->name
+        ];
+    }
+    
+    public function unserialize($serialized)
+    {
+        throw new \Exception("unserialize() method unsupported");
+    }
 
-    public function toString() {
+    public function toString()
+    {
         return $this->name;
     }
-	
-	/**
+    
+    /**
      * @var integer
      */
     private $id;

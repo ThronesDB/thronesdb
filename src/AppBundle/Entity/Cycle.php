@@ -4,23 +4,26 @@ namespace AppBundle\Entity;
 
 class Cycle implements \Gedmo\Translatable\Translatable, \Serializable
 {
-	public function serialize() {
-		return [
-				'code' => $this->code,
-				'name' => $this->name,
-				'position' => $this->position,
-				'size' => $this->size
-		];
-	}
-	
-	public function unserialize($serialized) {
-		throw new \Exception("unserialize() method unsupported");
-	}
-	
-	public function toString() {
-		return $this->name;
-	}
-	
+    public function serialize()
+    {
+        return [
+                'code' => $this->code,
+                'name' => $this->name,
+                'position' => $this->position,
+                'size' => $this->size
+        ];
+    }
+    
+    public function unserialize($serialized)
+    {
+        throw new \Exception("unserialize() method unsupported");
+    }
+    
+    public function toString()
+    {
+        return $this->name;
+    }
+    
     /**
      * @var integer
      */

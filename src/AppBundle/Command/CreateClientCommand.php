@@ -24,7 +24,7 @@ class CreateClientCommand extends ContainerAwareCommand
             )
             ->addArgument(
                 'redirect-uri',
-            	InputArgument::REQUIRED,
+                InputArgument::REQUIRED,
                 'Sets redirect uri for client'
             )
             ->addArgument(
@@ -37,8 +37,8 @@ class CreateClientCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-    	$redirectUris = [ $input->getArgument('redirect-uri') ];
-    	
+        $redirectUris = [ $input->getArgument('redirect-uri') ];
+        
         $clientManager = $this->getContainer()->get('fos_oauth_server.client_manager.default');
         $client = $clientManager->createClient();
         $client->setRedirectUris($redirectUris);

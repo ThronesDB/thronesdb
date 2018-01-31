@@ -4,13 +4,12 @@ namespace AppBundle\Model;
 
 class ExportableDeck
 {
-
-    public function getArrayExport ($withUnsavedChanges = false)
+    public function getArrayExport($withUnsavedChanges = false)
     {
         $slots = $this->getSlots();
         $agendas = $slots->getAgendas();
         $agendas_code = [];
-        foreach($agendas as $agenda) {
+        foreach ($agendas as $agenda) {
             $agendas_code[] = $agenda->getCard()->getCode();
         }
         $array = [
@@ -32,7 +31,7 @@ class ExportableDeck
         return $array;
     }
 
-    public function getTextExport ()
+    public function getTextExport()
     {
         $slots = $this->getSlots();
         return [
@@ -46,5 +45,4 @@ class ExportableDeck
             'slots_by_type' => $slots->getSlotsByType()
         ];
     }
-
 }

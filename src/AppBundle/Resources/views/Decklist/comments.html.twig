@@ -1,3 +1,5 @@
+{% import "AppBundle::macros.html.twig" as macros %}
+
 <table class="table">
 <thead>
 <tr><th><span class="fa fa-comment"></span>{% transchoice decklist.nbComments with {'%count%': decklist.nbComments} %}decklist.view.comments.count{% endtranschoice %}</th></tr>

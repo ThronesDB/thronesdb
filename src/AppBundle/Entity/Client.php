@@ -12,11 +12,11 @@ class Client extends BaseClient
     
     public function getName()
     {
-    	return $this->name;
+        return $this->name;
     }
     
     public function setName($name)
     {
-    	$this->name = $name;
+        $this->name = $name;
     }
 }
