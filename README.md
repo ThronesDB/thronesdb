@@ -9,14 +9,14 @@ This guide assumes you know how to use the command-line and that your machine ha
 - clone the repo somewhere
 - cd to it
 - run `composer install` (at the end it will ask for the database configuration parameters)
-- run `php app/console doctrine:database:create`
-- run `php app/console doctrine:schema:create`
-- run `php app/console app:import:std ../thronesdb-json-data` or whatever the path to your ThronesDB JSON data repository is
-- run `php app/console app:import:trans ../thronesdb-json-data` if you want to import the translations
-- run `php app/console server:run`
+- run `php bin/console doctrine:database:create`
+- run `php bin/console doctrine:schema:create`
+- run `php bin/console app:import:std ../thronesdb-json-data` or whatever the path to your ThronesDB JSON data repository is
+- run `php bin/console app:import:trans ../thronesdb-json-data` if you want to import the translations
+- run `php bin/console server:run`
 
 ## Setup an admin account
 
-- register
-- make sure your account is enabled (or run `php app/console fos:user:activate <username>`)
-- run `php app/console fos:user:promote --super <username>`
+- register (or run `php bin/console fos:user:create <username>`)
+- make sure your account is enabled (or run `php bin/console fos:user:activate <username>`)
+- run `php bin/console fos:user:promote --super <username>`
