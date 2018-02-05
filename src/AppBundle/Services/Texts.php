@@ -5,15 +5,15 @@ namespace AppBundle\Services;
 
 class Texts
 {
-	public function __construct($root_dir)
-	{
+    public function __construct($root_dir)
+    {
         $config = \HTMLPurifier_Config::create(array('Cache.SerializerPath' => $root_dir));
-		$def = $config->getHTMLDefinition(true);
-		$def->addAttribute('a', 'data-code', 'Text');
+        $def = $config->getHTMLDefinition(true);
+        $def->addAttribute('a', 'data-code', 'Text');
         $this->purifier_service = new \HTMLPurifier($config);
 
         $this->markdown_service = new \Parsedown();
-	}
+    }
 
     /**
      * Returns a substring of $string that is $max_length length max and doesn't split
@@ -26,28 +26,22 @@ class Texts
 
         $string = preg_replace('/\s+/', ' ', $string);
 
-        while(strlen($token.$string) > 0 && strlen($response.$token) < $max_length)
-        {
+        while (strlen($token.$string) > 0 && strlen($response.$token) < $max_length) {
             $response = $response.$token;
             $matches = [];
 
-            if(preg_match('/^(<.+?>)(.*)/', $string, $matches))
-            {
+            if (preg_match('/^(<.+?>)(.*)/', $string, $matches)) {
                 $token = $matches[1];
                 $string = $matches[2];
-            }
-            else if(preg_match('/^([^\s]+\s*)(.*)/', $string, $matches))
-            {
+            } elseif (preg_match('/^([^\s]+\s*)(.*)/', $string, $matches)) {
                 $token = $matches[1];
                 $string = $matches[2];
-            }
-            else
-            {
+            } else {
                 $token = $string;
                 $string = '';
             }
         }
-        if(strlen($token) > 0) {
+        if (strlen($token) > 0) {
             $response = $response . '[&hellip;]';
         }
 
@@ -69,7 +63,7 @@ class Texts
      */
     public function purify($string)
     {
-    	return $this->purifier_service->purify($string);
+        return $this->purifier_service->purify($string);
     }
 
     /**
@@ -79,7 +73,7 @@ class Texts
      */
     public function transform($string)
     {
-    	return $this->markdown_service->text($string);
+        return $this->markdown_service->text($string);
     }
 
     /**
@@ -89,7 +83,7 @@ class Texts
      */
     public function img_responsive($string)
     {
-    	return preg_replace('/<img/', '<img class="img-responsive"', $string);
+        return preg_replace('/<img/', '<img class="img-responsive"', $string);
     }
     
     /**
@@ -99,12 +93,12 @@ class Texts
      */
     public function slugify($filename)
     {
-    	$filename = mb_ereg_replace('[^\w\-]', '-', $filename);
-    	$filename = iconv('utf-8', 'us-ascii//TRANSLIT', $filename);
-    	$filename = preg_replace('/[^\w\-]/', '', $filename);
-    	$filename = preg_replace('/\-+/', '-', $filename);
-    	$filename = trim($filename, '-');
-    	$filename = strtolower($filename);
-    	return $filename;
+        $filename = mb_ereg_replace('[^\w\-]', '-', $filename);
+        $filename = iconv('utf-8', 'us-ascii//TRANSLIT', $filename);
+        $filename = preg_replace('/[^\w\-]/', '', $filename);
+        $filename = preg_replace('/\-+/', '-', $filename);
+        $filename = trim($filename, '-');
+        $filename = strtolower($filename);
+        return $filename;
     }
 }

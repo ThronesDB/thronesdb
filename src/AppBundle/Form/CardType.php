@@ -48,6 +48,6 @@ class CardType extends AbstractType
 
     public function getName()
     {
-    	return 'appbundle_cardtype';
+        return 'appbundle_cardtype';
     }
 }

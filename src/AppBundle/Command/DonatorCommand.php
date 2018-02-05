@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class DonatorCommand extends ContainerAwareCommand
 {
-
     protected function configure()
     {
         $this
@@ -40,18 +39,18 @@ class DonatorCommand extends ContainerAwareCommand
         $repo = $em->getRepository('AppBundle:User');
         /* @var $user \AppBundle\Entity\User */
         $user = $repo->findOneBy(array('email' => $email));
-        if(!$user) {
-        	$user = $repo->findOneBy(array('username' => $email));
+        if (!$user) {
+            $user = $repo->findOneBy(array('username' => $email));
         }
 
-        if($user) {
-        	if($donation) {
-        		$user->setDonation($donation + $user->getDonation());
-        		$em->flush();
-            	$output->writeln(date('c') . " " . "Success");
-        	} else {
-        		$output->writeln(date('c') . " User " . $user->getUsername() . " donated " . $user->getDonation());
-        	}
+        if ($user) {
+            if ($donation) {
+                $user->setDonation($donation + $user->getDonation());
+                $em->flush();
+                $output->writeln(date('c') . " " . "Success");
+            } else {
+                $output->writeln(date('c') . " User " . $user->getUsername() . " donated " . $user->getDonation());
+            }
         } else {
             $output->writeln(date('c') . " " . "Cannot find user [$email]");
         }

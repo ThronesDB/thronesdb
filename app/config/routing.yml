@@ -2,9 +2,17 @@ app:
     resource: "@AppBundle/Resources/config/routing.yml"
     prefix:   /
 
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml"
+    prefix:   /api/doc
+
+_bazinga_jstranslation:
+    resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"
+
+
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
-    
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
@@ -24,16 +32,13 @@ fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
 
-nelmio_api_doc_bundle:
-    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
-    prefix:   /api/doc
 
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
 
 fos_oauth_server_authorize:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"
-    
+
 oauth_server_auth_login:
     path:  /oauth/v2/auth_login
     defaults:
@@ -43,6 +48,3 @@ oauth_server_auth_login_check:
     path:  /oauth/v2/auth_login_check
     defaults:
         _controller: AppBundle:Security:loginCheck
-
-_bazinga_jstranslation:
-    resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"

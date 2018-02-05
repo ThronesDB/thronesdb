@@ -6,9 +6,9 @@ use FOS\OAuthServerBundle\Entity\RefreshToken as BaseRefreshToken;
 
 class RefreshToken extends BaseRefreshToken
 {
-	protected $id;
+    protected $id;
 
-	protected $client;
+    protected $client;
 
-	protected $user;
+    protected $user;
 }

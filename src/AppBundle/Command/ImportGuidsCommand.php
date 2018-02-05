@@ -10,16 +10,15 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 class ImportGuidsCommand extends ContainerAwareCommand
 {
-
     protected function configure()
     {
         $this
         ->setName('app:import:guids')
         ->setDescription('Download OCTGN IDs from CGDB')
         ->addArgument(
-        		'setid',
-        		InputArgument::REQUIRED,
-        		'GUID of the set for OCTGN'
+                'setid',
+                InputArgument::REQUIRED,
+                'GUID of the set for OCTGN'
         )
         ;
     }
@@ -40,25 +39,25 @@ class ImportGuidsCommand extends ContainerAwareCommand
         $cards = $set->cards[0];
         
         $guids = [];
-        foreach($cards->children() as $card) {
-        	$attributes = $card->attributes();
-        	$name = (string)$attributes->name;
-        	$guid = (string)$attributes->id;
-        	$name  = str_replace('’', '\'', $name);
-        	$guids[$name] = $guid;
+        foreach ($cards->children() as $card) {
+            $attributes = $card->attributes();
+            $name = (string)$attributes->name;
+            $guid = (string)$attributes->id;
+            $name  = str_replace('’', '\'', $name);
+            $guids[$name] = $guid;
         }
         
         $cards = $repo->findBy(['octgnId' => null], ['code' => 'ASC']);
 
-        foreach($cards as $card) {
-        	$name = $card->getName();
-        	if(key_exists($name, $guids)) {
-            	$card->setOctgnId($guids[$name]);
-            	unset($guids[$name]);
-            	$output->writeln("<info>Updating octgn id for $name</info>");
-        	} else {
-        		$output->writeln("<error>Cannot find $name</error>");
-        	}
+        foreach ($cards as $card) {
+            $name = $card->getName();
+            if (key_exists($name, $guids)) {
+                $card->setOctgnId($guids[$name]);
+                unset($guids[$name]);
+                $output->writeln("<info>Updating octgn id for $name</info>");
+            } else {
+                $output->writeln("<error>Cannot find $name</error>");
+            }
         }
         
         $em->flush();

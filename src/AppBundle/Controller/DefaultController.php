@@ -9,57 +9,54 @@ use AppBundle\Entity\Decklist;
 
 class DefaultController extends Controller
 {
-
     public function indexAction()
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        /** 
-         * @var $decklist_manager DecklistManager  
+        /**
+         * @var $decklist_manager DecklistManager
          */
         $decklist_manager = $this->get('decklist_manager');
         $decklist_manager->setLimit(1);
         
         $typeNames = [];
-        foreach($this->getDoctrine()->getRepository('AppBundle:Type')->findAll() as $type) {
-        	$typeNames[$type->getCode()] = $type->getName();
+        foreach ($this->getDoctrine()->getRepository('AppBundle:Type')->findAll() as $type) {
+            $typeNames[$type->getCode()] = $type->getName();
         }
         
         $decklists_by_faction = [];
         $factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(['isPrimary' => true], ['code' => 'ASC']);
         
-        foreach($factions as $faction) 
-        {
+        foreach ($factions as $faction) {
             $array = [];
             $array['faction'] = $faction;
 
-        	$decklist_manager->setFaction($faction);
-        	$paginator = $decklist_manager->findDecklistsByPopularity();
-        	/**
+            $decklist_manager->setFaction($faction);
+            $paginator = $decklist_manager->findDecklistsByPopularity();
+            /**
         	 * @var $decklist Decklist
         	 */
             $decklist = $paginator->getIterator()->current();
             
-            if($decklist) 
-            {
+            if ($decklist) {
                 $array['decklist'] = $decklist;
 
                 $countByType = $decklist->getSlots()->getCountByType();
                 $counts = [];
-                foreach($countByType as $code => $qty) {
+                foreach ($countByType as $code => $qty) {
                     $typeName = $typeNames[$code];
                     $counts[] = $qty . " " . $typeName . "s";
                 }
                 $array['count_by_type'] = join(' &bull; ', $counts);
 
                 $factions = [ $faction->getName() ];
-                foreach($decklist->getSlots()->getAgendas() as $agenda) {
+                foreach ($decklist->getSlots()->getAgendas() as $agenda) {
                     $minor_faction = $this->get('agenda_helper')->getMinorFaction($agenda->getCard());
-                    if($minor_faction) {
-                    	$factions[] = $minor_faction->getName();
-                    } else if($agenda->getCard()->getCode() != '06018') { // prevent Alliance agenda to show up
+                    if ($minor_faction) {
+                        $factions[] = $minor_faction->getName();
+                    } elseif ($agenda->getCard()->getCode() != '06018') { // prevent Alliance agenda to show up
                         $factions[] = $agenda->getCard()->getName();
                     }
                 }
@@ -79,64 +76,70 @@ class DefaultController extends Controller
         ], $response);
     }
 
-    function rulesreferenceAction()
+    public function rulesreferenceAction()
     {
-    	$response = new Response();
-    	$response->setPublic();
-    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-    	$page = $this->renderView('AppBundle:Default:rulesreference.html.twig',
-    			array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Rules Reference"));
-    	$response->setContent($page);
-    	return $response;
+        $page = $this->renderView(
+            'AppBundle:Default:rulesreference.html.twig',
+                array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Rules Reference")
+        );
+        $response->setContent($page);
+        return $response;
     }
 
-    function faqAction()
+    public function faqAction()
     {
-    	$response = new Response();
-    	$response->setPublic();
-    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-    	$page = $this->renderView('AppBundle:Default:faq.html.twig',
-    			array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "F.A.Q"));
-    	$response->setContent($page);
-    	return $response;
+        $page = $this->renderView(
+            'AppBundle:Default:faq.html.twig',
+                array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "F.A.Q")
+        );
+        $response->setContent($page);
+        return $response;
     }
 
-    function tournamentregulationsAction()
+    public function tournamentregulationsAction()
     {
-    	$response = new Response();
-    	$response->setPublic();
-    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-    	$page = $this->renderView('AppBundle:Default:tournamentregulations.html.twig',
-    			array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Tournament Regulations"));
-    	$response->setContent($page);
-    	return $response;
+        $page = $this->renderView(
+            'AppBundle:Default:tournamentregulations.html.twig',
+                array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Tournament Regulations")
+        );
+        $response->setContent($page);
+        return $response;
     }
 
-    function aboutAction()
+    public function aboutAction()
     {
-    	$response = new Response();
-    	$response->setPublic();
-    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-    	return $this->render('AppBundle:Default:about.html.twig', array(
-    			"pagetitle" => "About",
-    			"game_name" => $this->container->getParameter('game_name'),
-    	), $response);
+        return $this->render('AppBundle:Default:about.html.twig', array(
+                "pagetitle" => "About",
+                "game_name" => $this->container->getParameter('game_name'),
+        ), $response);
     }
 
-    function apiIntroAction()
+    public function apiIntroAction()
     {
-    	$response = new Response();
-    	$response->setPublic();
-    	$response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-    	return $this->render('AppBundle:Default:apiIntro.html.twig', array(
-    			"pagetitle" => "API",
-    			"game_name" => $this->container->getParameter('game_name'),
-    			"publisher_name" => $this->container->getParameter('publisher_name'),
-    	), $response);
+        return $this->render('AppBundle:Default:apiIntro.html.twig', array(
+                "pagetitle" => "API",
+                "game_name" => $this->container->getParameter('game_name'),
+                "publisher_name" => $this->container->getParameter('publisher_name'),
+        ), $response);
     }
 }

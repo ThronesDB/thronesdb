@@ -6,9 +6,9 @@ use FOS\OAuthServerBundle\Entity\AuthCode as BaseAuthCode;
 
 class AuthCode extends BaseAuthCode
 {
-	protected $id;
+    protected $id;
 
-	protected $client;
+    protected $client;
 
-	protected $user;
+    protected $user;
 }

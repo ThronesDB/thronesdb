@@ -312,4 +312,3 @@ class Review
         return $this->votes;
     }
 }
-

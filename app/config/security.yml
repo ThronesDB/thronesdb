@@ -22,6 +22,7 @@ security:
                 check_path: oauth_server_auth_login_check
                 login_path: oauth_server_auth_login
             anonymous: true
+            logout_on_user_change: true
 
         api_oauth2:
             pattern:    ^/api/oauth2
@@ -40,13 +41,14 @@ security:
                 always_use_default_target_path: false
                 default_target_path: index
             logout:       true
+            logout_on_user_change: true
             anonymous:    true
             remember_me:
                 secret:   "%secret%"
                 lifetime: 31536000 # 365 jours en secondes
                 path:     /
                 domain:   ~ # Prend la valeur par défaut du domaine courant depuis $_SERVER
-            
+
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }

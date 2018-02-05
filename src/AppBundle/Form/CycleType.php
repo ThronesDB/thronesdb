@@ -27,6 +27,6 @@ class CycleType extends AbstractType
     
     public function getName()
     {
-    	return 'appbundle_cycletype';
+        return 'appbundle_cycletype';
     }
 }

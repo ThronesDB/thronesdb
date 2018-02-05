@@ -7,7 +7,7 @@ namespace AppBundle\Entity;
  */
 class Comment
 {
-	
+    
     /**
      * @var integer
      */

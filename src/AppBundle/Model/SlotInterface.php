@@ -7,17 +7,16 @@ namespace AppBundle\Model;
  */
 interface SlotInterface
 {
-	
-	/**
-	 * Get card
-	 * @return \AppBundle\Entity\Card
-	 */
-	public function getCard();
-	
-	/**
-	 * Get quantity
-	 * @return integer
-	 */
-	public function getQuantity();
-	
+    
+    /**
+     * Get card
+     * @return \AppBundle\Entity\Card
+     */
+    public function getCard();
+    
+    /**
+     * Get quantity
+     * @return integer
+     */
+    public function getQuantity();
 }

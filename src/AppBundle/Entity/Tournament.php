@@ -98,4 +98,3 @@ class Tournament
         return $this->decklists;
     }
 }
-

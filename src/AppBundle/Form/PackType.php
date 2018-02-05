@@ -29,6 +29,6 @@ class PackType extends AbstractType
     
     public function getName()
     {
-    	return 'appbundle_packtype';
+        return 'appbundle_packtype';
     }
 }

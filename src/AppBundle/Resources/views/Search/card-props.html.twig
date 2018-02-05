@@ -1,4 +1,5 @@
 {% import "AppBundle::macros.html.twig" as macros %}
+
 <span class="card-props">
 {% if card.type_code == 'character' or card.type_code == 'attachment' or card.type_code == 'event' or card.type_code == 'location' %}
 	{{'card.info.cost' | trans}}: {{ macros.integer_or_x(card.cost) }}.

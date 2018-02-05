@@ -9,10 +9,10 @@ use FOS\UserBundle\Model\User as BaseUser;
  */
 class User extends BaseUser
 {
-	public function getMaxNbDecks()
-	{
-		return 2*(100+floor($this->reputation/ 10));
-	}
+    public function getMaxNbDecks()
+    {
+        return 2*(100+floor($this->reputation/ 10));
+    }
 
     /**
      * @var \DateTime
@@ -109,13 +109,13 @@ class User extends BaseUser
      */
     private $reviewvotes;
 
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->reputation = 1;
-		$this->donation = 0;
-	}
+        $this->reputation = 1;
+        $this->donation = 0;
+    }
 
     /**
      * Set dateCreation
@@ -550,7 +550,7 @@ class User extends BaseUser
      */
     public function addFavorite(\AppBundle\Entity\Decklist $favorite)
     {
-		$favorite->addFavorite($this);
+        $favorite->addFavorite($this);
         $this->favorites[] = $favorite;
 
         return $this;
@@ -563,7 +563,7 @@ class User extends BaseUser
      */
     public function removeFavorite(\AppBundle\Entity\Decklist $favorite)
     {
-    	$favorite->removeFavorite($this);
+        $favorite->removeFavorite($this);
         $this->favorites->removeElement($favorite);
     }
 
@@ -586,7 +586,7 @@ class User extends BaseUser
      */
     public function addVote(\AppBundle\Entity\Decklist $vote)
     {
-		$vote->addVote($this);
+        $vote->addVote($this);
         $this->votes[] = $vote;
 
         return $this;
@@ -599,7 +599,7 @@ class User extends BaseUser
      */
     public function removeVote(\AppBundle\Entity\Decklist $vote)
     {
-    	$vote->removeVote($this);
+        $vote->removeVote($this);
         $this->votes->removeElement($vote);
     }
 

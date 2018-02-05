@@ -12,8 +12,7 @@ use AppBundle\Helper\AgendaHelper;
 
 class DeckManager
 {
-
-    public function __construct (EntityManager $doctrine, DeckValidationHelper $deck_validation_helper, AgendaHelper $agenda_helper, Diff $diff, Logger $logger)
+    public function __construct(EntityManager $doctrine, DeckValidationHelper $deck_validation_helper, AgendaHelper $agenda_helper, Diff $diff, Logger $logger)
     {
         $this->doctrine = $doctrine;
         $this->deck_validation_helper = $deck_validation_helper;
@@ -22,7 +21,7 @@ class DeckManager
         $this->logger = $logger;
     }
 
-    public function getByUser ($user, $decode_variation = FALSE)
+    public function getByUser($user, $decode_variation = false)
     {
         $decks = $user->getDecks();
         $list = [];
@@ -45,14 +44,15 @@ class DeckManager
      * @param unknown $content
      * @param unknown $source_deck
      */
-    public function save ($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
+    public function save($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
     {
         $deck_content = [];
 
         if ($decklist_id) {
             $decklist = $this->doctrine->getRepository('AppBundle:Decklist')->find($decklist_id);
-            if ($decklist)
+            if ($decklist) {
                 $deck->setParent($decklist);
+            }
         }
 
         $deck->setName($name);
@@ -67,19 +67,19 @@ class DeckManager
             $card = $this->doctrine->getRepository('AppBundle:Card')->findOneBy(array(
                 "code" => $card_code
             ));
-            if (!$card)
+            if (!$card) {
                 continue;
+            }
 
             $cards [$card_code] = $card;
 
             $pack = $card->getPack();
             if (!$latestPack) {
                 $latestPack = $pack;
-            } else if (empty($pack->getDateRelease())) {
+            } elseif (empty($pack->getDateRelease())) {
                 $latestPack = $pack;
-            } else if (empty($latestPack->getDateRelease())) {
-                
-            } else if ($latestPack->getDateRelease() < $pack->getDateRelease()) {
+            } elseif (empty($latestPack->getDateRelease())) {
+            } elseif ($latestPack->getDateRelease() < $pack->getDateRelease()) {
                 $latestPack = $pack;
             }
         }
@@ -99,7 +99,7 @@ class DeckManager
 
         if ($source_deck) {
             // compute diff between current content and saved content
-            list ( $listings ) = $this->diff->diffContents(array(
+            list($listings) = $this->diff->diffContents(array(
                 $content,
                 $source_deck->getSlots()->getContent()
             ));
@@ -111,10 +111,10 @@ class DeckManager
             $this->doctrine->flush();
             // save new change unless empty
             if (count($listings [0]) || count($listings [1])) {
-                $change = new Deckchange ();
+                $change = new Deckchange();
                 $change->setDeck($deck);
                 $change->setVariation(json_encode($listings));
-                $change->setIsSaved(TRUE);
+                $change->setIsSaved(true);
                 $change->setVersion($deck->getVersion());
                 $this->doctrine->persist($change);
                 $this->doctrine->flush();
@@ -130,7 +130,7 @@ class DeckManager
 
         foreach ($content as $card_code => $qty) {
             $card = $cards [$card_code];
-            $slot = new Deckslot ();
+            $slot = new Deckslot();
             $slot->setQuantity($qty);
             $slot->setCard($card);
             $slot->setDeck($deck);
@@ -146,7 +146,7 @@ class DeckManager
         return $deck->getId();
     }
 
-    public function revert ($deck)
+    public function revert($deck)
     {
         $changes = $this->getUnsavedChanges($deck);
         foreach ($changes as $change) {
@@ -165,12 +165,11 @@ class DeckManager
         $this->doctrine->flush();
     }
 
-    public function getUnsavedChanges ($deck)
+    public function getUnsavedChanges($deck)
     {
         return $this->doctrine->getRepository('AppBundle:Deckchange')->findBy(array(
                     'deck' => $deck,
-                    'isSaved' => FALSE
+                    'isSaved' => false
         ));
     }
-
 }

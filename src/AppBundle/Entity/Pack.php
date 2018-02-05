@@ -4,26 +4,29 @@ namespace AppBundle\Entity;
 
 class Pack implements \Gedmo\Translatable\Translatable, \Serializable
 {
-	public function serialize() {
-		return [
-				'code' => $this->code,
-				'cycle_code' => $this->cycle ? $this->cycle->getCode() : null,
-				'date_release' => $this->dateRelease ? $this->dateRelease->format('Y-m-d') : null,
-				'name' => $this->name,
-				'position' => $this->position,
-				'size' => $this->size,
-				'cgdb_id' => $this->cgdbId
-		];
-	}
-	
-	public function unserialize($serialized) {
-		throw new \Exception("unserialize() method unsupported");
-	}
-	
-    public function toString() {
-		return $this->name;
-	}
-	
+    public function serialize()
+    {
+        return [
+                'code' => $this->code,
+                'cycle_code' => $this->cycle ? $this->cycle->getCode() : null,
+                'date_release' => $this->dateRelease ? $this->dateRelease->format('Y-m-d') : null,
+                'name' => $this->name,
+                'position' => $this->position,
+                'size' => $this->size,
+                'cgdb_id' => $this->cgdbId
+        ];
+    }
+    
+    public function unserialize($serialized)
+    {
+        throw new \Exception("unserialize() method unsupported");
+    }
+    
+    public function toString()
+    {
+        return $this->name;
+    }
+    
     /**
      * @var integer
      */
@@ -274,9 +277,9 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
      */
     public function setCgdbId($cgdbId)
     {
-    	$this->cgdbId = $cgdbId;
+        $this->cgdbId = $cgdbId;
     
-    	return $this;
+        return $this;
     }
     
     /**
@@ -286,7 +289,7 @@ class Pack implements \Gedmo\Translatable\Translatable, \Serializable
      */
     public function getCgdbId()
     {
-    	return $this->cgdbId;
+        return $this->cgdbId;
     }
     
     /**
