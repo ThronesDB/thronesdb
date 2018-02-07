@@ -2,6 +2,7 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Card;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -440,7 +441,7 @@ class CardsData
         }
         $qb->addOrderBy('c.name');
         $qb->addOrderBy('c.code');
-        $rows = $repo->getResult($qb);
+        $rows = $qb->getQuery()->getResult();
 
         return $rows;
     }
@@ -451,7 +452,7 @@ class CardsData
      * @param string $api
      * @return multitype:multitype: string number mixed NULL unknown
      */
-    public function getCardInfo($card, $api = false)
+    public function getCardInfo(Card $card, $api = false)
     {
         $cardinfo = [];
 
@@ -497,9 +498,7 @@ class CardsData
             $cardinfo['imagesrc'] = null;
         }
 
-        // look for another card with the same name to set the label
-        $homonyms = $this->doctrine->getRepository('AppBundle:Card')->findBy(['name' => $card->getName()]);
-        if (count($homonyms) > 1) {
+        if ($card->getIsMultiple()) {
             $cardinfo['label'] = $card->getName() . ' (' . $card->getPack()->getCode() . ')';
         } else {
             $cardinfo['label'] = $card->getName();

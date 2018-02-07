@@ -92,13 +92,6 @@ doctrine:
                 binary: AppBundle\DQL\BinaryFunction
             numeric_functions:
                 power: AppBundle\DQL\PowerFunction
-        mappings:
-            gedmo_translatable:
-                type: annotation
-                prefix: Gedmo\Translatable\Entity
-                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
-                alias: GedmoTranslatable # (optional) it will default to the name set for the mapping
-                is_bundle: false
 
 # JMSI18nRoutingBundle Configuration
 jms_i18n_routing:
@@ -159,8 +152,6 @@ bazinga_js_translation:
 
 # DoctrineExtensions Configuration
 stof_doctrine_extensions:
-    default_locale: "%kernel.default_locale%"
     orm:
         default:
             timestampable: true
-            translatable: true

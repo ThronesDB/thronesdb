@@ -233,7 +233,8 @@ class ImportStdCommand extends ContainerAwareCommand
                     'text',
                     'flavor',
                     'is_loyal',
-                    'is_unique'
+                    'is_unique',
+                    'is_multiple'
             ], [
                     'faction_code',
                     'pack_code',

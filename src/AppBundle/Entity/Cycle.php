@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Cycle implements \Gedmo\Translatable\Translatable, \Serializable
+class Cycle implements  \Serializable
 {
     public function serialize()
     {
@@ -258,15 +258,5 @@ class Cycle implements \Gedmo\Translatable\Translatable, \Serializable
     public function getPacks()
     {
         return $this->packs;
-    }
-
-    /*
-    * I18N vars
-    */
-    private $locale = 'en';
-
-    public function setTranslatableLocale($locale)
-    {
-        $this->locale = $locale;
     }
 }

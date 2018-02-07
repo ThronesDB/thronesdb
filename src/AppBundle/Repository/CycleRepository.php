@@ -2,13 +2,10 @@
 
 namespace AppBundle\Repository;
 
-class CycleRepository extends TranslatableRepository
-{
-    public function __construct($entityManager)
-    {
-        parent::__construct($entityManager, $entityManager->getClassMetadata('AppBundle\Entity\Cycle'));
-    }
+use Doctrine\ORM\EntityRepository;
 
+class CycleRepository extends EntityRepository
+{
     public function findAll()
     {
         $qb = $this->createQueryBuilder('y')
@@ -16,6 +13,6 @@ class CycleRepository extends TranslatableRepository
             ->leftJoin('y.packs', 'p')
             ->orderBy('y.position', 'ASC');
 
-        return $this->getResult($qb);
+        return $qb->getQuery()->getResult();
     }
 }

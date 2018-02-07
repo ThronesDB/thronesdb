@@ -2,13 +2,11 @@
 
 namespace AppBundle\Repository;
 
-class CardRepository extends TranslatableRepository
-{
-    public function __construct($entityManager)
-    {
-        parent::__construct($entityManager, $entityManager->getClassMetadata('AppBundle\Entity\Card'));
-    }
+use AppBundle\Entity\Card;
+use Doctrine\ORM\EntityRepository;
 
+class CardRepository extends EntityRepository
+{
     public function findAll()
     {
         $qb = $this->createQueryBuilder('c')
@@ -19,7 +17,7 @@ class CardRepository extends TranslatableRepository
             ->join('p.cycle', 'y')
             ->orderBY('c.code', 'ASC');
 
-        return $this->getResult($qb);
+        return $qb->getQuery()->getResult();
     }
 
     public function findByType($type)
@@ -33,7 +31,7 @@ class CardRepository extends TranslatableRepository
 
         $qb->setParameter(1, $type);
 
-        return $this->getResult($qb);
+        return $qb->getQuery()->getResult();
     }
 
     public function findByCode($code)
@@ -44,7 +42,7 @@ class CardRepository extends TranslatableRepository
 
         $qb->setParameter(1, $code);
 
-        return $this->getOneOrNullResult($qb);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function findAllByCodes($codes)
@@ -60,10 +58,10 @@ class CardRepository extends TranslatableRepository
 
         $qb->setParameter(1, $codes);
 
-        return $this->getResult($qb);
+        return $qb->getQuery()->getResult();
     }
 
-    public function findByRelativePosition($card, $position)
+    public function findByRelativePosition(Card $card, int $position)
     {
         $qb = $this->createQueryBuilder('c')
             ->select('c')
@@ -74,7 +72,7 @@ class CardRepository extends TranslatableRepository
         $qb->setParameter(1, $card->getPack()->getCode());
         $qb->setParameter(2, $card->getPosition()+$position);
 
-        return $this->getOneOrNullResult($qb);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function findPreviousCard($card)
@@ -92,6 +90,6 @@ class CardRepository extends TranslatableRepository
         $qb = $this->createQueryBuilder('c')
             ->select('DISTINCT c.traits')
             ->andWhere("c.traits != ''");
-        return $this->getResult($qb);
+        return $qb->getQuery()->getResult();
     }
 }

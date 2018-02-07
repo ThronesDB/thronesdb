@@ -2,9 +2,6 @@ AppBundle\Entity\Card:
     type: entity
     table: card
     repositoryClass: AppBundle\Repository\CardRepository
-    gedmo:
-        translation:
-            locale: locale
     manyToOne:
         pack:
             targetEntity: Pack
@@ -46,16 +43,12 @@ AppBundle\Entity\Card:
             type: string
             length: 50
             nullable: false
-            gedmo:
-                - translatable
         cost:
             type: smallint
             nullable: true
         text:
             type: text
             nullable: false
-            gedmo:
-                - translatable
         dateCreation:
             type: datetime
             nullable: false
@@ -93,8 +86,6 @@ AppBundle\Entity\Card:
             type: text
             length: 255
             nullable: true
-            gedmo:
-                - translatable
         strength:
             type: smallint
             nullable: true
@@ -102,13 +93,9 @@ AppBundle\Entity\Card:
             type: string
             length: 255
             nullable: false
-            gedmo:
-                - translatable
         flavor:
             type: text
             nullable: false
-            gedmo:
-                - translatable
         illustrator:
             type: string
             length: 255
@@ -137,6 +124,10 @@ AppBundle\Entity\Card:
             type: string
             nullable: true
             column: octgn_id
+        isMultiple:
+            type: boolean
+            nullable: false
+            column: is_multiple
     uniqueConstraints:
         card_code_idx:
             columns: [ code ]

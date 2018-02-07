@@ -2,13 +2,10 @@
 
 namespace AppBundle\Repository;
 
-class DeckRepository extends TranslatableRepository
-{
-    public function __construct($entityManager)
-    {
-        parent::__construct($entityManager, $entityManager->getClassMetadata('AppBundle\Entity\Deck'));
-    }
+use Doctrine\ORM\EntityRepository;
 
+class DeckRepository extends EntityRepository
+{
     public function find($id)
     {
         $qb = $this->createQueryBuilder('d')
@@ -19,6 +16,6 @@ class DeckRepository extends TranslatableRepository
             ->andWhere('d.id = ?1');
 
         $qb->setParameter(1, $id);
-        return $this->getOneOrNullResult($qb);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

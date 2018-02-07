@@ -2,13 +2,11 @@
 
 namespace AppBundle\Repository;
 
-class DecklistRepository extends TranslatableRepository
-{
-    public function __construct($entityManager)
-    {
-        parent::__construct($entityManager, $entityManager->getClassMetadata('AppBundle\Entity\Decklist'));
-    }
+use AppBundle\Entity\Decklist;
+use Doctrine\ORM\EntityRepository;
 
+class DecklistRepository extends EntityRepository
+{
     public function find($id)
     {
         $qb = $this->createQueryBuilder('d')
@@ -19,10 +17,10 @@ class DecklistRepository extends TranslatableRepository
             ->andWhere('d.id = ?1');
 
         $qb->setParameter(1, $id);
-        return $this->getOneOrNullResult($qb);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function findDuplicate($decklist)
+    public function findDuplicate(Decklist $decklist)
     {
         $qb = $this->createQueryBuilder('d')
             ->select('d, f')
@@ -33,11 +31,11 @@ class DecklistRepository extends TranslatableRepository
         $qb->orderBy('d.dateCreation', 'ASC');
         $qb->setMaxResults(1);
 
-        return $this->getOneOrNullResult($qb);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     //findBy([ 'parent' => $decklist->getParent() ], [ 'version' => 'DESC' ]);
-    public function findVersions($decklist)
+    public function findVersions(Decklist $decklist)
     {
         $qb = $this->createQueryBuilder('d')
             ->select('d, f, ds, c')
@@ -49,6 +47,6 @@ class DecklistRepository extends TranslatableRepository
         $qb->setParameter(1, $decklist->getParent());
         $qb->orderBy('d.version', 'DESC');
 
-        return $this->getResult($qb);
+        return $qb->getQuery()->getResult();
     }
 }

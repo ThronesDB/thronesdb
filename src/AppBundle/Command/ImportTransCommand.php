@@ -199,6 +199,7 @@ class ImportTransCommand extends ContainerAwareCommand
         if (!$entity) {
             throw new \Exception("Cannot find entity [code]");
         }
+        die('entity are not translatable anymore');
         $entity->setTranslatableLocale($locale);
         $this->em->refresh($entity);
         

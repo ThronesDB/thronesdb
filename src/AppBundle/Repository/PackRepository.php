@@ -2,13 +2,10 @@
 
 namespace AppBundle\Repository;
 
-class PackRepository extends TranslatableRepository
-{
-    public function __construct($entityManager)
-    {
-        parent::__construct($entityManager, $entityManager->getClassMetadata('AppBundle\Entity\Pack'));
-    }
+use Doctrine\ORM\EntityRepository;
 
+class PackRepository extends EntityRepository
+{
     public function findAll()
     {
         $qb = $this->createQueryBuilder('p')
@@ -17,7 +14,7 @@ class PackRepository extends TranslatableRepository
                 ->orderBy('p.dateRelease', 'ASC')
                 ->addOrderBy('p.position', 'ASC');
 
-        return $this->getResult($qb);
+        return $qb->getQuery()->getResult();
     }
 
     public function findByCode($code)
@@ -28,6 +25,6 @@ class PackRepository extends TranslatableRepository
 
         $qb->setParameter(1, $code);
 
-        return $this->getOneOrNullResult($qb);
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

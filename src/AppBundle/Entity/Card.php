@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Card implements \Gedmo\Translatable\Translatable, \Serializable
+class Card implements \Serializable
 {
     private function snakeToCamel($snake)
     {
@@ -26,7 +26,8 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
                 'traits',
                 'is_loyal',
                 'is_unique',
-                                'octgn_id',
+                'is_multiple',
+                'octgn_id',
         ];
     
         $optionalFields = [
@@ -239,6 +240,11 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     private $faction;
 
     /**
+     * @var boolean
+     */
+    private $isMultiple;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -246,6 +252,7 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
         $this->isMilitary = false;
         $this->isIntrigue = false;
         $this->isPower = false;
+        $this->isMultiple = false;
          
         $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -918,16 +925,6 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
         return $this->faction;
     }
 
-    /*
-    * I18N vars
-    */
-    private $locale = 'en';
-
-    public function setTranslatableLocale($locale)
-    {
-        $this->locale = $locale;
-    }
-
     /**
      * @return int
      */
@@ -983,5 +980,25 @@ class Card implements \Gedmo\Translatable\Translatable, \Serializable
     public function getDesigner()
     {
         return $this->designer;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsMultiple(): bool
+    {
+        return $this->isMultiple;
+    }
+
+    /**
+     * @param bool $isMultiple
+     *
+     * @return self
+     */
+    public function setIsMultiple(bool $isMultiple): self
+    {
+        $this->isMultiple = $isMultiple;
+
+        return $this;
     }
 }
