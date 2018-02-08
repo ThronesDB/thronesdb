@@ -7,19 +7,6 @@ use Doctrine\ORM\EntityRepository;
 
 class DecklistRepository extends EntityRepository
 {
-    public function find($id)
-    {
-        $qb = $this->createQueryBuilder('d')
-            ->select('d, f, ds, c')
-            ->join('d.faction', 'f')
-            ->join('d.slots', 'ds')
-            ->join('ds.card', 'c')
-            ->andWhere('d.id = ?1');
-
-        $qb->setParameter(1, $id);
-        return $qb->getQuery()->getOneOrNullResult();
-    }
-
     public function findDuplicate(Decklist $decklist)
     {
         $qb = $this->createQueryBuilder('d')
