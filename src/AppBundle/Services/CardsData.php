@@ -3,6 +3,7 @@
 namespace AppBundle\Services;
 
 use AppBundle\Entity\Card;
+use AppBundle\Entity\Cycle;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -90,25 +91,19 @@ class CardsData
 
     public function allsetsdata()
     {
+        /** @var Cycle[] $list_cycles */
         $list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findAll();
         $lines = [];
-        /* @var $cycle \AppBundle\Entity\Cycle */
+
         foreach ($list_cycles as $cycle) {
             $packs = $cycle->getPacks();
-            /* @var $pack \AppBundle\Entity\Pack */
-            foreach ($packs as $pack) {
-                $known = count($pack->getCards());
-                $max = $pack->getSize();
 
+            foreach ($packs as $pack) {
                 if ($cycle->getSize() === 1) {
                     $label = $pack->getName();
                 } else {
                     $label = $pack->getPosition() . '. ' . $pack->getName();
                 }
-                if ($known < $max) {
-                    $label = sprintf("%s (%d/%d)", $label, $known, $max);
-                }
-
                 $lines[] = array(
                     "code" => $pack->getCode(),
                     "label" => $label,
@@ -132,14 +127,7 @@ class CardsData
 
             /* @var $pack \AppBundle\Entity\Pack */
             foreach ($list_packs as $pack) {
-                $known = count($pack->getCards());
-                $max = $pack->getSize();
-
                 $label = $pack->getName();
-
-                if ($known < $max) {
-                    $label = sprintf("%s (%d/%d)", $label, $known, $max);
-                }
 
                 $packs[] = [
                     "code" => $pack->getCode(),
