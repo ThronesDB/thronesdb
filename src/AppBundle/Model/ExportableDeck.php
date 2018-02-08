@@ -9,8 +9,10 @@ class ExportableDeck
         $slots = $this->getSlots();
         $agendas = $slots->getAgendas();
         $agendas_code = [];
+        $agenda_urls = [];
         foreach ($agendas as $agenda) {
             $agendas_code[] = $agenda->getCard()->getCode();
+            $agendas_urls[] = $agenda->getCard()->getImageUrl();
         }
         $array = [
             'id' => $this->getId(),
@@ -23,8 +25,7 @@ class ExportableDeck
             'faction_name' => $this->getFaction()->getName(),
             'slots' => $slots->getContent(),
             'agendas' => $agendas_code,
-            // agenda_code deprecated. Removed 2017-03-01
-            'agenda_code' => count($agendas) ? $agendas[0]->getCard()->getCode() : null,
+            'agendaurls' => $agenda_urls,
             'version' => $this->getVersion(),
         ];
 

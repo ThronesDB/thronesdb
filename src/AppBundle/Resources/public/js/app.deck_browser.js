@@ -62,7 +62,7 @@
     deck_browser.update = function update()
     {
 
-        images = [Identity.imagesrc];
+        images = [Identity.image_url];
         app.data.cards({
             indeck: {
                 'gt': 0
@@ -73,7 +73,7 @@
         }).order('type_code,name').each(function (record)
         {
             for(var i = 0; i < record.indeck; i++) {
-                images.push(record.imagesrc);
+                images.push(record.image_url);
             }
         });
         for(var i = 0; i < images.length; i++) {

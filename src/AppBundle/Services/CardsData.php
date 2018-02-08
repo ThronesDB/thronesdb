@@ -490,13 +490,6 @@ class CardsData
         }
 
         $cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), UrlGeneratorInterface::ABSOLUTE_URL);
-        $imageurl = $this->packages->getUrl('bundles/cards/' . $card->getCode() . '.png');
-        $imagepath = $this->rootDir . '/../web' . preg_replace('/\?.*/', '', $imageurl);
-        if (file_exists($imagepath)) {
-            $cardinfo['imagesrc'] = $imageurl;
-        } else {
-            $cardinfo['imagesrc'] = null;
-        }
 
         if ($card->getIsMultiple()) {
             $cardinfo['label'] = $card->getName() . ' (' . $card->getPack()->getCode() . ')';

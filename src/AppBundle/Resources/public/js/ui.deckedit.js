@@ -489,7 +489,7 @@
                 DisplayColumnsTpl = _.template(
                         '<div class="col-sm-6">'
                         + '<div class="media">'
-                        + '<div class="media-left"><img class="media-object" src="/bundles/cards/<%= card.code %>.png" alt="<%= card.name %>"></div>'
+                        + '<div class="media-left"><img class="media-object" src="<%= card.image_url %>" alt="<%= card.name %>"></div>'
                         + '<div class="media-body">'
                         + '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
                         + '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
@@ -502,7 +502,7 @@
                 DisplayColumnsTpl = _.template(
                         '<div class="col-sm-4">'
                         + '<div class="media">'
-                        + '<div class="media-left"><img class="media-object" src="/bundles/cards/<%= card.code %>.png" alt="<%= card.name %>"></div>'
+                        + '<div class="media-left"><img class="media-object" src="<%= card.image_url %>" alt="<%= card.name %>"></div>'
                         + '<div class="media-body">'
                         + '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h5>'
                         + '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'

@@ -1001,4 +1001,29 @@ class Card implements \Serializable
 
         return $this;
     }
+
+    /**
+     * @var string|null
+     */
+    private $imageUrl;
+
+    /**
+     * @return string|null
+     */
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+
+    /**
+     * @param string $imageUrl
+     *
+     * @return self
+     */
+    public function setImageUrl(string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
 }

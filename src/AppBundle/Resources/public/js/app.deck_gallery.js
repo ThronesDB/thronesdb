@@ -13,8 +13,8 @@
         cards.forEach(function (card)
         {
             var card_element;
-            if(card.imagesrc) {
-                card_element = '<img src="' + card.imagesrc + '">';
+            if(card.image_url) {
+                card_element = '<img src="' + card.image_url + '">';
             } else {
                 card_element = '<div class="card-proxy"><div>' + card.label + '</div></div>';
             }

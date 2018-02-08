@@ -290,7 +290,7 @@
         
         deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/' + deck.get_faction_code() + '.png" class="img-responsive">'));
         agendas.forEach(function (agenda) {
-            deck.update_layout_section(data, 'images', $('<div><img src="' + agenda.imagesrc + '" class="img-responsive">'));
+            deck.update_layout_section(data, 'images', $('<div><img src="' + agenda.image_url + '" class="img-responsive">'));
         });
 
         deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">' + faction_name + '</h4>'));
