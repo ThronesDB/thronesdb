@@ -28,6 +28,7 @@
         "friendsofsymfony/jsrouting-bundle": "^2.1",
         "friendsofsymfony/oauth-server-bundle": "^1.5",
         "friendsofsymfony/user-bundle": "^2.0",
+        "guzzlehttp/guzzle": "^6.3",
         "incenteev/composer-parameter-handler": "^2.0",
         "jms/i18n-routing-bundle": "^2.0.1",
         "leafo/scssphp": "^0.7.4",
@@ -46,7 +47,6 @@
         "willdurand/js-translation-bundle": "^2.6"
     },
     "require-dev": {
-        "guzzlehttp/guzzle": "^6.3",
         "phpunit/phpunit": "^6.5",
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0"
