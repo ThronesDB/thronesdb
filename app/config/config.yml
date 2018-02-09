@@ -155,3 +155,11 @@ stof_doctrine_extensions:
     orm:
         default:
             timestampable: true
+
+# NelmioCorsBundle Configuration
+nelmio_cors:
+    paths:
+        '^/api/public/':
+            allow_origin: ['*']
+            allow_methods: ['GET']
+            max_age: 3600
