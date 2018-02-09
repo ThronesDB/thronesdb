@@ -2,6 +2,8 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Card;
+use AppBundle\Entity\Pack;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Decklist;
@@ -130,6 +132,9 @@ class ApiController extends Controller
         $jsonp = $request->query->get('jsonp');
 
         $card = $this->getDoctrine()->getRepository('AppBundle:Card')->findOneBy(array("code" => $card_code));
+        if (!$card instanceof Card) {
+            return $this->createNotFoundException();
+        }
 
         // check the last-modified-since header
 
@@ -268,8 +273,8 @@ class ApiController extends Controller
         }
 
         $pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array('code' => $pack_code));
-        if (!$pack) {
-            die();
+        if (!$pack instanceof Pack) {
+            return $this->createNotFoundException();
         }
 
         $conditions = $this->get('cards_data')->syntax("e:$pack_code");
@@ -345,8 +350,8 @@ class ApiController extends Controller
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         $decklist = $this->getDoctrine()->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (!$decklist) {
-            die();
+        if (!$decklist instanceof Decklist) {
+            return $this->createNotFoundException();
         }
 
         $response->setLastModified($decklist->getDateUpdate());
