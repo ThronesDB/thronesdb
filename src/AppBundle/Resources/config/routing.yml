@@ -1,7 +1,3 @@
-app_admin:
-    resource: "@AppBundle/Resources/config/routing/routing_admin.yml"
-    prefix: /admin
-
 app_api:
     resource: "@AppBundle/Resources/config/routing/routing_api.yml"
     prefix: /api

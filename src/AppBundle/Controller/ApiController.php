@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Decklist;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Collections\Criteria;
-use Nelmio\ApiDocBundle\Annotation\Operation;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ApiController extends Controller
@@ -20,21 +18,14 @@ class ApiController extends Controller
     /**
      * Get the description of all the packs as an array of JSON objects.
      *
-     * @Operation(
-     *     tags={"Pack"},
-     *     summary="All the Packs",
-     *     @SWG\Parameter(
-     *         name="jsonp",
-     *         in="body",
-     *         description="JSONP callback",
-     *         required=false,
-     *         type="string",
-     *         schema=""
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
+     *
+     * @ApiDoc(
+     *  section="Pack",
+     *  resource=true,
+     *  description="All the Packs",
+     *  parameters={
+     *    {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+     *  },
      * )
      *
      * @param Request $request
@@ -100,21 +91,26 @@ class ApiController extends Controller
     /**
      * Get the description of a card as a JSON object.
      *
-     * @Operation(
-     *     tags={"Card"},
-     *     summary="One Card",
-     *     @SWG\Parameter(
-     *         name="jsonp",
-     *         in="body",
-     *         description="JSONP callback",
-     *         required=false,
-     *         type="string",
-     *         schema=""
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
+     * @ApiDoc(
+     *  section="Card",
+     *  resource=true,
+     *  description="One Card",
+     *  parameters={
+     *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+     *  },
+     *  requirements={
+     *      {
+     *          "name"="card_code",
+     *          "dataType"="string",
+     *          "description"="The code of the card to get, e.g. '01001'"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
      * )
      *
      * @param Request $request
@@ -167,21 +163,13 @@ class ApiController extends Controller
     /**
      * Get the description of all the cards as an array of JSON objects.
      *
-     * @Operation(
-     *     tags={"Card"},
-     *     summary="All the Cards",
-     *     @SWG\Parameter(
-     *         name="jsonp",
-     *         in="body",
-     *         description="JSONP callback",
-     *         required=false,
-     *         type="string",
-     *         schema=""
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
+     * @ApiDoc(
+     *  section="Card",
+     *  resource=true,
+     *  description="All the Cards",
+     *  parameters={
+     *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+     *  },
      * )
      *
      * @param Request $request
@@ -238,21 +226,26 @@ class ApiController extends Controller
     /**
      * Get the description of all the card from a pack, as an array of JSON objects.
      *
-     * @Operation(
-     *     tags={"Card"},
-     *     summary="All the Cards from One Pack",
-     *     @SWG\Parameter(
-     *         name="jsonp",
-     *         in="body",
-     *         description="JSONP callback",
-     *         required=false,
-     *         type="string",
-     *         schema=""
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
+     * @ApiDoc(
+     *  section="Card",
+     *  resource=true,
+     *  description="All the Cards from One Pack",
+     *  parameters={
+     *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+     *  },
+     *  requirements={
+     *      {
+     *          "name"="pack_code",
+     *          "dataType"="string",
+     *          "description"="The code of the pack to get the cards from, e.g. 'Core'"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json|xml|xlsx|xls",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
      * )
      *
      * @param Request $request
@@ -314,21 +307,27 @@ class ApiController extends Controller
     /**
      * Get the description of a decklist as a JSON object.
      *
-     * @Operation(
-     *     tags={"Decklist"},
-     *     summary="One Decklist",
-     *     @SWG\Parameter(
-     *         name="jsonp",
-     *         in="body",
-     *         description="JSONP callback",
-     *         required=false,
-     *         type="string",
-     *         schema=""
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
+     * @ApiDoc(
+     *  section="Decklist",
+     *  resource=true,
+     *  description="One Decklist",
+     *  parameters={
+     *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+     *  },
+     *  requirements={
+     *      {
+     *          "name"="decklist_id",
+     *          "dataType"="integer",
+     *          "requirement"="\d+",
+     *          "description"="The numeric identifier of the decklist"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
      * )
      *
      * @param Request $request
@@ -375,21 +374,27 @@ class ApiController extends Controller
     /**
      * Get the description of all the decklists published at a given date, as an array of JSON objects.
      *
-     * @Operation(
-     *     tags={"Decklist"},
-     *     summary="All the Decklists from One Day",
-     *     @SWG\Parameter(
-     *         name="jsonp",
-     *         in="body",
-     *         description="JSONP callback",
-     *         required=false,
-     *         type="string",
-     *         schema=""
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
+     * @ApiDoc(
+     *  section="Decklist",
+     *  resource=true,
+     *  description="All the Decklists from One Day",
+     *  parameters={
+     *      {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
+     *  },
+     *  requirements={
+     *      {
+     *          "name"="date",
+     *          "dataType"="string",
+     *          "requirement"="\d\d\d\d-\d\d-\d\d",
+     *          "description"="The date, format 'Y-m-d'"
+     *      },
+     *      {
+     *          "name"="_format",
+     *          "dataType"="string",
+     *          "requirement"="json",
+     *          "description"="The format of the returned data. Only 'json' is supported at the moment."
+     *      }
+     *  },
      * )
      *
      * @param Request $request

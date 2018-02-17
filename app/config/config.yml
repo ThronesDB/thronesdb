@@ -130,10 +130,7 @@ fos_js_routing:
     routes_to_expose: [ '.*' ]
 
 # NelmioApiDocBundle Configuration
-nelmio_api_doc:
-    documentation:
-        info:
-            title: ThronesDB
+nelmio_api_doc: ~
 
 # FOSOAuthServerBundle
 fos_oauth_server:
