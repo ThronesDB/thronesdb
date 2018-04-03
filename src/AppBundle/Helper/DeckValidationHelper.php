@@ -76,9 +76,13 @@ class DeckValidationHelper
 
         /* @var integer $expectedPlotDeckSize Expected number of plots */
         $expectedPlotDeckSize = 7;
+        $expectedMaxDoublePlot = 1;
         foreach ($slots->getAgendas() as $agenda) {
             if ($agenda->getCard()->getCode() === '05045') {
                 $expectedPlotDeckSize = 12;
+            } else if ($agenda->getCard()->getCode() === '10045') {
+                $expectedPlotDeckSize = 10;
+                $expectedMaxDoublePlot = 2;
             }
         }
         if ($plotDeckSize > $expectedPlotDeckSize) {
@@ -88,7 +92,7 @@ class DeckValidationHelper
             return 'too_few_plots';
         }
         /* @var integer $expectedPlotDeckSpread Expected number of different plots */
-        $expectedPlotDeckSpread = $expectedPlotDeckSize - 1;
+        $expectedPlotDeckSpread = $expectedPlotDeckSize - $expectedMaxDoublePlot;
         if (count($plotDeck) < $expectedPlotDeckSpread) {
             return 'too_many_different_plots';
         }

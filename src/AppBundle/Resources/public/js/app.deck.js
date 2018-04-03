@@ -465,11 +465,15 @@
     {
         var agendas = deck.get_agendas();
         var expectedPlotDeckSize = 7;
+        var expectedMaxDoublePlot = 1;
         var expectedMaxAgendaCount = 1;
         var expectedMinCardCount = 60;
         agendas.forEach(function (agenda) {
             if(agenda && agenda.code === '05045') {
                 expectedPlotDeckSize = 12;
+            } else if(agenda && agenda.code === '10045') {
+                expectedPlotDeckSize = 10;
+                expectedMaxDoublePlot = 2;
             }
         });
         // exactly 7 plots
@@ -480,7 +484,7 @@
             return 'too_few_plots';
         }
 
-        var expectedPlotDeckSpread = expectedPlotDeckSize - 1;
+        var expectedPlotDeckSpread = expectedPlotDeckSize - expectedMaxDoublePlot;
         // at least 6 different plots
         if(deck.get_plot_deck_variety() < expectedPlotDeckSpread) {
             return 'too_many_different_plots';
