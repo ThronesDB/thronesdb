@@ -14,3 +14,16 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    AppBundle\Features\Json\:
+        resource: '../../features/Json/*'
+
+    json_inspector:
+        class: AppBundle\Features\Json\JsonInspector
+        public: true

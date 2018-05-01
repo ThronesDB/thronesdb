@@ -13,7 +13,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "AppBundle\\Features\\": "features/"
         },
         "files": [
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
@@ -48,8 +49,13 @@
         "willdurand/js-translation-bundle": "^2.6"
     },
     "require-dev": {
+        "beberlei/assert": "^2.9",
+        "behat/behat": "^3.4",
+        "behat/symfony2-extension": "^2.1",
+        "justinrainbow/json-schema": "^5.2",
         "phpunit/phpunit": "^6.5",
         "sensio/generator-bundle": "^3.0",
+        "symfony/expression-language": "^4.0",
         "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {
