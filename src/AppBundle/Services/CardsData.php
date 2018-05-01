@@ -435,11 +435,12 @@ class CardsData
     }
 
     /**
-     * @param Card $card
-     * @param bool $api
+     * @param Card   $card
+     * @param bool   $api
+     * @param string $version
      * @return array
      */
-    public function getCardInfo(Card $card, $api = false)
+    public function getCardInfo(Card $card, bool $api, string $version = '1')
     {
         $cardinfo = [];
 
@@ -494,6 +495,11 @@ class CardsData
             $cardinfo['text'] = $this->splitInParagraphs($cardinfo['text']);
 
             $cardinfo['flavor'] = $this->replaceSymbols($cardinfo['flavor']);
+        }
+
+        if ($version === '1') {
+            $cardinfo['cost'] = is_numeric($cardinfo['cost']) ? intval($cardinfo['cost']) : null;
+            $cardinfo['ci'] = is_numeric($cardinfo['ci']) ? intval($cardinfo['ci']) : null;
         }
 
         return $cardinfo;

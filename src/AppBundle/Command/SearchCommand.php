@@ -46,7 +46,7 @@ class SearchCommand extends ContainerAwareCommand
         
         $rows = $service->get_search_rows($conditions, 'set');
         foreach ($rows as $card) {
-            $cardinfo = $service->getCardInfo($card, false);
+            $cardinfo = $service->getCardInfo($card, false, null);
             $filtered = array_filter($cardinfo, function ($key) use ($fields) {
                 return in_array($key, $fields);
             }, ARRAY_FILTER_USE_KEY);
