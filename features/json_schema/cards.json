@@ -1,14 +1,14 @@
 {
-    "$id": "https://thronesdb.com/api/public/cards/",
+    "$id": "https://thronesdb.com/api/public/cards",
     "type": "array",
     "definitions": {},
     "$schema": "http://json-schema.org/draft-07/schema#",
     "items": {
-        "$id": "https://thronesdb.com/api/public/cards//items",
+        "$id": "https://thronesdb.com/api/public/cards/items",
         "type": "object",
         "properties": {
             "pack_code": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/pack_code",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/pack_code",
                 "type": "string",
                 "title": "The Pack_code Schema ",
                 "default": "",
@@ -17,7 +17,7 @@
                 ]
             },
             "pack_name": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/pack_name",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/pack_name",
                 "type": "string",
                 "title": "The Pack_name Schema ",
                 "default": "",
@@ -26,7 +26,7 @@
                 ]
             },
             "type_code": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/type_code",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/type_code",
                 "type": "string",
                 "title": "The Type_code Schema ",
                 "default": "",
@@ -35,7 +35,7 @@
                 ]
             },
             "type_name": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/type_name",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/type_name",
                 "type": "string",
                 "title": "The Type_name Schema ",
                 "default": "",
@@ -44,7 +44,7 @@
                 ]
             },
             "faction_code": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/faction_code",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/faction_code",
                 "type": "string",
                 "title": "The Faction_code Schema ",
                 "default": "",
@@ -53,7 +53,7 @@
                 ]
             },
             "faction_name": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/faction_name",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/faction_name",
                 "type": "string",
                 "title": "The Faction_name Schema ",
                 "default": "",
@@ -62,7 +62,7 @@
                 ]
             },
             "position": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/position",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/position",
                 "type": "integer",
                 "title": "The Position Schema ",
                 "default": 0,
@@ -71,7 +71,7 @@
                 ]
             },
             "code": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/code",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/code",
                 "type": "string",
                 "title": "The Code Schema ",
                 "default": "",
@@ -80,7 +80,7 @@
                 ]
             },
             "name": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/name",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/name",
                 "type": "string",
                 "title": "The Name Schema ",
                 "default": "",
@@ -89,7 +89,7 @@
                 ]
             },
             "cost": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/cost",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/cost",
                 "type": ["integer","null"],
                 "title": "The Cost Schema ",
                 "default": null,
@@ -98,7 +98,7 @@
                 ]
             },
             "text": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/text",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/text",
                 "type": "string",
                 "title": "The Text Schema ",
                 "default": "",
@@ -107,7 +107,7 @@
                 ]
             },
             "quantity": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/quantity",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/quantity",
                 "type": "integer",
                 "title": "The Quantity Schema ",
                 "default": 0,
@@ -116,7 +116,7 @@
                 ]
             },
             "income": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/income",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/income",
                 "type": ["integer","null"],
                 "title": "The Income Schema ",
                 "default": 0,
@@ -125,7 +125,7 @@
                 ]
             },
             "initiative": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/initiative",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/initiative",
                 "type": ["integer","null"],
                 "title": "The Initiative Schema ",
                 "default": 0,
@@ -134,7 +134,7 @@
                 ]
             },
             "claim": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/claim",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/claim",
                 "type": ["integer","null"],
                 "title": "The Claim Schema ",
                 "default": 0,
@@ -143,7 +143,7 @@
                 ]
             },
             "reserve": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/reserve",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/reserve",
                 "type": ["integer","null"],
                 "title": "The Reserve Schema ",
                 "default": 0,
@@ -152,7 +152,7 @@
                 ]
             },
             "deck_limit": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/deck_limit",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/deck_limit",
                 "type": "integer",
                 "title": "The Deck_limit Schema ",
                 "default": 0,
@@ -161,7 +161,7 @@
                 ]
             },
             "designer": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/designer",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/designer",
                 "type": ["string","null"],
                 "title": "The Designer Schema ",
                 "default": null,
@@ -170,7 +170,7 @@
                 ]
             },
             "strength": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/strength",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/strength",
                 "type": ["integer","null"],
                 "title": "The Strength Schema ",
                 "default": null,
@@ -179,7 +179,7 @@
                 ]
             },
             "traits": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/traits",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/traits",
                 "type": "string",
                 "title": "The Traits Schema ",
                 "default": "",
@@ -188,7 +188,7 @@
                 ]
             },
             "flavor": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/flavor",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/flavor",
                 "type": "string",
                 "title": "The Flavor Schema ",
                 "default": "",
@@ -197,7 +197,7 @@
                 ]
             },
             "illustrator": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/illustrator",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/illustrator",
                 "type": ["string","null"],
                 "title": "The Illustrator Schema ",
                 "default": "",
@@ -206,7 +206,7 @@
                 ]
             },
             "is_unique": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/is_unique",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/is_unique",
                 "type": "boolean",
                 "title": "The Is_unique Schema ",
                 "default": false,
@@ -215,7 +215,7 @@
                 ]
             },
             "is_loyal": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/is_loyal",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/is_loyal",
                 "type": "boolean",
                 "title": "The Is_loyal Schema ",
                 "default": false,
@@ -224,7 +224,7 @@
                 ]
             },
             "is_military": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/is_military",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/is_military",
                 "type": "boolean",
                 "title": "The Is_military Schema ",
                 "default": false,
@@ -233,7 +233,7 @@
                 ]
             },
             "is_intrigue": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/is_intrigue",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/is_intrigue",
                 "type": "boolean",
                 "title": "The Is_intrigue Schema ",
                 "default": false,
@@ -242,7 +242,7 @@
                 ]
             },
             "is_power": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/is_power",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/is_power",
                 "type": "boolean",
                 "title": "The Is_power Schema ",
                 "default": false,
@@ -251,7 +251,7 @@
                 ]
             },
             "octgn_id": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/octgn_id",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/octgn_id",
                 "type": "string",
                 "title": "The Octgn_id Schema ",
                 "default": "",
@@ -260,7 +260,7 @@
                 ]
             },
             "is_multiple": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/is_multiple",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/is_multiple",
                 "type": "boolean",
                 "title": "The Is_multiple Schema ",
                 "default": false,
@@ -269,7 +269,7 @@
                 ]
             },
             "image_url": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/image_url",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/image_url",
                 "type": ["string", "null"],
                 "title": "The Image_url Schema ",
                 "default": "",
@@ -278,7 +278,7 @@
                 ]
             },
             "url": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/url",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/url",
                 "type": "string",
                 "title": "The Url Schema ",
                 "default": "",
@@ -287,7 +287,7 @@
                 ]
             },
             "label": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/label",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/label",
                 "type": "string",
                 "title": "The Label Schema ",
                 "default": "",
@@ -296,7 +296,7 @@
                 ]
             },
             "ci": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/ci",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/ci",
                 "type": ["integer","null"],
                 "title": "The Ci Schema ",
                 "default": 0,
@@ -305,7 +305,7 @@
                 ]
             },
             "si": {
-                "$id": "https://thronesdb.com/api/public/cards//items/properties/si",
+                "$id": "https://thronesdb.com/api/public/cards/items/properties/si",
                 "type": ["integer","null"],
                 "title": "The Si Schema ",
                 "default": 0,

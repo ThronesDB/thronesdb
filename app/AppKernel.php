@@ -22,7 +22,7 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Nelmio\ApiDocBundle\NelmioApiDocBundle(),
             new Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle(),
-//            new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
+            new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
             new AppBundle\AppBundle(),
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
             new Nelmio\CorsBundle\NelmioCorsBundle(),
