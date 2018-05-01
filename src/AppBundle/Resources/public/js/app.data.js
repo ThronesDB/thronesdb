@@ -100,7 +100,7 @@
         });
 
         $.ajax({
-            url: Routing.generate('api_cards'),
+            url: Routing.generate('api_cards', {'v': '2.0'}),
             success: parse_cards,
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('error when requesting cards', errorThrown);

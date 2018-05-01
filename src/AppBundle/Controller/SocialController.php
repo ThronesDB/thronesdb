@@ -382,7 +382,7 @@ class SocialController extends Controller
 
             $params['cards'] = '';
             foreach ($cards as $card) {
-                $cardinfo = $this->get('cards_data')->getCardInfo($card);
+                $cardinfo = $this->get('cards_data')->getCardInfo($card, false, null);
                 $params['cards'] .= $this->renderView('AppBundle:Search:card.html.twig', $cardinfo);
             }
         }

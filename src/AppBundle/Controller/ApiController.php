@@ -117,6 +117,8 @@ class ApiController extends Controller
      */
     public function getCardAction($card_code, Request $request)
     {
+        $version = $request->query->get('v', '1.0');
+
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
@@ -147,7 +149,7 @@ class ApiController extends Controller
         // build the response
 
         /* @var $card \AppBundle\Entity\Card */
-        $card = $this->get('cards_data')->getCardInfo($card, true, "en");
+        $card = $this->get('cards_data')->getCardInfo($card, true, $version);
 
         $content = json_encode($card);
         if (isset($jsonp)) {
@@ -176,14 +178,13 @@ class ApiController extends Controller
      */
     public function listCardsAction(Request $request)
     {
-        $locale = $request->getLocale();
+        $version = $request->query->get('v', '1.0');
 
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
         $response->headers->add(array(
-            'Access-Control-Allow-Origin' => '*',
-            'Content-Language' => $locale
+            'Access-Control-Allow-Origin' => '*'
         ));
 
         $jsonp = $request->query->get('jsonp');
@@ -209,7 +210,7 @@ class ApiController extends Controller
         $cards = array();
         /* @var $card \AppBundle\Entity\Card */
         foreach ($list_cards as $card) {
-            $cards[] = $this->get('cards_data')->getCardInfo($card, true, $locale);
+            $cards[] = $this->get('cards_data')->getCardInfo($card, true, $version);
         }
 
         $content = json_encode($cards);
@@ -252,6 +253,8 @@ class ApiController extends Controller
      */
     public function listCardsByPackAction($pack_code, Request $request)
     {
+        $version = $request->query->get('v', '1.0');
+
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
@@ -287,7 +290,7 @@ class ApiController extends Controller
                 return $response;
             }
             for ($rowindex = 0; $rowindex < count($rows); $rowindex++) {
-                $card = $this->get('cards_data')->getCardInfo($rows[$rowindex], true, "en");
+                $card = $this->get('cards_data')->getCardInfo($rows[$rowindex], true, $version);
                 $cards[] = $card;
             }
         }

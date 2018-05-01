@@ -120,7 +120,7 @@ class Card implements \Serializable
     private $name;
 
     /**
-     * @var integer
+     * @var string
      */
     private $cost;
 
@@ -342,7 +342,7 @@ class Card implements \Serializable
     /**
      * Set cost
      *
-     * @param integer $cost
+     * @param string $cost
      *
      * @return Card
      */
@@ -356,7 +356,7 @@ class Card implements \Serializable
     /**
      * Get cost
      *
-     * @return integer
+     * @return string
      */
     public function getCost()
     {
@@ -926,17 +926,18 @@ class Card implements \Serializable
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getCostIncome()
     {
         $cost = $this->getCost();
         $income = $this->getIncome();
 
-        if (is_null($cost) and is_null($income)) {
-            return -1;
+        if (is_null($income) && is_null($cost)) {
+            return "";
         }
-        return max($cost, $income);
+
+        return $cost ?? (string) $income;
     }
 
     /**

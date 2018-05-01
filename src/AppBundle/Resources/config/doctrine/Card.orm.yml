@@ -44,7 +44,8 @@ AppBundle\Entity\Card:
             length: 50
             nullable: false
         cost:
-            type: smallint
+            type: string
+            length: 2
             nullable: true
         text:
             type: text
