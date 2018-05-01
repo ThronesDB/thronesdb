@@ -147,7 +147,7 @@ class ApiController extends Controller
         // build the response
 
         /* @var $card \AppBundle\Entity\Card */
-        $card = $this->get('cards_data')->getCardInfo($card, true, "en");
+        $card = $this->get('cards_data')->getCardInfo($card, true);
 
         $content = json_encode($card);
         if (isset($jsonp)) {
@@ -176,14 +176,11 @@ class ApiController extends Controller
      */
     public function listCardsAction(Request $request)
     {
-        $locale = $request->getLocale();
-
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
         $response->headers->add(array(
-            'Access-Control-Allow-Origin' => '*',
-            'Content-Language' => $locale
+            'Access-Control-Allow-Origin' => '*'
         ));
 
         $jsonp = $request->query->get('jsonp');
@@ -209,7 +206,7 @@ class ApiController extends Controller
         $cards = array();
         /* @var $card \AppBundle\Entity\Card */
         foreach ($list_cards as $card) {
-            $cards[] = $this->get('cards_data')->getCardInfo($card, true, $locale);
+            $cards[] = $this->get('cards_data')->getCardInfo($card, true);
         }
 
         $content = json_encode($cards);

@@ -435,10 +435,9 @@ class CardsData
     }
 
     /**
-     *
-     * @param \AppBundle\Entity\Card $card
-     * @param string $api
-     * @return multitype:multitype: string number mixed NULL unknown
+     * @param Card $card
+     * @param bool $api
+     * @return array
      */
     public function getCardInfo(Card $card, $api = false)
     {
