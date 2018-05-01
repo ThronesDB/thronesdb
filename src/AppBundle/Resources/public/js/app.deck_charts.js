@@ -242,7 +242,7 @@
         var draw_deck = app.deck.get_draw_deck();
         draw_deck.forEach(function (card)
         {
-            if(card.cost !== null && card.cost !== 'X') {
+            if(card.cost !== null && card.cost !== 'X' && card.cost !== '-') {
                 data[card.cost] = data[card.cost] || 0;
                 data[card.cost] += card.indeck;
             }

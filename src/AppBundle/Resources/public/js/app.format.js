@@ -46,7 +46,7 @@
         var text = '<span class="card-type">' + card.type_name + '. </span>';
         switch(card.type_code) {
             case 'character':
-                text += Translator.trans('card.info.cost') + ': ' + (card.cost != null ? card.cost : 'X') + '. ';
+                text += Translator.trans('card.info.cost') + ': ' + card.cost + '. ';
                 text += Translator.trans('card.info.str') + ': ' + (card.strength != null ? card.strength : 'X') + '. '
                 if(card.is_military)
                     text += '<span class="color-military icon-military" title="' + Translator.trans('challenges.military') + '"></span> ';
@@ -58,7 +58,7 @@
             case 'attachment':
             case 'location':
             case 'event':
-                text += Translator.trans('card.info.cost') + ': ' + (card.cost != null ? card.cost : 'X') + '. ';
+                text += Translator.trans('card.info.cost') + ': ' + card.cost + '. ';
                 break;
             case 'plot':
                 text += Translator.trans('card.info.income') + ': ' + card.income + '. ';
