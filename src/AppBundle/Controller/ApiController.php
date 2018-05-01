@@ -117,7 +117,7 @@ class ApiController extends Controller
      */
     public function getCardAction($card_code, Request $request)
     {
-        $version = $request->query->get('v', '1');
+        $version = $request->query->get('v', '1.0');
 
         $response = new Response();
         $response->setPublic();
@@ -178,7 +178,7 @@ class ApiController extends Controller
      */
     public function listCardsAction(Request $request)
     {
-        $version = $request->query->get('v', '1');
+        $version = $request->query->get('v', '1.0');
 
         $response = new Response();
         $response->setPublic();
@@ -253,7 +253,7 @@ class ApiController extends Controller
      */
     public function listCardsByPackAction($pack_code, Request $request)
     {
-        $version = $request->query->get('v', '1');
+        $version = $request->query->get('v', '1.0');
 
         $response = new Response();
         $response->setPublic();
