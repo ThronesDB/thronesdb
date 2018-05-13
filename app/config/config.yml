@@ -120,8 +120,8 @@ fos_user:
         confirmation:
             enabled: true
     from_email:
-        address: '%mailer_user%'
-        sender_name: '%mailer_user%'
+        address: '%email_sender_address%'
+        sender_name: '%email_sender_name%'
     service:
         mailer: fos_user.mailer.twig_swift
 
