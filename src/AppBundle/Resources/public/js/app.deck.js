@@ -593,6 +593,12 @@
                     return false;
                 }
                 break;
+            case '11079':
+                var nonNeutralCards = deck.get_nb_cards(deck.get_cards(null, {faction_code: { $ne: 'neutral' }}));
+                if(nonNeutralCards > 0) {
+                    return false;
+                }
+                break;
         }
         return true;
     };
