@@ -150,6 +150,8 @@ class DeckValidationHelper
                 return $this->validateBrotherhood($slots, $agenda);
             case '09045':
                 return $this->validateConclave($slots, $agenda);
+            case '11079':
+                return $this->validateFreeFolk($slots, $agenda);
             default:
                 return true;
         }
@@ -231,6 +233,25 @@ class DeckValidationHelper
         if ($matchingMaesters < 12) {
             return false;
         }
+        return true;
+    }
+
+    public function validateFreeFolk(\AppBundle\Model\SlotCollectionInterface $slots, \AppBundle\Entity\Card $agenda)
+    {
+        foreach ($slots->getPlotDeck()->getSlots() as $slot) {
+            $card = $slot->getCard();
+            if ($card->getFaction()->getCode() !== 'neutral') {
+                return false;
+            }
+        }
+
+        foreach ($slots->getDrawDeck()->getSlots() as $slot) {
+            $card = $slot->getCard();
+            if ($card->getFaction()->getCode() !== 'neutral') {
+                return false;
+            }
+        }
+
         return true;
     }
 
