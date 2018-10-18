@@ -227,6 +227,41 @@ class BuilderController extends Controller
         return $response;
     }
 
+    public function binderexportAction($deck_id)
+    {
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var $deck \AppBundle\Entity\Deck */
+        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+            return $this->render(
+                            'AppBundle:Default:error.html.twig',
+                array(
+                        'pagetitle' => "Error",
+                        'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+                            )
+            );
+        }
+
+        $content = $this->renderView('AppBundle:Export:cycleorder.txt.twig', [
+            "deck" => $deck->getCycleOrderExport()
+        ]);
+        $content = str_replace("\n", "\r\n", $content);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $this->get('texts')->slugify($deck->getName()) . '.txt'
+        ));
+
+        $response->setContent($content);
+        return $response;
+    }
+
     public function cloneAction($deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */

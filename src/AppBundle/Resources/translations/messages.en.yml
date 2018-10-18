@@ -133,6 +133,7 @@ decks:
     download:
       text: Text file
       octgn: Octgn file
+      binderordered: Binder Ordered List file
   modals:
     card:
       go: Go to card page
