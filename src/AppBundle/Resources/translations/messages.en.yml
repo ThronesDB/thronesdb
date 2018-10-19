@@ -132,8 +132,8 @@ decks:
     labelswitch: Click to switch to this tag. Shift-click to toggle this tag.
     download:
       text: Text file
+      text_cycleorder: Text file (ordered by release date)
       octgn: Octgn file
-      binderordered: Binder Ordered List file
   modals:
     card:
       go: Go to card page

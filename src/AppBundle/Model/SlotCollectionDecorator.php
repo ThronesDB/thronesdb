@@ -98,21 +98,25 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
         return $slotsByType;
     }
 
-    public static function sortByCode($s1, $s2)
+    public static function sortByCycleOrder($s1, $s2)
     {
         return intval($s1->getCard()->getCode()) - intval($s2->getCard()->getCode());
     }
 
-    public function getSlotsByCycle()
+    public function getSlotsByCycleOrder()
     {
-        //$slots_array = (array)$this->slots;
         $slots_array = [];
         foreach ($this->slots as $slot){
             $slots_array[] = $slot;
         }
-        //usort($slots_array, array("AppBundle\Model\SlotCollectionDecorator", "sortByCode"));
-        //dump($slots_array);
-        return $slots_array;
+        usort($slots_array, array("AppBundle\Model\SlotCollectionDecorator", "sortByCycleOrder"));
+        
+        // At this point, $slots_array is also ordered by cycle
+        $slots_array_by_cicle = [];
+        foreach ($slots_array as $slot){
+            $slots_array_by_cicle[$slot->getCard()->getPack()->getCycle()->getName()][] = $slot;
+        }
+        return $slots_array_by_cicle;
     }
 
     public function getCountByType()

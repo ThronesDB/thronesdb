@@ -132,6 +132,7 @@ decks:
     labelswitch: Click para cambiar a esta etiqueta. Mayús+Click para alternar esta etiqueta.
     download:
       text: Fichero de texto
+      text_cycleorder: Fichero de texto (ordenado por fecha de lanzamiento)
       octgn: Fichero OCTGN
   modals:
     card:
