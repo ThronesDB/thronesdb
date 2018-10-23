@@ -33,7 +33,7 @@ class DeckImportService
 
         foreach ($lines as $line) {
             $matches = [];
-            if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
+            if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\: \"]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
             } elseif (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {
