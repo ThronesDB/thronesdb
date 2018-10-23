@@ -29,7 +29,7 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
      * Get all slots sorted by cycle number (including plots)
      * @return array
      */
-    public function getSlotsByCycleOrder();
+    public function getSlotsByCycleOrder($deluxeAfter);
     
     /**
      * Get all slot counts sorted by type code (excluding plots)
