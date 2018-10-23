@@ -54,7 +54,8 @@
 						</button>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">{{ 'decks.form.download.text' | trans }}</a></li>
-							<li><a href="{{ path('deck_export_text_ordered', {deck_id:deck_id}) }}">{{ 'decks.form.download.text_cycleorder' | trans }}</a></li>
+							<li><a href="{{ path('deck_export_text_ordered_deluxe_before', {deck_id:deck_id}) }}">{{ 'decks.form.download.text_cycleorder' | trans }}</a></li>
+							<li><a href="{{ path('deck_export_text_ordered_deluxe_after', {deck_id:deck_id}) }}">{{ 'decks.form.download.text_cycleorder_deluxe_after' | trans }}</a></li>
 							<li><a href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">{{ 'decks.form.download.octgn' | trans }}</a></li>
 						</ul>
 					</div>

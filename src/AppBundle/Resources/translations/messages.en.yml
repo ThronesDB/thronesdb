@@ -133,6 +133,7 @@ decks:
     download:
       text: Text file
       text_cycleorder: Text file (ordered by release date)
+      text_cycleorder_deluxe_after: Text file (ordered by release date, deluxe after)
       octgn: Octgn file
   modals:
     card:

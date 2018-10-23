@@ -227,7 +227,7 @@ class BuilderController extends Controller
         return $response;
     }
 
-    public function textorderedexportAction($deck_id)
+    public function textorderedexportAction($deck_id, $deluxeAfter)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -245,9 +245,8 @@ class BuilderController extends Controller
                             )
             );
         }
-
         $content = $this->renderView('AppBundle:Export:cycleorder.txt.twig', [
-            "deck" => $deck->getCycleOrderExport()
+            "deck" => $deck->getCycleOrderExport($deluxeAfter)
         ]);
         $content = str_replace("\n", "\r\n", $content);
 
