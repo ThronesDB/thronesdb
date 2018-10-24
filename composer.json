@@ -53,6 +53,7 @@
         "behat/behat": "^3.4",
         "behat/symfony2-extension": "^2.1",
         "justinrainbow/json-schema": "^5.2",
+        "mockery/mockery": "^1.2",
         "phpunit/phpunit": "^6.5",
         "sensio/generator-bundle": "^3.0",
         "symfony/expression-language": "^4.0",
