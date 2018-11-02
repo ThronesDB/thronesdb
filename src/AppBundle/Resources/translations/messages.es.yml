@@ -462,6 +462,6 @@ keyword:
   bestow:
     name: Encomienda
     title: "Cuando esta carta entre en juego, traslada hasta X de Oro de tu suministro de Oro hasta esta carta."
-  shadows:
+  shadow:
     name: Sombra
     title: "Marshal this card facedown into the shadows for 2 gold. As an action, pay 0 gold to bring it into play faceup."
