@@ -463,4 +463,7 @@ keyword:
   bestow:
     name: Bestow
     title: "When this card enters play, move up to X gold from your gold pool to this card."
+  shadow:
+    name: Shadow
+    title: "Marshal this card facedown into the shadows for 2 gold. As an action, pay 0 gold to bring it into play faceup."
   
