@@ -2,9 +2,6 @@
 
 (function ui_deckimport(ui, $)
 {
-
-    var name_regexp;
-
     ui.on_content_change = function on_content_change(event)
     {
         var text = $(content).val(),
@@ -12,17 +9,25 @@
                 faction_code,
                 faction_name;
 
-        text.match(name_regexp).forEach(function (token)
+        text.match(/[^\r\n]+/g).forEach(function (token)
         {
-            var qty = 1, name = token.trim(), card;
-            if(token[0] === '(') {
-                return;
-            }
-            if(name.match(/^(\d+)x (.*)/)) {
+            var qty = 1, name = token.trim(), card, packName;
+            if (name.match(/^(\d+)x? ([^(]+) \(([^)]+)\)/)) {
+              qty = parseInt(RegExp.$1, 10);
+              name = RegExp.$2.trim();
+              packName = RegExp.$3.trim();
+            } else if(name.match(/^(\d+)x (.*)/)) {
                 qty = parseInt(RegExp.$1, 10);
                 name = RegExp.$2.trim();
             }
-            card = app.data.cards.findOne({name: name});
+            if (packName) {
+              card = app.data.cards.findOne({name: name, pack_name: packName});
+              if (!card) {
+                card = app.data.cards.findOne({name: name, pack_code: packName});
+              }
+            } else {
+              card = app.data.cards.findOne({name: name});
+            }
             faction = app.data.factions.findOne({name: name});
             if(card) {
                 slots[card.code] = qty;
@@ -59,8 +64,6 @@
      */
     ui.on_data_loaded = function on_data_loaded()
     {
-        var characters = _.unique(_.pluck(app.data.cards.find(), 'name').join('').split('').sort()).join('');
-        name_regexp = new RegExp('\\(?[\\d' + characters.replace(/[[\](){}?*+^$\\.|]/g, '\\$&') + ']+\\)?', 'g');
     };
 
     /**
