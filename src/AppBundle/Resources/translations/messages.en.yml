@@ -465,5 +465,5 @@ keyword:
     title: "When this card enters play, move up to X gold from your gold pool to this card."
   shadow:
     name: Shadow
-    title: " A card with shadow (X) can be marshaled facedown into its controller’s shadows area for 2 gold. That card can later be played (if it is an event) or brought into play faceup (if it is a character, location, or attachment) by paying X gold."
+    title: "A card with shadow (X) can be marshaled facedown into its controller’s shadows area for 2 gold. That card can later be played (if it is an event) or brought into play faceup (if it is a character, location, or attachment) by paying X gold."
   
