@@ -16,7 +16,7 @@
                 qty = parseInt(RegExp.$1, 10);
                 name = RegExp.$2.trim();
                 packName = RegExp.$3.trim();
-            } else if(name.match(/^(\d+)x (.*)/)) {
+            } else if(name.match(/^(\d+)x? (.*)/)) {
                 qty = parseInt(RegExp.$1, 10);
                 name = RegExp.$2.trim();
             }
