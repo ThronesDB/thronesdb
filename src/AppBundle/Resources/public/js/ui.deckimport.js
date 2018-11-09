@@ -13,20 +13,20 @@
         {
             var qty = 1, name = token.trim(), card, packName;
             if (name.match(/^(\d+)x? ([^(]+) \(([^)]+)\)/)) {
-              qty = parseInt(RegExp.$1, 10);
-              name = RegExp.$2.trim();
-              packName = RegExp.$3.trim();
+                qty = parseInt(RegExp.$1, 10);
+                name = RegExp.$2.trim();
+                packName = RegExp.$3.trim();
             } else if(name.match(/^(\d+)x (.*)/)) {
                 qty = parseInt(RegExp.$1, 10);
                 name = RegExp.$2.trim();
             }
             if (packName) {
-              card = app.data.cards.findOne({name: name, pack_name: packName});
-              if (!card) {
-                card = app.data.cards.findOne({name: name, pack_code: packName});
-              }
+                card = app.data.cards.findOne({name: name, pack_name: packName});
+                if (!card) {
+                    card = app.data.cards.findOne({name: name, pack_code: packName});
+                }
             } else {
-              card = app.data.cards.findOne({name: name});
+                card = app.data.cards.findOne({name: name});
             }
             faction = app.data.factions.findOne({name: name});
             if(card) {
