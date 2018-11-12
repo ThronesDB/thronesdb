@@ -103,7 +103,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
         return intval($s1->getCard()->getCode()) - intval($s2->getCard()->getCode());
     }
 
-    public static function sortByCycleOrder_deluxeAfter($s1, $s2)
+    public static function sortByCycleOrderDeluxeAfter($s1, $s2)
     {
         // Compare cycle first. Cycle size should be enough for the moment. Core set will be first anyway.
 
@@ -133,7 +133,7 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
         if (!$deluxeAfter)
             usort($slots_array, array("AppBundle\Model\SlotCollectionDecorator", "sortByCycleOrder"));
         else
-            usort($slots_array, array("AppBundle\Model\SlotCollectionDecorator", "sortByCycleOrder_deluxeAfter"));
+            usort($slots_array, array("AppBundle\Model\SlotCollectionDecorator", "sortByCycleOrderDeluxeAfter"));
 
         // At this point, $slots_array is also ordered by cycle
         $slots_array_by_cicle = [];
