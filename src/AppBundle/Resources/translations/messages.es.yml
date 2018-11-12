@@ -133,6 +133,7 @@ decks:
     download:
       text: Fichero de texto
       text_cycleorder: Fichero de texto (ordenado por fecha de lanzamiento)
+      text_cycleorder_deluxe_after: Fichero de texto (ordenado por fecha de lanzamiento, deluxe al final)
       octgn: Fichero OCTGN
   modals:
     card:
