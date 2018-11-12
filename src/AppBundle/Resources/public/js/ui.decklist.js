@@ -34,6 +34,12 @@
             case 'btn-download-text':
                 location.href = Routing.generate('decklist_export_text', {decklist_id: app.deck.get_id()});
                 break;
+            case 'btn-download-text-cycle-ordered':
+                location.href = Routing.generate('decklist_export_text_ordered_deluxe_before', {decklist_id: app.deck.get_id()});
+                break;
+            case 'btn-download-text-cycle-ordered-deluxe-after':
+                location.href = Routing.generate('decklist_export_text_ordered_deluxe_after', {decklist_id: app.deck.get_id()});
+                break;
             case 'btn-download-octgn':
                 location.href = Routing.generate('decklist_export_octgn', {decklist_id: app.deck.get_id()});
                 break;

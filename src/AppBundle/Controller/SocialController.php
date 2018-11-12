@@ -837,9 +837,46 @@ class SocialController extends Controller
     }
 
     /*
-     * returns a octgn file with the content of a decklist
+     * returns a text file ordered by release cycle release date
      */
 
+
+    public function textorderedexportAction($decklist_id, $deluxeAfter, Request $request)
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+
+        /* @var $em \Doctrine\ORM\EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var $decklist \AppBundle\Entity\Decklist */
+        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
+        if (!$decklist) {
+            throw new NotFoundHttpException("Unable to find decklist.");
+        }
+
+        $content = $this->renderView('AppBundle:Export:cycleorder.txt.twig', [
+            "deck" => $decklist->getCycleOrderExport($deluxeAfter)
+        ]);
+        $content = str_replace("\n", "\r\n", $content);
+
+        $response = new Response();
+
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
+                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $decklist->getNameCanonical() . '.txt'
+        ));
+
+        $response->setContent($content);
+        return $response;
+    }
+
+    /*
+     * returns a octgn file with the content of a decklist
+     */
+    
     public function octgnexportAction($decklist_id, Request $request)
     {
         $response = new Response();
