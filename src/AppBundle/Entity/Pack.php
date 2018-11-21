@@ -91,6 +91,16 @@ class Pack implements  \Serializable
     }
 
     /**
+     * @param int $id
+     * @return Pack
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
      * Get id
      *
      * @return integer

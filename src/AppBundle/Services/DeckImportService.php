@@ -2,6 +2,8 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Pack;
+
 /**
  * Description of DeckImportService
  *
@@ -31,9 +33,25 @@ class DeckImportService
 
         $lines = explode("\n", $text);
 
+        if (empty($lines)) {
+            return $data;
+        }
+
+        // load all packs upfront and map them by their names and codes for easy lookup below
+        $packs = $this->em->getRepository('AppBundle:Pack')->findAll();
+        $packsByName = array_combine(array_map(function(Pack $pack) { return $pack->getName(); }, $packs), $packs);
+        $packsByCode = array_combine(array_map(function(Pack $pack) { return $pack->getCode(); }, $packs), $packs);
+
         foreach ($lines as $line) {
             $matches = [];
-            if (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
+            $packNameOrCode = null;
+            $card = null;
+
+            if (preg_match('/^\s*(\d)x?([^(]+) \(([^)]+)/u', $line, $matches)){
+                $quantity = intval($matches[1]);
+                $name = trim($matches[2]);
+                $packNameOrCode = trim($matches[3]);
+            } elseif (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\:" ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
             } elseif (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {
@@ -45,9 +63,27 @@ class DeckImportService
             } else {
                 continue;
             }
-            $card = $this->em->getRepository('AppBundle:Card')->findOneBy(array(
-                'name' => $name
-            ));
+
+            if ($packNameOrCode) {
+                /* @var Pack $pack */
+                $pack = null;
+                if (array_key_exists($packNameOrCode, $packsByName)) {
+                    $pack = $packsByName[$packNameOrCode];
+                } elseif (array_key_exists($packNameOrCode, $packsByCode)) {
+                    $pack = $packsByCode[$packNameOrCode];
+                }
+                if ($pack) {
+                    $card = $this->em->getRepository('AppBundle:Card')->findOneBy(array(
+                        'name' => $name,
+                        'pack' => $pack->getId(),
+                    ));
+                }
+            } else {
+                $card = $this->em->getRepository('AppBundle:Card')->findOneBy(array(
+                    'name' => $name
+                ));
+            }
+
             if ($card) {
                 $data['content'][$card->getCode()] = $quantity;
             } else {
