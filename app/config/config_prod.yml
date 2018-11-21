@@ -14,7 +14,7 @@ monolog:
             action_level: error
             handler: nested
             excluded_404s:
-                - ^/bundle/cards
+                - ^/bundles/cards
         nested:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'
