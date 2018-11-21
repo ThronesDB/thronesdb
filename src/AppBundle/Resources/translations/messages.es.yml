@@ -462,3 +462,6 @@ keyword:
   bestow:
     name: Encomienda
     title: "Cuando esta carta entre en juego, traslada hasta X de Oro de tu suministro de Oro hasta esta carta."
+  shadow:
+    name: Sombra
+    title: "A card with shadow (X) can be marshaled facedown into its controller’s shadows area for 2 gold. That card can later be played (if it is an event) or brought into play faceup (if it is a character, location, or attachment) by paying X gold."
