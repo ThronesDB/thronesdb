@@ -7,6 +7,8 @@
 
     var fdb = new ForerunnerDB();
     var database = fdb.db('thronesdb');
+
+    data.db = database;
     var masters = {
         packs: database.collection('master_pack', {primaryKey: 'code'}),
         cards: database.collection('master_card', {primaryKey: 'code'})
