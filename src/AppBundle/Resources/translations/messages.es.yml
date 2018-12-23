@@ -392,7 +392,6 @@ card:
     str: FUE
     strini: Fuerza/Iniciativa
     traits: Rasgos
-    set: Capítulo
     loyal: Leal
     nonloyal: No Leal
     income: Ingresos

@@ -393,7 +393,6 @@ card:
     str: STR
     strini: Strength/Initiative
     traits: Traits
-    set: Set
     loyal: Loyal
     nonloyal: Non-Loyal
     income: Income
