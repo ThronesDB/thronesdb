@@ -238,7 +238,9 @@ class Oauth2Controller extends Controller
      *  },
      * )
      *
+     * @param int $id
      * @param Request $request
+     * @return Response $response
      */
     public function publishDeckAction($id, Request $request)
     {
@@ -263,7 +265,7 @@ class Oauth2Controller extends Controller
                 $precedent_id = null;
             }
         }
-        $precedent = $precedent_id ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
+        $precedent = $precedent_id ? $this->getDoctrine()->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
 
         try {
             $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
