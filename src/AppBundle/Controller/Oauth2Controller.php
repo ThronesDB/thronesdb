@@ -55,7 +55,7 @@ class Oauth2Controller extends Controller
         $decks = $this->getDoctrine()->getRepository('AppBundle:Deck')->findBy(['user' => $this->getUser()]);
 
         if (! empty($decks)) {
-            $dateUpdates = array_map(function ($deck) {
+            $dateUpdates = array_map(function (Deck $deck) {
                 return $deck->getDateUpdate();
             }, $decks);
 
