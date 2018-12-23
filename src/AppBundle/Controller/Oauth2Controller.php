@@ -90,8 +90,10 @@ class Oauth2Controller extends Controller
      * )
      *
      * @param Request $request
+     * @param int $id
+     * @return Response
      */
-    public function loadDeckAction($id)
+    public function loadDeckAction(Request $request, $id)
     {
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
