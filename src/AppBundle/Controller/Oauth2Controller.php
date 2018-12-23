@@ -54,13 +54,15 @@ class Oauth2Controller extends Controller
         /* @var $decks \AppBundle\Entity\Deck[] */
         $decks = $this->getDoctrine()->getRepository('AppBundle:Deck')->findBy(['user' => $this->getUser()]);
 
-        $dateUpdates = array_map(function ($deck) {
-            return $deck->getDateUpdate();
-        }, $decks);
+        if (! empty($decks)) {
+            $dateUpdates = array_map(function ($deck) {
+                return $deck->getDateUpdate();
+            }, $decks);
 
-        $response->setLastModified(max($dateUpdates));
-        if ($response->isNotModified($request)) {
-            return $response;
+            $response->setLastModified(max($dateUpdates));
+            if ($response->isNotModified($request)) {
+                return $response;
+            }
         }
 
         $content = json_encode($decks);
