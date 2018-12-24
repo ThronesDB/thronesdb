@@ -86,7 +86,7 @@ decks:
       options:
         label: Options
         show:
-          unusable: Show unusabled cards
+          unusable: Show unusable cards
           onlyused: Show only used cards
         display: "{1} Display on 1 column | ]1, Inf] Display on %cols% columns"
         usecore: "{1} Use 1 Core Set | ]1, Inf] Use %core% Core Sets"
@@ -393,7 +393,6 @@ card:
     str: STR
     strini: Strength/Initiative
     traits: Traits
-    set: Set
     loyal: Loyal
     nonloyal: Non-Loyal
     income: Income
