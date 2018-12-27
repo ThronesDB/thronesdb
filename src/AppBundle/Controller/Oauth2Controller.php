@@ -54,13 +54,15 @@ class Oauth2Controller extends Controller
         /* @var $decks \AppBundle\Entity\Deck[] */
         $decks = $this->getDoctrine()->getRepository('AppBundle:Deck')->findBy(['user' => $this->getUser()]);
 
-        $dateUpdates = array_map(function ($deck) {
-            return $deck->getDateUpdate();
-        }, $decks);
+        if (! empty($decks)) {
+            $dateUpdates = array_map(function (Deck $deck) {
+                return $deck->getDateUpdate();
+            }, $decks);
 
-        $response->setLastModified(max($dateUpdates));
-        if ($response->isNotModified($request)) {
-            return $response;
+            $response->setLastModified(max($dateUpdates));
+            if ($response->isNotModified($request)) {
+                return $response;
+            }
         }
 
         $content = json_encode($decks);
@@ -90,8 +92,10 @@ class Oauth2Controller extends Controller
      * )
      *
      * @param Request $request
+     * @param int $id
+     * @return Response
      */
-    public function loadDeckAction($id)
+    public function loadDeckAction(Request $request, $id)
     {
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
@@ -236,7 +240,9 @@ class Oauth2Controller extends Controller
      *  },
      * )
      *
+     * @param int $id
      * @param Request $request
+     * @return Response $response
      */
     public function publishDeckAction($id, Request $request)
     {
@@ -261,7 +267,7 @@ class Oauth2Controller extends Controller
                 $precedent_id = null;
             }
         }
-        $precedent = $precedent_id ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
+        $precedent = $precedent_id ? $this->getDoctrine()->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
 
         try {
             $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
