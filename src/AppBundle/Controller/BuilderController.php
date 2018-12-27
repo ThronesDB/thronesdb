@@ -157,7 +157,7 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function textexportAction($deck_id)
+    public function downloadAction(Request $request, $deck_id)
     {
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -168,96 +168,128 @@ class BuilderController extends Controller
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
             return $this->render(
-                            'AppBundle:Default:error.html.twig',
+                'AppBundle:Default:error.html.twig',
                 array(
-                        'pagetitle' => "Error",
-                        'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
-                            )
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
+                )
             );
         }
 
-        $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
-            "deck" => $deck->getTextExport()
-        ]);
+        $format = $request->query->get('format', 'text');
+
+        switch ($format) {
+            case 'theironthrone':
+                return $this->downloadInTheIronThroneFormat($deck);
+                break;
+            case 'octgn':
+                return $this->downloadInOctgnFormat($deck);
+                break;
+            case 'text_cycle':
+                return $this->downloadInTextFormatSortedByCycle($deck);
+                break;
+            case 'text':
+            default:
+                return $this->downloadInDefaultTextFormat($deck);
+        }
+    }
+
+    protected function downloadInTheIronThroneFormat(Deck $deck)
+    {
+        $content = $this->renderView(
+            'AppBundle:Export:theironthrone.txt.twig',
+            [
+                "deck" => $deck->getTextExport()
+            ]
+        );
         $content = str_replace("\n", "\r\n", $content);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $this->get('texts')->slugify($deck->getName()) . '.txt'
-        ));
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($deck->getName()).'.txt'
+            )
+        );
 
         $response->setContent($content);
+
         return $response;
     }
 
-    public function octgnexportAction($deck_id)
+    protected function downloadInOctgnFormat(Deck $deck)
     {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var $deck \AppBundle\Entity\Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
-        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
-            return $this->render(
-                            'AppBundle:Default:error.html.twig',
-                array(
-                        'pagetitle' => "Error",
-                        'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
-                            )
-            );
-        }
-
-        $content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
-            "deck" => $deck->getTextExport()
-        ]);
+        $content = $this->renderView(
+            'AppBundle:Export:octgn.xml.twig',
+            [
+                "deck" => $deck->getTextExport()
+            ]
+        );
 
         $response = new Response();
-
         $response->headers->set('Content-Type', 'application/octgn');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $this->get('texts')->slugify($deck->getName()) . '.o8d'
-        ));
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($deck->getName()) . '.o8d'
+            )
+        );
 
         $response->setContent($content);
+
         return $response;
     }
 
-    public function textorderedexportAction($deck_id, $deluxeAfter)
+    protected function downloadInDefaultTextFormat(Deck $deck)
     {
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var $deck \AppBundle\Entity\Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
-
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
-        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
-            return $this->render(
-                            'AppBundle:Default:error.html.twig',
-                array(
-                        'pagetitle' => "Error",
-                        'error' => 'You are not allowed to view this deck. To get access, you can ask the deck owner to enable "Share your decks" on their account.'
-                            )
-            );
-        }
-        $content = $this->renderView('AppBundle:Export:cycleorder.txt.twig', [
-            "deck" => $deck->getCycleOrderExport($deluxeAfter)
-        ]);
+        $content = $this->renderView(
+            'AppBundle:Export:default.txt.twig',
+            [
+                "deck" => $deck->getTextExport()
+            ]
+        );
         $content = str_replace("\n", "\r\n", $content);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $this->get('texts')->slugify($deck->getName()) . '.txt'
-        ));
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($deck->getName()).'.txt'
+            )
+        );
 
         $response->setContent($content);
+
+        return $response;
+    }
+
+    protected function downloadInTextFormatSortedByCycle(Deck $deck)
+    {
+        $content = $this->renderView(
+            'AppBundle:Export:sortedbycycle.txt.twig',
+            [
+                "deck" => $deck->getCycleOrderExport()
+            ]
+        );
+        $content = str_replace("\n", "\r\n", $content);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($deck->getName()) . '.txt'
+            )
+        );
+
+        $response->setContent($content);
+
         return $response;
     }
 

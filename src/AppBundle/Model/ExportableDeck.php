@@ -47,7 +47,7 @@ class ExportableDeck
         ];
     }
 
-    public function getCycleOrderExport($deluxeAfter)
+    public function getCycleOrderExport()
     {
         $slots = $this->getSlots();
         return [
@@ -58,7 +58,7 @@ class ExportableDeck
             'draw_deck_size' => $slots->getDrawDeck()->countCards(),
             'plot_deck_size' => $slots->getPlotDeck()->countCards(),
             'included_packs' => $slots->getIncludedPacks(),
-            'slots_by_cycle_order' => $slots->getSlotsByCycleOrder($deluxeAfter)
+            'slots_by_cycle_order' => $slots->getSlotsByCycleOrder()
         ];
     }
 }

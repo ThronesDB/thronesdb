@@ -1,0 +1,43 @@
+{{ deck.name }} {{ deck.version }}
+
+{{ deck.faction.name }}
+{% for agenda in deck.agendas %}
+{{ agenda.card.name }}
+{% endfor %}
+
+{% set plots = deck.slots_by_type.plot %}
+Plot{% if plots|length > 1 %}s{% endif %}
+
+{% for slot in plots %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.code }})
+{% endfor %}
+
+{% set characters = deck.slots_by_type.character %}
+Character{% if characters|length > 1 %}s{% endif %}
+
+{% for slot in characters %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.code }})
+{% endfor %}
+
+{% set locations = deck.slots_by_type.location %}
+Location{% if locations|length > 1 %}s{% endif %}
+
+{% for slot in locations %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.code }})
+{% endfor %}
+
+{% set attachments = deck.slots_by_type.attachment %}
+Attachment{% if attachments|length > 1 %}s{% endif %}
+
+{% for slot in attachments %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.code }})
+{% endfor %}
+
+{% set events = deck.slots_by_type.event %}
+Event{% if events|length > 1 %}s{% endif %}
+
+{% for slot in events %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.code }})
+{% endfor %}
+
+{{ footer|default('') }}

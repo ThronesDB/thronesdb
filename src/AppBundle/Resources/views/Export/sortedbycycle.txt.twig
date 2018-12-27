@@ -18,7 +18,7 @@ From {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){
 
 ---- {{ cycle }} ----
 {% for slot in slots %}
-#{{ "%03d" | format(slot.card.position) }} {{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }})
+{{ slot.quantity }}x {{ slot.card.name }} | #{{ slot.card.code }} {{ slot.card.pack.name }}
 {% endfor %}
 {% endfor %}
 

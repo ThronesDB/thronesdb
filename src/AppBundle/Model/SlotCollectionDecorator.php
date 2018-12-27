@@ -98,49 +98,30 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
         return $slotsByType;
     }
 
-    public static function sortByCycleOrder($s1, $s2)
+    /**
+     * Sorting callback.
+     * @param SlotInterface $s1
+     * @param SlotInterface $s2
+     * @return int
+     */
+    public function sortByCardCode(SlotInterface $s1, SlotInterface $s2)
     {
-        return intval($s1->getCard()->getCode()) - intval($s2->getCard()->getCode());
+        return intval($s1->getCard()->getCode(), 10) - intval($s2->getCard()->getCode(), 10);
     }
 
-    public static function sortByCycleOrderDeluxeAfter($s1, $s2)
-    {
-        // Compare cycle first. Cycle size should be enough for the moment. Core set will be first anyway.
-
-        // If at least one is a core set slot, then ordering by code will be fine
-        $comparingCore = $s1->getCard()->getPack()->getCycle()->getPosition() == 1 || $s2->getCard()->getPack()->getCycle()->getPosition() == 1;
-
-        // If the packs have same size (both non-deluxe, or both deluxe), then ordering by code will be fine
-        $sameSize = $s1->getCard()->getPack()->getCycle()->getSize() == $s2->getCard()->getPack()->getCycle()->getSize();
-
-
-        if ($comparingCore || $sameSize)
-            // Normal ordering
-            return intval($s1->getCard()->getCode()) - intval($s2->getCard()->getCode());
-        else
-            // Cycle with size 6 (non-deluxe) should be first
-            return intval($s2->getCard()->getPack()->getCycle()->getSize()) - intval($s1->getCard()->getPack()->getCycle()->getSize());
-    }
-
-
-    public function getSlotsByCycleOrder($deluxeAfter)
+    public function getSlotsByCycleOrder()
     {
         $slots_array = [];
         foreach ($this->slots as $slot){
             $slots_array[] = $slot;
         }
 
-        if (!$deluxeAfter)
-            usort($slots_array, array("AppBundle\Model\SlotCollectionDecorator", "sortByCycleOrder"));
-        else
-            usort($slots_array, array("AppBundle\Model\SlotCollectionDecorator", "sortByCycleOrderDeluxeAfter"));
-
-        // At this point, $slots_array is also ordered by cycle
-        $slots_array_by_cicle = [];
+        usort($slots_array, array($this, "sortByCardCode"));
+        $cycles = [];
         foreach ($slots_array as $slot){
-            $slots_array_by_cicle[$slot->getCard()->getPack()->getCycle()->getName()][] = $slot;
+            $cycles[$slot->getCard()->getPack()->getCycle()->getName()][] = $slot;
         }
-        return $slots_array_by_cicle;
+        return $cycles;
     }
 
     public function getCountByType()
