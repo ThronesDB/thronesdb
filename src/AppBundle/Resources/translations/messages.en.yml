@@ -131,10 +131,10 @@ decks:
         selected: Delete all decks selected
     labelswitch: Click to switch to this tag. Shift-click to toggle this tag.
     download:
-      text: Text file
-      text_cycleorder: Text file (ordered by release date)
-      text_cycleorder_deluxe_after: Text file (ordered by release date, deluxe after)
-      octgn: Octgn file
+      octgn: Octgn
+      text: Sorted by type and name
+      text_cycleset: Sorted by cycle and set
+      theironthrone: TheIronThrone.net
   modals:
     card:
       go: Go to card page

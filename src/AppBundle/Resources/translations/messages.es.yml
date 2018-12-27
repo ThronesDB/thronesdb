@@ -131,10 +131,10 @@ decks:
         selected: Borrar todos los mazos seleccionados
     labelswitch: Click para cambiar a esta etiqueta. Mayús+Click para alternar esta etiqueta.
     download:
-      text: Fichero de texto
-      text_cycleorder: Fichero de texto (ordenado por fecha de lanzamiento)
-      text_cycleorder_deluxe_after: Fichero de texto (ordenado por fecha de lanzamiento, deluxe al final)
-      octgn: Fichero OCTGN
+      octgn: Octgn
+      text: Ordenados por tipo y nombre
+      text_cycleset: Ordenado por ciclo y conjunto
+      theironthrone: TheIronThrone.net
   modals:
     card:
       go: Ir a la página de la carta
