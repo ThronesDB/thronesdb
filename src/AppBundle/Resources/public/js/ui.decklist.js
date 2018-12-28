@@ -40,9 +40,6 @@
             case 'btn-download-octgn':
                 location.href = Routing.generate('decklist_download', {decklist_id: app.deck.get_id(), format: 'octgn'});
                 break;
-            case 'btn-download-theironthrone':
-                location.href = Routing.generate('decklist_download', {decklist_id: app.deck.get_id(), format: 'theironthrone'});
-                break;
             case 'btn-export-bbcode':
                 export_bbcode();
                 break;

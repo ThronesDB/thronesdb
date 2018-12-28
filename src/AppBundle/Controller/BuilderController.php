@@ -179,9 +179,6 @@ class BuilderController extends Controller
         $format = $request->query->get('format', 'text');
 
         switch ($format) {
-            case 'theironthrone':
-                return $this->downloadInTheIronThroneFormat($deck);
-                break;
             case 'octgn':
                 return $this->downloadInOctgnFormat($deck);
                 break;
@@ -192,31 +189,6 @@ class BuilderController extends Controller
             default:
                 return $this->downloadInDefaultTextFormat($deck);
         }
-    }
-
-    protected function downloadInTheIronThroneFormat(Deck $deck)
-    {
-        $content = $this->renderView(
-            'AppBundle:Export:theironthrone.txt.twig',
-            [
-                "deck" => $deck->getTextExport()
-            ]
-        );
-        $content = str_replace("\n", "\r\n", $content);
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($deck->getName()).'.txt'
-            )
-        );
-
-        $response->setContent($content);
-
-        return $response;
     }
 
     protected function downloadInOctgnFormat(Deck $deck)

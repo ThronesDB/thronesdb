@@ -814,9 +814,6 @@ class SocialController extends Controller
         $format = $request->query->get('format', 'text');
 
         switch ($format) {
-            case 'theironthrone':
-                return $this->downloadInTheIronThroneFormat($decklist);
-                break;
             case 'octgn':
                 return $this->downloadInOctgnFormat($decklist);
                 break;
@@ -827,33 +824,6 @@ class SocialController extends Controller
             default:
                 return $this->downloadInDefaultTextFormat($decklist);
         }
-    }
-
-    protected function downloadInTheIronThroneFormat(Decklist $decklist)
-    {
-        $content = $this->renderView(
-            'AppBundle:Export:theironthrone.txt.twig',
-            [
-                "deck" => $decklist->getTextExport()
-            ]
-        );
-        $content = str_replace("\n", "\r\n", $content);
-
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
-        $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($decklist->getName()).'.txt'
-            )
-        );
-
-        $response->setContent($content);
-
-        return $response;
     }
 
     protected function downloadInOctgnFormat(Decklist $decklist)
