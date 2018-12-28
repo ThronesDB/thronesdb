@@ -132,8 +132,8 @@ decks:
     labelswitch: Click to switch to this tag. Shift-click to toggle this tag.
     download:
       octgn: Octgn
-      text: Sorted by type and name
-      text_cycleset: Sorted by cycle and set
+      text: Sorted by type
+      text_cycle: Sorted by cycle
       theironthrone: TheIronThrone.net
   modals:
     card:

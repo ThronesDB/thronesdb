@@ -132,8 +132,8 @@ decks:
     labelswitch: Click para cambiar a esta etiqueta. Mayús+Click para alternar esta etiqueta.
     download:
       octgn: Octgn
-      text: Ordenados por tipo y nombre
-      text_cycleset: Ordenado por ciclo y conjunto
+      text: Ordenados por tipo
+      text_cycle: Ordenado por ciclo
       theironthrone: TheIronThrone.net
   modals:
     card:
