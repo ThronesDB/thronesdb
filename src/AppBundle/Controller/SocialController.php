@@ -800,16 +800,8 @@ class SocialController extends Controller
         return $arr;
     }
 
-    /*
-     * returns a text file with the content of a decklist
-     */
-
-    public function textexportAction($decklist_id, Request $request)
+    public function downloadAction(Request $request, $decklist_id)
     {
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
-
         /* @var $em \Doctrine\ORM\EntityManager */
         $em = $this->getDoctrine()->getManager();
 
@@ -819,92 +811,128 @@ class SocialController extends Controller
             throw new NotFoundHttpException("Unable to find decklist.");
         }
 
-        $content = $this->renderView('AppBundle:Export:plain.txt.twig', [
-            "deck" => $decklist->getTextExport()
-        ]);
+        $format = $request->query->get('format', 'text');
+
+        switch ($format) {
+            case 'theironthrone':
+                return $this->downloadInTheIronThroneFormat($decklist);
+                break;
+            case 'octgn':
+                return $this->downloadInOctgnFormat($decklist);
+                break;
+            case 'text_cycle':
+                return $this->downloadInTextFormatSortedByCycle($decklist);
+                break;
+            case 'text':
+            default:
+                return $this->downloadInDefaultTextFormat($decklist);
+        }
+    }
+
+    protected function downloadInTheIronThroneFormat(Decklist $decklist)
+    {
+        $content = $this->renderView(
+            'AppBundle:Export:theironthrone.txt.twig',
+            [
+                "deck" => $decklist->getTextExport()
+            ]
+        );
         $content = str_replace("\n", "\r\n", $content);
 
         $response = new Response();
-
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
         $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $decklist->getNameCanonical() . '.txt'
-        ));
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($decklist->getName()).'.txt'
+            )
+        );
 
         $response->setContent($content);
+
         return $response;
     }
 
-    /*
-     * returns a text file ordered by release cycle release date
-     */
-
-
-    public function textorderedexportAction($decklist_id, $deluxeAfter, Request $request)
+    protected function downloadInOctgnFormat(Decklist $decklist)
     {
+        $content = $this->renderView(
+            'AppBundle:Export:octgn.xml.twig',
+            [
+                "deck" => $decklist->getTextExport()
+            ]
+        );
+
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
-
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var $decklist \AppBundle\Entity\Decklist */
-        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (!$decklist) {
-            throw new NotFoundHttpException("Unable to find decklist.");
-        }
-
-        $content = $this->renderView('AppBundle:Export:cycleorder.txt.twig', [
-            "deck" => $decklist->getCycleOrderExport($deluxeAfter)
-        ]);
-        $content = str_replace("\n", "\r\n", $content);
-
-        $response = new Response();
-
-        $response->headers->set('Content-Type', 'text/plain');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $decklist->getNameCanonical() . '.txt'
-        ));
-
-        $response->setContent($content);
-        return $response;
-    }
-
-    /*
-     * returns a octgn file with the content of a decklist
-     */
-    
-    public function octgnexportAction($decklist_id, Request $request)
-    {
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
-
-        /* @var $em \Doctrine\ORM\EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var $decklist \AppBundle\Entity\Decklist */
-        $decklist = $em->getRepository('AppBundle:Decklist')->find($decklist_id);
-        if (!$decklist) {
-            throw new NotFoundHttpException("Unable to find decklist.");
-        }
-
-        $content = $this->renderView('AppBundle:Export:octgn.xml.twig', [
-            "deck" => $decklist->getTextExport()
-        ]);
-
-        $response = new Response();
-
         $response->headers->set('Content-Type', 'application/octgn');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-                        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $decklist->getNameCanonical() . '.o8d'
-        ));
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($decklist->getName()) . '.o8d'
+            )
+        );
 
         $response->setContent($content);
+
+        return $response;
+    }
+
+    protected function downloadInDefaultTextFormat(Decklist $decklist)
+    {
+        $content = $this->renderView(
+            'AppBundle:Export:default.txt.twig',
+            [
+                "deck" => $decklist->getTextExport()
+            ]
+        );
+        $content = str_replace("\n", "\r\n", $content);
+
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($decklist->getName()).'.txt'
+            )
+        );
+
+        $response->setContent($content);
+
+        return $response;
+    }
+
+    protected function downloadInTextFormatSortedByCycle(Decklist $decklist)
+    {
+        $content = $this->renderView(
+            'AppBundle:Export:sortedbycycle.txt.twig',
+            [
+                "deck" => $decklist->getCycleOrderExport()
+            ]
+        );
+        $content = str_replace("\n", "\r\n", $content);
+
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $this->get('texts')->slugify($decklist->getName()) . '.txt'
+            )
+        );
+
+        $response->setContent($content);
+
         return $response;
     }
 

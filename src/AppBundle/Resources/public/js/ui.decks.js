@@ -184,12 +184,6 @@
             case 'btn-download-text':
                 ui.download_text_selection(ids);
                 break;
-            case 'btn-download-text-ordered':
-                ui.download_text_selection(ids);
-                break;
-            case 'btn-download-text-ordered-deluxe-after':
-                ui.download_text_selection(ids);
-                break;
             case 'btn-download-octgn':
                 ui.download_octgn_selection(ids);
                 break;
