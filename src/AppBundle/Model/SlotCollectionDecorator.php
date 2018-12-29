@@ -71,16 +71,16 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
         foreach ($this->slots as $slot) {
             $card = $slot->getCard();
             $pack = $card->getPack();
-            if (!isset($packs[$pack->getPosition()])) {
-                $packs[$pack->getPosition()] = [
+            if (!isset($packs[$pack->getId()])) {
+                $packs[$pack->getId()] = [
                     'pack' => $pack,
                     'nb' => 0
                 ];
             }
 
             $nbpacks = ceil($slot->getQuantity() / $card->getQuantity());
-            if ($packs[$pack->getPosition()]['nb'] < $nbpacks) {
-                $packs[$pack->getPosition()]['nb'] = $nbpacks;
+            if ($packs[$pack->getId()]['nb'] < $nbpacks) {
+                $packs[$pack->getId()]['nb'] = $nbpacks;
             }
         }
         ksort($packs);
