@@ -47,7 +47,7 @@
                 export_markdown();
                 break;
             case 'btn-export-plaintext':
-                ui.export_plaintext();
+                ui.export_plaintext(app.deck);
                 break;
         }
     };

@@ -68,8 +68,8 @@
         return lines;
     };
 
-    ui.export_plaintext = function export_plaintext() {
-        $('#export-deck').html(build_plaintext(app.deck).join("\n"));
+    ui.export_plaintext = function export_plaintext(deck) {
+        $('#export-deck').html(build_plaintext(deck).join("\n"));
         $('#exportModal').modal('show');
     };
 
