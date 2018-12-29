@@ -137,8 +137,7 @@ decks:
       text: Text file
       text_cycle: Text file, sorted by cycle
     export:
-      octgn: Octgn
-      theironthrone: TheIronThrone.net
+      plaintext: Plain text
   modals:
     card:
       go: Go to card page

@@ -40,7 +40,7 @@
         return lines;
     }
 
-    function export_text() {
+    function export_plaintext() {
         $('#export-deck').html(build_plaintext(app.deck).join("\n"));
         $('#exportModal').modal('show');
     }
@@ -82,11 +82,8 @@
                 DisplaySort = 'name';
                 ui.refresh_deck()();
                 break;
-            case 'btn-export-theironthrone':
-                export_text();
-                break;
-            case 'btn-export-octgn':
-                export_octgn();
+            case 'btn-export-plaintext':
+                export_plaintext();
                 break;
         }
 

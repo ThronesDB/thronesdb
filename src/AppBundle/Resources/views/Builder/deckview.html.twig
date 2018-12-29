@@ -54,8 +54,7 @@
 						</button>
 						<ul class="dropdown-menu" role="menu">
 							<li class="dropdown-header"><span class="fa fa-external-link"></span> {{ 'forms.export' | trans }}</li>
-							<li><a id="btn-export-octgn" href="#">{{ 'decks.form.export.octgn' | trans }}</a></li>
-							<li><a id="btn-export-theironthrone" href="#">{{ 'decks.form.export.theironthrone' | trans }}</a></li>
+							<li><a id="btn-export-plaintext" href="#">{{ 'decks.form.export.plaintext' | trans }}</a></li>
 							<li class="dropdown-header"><span class="fa fa-download"></span> {{ 'forms.download' | trans }}</li>
 							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text">{{ 'decks.form.download.text' | trans }}</a></li>
 							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text_cycle">{{ 'decks.form.download.text_cycle' | trans }}</a></li>
