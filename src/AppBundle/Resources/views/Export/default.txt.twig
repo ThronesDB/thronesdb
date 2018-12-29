@@ -13,6 +13,7 @@ From {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){
 {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){% endif %}
 {% endif %}
 
+
 {% set plots = deck.slots_by_type.plot %}
 Plot{% if plots|length > 1 %}s{% endif %}
 
