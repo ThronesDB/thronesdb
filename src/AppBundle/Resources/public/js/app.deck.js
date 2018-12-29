@@ -107,6 +107,14 @@
     };
 
     /**
+     * @returns {String}
+     */
+    deck.get_faction_name = function get_faction_name()
+    {
+        return faction_name;
+    };
+
+    /**
      * @memberOf deck
      * @returns string
      */
@@ -188,6 +196,50 @@
     {
         return deck.get_cards(sort, {
             type_code: 'plot'
+        });
+    };
+
+    /**
+     * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_attachments = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'attachment'
+        });
+    };
+
+    /**
+     * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_characters = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'character'
+        });
+    };
+
+    /**
+     * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_events = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'event'
+        });
+    };
+
+    /**
+     * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_locations = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'location'
         });
     };
 
