@@ -278,11 +278,13 @@
 
     /**
      * @memberOf deck
+     * @param {Object} sort
      */
-    deck.get_included_packs = function get_included_packs()
+    deck.get_included_packs = function get_included_packs(sort)
     {
         var cards = deck.get_cards();
         var nb_packs = {};
+        sort = sort || { 'available': 1 };
         cards.forEach(function (card)
         {
             nb_packs[card.pack_code] = Math.max(nb_packs[card.pack_code] || 0, card.indeck / card.quantity);
@@ -293,9 +295,7 @@
                 '$in': pack_codes
             }
         }, {
-            '$orderBy': {
-                'available': 1
-            }
+            '$orderBy': sort
         });
         packs.forEach(function (pack)
         {

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\Pack;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -83,8 +84,27 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
                 $packs[$pack->getId()]['nb'] = $nbpacks;
             }
         }
-        ksort($packs);
-        return array_values($packs);
+
+        $packs =  array_values($packs);
+        usort($packs, function ($arr1 , $arr2) {
+            $pack1 = $arr1['pack'];
+            $pack2 = $arr2['pack'];
+            $cycle1 = $pack1->getCycle();
+            $cycle2 = $pack2->getCycle();
+            if ($cycle1->getPosition() > $cycle2->getPosition()) {
+                return 1;
+            } else if ($cycle1->getPosition() < $cycle2->getPosition()) {
+                return -1;
+            }
+
+            if ($pack1->getPosition() > $pack2->getPosition()) {
+                return 1;
+            } else if ($pack1->getPosition() < $pack2->getPosition()) {
+                return -1;
+            }
+            return 0;
+        });
+        return $packs;
     }
 
     public function getSlotsByType()

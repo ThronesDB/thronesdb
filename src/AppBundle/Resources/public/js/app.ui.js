@@ -35,7 +35,8 @@
 
     function build_plaintext(deck) {
         var lines = [];
-        var included_packs = deck.get_included_packs();
+        var included_packs = deck.get_included_packs({ 'cycle_position': 1, 'position': 1 });
+
         var agendas = deck.get_agendas();
         var sortOrder = { "name": 1 };
         var sections = {
