@@ -60,7 +60,7 @@
         }
         Object.getOwnPropertyNames(sections).forEach(function(section) {
             lines.push("");
-            lines.push(section + ":");
+            lines.push(section + " (" + deck.get_nb_cards(sections[section]) + "):");
             sections[section].forEach(function(card) {
                 lines.push(card.indeck + "x " + card.name + " (" + card.pack_code + ")");
             });
