@@ -358,7 +358,7 @@
         plotDeckSection.addClass(problem && problem.indexOf('plots') !== -1 ? 'text-danger' : '');
         deck.update_layout_section(data, 'meta', plotDeckSection);
         //deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
-        var packs = _.map(deck.get_included_packs(), function (pack)
+        var packs = _.map(deck.get_included_packs({ 'cycle_position': 1, 'position': 1 }), function (pack)
         {
             return pack.name + (pack.quantity > 1 ? ' (' + pack.quantity + ')' : '');
         }).join(', ');
