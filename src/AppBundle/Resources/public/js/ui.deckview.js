@@ -5,6 +5,46 @@
 
     var DisplaySort = 'type';
 
+    function build_plaintext(deck) {
+        var lines = [];
+        var included_packs = deck.get_included_packs();
+        var agendas = deck.get_agendas();
+        var sortOrder = { "name": 1 };
+        var sections = {
+            "Plots": deck.get_plot_deck(sortOrder),
+            "Characters": deck.get_characters(sortOrder),
+            "Attachments": deck.get_attachments(sortOrder),
+            "Locations":  deck.get_locations(sortOrder),
+            'Events': deck.get_events(sortOrder)
+        };
+
+        lines.push(deck.get_name());
+        lines.push("");
+        lines.push(deck.get_faction_name());
+        agendas.forEach(function(agenda) {
+            lines.push(agenda.name);
+        });
+        lines.push("");
+        if (included_packs.length > 1) {
+            lines.push("Packs: From " + included_packs[0].name + ' to ' + included_packs[included_packs.length - 1].name);
+        } else {
+            lines.push("Packs: From " + included_packs[0].name);
+        }
+        Object.getOwnPropertyNames(sections).forEach(function(section) {
+            lines.push("");
+            lines.push(section + ":");
+            sections[section].forEach(function(card) {
+                lines.push(card.indeck + "x " + card.name + " (" + card.pack_code + ")");
+            });
+        });
+        return lines;
+    }
+
+    function export_text() {
+        $('#export-deck').html(build_plaintext(app.deck).join("\n"));
+        $('#exportModal').modal('show');
+    }
+
     function confirm_delete()
     {
         $('#delete-deck-name').text(app.deck.get_name());
@@ -42,14 +82,11 @@
                 DisplaySort = 'name';
                 ui.refresh_deck()();
                 break;
-            case 'btn-display-plain':
-                export_plaintext();
+            case 'btn-export-theironthrone':
+                export_text();
                 break;
-            case 'btn-display-bbcode':
-                export_bbcode();
-                break;
-            case 'btn-display-markdown':
-                export_markdown();
+            case 'btn-export-octgn':
+                export_octgn();
                 break;
         }
 
