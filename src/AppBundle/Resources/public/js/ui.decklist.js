@@ -47,7 +47,7 @@
                 export_markdown();
                 break;
             case 'btn-export-plaintext':
-                export_plaintext();
+                ui.export_plaintext();
                 break;
         }
     };
