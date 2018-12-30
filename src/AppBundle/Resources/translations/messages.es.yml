@@ -44,6 +44,7 @@ forms:
   search: Buscar
   actions: Acciones
   export: Exportar
+  sort: Ordenar
 
 decks:
   privatedecks: Mis mazos privados
@@ -138,6 +139,10 @@ decks:
       text_cycle: Fichero de texto, ordenado por ciclo
     export:
       plaintext: Texto sin formato
+    sort:
+      by_type: Por tipo
+      by_cost: Por coste/oro
+      by_cycle: Por ciclo
   modals:
     card:
       go: Ir a la página de la carta

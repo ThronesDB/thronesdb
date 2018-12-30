@@ -44,6 +44,7 @@ forms:
   search: Search
   actions: Actions
   export: Export
+  sort: Sort
 
 decks:
   privatedecks: My private decks
@@ -138,6 +139,10 @@ decks:
       text_cycle: Text file, sorted by cycle
     export:
       plaintext: Plain text
+    sort:
+        by_type: By type
+        by_cost: By cost/gold
+        by_cycle: By cycle
   modals:
     card:
       go: Go to card page

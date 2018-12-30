@@ -48,6 +48,7 @@
 					{% endif %}
 					<a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span class="fa fa-clone"></span> {{ 'forms.clone' | trans }}</a>
 					<button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> {{ 'forms.print' | trans }}</button>
+
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 							<span></span> {{ 'forms.actions' | trans }} <span class="caret"></span>
@@ -59,6 +60,10 @@
 							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text">{{ 'decks.form.download.text' | trans }}</a></li>
 							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text_cycle">{{ 'decks.form.download.text_cycle' | trans }}</a></li>
 							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=octgn">{{ 'decks.form.download.octgn' | trans }}</a></li>
+							<li class="dropdown-header"><span class="fa fa-sort"></span> {{ 'forms.sort' | trans }}</li>
+							<li><a href="#" onclick="app.deck.change_sort('default')" id="btn-sort-default">{{ 'decks.form.sort.by_type' | trans }}</a></li>
+							<li><a href="#" onclick="app.deck.change_sort('cycle')" id="btn-sort-cycle">{{ 'decks.form.sort.by_cycle' | trans }}</a></li>
+							<li><a href="#" onclick="app.deck.change_sort('cost')" id="btn-sort-cost">{{ 'decks.form.sort.by_cost' | trans }}</a></li>
 						</ul>
 					</div>
 				</div>
