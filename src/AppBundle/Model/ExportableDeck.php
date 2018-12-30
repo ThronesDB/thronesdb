@@ -46,4 +46,19 @@ class ExportableDeck
             'slots_by_type' => $slots->getSlotsByType()
         ];
     }
+
+    public function getCycleOrderExport()
+    {
+        $slots = $this->getSlots();
+        return [
+            'name' => $this->getName(),
+            'version' => $this->getVersion(),
+            'agendas' => $slots->getAgendas(),
+            'faction' => $this->getFaction(),
+            'draw_deck_size' => $slots->getDrawDeck()->countCards(),
+            'plot_deck_size' => $slots->getPlotDeck()->countCards(),
+            'included_packs' => $slots->getIncludedPacks(),
+            'slots_by_cycle_order' => $slots->getSlotsByCycleOrder()
+        ];
+    }
 }

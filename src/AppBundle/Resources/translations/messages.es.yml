@@ -42,6 +42,8 @@ forms:
   print: Imprimir
   download: Descargar
   search: Buscar
+  actions: Acciones
+  export: Exportar
 
 decks:
   privatedecks: Mis mazos privados
@@ -131,8 +133,11 @@ decks:
         selected: Borrar todos los mazos seleccionados
     labelswitch: Click para cambiar a esta etiqueta. Mayús+Click para alternar esta etiqueta.
     download:
-      text: Fichero de texto
       octgn: Fichero OCTGN
+      text: Fichero de texto
+      text_cycle: Fichero de texto, ordenado por ciclo
+    export:
+      plaintext: Texto sin formato
   modals:
     card:
       go: Ir a la página de la carta

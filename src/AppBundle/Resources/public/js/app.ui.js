@@ -33,6 +33,47 @@
         $('#wrapper>div.container').first().prepend(alert);
     };
 
+    function build_plaintext(deck) {
+        var lines = [];
+        var included_packs = deck.get_included_packs({ 'cycle_position': 1, 'position': 1 });
+
+        var agendas = deck.get_agendas();
+        var sortOrder = { "name": 1 };
+        var sections = {
+            "Plots": deck.get_plot_deck(sortOrder),
+            "Characters": deck.get_characters(sortOrder),
+            "Attachments": deck.get_attachments(sortOrder),
+            "Locations":  deck.get_locations(sortOrder),
+            'Events': deck.get_events(sortOrder)
+        };
+
+        lines.push(deck.get_name());
+        lines.push("");
+        lines.push(deck.get_faction_name());
+        agendas.forEach(function(agenda) {
+            lines.push(agenda.name);
+        });
+        lines.push("");
+        if (included_packs.length > 1) {
+            lines.push("Packs: From " + included_packs[0].name + ' to ' + included_packs[included_packs.length - 1].name);
+        } else {
+            lines.push("Packs: From " + included_packs[0].name);
+        }
+        Object.getOwnPropertyNames(sections).forEach(function(section) {
+            lines.push("");
+            lines.push(section + " (" + deck.get_nb_cards(sections[section]) + "):");
+            sections[section].forEach(function(card) {
+                lines.push(card.indeck + "x " + card.name + " (" + card.pack_code + ")");
+            });
+        });
+        return lines;
+    };
+
+    ui.export_plaintext = function export_plaintext(deck) {
+        $('#export-deck').html(build_plaintext(deck).join("\n"));
+        $('#exportModal').modal('show');
+    };
+
     $(document).ready(function ()
     {
         $('[data-toggle="tooltip"]').tooltip();

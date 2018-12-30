@@ -42,6 +42,8 @@ forms:
   print: Print
   download: Download
   search: Search
+  actions: Actions
+  export: Export
 
 decks:
   privatedecks: My private decks
@@ -131,8 +133,11 @@ decks:
         selected: Delete all decks selected
     labelswitch: Click to switch to this tag. Shift-click to toggle this tag.
     download:
-      text: Text file
       octgn: Octgn file
+      text: Text file
+      text_cycle: Text file, sorted by cycle
+    export:
+      plaintext: Plain text
   modals:
     card:
       go: Go to card page

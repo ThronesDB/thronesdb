@@ -32,10 +32,13 @@
         }
         switch(action_id) {
             case 'btn-download-text':
-                location.href = Routing.generate('decklist_export_text', {decklist_id: app.deck.get_id()});
+                location.href = Routing.generate('decklist_download', {decklist_id: app.deck.get_id(), format: 'text'});
+                break;
+            case 'btn-download-text-cycle':
+                location.href = Routing.generate('decklist_download', {decklist_id: app.deck.get_id(), format: 'text_cycle'});
                 break;
             case 'btn-download-octgn':
-                location.href = Routing.generate('decklist_export_octgn', {decklist_id: app.deck.get_id()});
+                location.href = Routing.generate('decklist_download', {decklist_id: app.deck.get_id(), format: 'octgn'});
                 break;
             case 'btn-export-bbcode':
                 export_bbcode();
@@ -44,7 +47,7 @@
                 export_markdown();
                 break;
             case 'btn-export-plaintext':
-                export_plaintext();
+                ui.export_plaintext(app.deck);
                 break;
         }
     };

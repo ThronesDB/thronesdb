@@ -1,17 +1,8 @@
-
-decklist_export_octgn:
-    path: /export/octgn/{decklist_id}
-    methods: [GET]
-    defaults:
-        _controller: AppBundle:Social:octgnexport
-    requirements:
-        decklist_id: \d+
-
-decklist_export_text:
+decklist_download:
     path: /export/text/{decklist_id}
     methods: [GET]
     defaults:
-        _controller: AppBundle:Social:textexport
+        _controller: AppBundle:Social:download
     requirements:
         decklist_id: \d+
 

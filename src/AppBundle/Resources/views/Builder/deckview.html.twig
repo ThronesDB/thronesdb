@@ -50,11 +50,15 @@
 					<button type="button" id="btn-print" class="btn btn-default"><span class="fa fa-print"></span> {{ 'forms.print' | trans }}</button>
 					<div class="btn-group">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							<span class="fa fa-download"></span> {{ 'forms.download' | trans }} <span class="caret"></span>
+							<span></span> {{ 'forms.actions' | trans }} <span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="{{ path('deck_export_text', {deck_id:deck_id}) }}">{{ 'decks.form.download.text' | trans }}</a></li>
-							<li><a href="{{ path('deck_export_octgn', {deck_id:deck_id}) }}">{{ 'decks.form.download.octgn' | trans }}</a></li>
+							<li class="dropdown-header"><span class="fa fa-clipboard"></span> {{ 'forms.export' | trans }}</li>
+							<li><a id="btn-export-plaintext" href="#">{{ 'decks.form.export.plaintext' | trans }}</a></li>
+							<li class="dropdown-header"><span class="fa fa-download"></span> {{ 'forms.download' | trans }}</li>
+							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text">{{ 'decks.form.download.text' | trans }}</a></li>
+							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text_cycle">{{ 'decks.form.download.text_cycle' | trans }}</a></li>
+							<li><a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=octgn">{{ 'decks.form.download.octgn' | trans }}</a></li>
 						</ul>
 					</div>
 				</div>

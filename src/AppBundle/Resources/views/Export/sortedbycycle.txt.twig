@@ -1,0 +1,25 @@
+{{ deck.name }} {{ deck.version }}
+
+{{ deck.faction.name }}
+{% for agenda in deck.agendas %}
+{{ agenda.card.name }}
+{% endfor %}
+
+{% set first_pack = deck.included_packs|first %}
+{% set last_pack = deck.included_packs|last %}
+Packs: {% if deck.included_packs|length > 1 %}
+From {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){% endif %} to {{ last_pack.pack.name }}{% if last_pack.nb > 1 %} ({{ last_pack.nb }}){% endif %}
+{% else %}
+{{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){% endif %}
+{% endif %}
+
+{% set slotsByCycle = deck.slots_by_cycle_order %}
+{% for cycle, slots in slotsByCycle  %}
+
+---- {{ cycle }} ----
+{% for slot in slots %}
+{{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }} #{{ slot.card.position }})
+{% endfor %}
+{% endfor %}
+
+{{ footer|default('') }}

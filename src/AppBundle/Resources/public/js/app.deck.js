@@ -107,6 +107,14 @@
     };
 
     /**
+     * @returns {String}
+     */
+    deck.get_faction_name = function get_faction_name()
+    {
+        return faction_name;
+    };
+
+    /**
      * @memberOf deck
      * @returns string
      */
@@ -193,6 +201,50 @@
 
     /**
      * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_attachments = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'attachment'
+        });
+    };
+
+    /**
+     * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_characters = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'character'
+        });
+    };
+
+    /**
+     * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_events = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'event'
+        });
+    };
+
+    /**
+     * @memberOf deck
+     * @param {object} sort
+     */
+    deck.get_locations = function get_plot_deck(sort)
+    {
+        return deck.get_cards(sort, {
+            type_code: 'location'
+        });
+    };
+
+    /**
+     * @memberOf deck
      * @returns the number of plot cards
      * @param {object} sort 
      */
@@ -226,11 +278,13 @@
 
     /**
      * @memberOf deck
+     * @param {Object} sort
      */
-    deck.get_included_packs = function get_included_packs()
+    deck.get_included_packs = function get_included_packs(sort)
     {
         var cards = deck.get_cards();
         var nb_packs = {};
+        sort = sort || { 'available': 1 };
         cards.forEach(function (card)
         {
             nb_packs[card.pack_code] = Math.max(nb_packs[card.pack_code] || 0, card.indeck / card.quantity);
@@ -241,9 +295,7 @@
                 '$in': pack_codes
             }
         }, {
-            '$orderBy': {
-                'available': 1
-            }
+            '$orderBy': sort
         });
         packs.forEach(function (pack)
         {
@@ -306,7 +358,7 @@
         plotDeckSection.addClass(problem && problem.indexOf('plots') !== -1 ? 'text-danger' : '');
         deck.update_layout_section(data, 'meta', plotDeckSection);
         //deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
-        var packs = _.map(deck.get_included_packs(), function (pack)
+        var packs = _.map(deck.get_included_packs({ 'cycle_position': 1, 'position': 1 }), function (pack)
         {
             return pack.name + (pack.quantity > 1 ? ' (' + pack.quantity + ')' : '');
         }).join(', ');

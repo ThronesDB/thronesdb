@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\Pack;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -71,20 +72,39 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
         foreach ($this->slots as $slot) {
             $card = $slot->getCard();
             $pack = $card->getPack();
-            if (!isset($packs[$pack->getPosition()])) {
-                $packs[$pack->getPosition()] = [
+            if (!isset($packs[$pack->getId()])) {
+                $packs[$pack->getId()] = [
                     'pack' => $pack,
                     'nb' => 0
                 ];
             }
 
             $nbpacks = ceil($slot->getQuantity() / $card->getQuantity());
-            if ($packs[$pack->getPosition()]['nb'] < $nbpacks) {
-                $packs[$pack->getPosition()]['nb'] = $nbpacks;
+            if ($packs[$pack->getId()]['nb'] < $nbpacks) {
+                $packs[$pack->getId()]['nb'] = $nbpacks;
             }
         }
-        ksort($packs);
-        return array_values($packs);
+
+        $packs =  array_values($packs);
+        usort($packs, function ($arr1 , $arr2) {
+            $pack1 = $arr1['pack'];
+            $pack2 = $arr2['pack'];
+            $cycle1 = $pack1->getCycle();
+            $cycle2 = $pack2->getCycle();
+            if ($cycle1->getPosition() > $cycle2->getPosition()) {
+                return 1;
+            } else if ($cycle1->getPosition() < $cycle2->getPosition()) {
+                return -1;
+            }
+
+            if ($pack1->getPosition() > $pack2->getPosition()) {
+                return 1;
+            } else if ($pack1->getPosition() < $pack2->getPosition()) {
+                return -1;
+            }
+            return 0;
+        });
+        return $packs;
     }
 
     public function getSlotsByType()
@@ -96,6 +116,32 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
             }
         }
         return $slotsByType;
+    }
+
+    /**
+     * Sorting callback.
+     * @param SlotInterface $s1
+     * @param SlotInterface $s2
+     * @return int
+     */
+    public function sortByCardCode(SlotInterface $s1, SlotInterface $s2)
+    {
+        return intval($s1->getCard()->getCode(), 10) - intval($s2->getCard()->getCode(), 10);
+    }
+
+    public function getSlotsByCycleOrder()
+    {
+        $slots_array = [];
+        foreach ($this->slots as $slot){
+            $slots_array[] = $slot;
+        }
+
+        usort($slots_array, array($this, "sortByCardCode"));
+        $cycles = [];
+        foreach ($slots_array as $slot){
+            $cycles[$slot->getCard()->getPack()->getCycle()->getName()][] = $slot;
+        }
+        return $cycles;
     }
 
     public function getCountByType()

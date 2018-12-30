@@ -42,14 +42,8 @@
                 DisplaySort = 'name';
                 ui.refresh_deck()();
                 break;
-            case 'btn-display-plain':
-                export_plaintext();
-                break;
-            case 'btn-display-bbcode':
-                export_bbcode();
-                break;
-            case 'btn-display-markdown':
-                export_markdown();
+            case 'btn-export-plaintext':
+                ui.export_plaintext(app.deck);
                 break;
         }
 
