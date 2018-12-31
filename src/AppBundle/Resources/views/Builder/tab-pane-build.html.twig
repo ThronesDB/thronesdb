@@ -11,11 +11,6 @@
 				<li><a href="#" id="btn-sort-cost">{{ 'decks.form.sort.by_cost' | trans }}</a></li>
 			</ul>
 		</div>
-        <button class="btn btn-default btn-xs" type="button" id="filter-text-button">{{'decks.edit.build.help' | trans}}</button>
-        <div class="btn-group">
-			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">{{ 'decks.edit.build.sets.label' | trans}} <span class="caret"></span></button>
-			<ul class="dropdown-menu pull-right" data-filter="pack_code" title="{{ 'decks.edit.build.sets.hint' | trans }}"></ul>
-		</div>
 		<div class="btn-group">
 			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">{{ 'decks.edit.build.options.label' | trans}} <span class="caret"></span></button>
 			<ul class="dropdown-menu pull-right" id="config-options">
@@ -44,6 +39,11 @@
 				<li><a href="#"><label><input type="radio" name="buttons-behavior" value="cumulative"> {{ 'decks.edit.build.options.factype.cumulative' | trans }}</label></a></li>
 				<li><a href="#"><label><input type="radio" name="buttons-behavior" value="exclusive"> {{ 'decks.edit.build.options.factype.exclusive' | trans }}</label></a></li>
 			</ul>
+		</div>
+		<button class="btn btn-default btn-xs" type="button" id="filter-text-button">{{'decks.edit.build.help' | trans}}</button>
+		<div class="btn-group">
+			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">{{ 'decks.edit.build.sets.label' | trans}} <span class="caret"></span></button>
+			<ul class="dropdown-menu pull-right" data-filter="pack_code" title="{{ 'decks.edit.build.sets.hint' | trans }}"></ul>
 		</div><!-- /.btn-group -->
 	</div><!-- /.col-sm-6 -->
 </div><!-- /.row -->
