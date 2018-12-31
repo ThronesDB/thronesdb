@@ -43,8 +43,8 @@
             case 'btn-sort-default':
                 app.deck.change_sort('type');
                 break;
-            case 'btn-sort-cycle':
-                app.deck.change_sort('cycle');
+            case 'btn-sort-cardnumber':
+                app.deck.change_sort('cardnumber');
                 break;
             case 'btn-sort-cost':
                 app.deck.change_sort('cost');

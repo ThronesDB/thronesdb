@@ -32,7 +32,7 @@
     layouts[1] = _.template('<div class="deck-content"><%= meta %><%= plots %><%= characters %><%= attachments %><%= locations %><%= events %></div>');
     layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= characters %></div><div class="col-sm-6 col-print-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
     layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
-    layouts[4] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
+    layouts[4] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
     layouts[5] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-12 col-print-12"><%= meta %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
 
     /**
@@ -412,8 +412,9 @@
         }
 
         var layout_template = 2;
-        if (deck.sort_type === "cycle"){
-            deck.update_layout_section(data, "cards", deck.get_layout_section_for_sorting_by_cycle(), null);
+        if (deck.sort_type === "cardnumber") {
+            deck.update_layout_section(data, "cards", $('<br>'));
+            deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1},  null, {}, "number"));
             layout_template = 5;
         } else if (deck.sort_type === "cost"){
             deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
@@ -439,17 +440,13 @@
         data[section] = data[section] + element[0].outerHTML;
     };
 
-    deck.get_layout_section = function(sort, group, query){
+    deck.get_layout_section = function(sort, group, query, context){
+        var cards;
         var section = $('<div>');
         query = query || {};
-        group = group || {};
-        var context = "";
-        var cards;
-        if (sort && (sort.position)){
-            context = "number";
-        }
+        group = group || null;
+        context = context || "";
         cards = deck.get_cards(sort, query, group);
-
         if(cards.length) {
             deck.create_card_group(cards, context).appendTo(section);
 
@@ -462,54 +459,6 @@
             });
         }
         return section;
-    };
-
-    deck.get_layout_section_for_sorting_by_cycle = function() {
-      var section = $('<div>');
-      var cards = deck.get_cards();
-      var context = 'number';
-      var cycles = deck.get_included_cycles();
-      var packs = deck.get_included_packs();
-      var cyclesMap = {};
-      var packsToCycleMap = {};
-      var cardsByCycleMap = {};
-      var cardsByCycleList = [];
-
-      cycles.forEach(function(cycle) {
-          cyclesMap[cycle.code] = cycle;
-      });
-
-      packs.forEach(function(pack){
-        packsToCycleMap[pack.code] = pack.cycle_code;
-        if (! cardsByCycleMap.hasOwnProperty(pack.cycle_code)) {
-          cardsByCycleMap[pack.cycle_code] = {
-            "cards": [],
-            "cycle_name": cyclesMap[pack.cycle_code].name,
-            "cycle_position": cyclesMap[pack.cycle_code].position
-          };
-        }
-      });
-      cards.forEach(function(card) {
-        cardsByCycleMap[packsToCycleMap[card.pack_code]].cards.push(card);
-      });
-
-      $.each(cardsByCycleMap, function(index, cardsInCycle) {
-        cardsByCycleList.push(cardsInCycle);
-      });
-
-      cardsByCycleList.sort(function(cardsInCycle1, cardsInCycle2) {
-        if (cardsInCycle1.cycle_position > cardsInCycle2.cycle_position) {
-          return 1;
-        } else if (cardsInCycle1.cycle_position > cardsInCycle2.cycle_position) {
-          return -1;
-        }
-        return 0;
-      }).forEach(function(cardsInCycle) {
-        $(header_tpl({code: cardsInCycle.cycle_position, name: cardsInCycle.cycle_name, quantity: cardsInCycle.cards.reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
-        deck.create_card_group(cardsInCycle.cards, context).appendTo(section);
-      });
-
-      return section;
     };
 
     deck.create_card_group = function(cards, context){

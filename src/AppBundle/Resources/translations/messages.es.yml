@@ -143,7 +143,7 @@ decks:
     sort:
       by_type: Por tipo
       by_cost: Por coste/oro
-      by_cycle: Por ciclo
+      by_cardnumber: Por número de carta
   modals:
     card:
       go: Ir a la página de la carta
