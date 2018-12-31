@@ -27,6 +27,21 @@
             case 'btn-sort-default':
                 app.deck.change_sort('type');
                 break;
+            case 'btn-sort-name':
+                app.deck.change_sort('name');
+                break;
+            case 'btn-sort-set':
+                app.deck.change_sort('set');
+                break;
+            case 'btn-sort-setnumber':
+                app.deck.change_sort('setnumber');
+                break;
+            case 'btn-sort-faction':
+                app.deck.change_sort('faction');
+                break;
+            case 'btn-sort-factionnumber':
+                app.deck.change_sort('factionnumber');
+                break;
             case 'btn-sort-cardnumber':
                 app.deck.change_sort('cardnumber');
                 break;

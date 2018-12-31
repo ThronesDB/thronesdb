@@ -412,20 +412,46 @@
         }
 
         var layout_template = 2;
-        if (deck.sort_type === "cardnumber") {
-            deck.update_layout_section(data, "cards", $('<br>'));
-            deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1},  null, {}, "number"));
-            layout_template = 5;
-        } else if (deck.sort_type === "cost"){
-            deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
-            deck.update_layout_section(data, "cards", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost':1}, { type_code: { '$nin': ['agenda', 'plot'] }}));
-            layout_template = 4;
-        } else {
-            deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
-            deck.update_layout_section(data, 'characters', deck.get_layout_data_one_section('type_code', 'character', 'type_name'));
-            deck.update_layout_section(data, 'attachments', deck.get_layout_data_one_section('type_code', 'attachment', 'type_name'));
-            deck.update_layout_section(data, 'locations', deck.get_layout_data_one_section('type_code', 'location', 'type_name'));
-            deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
+
+        switch (deck.sort_type) {
+            case "faction":
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_name': 1, 'name': 1}, {'faction_name': 1}, null));
+                layout_template = 5;
+                break;
+            case "factionnumber":
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_name': 1, 'code': 1}, {'faction_name': 1}, null, "number"));
+                layout_template = 5;
+                break;
+            case "name":
+                deck.update_layout_section(data, "cards", $('<br>'));
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1},  null, null, "number"));
+                layout_template = 5;
+                break;
+            case "set":
+                deck.update_layout_section(data, "cards", deck.get_layout_section_for_cards_sorted_by_set(true));
+                layout_template = 5;
+                break;
+            case "setnumber":
+                deck.update_layout_section(data, "cards", deck.get_layout_section_for_cards_sorted_by_set(false));
+                layout_template = 5;
+                break;
+            case "cardnumber":
+                deck.update_layout_section(data, "cards", $('<br>'));
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1},  null, null, "number"));
+                layout_template = 5;
+                break;
+            case "cost":
+                deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost': 1}, { type_code: { '$nin': ['agenda', 'plot'] }}));
+                layout_template = 4;
+                break;
+            case "type":
+            default:
+                deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
+                deck.update_layout_section(data, 'characters', deck.get_layout_data_one_section('type_code', 'character', 'type_name'));
+                deck.update_layout_section(data, 'attachments', deck.get_layout_data_one_section('type_code', 'attachment', 'type_name'));
+                deck.update_layout_section(data, 'locations', deck.get_layout_data_one_section('type_code', 'location', 'type_name'));
+                deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
         }
 
         if (options && options.layout) {
@@ -443,9 +469,6 @@
     deck.get_layout_section = function(sort, group, query, context){
         var cards;
         var section = $('<div>');
-        query = query || {};
-        group = group || null;
-        context = context || "";
         cards = deck.get_cards(sort, query, group);
         if(cards.length) {
             deck.create_card_group(cards, context).appendTo(section);
@@ -458,6 +481,25 @@
                 }
             });
         }
+        return section;
+    };
+
+    /**
+     * @param {boolean} sortByName set to TRUE for sorting by name within sets, or FALSE to sort by card number.
+     */
+    deck.get_layout_section_for_cards_sorted_by_set = function(sortByName) {
+        sortByName = !!sortByName;
+
+        var section = $('<div>');
+        var context = sortByName ? "" : "number";
+        var sort = sortByName ? {"name": 1} : {"code": 1};
+        var packs = deck.get_included_packs({"cycle_position": 1, "position": 1});
+        var cards = deck.get_cards(sort, {}, {"pack_name": 1});
+
+        packs.forEach(function(pack){
+            $(header_tpl({code: pack.code, name: pack.name, quantity: cards[pack.name].reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
+            deck.create_card_group(cards[pack.name], context).appendTo(section);
+        });
         return section;
     };
 
