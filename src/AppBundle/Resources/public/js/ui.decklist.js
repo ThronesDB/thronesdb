@@ -40,11 +40,14 @@
             case 'btn-download-octgn':
                 location.href = Routing.generate('decklist_download', {decklist_id: app.deck.get_id(), format: 'octgn'});
                 break;
-            case 'btn-export-bbcode':
-                export_bbcode();
+            case 'btn-sort-default':
+                app.deck.change_sort('type');
                 break;
-            case 'btn-export-markdown':
-                export_markdown();
+            case 'btn-sort-cycle':
+                app.deck.change_sort('cycle');
+                break;
+            case 'btn-sort-cost':
+                app.deck.change_sort('cost');
                 break;
             case 'btn-export-plaintext':
                 ui.export_plaintext(app.deck);
