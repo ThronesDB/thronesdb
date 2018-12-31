@@ -312,24 +312,6 @@
         return packs;
     };
 
-    /**
-     * @memberOf deck
-     * @param {Object} sort
-     */
-    deck.get_included_cycles = function get_included_cycles(sort)
-    {
-        sort = sort || { 'position': 1 };
-        var packs = deck.get_included_packs();
-        var pack_codes = _.uniq(_.pluck(packs, 'cycle_code'));
-        return cycles = app.data.cycles.find({
-            'code': {
-                '$in': pack_codes
-            }
-        }, {
-            '$orderBy': sort
-        });
-    };
-
     deck.change_sort = function(sort_type) {
         if (localStorage) {
             localStorage.setItem('ui.deck.sort', sort_type);

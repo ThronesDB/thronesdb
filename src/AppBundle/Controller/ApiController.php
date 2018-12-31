@@ -16,74 +16,6 @@ class ApiController extends Controller
 {
 
     /**
-     * Get the description of all the cycles as an array of JSON objects.
-     *
-     *
-     * @ApiDoc(
-     *  section="Cycle",
-     *  resource=true,
-     *  description="All the Cycles",
-     *  parameters={
-     *    {"name"="jsonp", "dataType"="string", "required"=false, "description"="JSONP callback"}
-     *  },
-     * )
-     *
-     * @param Request $request
-     * @return Response $response
-     */
-    public function listCyclesAction(Request $request)
-    {
-        $response = new Response();
-        $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
-        $response->headers->add(array(
-            'Access-Control-Allow-Origin' => '*',
-            'Content-Language' => $request->getLocale()
-        ));
-
-        $jsonp = $request->query->get('jsonp');
-
-        $list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findAll();
-
-        // check the last-modified-since header
-
-        $lastModified = null;
-        /* @var $cycle \AppBundle\Entity\Cycle */
-        foreach ($list_cycles as $cycle) {
-            if (!$lastModified || $lastModified < $cycle->getDateUpdate()) {
-                $lastModified = $cycle->getDateUpdate();
-            }
-        }
-        $response->setLastModified($lastModified);
-        if ($response->isNotModified($request)) {
-            return $response;
-        }
-
-        // build the response
-
-        $cycles = array();
-        /* @var $cycle \AppBundle\Entity\Cycle */
-        foreach ($list_cycles as $cycle) {
-            $cycles[] = array(
-                "name" => $cycle->getName(),
-                "code" => $cycle->getCode(),
-                "position" => $cycle->getPosition(),
-                'size' => $cycle->getSize(),
-            );
-        }
-
-        $content = json_encode($cycles);
-        if (isset($jsonp)) {
-            $content = "$jsonp($content)";
-            $response->headers->set('Content-Type', 'application/javascript');
-        } else {
-            $response->headers->set('Content-Type', 'application/json');
-        }
-        $response->setContent($content);
-        return $response;
-    }
-
-    /**
      * Get the description of all the packs as an array of JSON objects.
      *
      *
@@ -138,7 +70,6 @@ class ApiController extends Controller
                 "code" => $pack->getCode(),
                 "position" => $pack->getPosition(),
                 "cycle_position" => $pack->getCycle()->getPosition(),
-                "cycle_code" => $pack->getCycle()->getCode(),
                 "available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
                 "known" => intval($real),
                 "total" => $max,
