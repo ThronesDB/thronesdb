@@ -11,7 +11,8 @@
     data.db = database;
     var masters = {
         packs: database.collection('master_pack', {primaryKey: 'code'}),
-        cards: database.collection('master_card', {primaryKey: 'code'})
+        cards: database.collection('master_card', {primaryKey: 'code'}),
+        cycles: database.collection('master_cycle', {primaryKey: 'code'}),
     };
 
     var dfd;
@@ -30,37 +31,45 @@
      * @memberOf data
      */
     function load() {
-        masters.packs.load(function (err) {
+        masters.cycles.load(function (err) {
             if (err) {
-                console.log('error when loading packs', err);
+                console.log('error when loading cycles', err);
             }
-            masters.cards.load(function (err) {
+            masters.packs.load(function (err) {
                 if (err) {
-                    console.log('error when loading cards', err);
+                    console.log('error when loading packs', err);
                 }
+                masters.cards.load(function (err) {
+                    if (err) {
+                        console.log('error when loading cards', err);
+                    }
 
-                /*
-                 * data has been fetched from local store
-                 */
-                
-                /*
-                 * we set up insert and update listeners now
-                 * if we did it before, .load() would have called onInsert
-                 */
-                masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
-                masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    /*
+                     * data has been fetched from local store
+                     */
 
-                /*
-                 * if database is not empty, use it for now
-                 */
-                if (masters.packs.count() > 0 && masters.cards.count() > 0) {
-                    release();
-                }
+                    /*
+                     * we set up insert and update listeners now
+                     * if we did it before, .load() would have called onInsert
+                     */
+                    masters.cycles.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
 
-                /*
-                 * then we ask the server if new data is available
-                 */
-                query();
+                    /*
+                     * if database is not empty, use it for now
+                     */
+                    if (masters.cycles.count() > 0 && masters.packs.count() > 0 && masters.cards.count() > 0) {
+                        release();
+                    }
+
+                    /*
+                     * then we ask the server if new data is available
+                     */
+                    query();
+                })
+
+
             });
         });
     }
@@ -70,6 +79,10 @@
      * @memberOf data
      */
     function release() {
+
+        data.cycles = database.collection('cycle', {primaryKey: 'code', changeTimestamp: false});
+        data.cycles.setData(masters.cycles.find());
+
         data.packs = database.collection('pack', {primaryKey: 'code', changeTimestamp: false});
         data.packs.setData(masters.packs.find());
 
@@ -87,10 +100,20 @@
      */
     function query() {
         dfd = {
+            cycles: new $.Deferred(),
             packs: new $.Deferred(),
             cards: new $.Deferred()
         };
-        $.when(dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+        $.when(dfd.cycles, dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+
+        $.ajax({
+            url: Routing.generate('api_cycles'),
+            success: parse_cycles,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('error when requesting packs', errorThrown);
+                dfd.packs.reject(false);
+            }
+        });
 
         $.ajax({
             url: Routing.generate('api_packs'),
@@ -139,8 +162,8 @@
      * deferred returns true if data has been loaded
      * @memberOf data
      */
-    function update_fail(packs_loaded, cards_loaded) {
-        if (packs_loaded === false || cards_loaded === false) {
+    function update_fail(cycles_loaded, packs_loaded, cards_loaded) {
+        if (cycles_loaded === false || packs_loaded === false || cards_loaded === false) {
             var message = Translator.trans('data_load_fail');
             app.ui.insert_alert_message('danger', message);
         } else {
@@ -181,6 +204,15 @@
                 deferred.resolve();
             }
         });
+    }
+
+    /**
+     * handles the response to the ajax query for packs data
+     * @memberOf data
+     */
+    function parse_cycles(response, textStatus, jqXHR) {
+        var locale = jqXHR.getResponseHeader('Content-Language');
+        update_collection(response, masters.cycles, locale, dfd.cycles);
     }
 
     /**
