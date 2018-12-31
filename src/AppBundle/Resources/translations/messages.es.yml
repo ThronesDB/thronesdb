@@ -82,6 +82,7 @@ decks:
       charts: Gráficas
       history: Historia
     build:
+      sort: Ordenar mazo
       help: Ayuda de filtros
       sets:
         label: Capítulos

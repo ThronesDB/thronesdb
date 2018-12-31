@@ -1,6 +1,16 @@
 
 <div class="row">
 	<div class="col-md-12 text-right" style="margin-bottom:10px">
+		<div class="btn-group">
+			<button type="button" class="btn btn-xs btn-default dropdown-toggle " data-toggle="dropdown">
+				<span class="fa fa-sort"></span> <span class="hidden-xs">{{ 'decks.edit.build.sort' | trans }}</span> <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu" id="menu-sort">
+				<li><a href="#" id="btn-sort-default">{{ 'decks.form.sort.by_type' | trans }}</a></li>
+				<li><a href="#" id="btn-sort-cycle">{{ 'decks.form.sort.by_cycle' | trans }}</a></li>
+				<li><a href="#" id="btn-sort-cost">{{ 'decks.form.sort.by_cost' | trans }}</a></li>
+			</ul>
+		</div>
         <button class="btn btn-default btn-xs" type="button" id="filter-text-button">{{'decks.edit.build.help' | trans}}</button>
         <div class="btn-group">
 			<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">{{ 'decks.edit.build.sets.label' | trans}} <span class="caret"></span></button>

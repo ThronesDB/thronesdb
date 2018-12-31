@@ -82,6 +82,7 @@ decks:
       charts: Charts
       history: History
     build:
+      sort: Sort Deck
       help: Filter help
       sets:
         label: Sets

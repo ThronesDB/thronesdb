@@ -435,6 +435,9 @@
 
         $('thead').on('click', 'a[data-sort]', ui.on_table_sort_click);
 
+        $('#btn-sort-default').on('click', function() { app.deck.change_sort('type'); });
+        $('#btn-sort-cycle').on('click', function() { app.deck.change_sort('cycle'); });
+        $('#btn-sort-cost').on('click', function() { app.deck.change_sort('cost'); });
     };
 
     /**
