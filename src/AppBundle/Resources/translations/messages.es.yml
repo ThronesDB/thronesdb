@@ -44,6 +44,7 @@ forms:
   search: Buscar
   actions: Acciones
   export: Exportar
+  sort: Ordenar
 
 decks:
   privatedecks: Mis mazos privados
@@ -81,6 +82,7 @@ decks:
       charts: Gráficas
       history: Historia
     build:
+      sort: Ordenar mazo
       help: Ayuda de filtros
       sets:
         label: Capítulos
@@ -138,6 +140,15 @@ decks:
       text_cycle: Fichero de texto, ordenado por ciclo
     export:
       plaintext: Texto sin formato
+    sort:
+      by_cardnumber: por número de carta
+      by_cost: por coste/oro
+      by_faction: por facción, luego nombre
+      by_factionnumber: por facción, luego número
+      by_name: por nombre
+      by_set: por capítulo, luego nombre
+      by_setnumber: por capítulo, luego número
+      by_type: por tipo
   modals:
     card:
       go: Ir a la página de la carta

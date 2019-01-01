@@ -32,6 +32,8 @@
     layouts[1] = _.template('<div class="deck-content"><%= meta %><%= plots %><%= characters %><%= attachments %><%= locations %><%= events %></div>');
     layouts[2] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-6 col-print-6"><%= characters %></div><div class="col-sm-6 col-print-6"><%= attachments %><%= locations %><%= events %></div></div></div>');
     layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
+    layouts[4] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
+    layouts[5] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-12 col-print-12"><%= meta %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
 
     /**
      * @memberOf deck
@@ -147,10 +149,11 @@
 
     /**
      * @memberOf deck
-     * @param {object} sort 
-     * @param {object} query 
+     * @param {object} sort
+     * @param {object} query
+     * @param {object} group
      */
-    deck.get_cards = function get_cards(sort, query)
+    deck.get_cards = function get_cards(sort, query, group)
     {
         sort = sort || {};
         sort['code'] = 1;
@@ -160,9 +163,13 @@
             '$gt': 0
         };
 
-        return app.data.cards.find(query, {
+        var options = {
             '$orderBy': sort
-        });
+        };
+        if (group){
+            options.$groupBy = group;
+        }
+        return app.data.cards.find(query, options);
     };
 
     /**
@@ -279,6 +286,7 @@
     /**
      * @memberOf deck
      * @param {Object} sort
+     * @return {Array}
      */
     deck.get_included_packs = function get_included_packs(sort)
     {
@@ -304,22 +312,38 @@
         return packs;
     };
 
-    /**
+    deck.change_sort = function(sort_type) {
+        if (localStorage) {
+            localStorage.setItem('ui.deck.sort', sort_type);
+        }
+        deck.sort_type = sort_type;
+        if ($("#deck")) {
+            deck.display('#deck');
+        }
+
+        if ($("#deck-content")) {
+            deck.display('#deck-content');
+        }
+
+        if ($("#decklist")) {
+            deck.display('#decklist');
+        }
+    };
+
+        /**
      * @memberOf deck
      * @param {object} container 
-     * @param {object} options 
+     * @param {object} options
      */
     deck.display = function display(container, options)
     {
-
         options = _.extend({sort: 'type', cols: 2}, options);
 
-        var layout_data = deck.get_layout_data(options);
-        var deck_content = layouts[options.cols](layout_data);
+        var deck_content = deck.get_layout_data(options);
 
         $(container)
-                .removeClass('deck-loading')
-                .empty();
+          .removeClass('deck-loading')
+          .empty();
 
         $(container).append(deck_content);
     };
@@ -334,7 +358,8 @@
             characters: '',
             attachments: '',
             locations: '',
-            events: ''
+            events: '',
+            cards: ''
         };
 
         var problem = deck.get_problem();
@@ -354,31 +379,126 @@
         var drawDeckSection = $('<div>' + Translator.transChoice('decks.edit.meta.drawdeck', deck.get_draw_deck_size(), {count: deck.get_draw_deck_size()}) + '</div>');
         drawDeckSection.addClass(problem && problem.indexOf('cards') !== -1 ? 'text-danger' : '');
         deck.update_layout_section(data, 'meta', drawDeckSection);
+
         var plotDeckSection = $('<div>' + Translator.transChoice('decks.edit.meta.plotdeck', deck.get_plot_deck_size(), {count: deck.get_plot_deck_size()}) + '</div>');
         plotDeckSection.addClass(problem && problem.indexOf('plots') !== -1 ? 'text-danger' : '');
         deck.update_layout_section(data, 'meta', plotDeckSection);
-        //deck.update_layout_section(data, 'meta', $('<div>Packs: ' + _.map(deck.get_included_packs(), function (pack) { return pack.name+(pack.quantity > 1 ? ' ('+pack.quantity+')' : ''); }).join(', ') + '</div>'));
-        var packs = _.map(deck.get_included_packs({ 'cycle_position': 1, 'position': 1 }), function (pack)
-        {
+
+        var packs = _.map(deck.get_included_packs({ 'cycle_position': 1, 'position': 1 }), function (pack) {
             return pack.name + (pack.quantity > 1 ? ' (' + pack.quantity + ')' : '');
         }).join(', ');
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
+
         if(problem) {
             deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> ' + problem_labels[problem] + '</div>'));
         }
 
-        deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
-        deck.update_layout_section(data, 'characters', deck.get_layout_data_one_section('type_code', 'character', 'type_name'));
-        deck.update_layout_section(data, 'attachments', deck.get_layout_data_one_section('type_code', 'attachment', 'type_name'));
-        deck.update_layout_section(data, 'locations', deck.get_layout_data_one_section('type_code', 'location', 'type_name'));
-        deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
+        var layout_template = 2;
 
-        return data;
+        switch (deck.sort_type) {
+            case "faction":
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_name': 1, 'name': 1}, {'faction_name': 1}, null));
+                layout_template = 5;
+                break;
+            case "factionnumber":
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'faction_name': 1, 'code': 1}, {'faction_name': 1}, null, "number"));
+                layout_template = 5;
+                break;
+            case "name":
+                deck.update_layout_section(data, "cards", $('<br>'));
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'name': 1},  null, null, "number"));
+                layout_template = 5;
+                break;
+            case "set":
+                deck.update_layout_section(data, "cards", deck.get_layout_section_for_cards_sorted_by_set(true));
+                layout_template = 5;
+                break;
+            case "setnumber":
+                deck.update_layout_section(data, "cards", deck.get_layout_section_for_cards_sorted_by_set(false));
+                layout_template = 5;
+                break;
+            case "cardnumber":
+                deck.update_layout_section(data, "cards", $('<br>'));
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'code': 1},  null, null, "number"));
+                layout_template = 5;
+                break;
+            case "cost":
+                deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
+                deck.update_layout_section(data, "cards", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost': 1}, { type_code: { '$nin': ['agenda', 'plot'] }}));
+                layout_template = 4;
+                break;
+            case "type":
+            default:
+                deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
+                deck.update_layout_section(data, 'characters', deck.get_layout_data_one_section('type_code', 'character', 'type_name'));
+                deck.update_layout_section(data, 'attachments', deck.get_layout_data_one_section('type_code', 'attachment', 'type_name'));
+                deck.update_layout_section(data, 'locations', deck.get_layout_data_one_section('type_code', 'location', 'type_name'));
+                deck.update_layout_section(data, 'events', deck.get_layout_data_one_section('type_code', 'event', 'type_name'));
+        }
+
+        if (options && options.layout) {
+            layout_template = options.layout;
+        }
+
+        return layouts[layout_template](data);
     };
 
     deck.update_layout_section = function update_layout_section(data, section, element)
     {
         data[section] = data[section] + element[0].outerHTML;
+    };
+
+    deck.get_layout_section = function(sort, group, query, context){
+        var cards;
+        var section = $('<div>');
+        cards = deck.get_cards(sort, query, group);
+        if(cards.length) {
+            deck.create_card_group(cards, context).appendTo(section);
+
+        } else if (cards.constructor !== Array){
+            $.each(cards, function (index, group_cards) {
+                if (group_cards.constructor === Array){
+                    $(header_tpl({code: index, name: index === "undefined" ? "Null" : index, quantity: group_cards.reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
+                    deck.create_card_group(group_cards, context).appendTo(section);
+                }
+            });
+        }
+        return section;
+    };
+
+    /**
+     * @param {boolean} sortByName set to TRUE for sorting by name within sets, or FALSE to sort by card number.
+     */
+    deck.get_layout_section_for_cards_sorted_by_set = function(sortByName) {
+        sortByName = !!sortByName;
+
+        var section = $('<div>');
+        var context = sortByName ? "" : "number";
+        var sort = sortByName ? {"name": 1} : {"code": 1};
+        var packs = deck.get_included_packs({"cycle_position": 1, "position": 1});
+        var cards = deck.get_cards(sort, {}, {"pack_name": 1});
+
+        packs.forEach(function(pack){
+            $(header_tpl({code: pack.code, name: pack.name, quantity: cards[pack.name].reduce(function(a,b){ return a + b.indeck}, 0) })).appendTo(section);
+            deck.create_card_group(cards[pack.name], context).appendTo(section);
+        });
+        return section;
+    };
+
+    deck.create_card_group = function(cards, context){
+        var section = $('<div>');
+        cards.forEach(function (card) {
+            var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+
+            $div.append($(card_line_tpl({card:card})));
+            $div.prepend(card.indeck+'x ');
+            if (context && context === "number"){
+                $div.append(" | "+card.pack_name+" #"+card.position);
+            }
+
+            $div.appendTo(section);
+        });
+        return section;
     };
 
     deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel)

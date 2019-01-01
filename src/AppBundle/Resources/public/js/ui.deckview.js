@@ -3,8 +3,6 @@
 (function ui_deck(ui, $)
 {
 
-    var DisplaySort = 'type';
-
     function confirm_delete()
     {
         $('#delete-deck-name').text(app.deck.get_name());
@@ -26,27 +24,34 @@
             case 'btn-print':
                 window.print();
                 break;
-            case 'btn-sort-type':
-                DisplaySort = 'type';
-                ui.refresh_deck()();
-                break;
-            case 'btn-sort-position':
-                DisplaySort = 'position';
-                ui.refresh_deck()();
-                break;
-            case 'btn-sort-faction':
-                DisplaySort = 'faction';
-                ui.refresh_deck()();
+            case 'btn-sort-default':
+                app.deck.change_sort('type');
                 break;
             case 'btn-sort-name':
-                DisplaySort = 'name';
-                ui.refresh_deck()();
+                app.deck.change_sort('name');
+                break;
+            case 'btn-sort-set':
+                app.deck.change_sort('set');
+                break;
+            case 'btn-sort-setnumber':
+                app.deck.change_sort('setnumber');
+                break;
+            case 'btn-sort-faction':
+                app.deck.change_sort('faction');
+                break;
+            case 'btn-sort-factionnumber':
+                app.deck.change_sort('factionnumber');
+                break;
+            case 'btn-sort-cardnumber':
+                app.deck.change_sort('cardnumber');
+                break;
+            case 'btn-sort-cost':
+                app.deck.change_sort('cost');
                 break;
             case 'btn-export-plaintext':
                 ui.export_plaintext(app.deck);
                 break;
         }
-
     };
 
     /**

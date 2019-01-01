@@ -44,6 +44,7 @@ forms:
   search: Search
   actions: Actions
   export: Export
+  sort: Sort
 
 decks:
   privatedecks: My private decks
@@ -81,6 +82,7 @@ decks:
       charts: Charts
       history: History
     build:
+      sort: Sort Deck
       help: Filter help
       sets:
         label: Sets
@@ -135,9 +137,18 @@ decks:
     download:
       octgn: Octgn file
       text: Text file
-      text_cycle: Text file, sorted by cycle
+      text_cycle: Text file, sorted by Cycle
     export:
       plaintext: Plain text
+    sort:
+      by_cardnumber: by Card Number
+      by_cost: by Cost/Gold
+      by_faction: by Faction, then Name
+      by_factionnumber: by Faction, then Number
+      by_name: by Name
+      by_set: by Set, then Name
+      by_setnumber: by Set, then Number
+      by_type: by Type
   modals:
     card:
       go: Go to card page
