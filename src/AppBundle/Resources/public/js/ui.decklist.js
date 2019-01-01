@@ -67,6 +67,9 @@
             case 'btn-export-plaintext':
                 ui.export_plaintext(app.deck);
                 break;
+            case 'btn-export-markdown':
+                ui.export_markdown(app.deck);
+                break;
         }
     };
 
