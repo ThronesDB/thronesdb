@@ -139,6 +139,7 @@ decks:
       text: Text file
       text_cycle: Text file, sorted by Cycle
     export:
+      markdown: Markdown
       plaintext: Plain text
     sort:
       by_cardnumber: by Card Number

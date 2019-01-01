@@ -139,6 +139,7 @@ decks:
       text: Fichero de texto
       text_cycle: Fichero de texto, ordenado por ciclo
     export:
+      markdown: Markdown
       plaintext: Texto sin formato
     sort:
       by_cardnumber: por número de carta
