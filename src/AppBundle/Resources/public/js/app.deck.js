@@ -24,7 +24,77 @@
             header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
             card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a>'),
             layouts = {},
-            layout_data = {};
+            layout_data = {},
+            // restricted list v2.0, 2018-10-08
+            joust_restricted_list = [
+                "01100",
+                "01109",
+                "03038",
+                "04001",
+                "04017",
+                "05010",
+                "05049",
+                "06004",
+                "06039",
+                "06040",
+                "06098",
+                "06100",
+                "06103",
+                "09001",
+                "09017",
+                "09023",
+                "10045",
+                "10050"
+            ],
+            melee_restricted_list = [
+                "01001",
+                "01013",
+                "01043",
+                "01078",
+                "01119",
+                "01162",
+                "02012",
+                "02024",
+                "02060",
+                "03003",
+                "04003",
+                "04118",
+                "05001",
+                "05010",
+                "06004",
+                "06039",
+                "06098",
+                "07036",
+                "08098",
+                "09028"
+            ];
+
+
+    /*
+     * Validates the current deck against a given list of restricted cards.
+     * @param {Array} restricted_list
+     * @return {boolean}
+     */
+    var validate_deck_against_restricted_list = function(restricted_list) {
+        var is_valid = true;
+        var cards = app.deck.get_cards();
+        var i, n;
+        var counter = 0;
+
+        restricted_list = restricted_list || [];
+
+        for (i = 0, n = cards.length; i < n; i++) {
+            if (-1 !== restricted_list.indexOf(cards[i].code)) {
+                counter++;
+            }
+            if (1 < counter) {
+                is_valid = false;
+                break;
+            }
+        }
+
+        return is_valid;
+    };
 
     /*
      * Templates for the different deck layouts, see deck.get_layout_data
@@ -34,6 +104,8 @@
     layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
     layouts[4] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
     layouts[5] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-12 col-print-12"><%= meta %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
+
+
 
     /**
      * @memberOf deck
@@ -865,6 +937,22 @@
             case '09045':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.maester')) !== -1;
         }
-    }
+    };
+
+    /**
+     * Checks if the current deck complies with the restricted list for joust.
+     * @return {boolean}
+     */
+    deck.is_joust_restricted_list_compliant = function is_joust_restricted_list_compliant() {
+        return validate_deck_against_restricted_list(joust_restricted_list);
+    };
+
+    /**
+     * Checks if the current deck complies with the restricted list for melee.
+     * @return {boolean}
+     */
+    deck.is_melee_restricted_list_compliant = function is_melee_restricted_list_compliant() {
+        return validate_deck_against_restricted_list(melee_restricted_list);
+    };
 
 })(app.deck = {}, jQuery);
