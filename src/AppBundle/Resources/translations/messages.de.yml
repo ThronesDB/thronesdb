@@ -1,0 +1,484 @@
+slogan: Deckbauer für Game of Thrones: Der Eiserne Thron – Das Kartenspiel Zweite Edition
+
+data_load_fail: "Die Seite konnte nicht geladen werden. Klicke <a href='javascript:window.location.reload(true)'>hier</a>, um die Seite neu zu laden."
+login_required: Für diese Funktion musst du eingeloggt sein.
+
+userby: Von %user%
+seemore:
+  faction: Mehr von dieser Fraktion
+noimage: Kein Bild
+
+nav:
+  mydecks: Meine Decklisten
+  decklists: Decklisten
+  cards: Karten
+  reviews: Karten-Rezensionen
+  rules: Spielregeln
+  rulesreference: Referenzhandbuch
+  faq: F.A.Q.
+  tournamentregulations: Turnierregeln
+  advancedsearch: Erweiterte Suche
+  cardsearch: Kartensuche
+  user:
+    loginregister: Einloggen oder registrieren
+    editaccount: Account bearbeiten
+    profile: Öffentliches Profil
+    logout: Ausloggen
+
+forms:
+  save: Speichern
+  edit: Bearbeiten
+  publish: Veröffentlichen
+  delete: Löschen
+  cancel: Abbrechen
+  add: Hinzufügen
+  remove: Entfernen
+  import: Importieren
+  upload: Hochladen
+  reset: Zurücksetzen
+  copy: Kopieren
+  clone: Klonen
+  close: Schließen
+  print: Drucken
+  download: Herunterladen
+  search: Suche
+  actions: Aktionen
+  export: Exportieren
+  sort: Sortieren
+
+decks:
+  privatedecks: Meine privaten Decklisten
+  slotcount: "(%current%/%max% Decklisten)"
+  version: Version %version%
+  description: Beschreibung
+  defaultemptydesc: "*Keine Beschreibung*"
+  problems:
+    too_many_plots: Enthält zu viele Strategiekarten
+    too_few_plots: Enthält zu wenige Strategiekarten
+    too_many_different_plots: Enthält mehr als eine Strategiekarte doppelt
+    too_many_agendas: Enthält mehr als eine Agenda
+    too_few_cards: Enthält zu wenige Karten
+    too_many_copies: Enthält zu viele Kopien einer Karte (nach Titel)
+    invalid_cards: Enthält nicht zulässige Karten (nach Fraktion oder Agenda)
+    agenda: Erfüllt die Bedingungen der Agenda nicht
+  build:
+    choose:
+      faction: Wähle eine Fraktion
+      agenda: Wähle eine Agenda
+      noagenda: Keine Agenda
+    start: Die Deckliste erstellen und mit dem Bauen beginnen
+    newname:
+      noagenda: "Neue Deckliste: %faction%"
+      agenda: "Neue Deckliste: %faction%, %agenda%"
+    errors:
+      nofaction: Es muss Fraktion ausgewählt sein.
+  edit:
+    unsaved: Diese Deckliste enthält nicht gespeicherte Änderungen. Bitte speichere oder verwerfe diese, bevor du weitere Änderungen vornimmst.
+    refresh: Die Daten neu laden
+    tabs:
+      build: Bauen
+      notes: Notizen
+      test: Tests
+      charts: Diagramme
+      history: Verlauf
+    build:
+      sort: Deckliste sortieren
+      help: Hilfe zu Filtern
+      sets:
+        label: Packs
+        hint: Umschalt+Klicken um nur eine Option auszuwählen; Alt+Umschalt+Klicken um alle anderen Optionen auszuwählen.
+      options:
+        label: Optionen
+        show:
+          unusable: Zeige Karten, die nicht verwendet werden können
+          onlyused: Zeige nur verwendete Karten
+        display: "{1} Zeige in 1 Spalte | ]1, Inf] Zeige in %cols% Spalten"
+        usecore: "{1} Verwende 1 Grundspiel | ]1, Inf] Verwende %core% Grundspiele"
+        factype:
+          cumulative: Fraktion/Typ kumulativ
+          exclusive: Fraktion/Typ exklusiv
+      searchhint: Eine Karte finden oder die List filtern
+    notes:
+      tags:
+        label: Tags
+        hint: Die Tags dienen zum Filtern deiner Decklisten, z.B., <i>Turnier</i> o <i>Buhurt</i>.
+      notes:
+        label: Notizen
+        hint: "Tippe # um einen Kartennamen oder $ um ein Spielsymbol einzugeben."
+    form:
+      name: Name
+      cancel: Änderungen verwerfen
+    meta:
+      drawdeck: "{0} Nachziehstapel: %count% Karten | {1} Nachziehstapel: %count% Karte | ]1,Inf] Nachziehstapel: %count% Karten"
+      plotdeck: "{0} Strategiestapel: %count% Karten | {1} Strategiestapel: %count% Karte | ]1,Inf] Strategiestapel: %count% Karten"
+      packs: "Packs: %packs%"
+  form:
+    build: Neue Deckliste erstellen
+    uploadarchive: Archiv hochladen
+    new: Neue Deckliste
+    import:
+      label: Deckliste importieren
+      copypaste: Kopieren/Einfügen
+      file: Datei
+    selection: 
+      label: Mit Auswahl
+      compare:
+        label: Vergleichen
+        twodecks: Zwei Decklisten vergleichen
+      tags:
+        label: Tags
+        add: Einen oder mehrere Tags hinzufügen
+        remove: Einen oder mehrere Tags entfernen
+        clear: Alle Tags entfernen
+      delete:
+        label: Löschen
+        selected: Alle ausgewählten Decklisten entfernen
+    labelswitch: Klicken nur Decklisten mit diesem Tag anzuzeigen. Umschalt+Klicken um auch Decklisten mit diesem Tag anzuzeigen.
+    download:
+      text: Textdatei
+      octgn: OCTGN-Datei
+      text_cycle: Textdatei, sortiert nach Zyklus
+    export:
+      markdown: Markdown
+      plaintext: einfacher Text
+    sort:
+      by_cardnumber: nach Kartennummer
+      by_cost: nach Kosten/Goldwert
+      by_faction: nach Fraktion, dann Name
+      by_factionnumber: nach Fraktion, dann Kartennummer
+      by_name: nach Name
+      by_set: nach Pack, dann Name
+      by_setnumber: nach Pack, dann Kartennummer
+      by_type: nach Typ
+  modals:
+    card:
+      go: Zur Seite der Karte wechseln
+    fileimport:
+      title: Eine Deckliste hochladen
+      file:
+        label: Datei
+      type:
+        label: Dateityp
+        options:
+          auto: Automatisch
+          octgn: OCTGN
+          text: Text
+    delete:
+      title: Deckliste löschen
+      question: Bist du sicher, dass du die Deckliste %name% löschen möchtest?
+      confirm: Ja, löschen
+    deletelist:
+      title: Decklisten löschen
+      question: Bist du sicher, dass du alle ausgewählten Decklisten löschen möchtest?
+      confirm: Ja, löschen
+    tags:
+      label: Bitte gebe die Liste der Tags ein, getrennt durch Leerzeichen.
+      hint: Tags dienen dem Filtern von Decklisten, zum Beispiel <i>Turnier</i> oder <i>Buhurt</i>
+      clear:
+        question: Bist du sicher, dass du alle Tags von den ausgewählten Decklisten entfernen möchtest?
+        confirm: Ja, entfernen
+  published:
+    title: Veröffentlichte Versionen
+    none: Keine
+  simulator:
+    title: Kartenziehsimulator
+    hint: Klicken um zu ziehen; Umschalt-Klicken um zurückzusetzen und zu ziehen
+    draw: Ziehen
+    all: Alle
+    oddhint: "Wahrscheinlichkeit, mindestens eine Kopie einer gewünschten Karten zu ziehen, nachdem diese Anzahl Karten vom Nachziehstapel gezogen wurden, abhängig von der Anzahl der Kopien im Nachziehstapel (1 - 2 - 3)"
+    odds: Wahrscheinlichkeit
+    more: Mehr
+  smartfilter:
+    title: Syntax des intelligenten Filters
+    example: "Beispiel: <tt>m:1 s>3</tt> zeigt alle Charaktere mit einem <span class='icon-military'></span>-Symbol und mehr als 3 Stärke."
+    filters:
+      flavor: Atmosphärischer Text
+      claim: Schadenswert
+      pack_code: Pack
+      faction_code: Fraktion
+      is_intrigue: Intrigenspiel-Symbol
+      reserve: Reservewert
+      illustrator: Illustrator/in
+      traits: Merkmale
+      is_loyal: Loyalität
+      is_military: Militäreinsatz-Symbol
+      income: Goldwert
+      cost: Kosten
+      is_power: Machtkampf-Symbol
+      strength: Stärke
+      type_code: Typ
+      is_unique: Einzigartigkeit
+      initiative: Initiativewert
+      text: Text
+      quantity: Anzahl der Kopien im Pack
+      designer: Designer/in
+  charts:
+    faction:
+      title: Karten pro Fraktion
+      subtitle: Nur Nachziehstapel
+      label: "# Karten"
+    icon:
+      title: Symbole der Charaktere
+      subtitle: Ausgenommen Duplikate
+      tooltip:
+        header: "Symbol %type%"
+        label: "# Charaktere"
+    strength:
+      title: Stärke der Charaktere
+      subtitle: Ausgenommen Duplikate
+      tooltip:
+        header: "Stärke %str%"
+        label: "# Charaktere"
+    cost:
+      title: Kosten der Karten
+      subtitle: Ausgenommen Karten mit Kosten X
+      tooltip:
+        header: "Kosten %cost%"
+        label: "# Karten"
+  history:
+    timeremaining: Verbleibende Zeit
+    columns:
+      date: Datum
+      version: Version
+      changes: Änderungen
+      action: Aktion
+    firstversion: Erste Version
+    unsaved: Nicht gespeichert
+    revert: Verwerfen
+  compare:
+    decknumber: "Deckliste #%id%"
+    plotdecks: Strategiestapel
+    drawdecks: Nachziehstapel
+
+decklist:
+  publish:
+    name: Name
+    placedhigh: Eine gute Platzierung bei einem Turnier erreicht?
+    no: Nein
+    derived: Basierend auf (Kopiere die ID oder die Adresse der Deckliste, auf der diese basiert.)
+    description: Beschreibung
+    editor:
+      hint: "Drücke # um einen Kartennamen oder $ um ein Spielsymbol einzufügen."
+      cardtolink: Einen Kartennamen in eine Link umwandeln
+      entersymbol: Ein Spielsymbol einfügen
+      heading: Überschrift %number%
+    errors:
+      unauthorized: Du hast keinen Zugriff auf diese Deckliste.
+      antispam:
+        newbie: Um Spam zu vermeiden müssen neu registrierte Accounts 24 Stunden warten, bevor sie eine Deckliste veröffentlichen dürfen.
+        limit: Um Spam zu vermeiden dürfen Accounts pro 24 Stunden nicht mehr Decklisten als ihr Ansehen veröffentlichen.
+      unreleased: Du darfst diese Deckliste noch nicht veröffentlichen, weil sie nicht veröffentlichte Karten enthält.
+      invalid: Du darfst diese Deckliste nicht veröffentlichen, weil sie nicht zulässig ist.
+      pagetitle:
+        spam: Vermeidung von Spam
+    warnings:
+      published: "Diese Deckliste <a href='%url%'>wurde bereits veröffentlicht</a>. Du wirst ein Duplikat erstellen."
+  view:
+    versions: Versionen
+    published: Veröffentlicht
+    duplicate: Duplikat von %duplicate%
+    comments:
+      count: "{0} Keine Kommentare | {1} %count% Kommentar | ]1,Inf] %count% Kommentare"
+      hint: "Gib einen Kommentar im Markdown-Format ein. Tippe # um einen Kartennamen, $ um ein Spielsymbol oder @ um einen Nutzernamen einzugeben."
+      submit: Kommentar veröffentlichen
+    social:
+      like: Gefällt mir
+      favorite: Favorit
+      comment: Kommentar
+      version: Version
+    derived:
+      title: Basierend auf
+      none: Keine. Ein selbstgebautes Deck.
+    inspire:
+      title: Vorlage für
+      none: Noch keine.
+    toolbar:
+      edit: Namen und Beschreibung der Deckliste bearbeiten
+    errors:
+      notfound: Deckliste nicht gefunden.
+  list:
+    types:
+      popular: Beliebt
+      recent: Neu
+      tournaments: Turnier
+      hottopics: Viel diskutierte Decklisten
+      hof: Hall of Fame
+      myfavorites: Meine Favoriten
+      mydecklists: Meine Decklisten
+    titles:
+      search: Suche nach Decklisten
+      find: Ergebnis der Suche nach Decklisten
+      popular: Beliebte Decklisten
+      recent: Neue Decklisten
+      tournament: Turniere
+      hottopics: Viel diskutierte Decklisten
+      halloffame: Hall of Fame
+      favorites: Favoriten
+      mine: Meine Decklisten
+    search:
+      faction:
+        label: Fraktion
+        any: beliebig
+      author: 
+        label: Name des Autors / der Autorin
+        hint: Gib den Namen des Autors / der Autorin ein.
+      used:
+        label: Verwendete Karten
+        hint: Gib den Kartennamen ein.
+      decklist:
+        label: Name der Deckliste
+        hint: Gib den Namen der Deckliste ein.
+      sort:
+        label: Sortieren
+        popularity: Nach Beliebtheit
+        date: Nach Datum
+        likes: Nach Anzahl der \"Gefällt mir\"
+        reputation: Nach Ansehen des Autors / der Autorin
+      allowed: 
+        label: Zulässige Packs
+        onoff: "(%on% Ja, %off% Nein)"
+        core: "Grundspiel / Erweiterungen"
+        all: Alle
+        none: Keine
+
+search:
+  label: Suche
+  setbrowse: Packs durchsuchen
+  title: Kartensuche
+  nametexts: Name und Texte
+  attributes: Attribute
+  numerics: Zahlen
+  other: Andere
+  previews: Vorschau
+  submit: Suchen
+  any: Beliebig
+  yes: Ja
+  no: Nein
+  only: Nur
+  sort:
+    name: Sortieren nach Name
+    set: Sortieren nach Pack
+    faction: Sortieren nach Fraktion
+    type: Sortieren nach Typ
+    costgold: Sortieren nach Kosten/Goldwert
+    strini: Sortieren nach Stärke/Initiativewert
+  view:
+    list: Ansehen als Liste
+    spoiler: Ansehen als Texte
+    card: Ansehen als Texte und Abbildungen
+    scan: Ansehen als Abbildungen
+    short: Ansehen als einfache Liste
+
+pag:
+  cardscount: "{0} Keine Karten | {1} Eine Karte | ]1,Inf] %count% Karten"
+
+card:
+  traits:
+    summer: Sommer
+    winter: Winter
+    scheme: Komplott
+    banner: Banner
+    maester: Maester
+  reviews:
+    title: Karten-Rezensionen
+    none: Noch keine Rezensionen dieser Karte.
+    unreleased: Rezensionen dieser Karte können erst geschrieben werden, wenn sie veröffentlicht wurde.
+    like: Mir gefällt diese Rezension.
+    edit: Rezension bearbeiten
+    write: Eine Rezension schreiben
+    hint: "Schreibe eine Rezension dieser Karte. Rezensionen müssen mindestens %min% Zeichen lang sein. Die Anzahl deiner Rezensionen darf nicht größer sein als dein Ruf. Rezensionen sind nicht für Fragen und Kommentare vorgesehen. Tippe # um einen Kartennamen oder $ um ein Spielsymbol einzugeben."
+    submit: Rezension veröffentlichen
+    posted: Deine Rezension wurde veröffentlicht. Sie wird in wenigen Minuten auf der Seite erscheinen.
+    comments:
+      add: Einen Kommentar hinzufügen
+      hint: Dein Kommentar
+      post: Veröffentlichen
+      posted: Dein Kommentar wurde veröffentlicht. Er wird in wenigen Minuten auf der Seite erscheinen.
+    alerts:
+      minimum: Deine Rezension muss mindestens %min% Zeichen lang sein.
+  info:
+    name: Name
+    unique: Einzigartig
+    text: Text
+    flavor: Atmosphärischer Text
+    faction: Fraktion
+    set: Pack
+    cost: Kosten
+    costgold: Kosten/Goldwert
+    type: Typ
+    strength: Stärke
+    str: Stärke
+    strini: Stärke/Initiativewert
+    traits: Merkmale
+    loyal: Loyal
+    nonloyal: Nicht-loyal
+    income: Einkommen
+    initiative: Initiativewert
+    claim: Schadenswert
+    reserve: Reservewert
+    plotlimit: Strategiestapel-Limit
+    quantity: Anzahl
+    illustrator: Illustrator/in
+    short:
+      costgold: K.
+      strini: S.
+      type: T.
+      faction: F.
+
+challenges:
+  military: Militäreinsatz
+  intrigue: Intrigenspiel
+  power: Machtkampf
+
+icon:
+  baratheon: Haus Baratheon
+  greyjoy: Haus Graufreud
+  intrigue: Intrigenspiel
+  lannister: Haus Lennister
+  martell: Haus Martell
+  military: Militäreinsatz
+  thenightswatch: Die Nachtwache
+  power: Machtkampf
+  stark: Haus Stark
+  targaryen: Haus Targaryen
+  tyrell: Haus Tyrell
+  unique: Einzigartig
+  plot: Strategiekarte
+  attachment: Verstärkung
+  location: Ort
+  character: Charakter
+  event: Ereignis
+  agenda: Agenda
+  neutral: Neutral
+
+keyword:
+  renown:
+    name: Ruhmreich
+    title: "Nachdem du eine Herausforderung gewonnen hast, an der dieser Charakter teilnimmt, darf er 1 Macht erhalten."
+  intimidate:
+    name: Einschüchternd
+    title: "Nachdem du eine Herausforderung gewonnen hast, bei der du 1 oder mehrere angreifende Charaktere mit Einschüchternd kontrollierst, darfst du einen vom Verlierer kontrollierten Charakter wählen, der nicht mehr Stärke hat als die Menge an Stärke, um die du die Herausforderung gewonnen hast, und ihn beugen. Pro Herausforderung darf nicht mehr als 1 Charakter durch Einschüchternd gebeugt werden."
+  stealth:
+    name: Heimlich
+    title: "Sobald dieser Charakter zum Angreifer deklariert wird, darfst du einen vom verteidigenden Spieler kontrollierten Charakter ohne Heimlich wählen. Der gewählte Charakter kann bei dieser Herausforderung nicht zum Verteidiger deklariert werden."
+  insight:
+    name: Einblick
+    title: "Nachdem du eine Herausforderung gewonnen hast, an der dieser Charakter teilnimmt, darfst du 1 Karte ziehen."
+  limited:
+    name: Limitiert
+    title: "Ein Spieler darf nicht mehr als 1 limitierte Karte pro Runde ausspielen oder aufmarschieren lassen bzw. beim Spielaufbau nicht mehr als 1 limitierte Karte platzieren."
+  pillage:
+    name: Brandschatzen
+    title: "Nachdem du eine Herausforderung gewonnen hast, an der dieser Charakter teilnimmt, darfst du die oberste Karte vom Nachziehstapel des Verlierers ablegen."
+  terminal:
+    name: Vergänglich
+    title: "(Taucht auf Verstärkungen auf.) Falls die verstärkte Karte das Spiel verlässt, kehrt diese Karte nicht auf die Hand ihres Besitzers zurück, sondern wird aus dem Spiel abgelegt."
+  ambush:
+    name: Hinterhalt
+    title: "Als Spieleraktion darfst du die Hinterhaltkosten (in Gold) bezahlen, um diese Karte während der Herausforderungsphase ins Spiel zu bringen. X sind die Hinterhaltkosten."
+  bestow:
+    name: Investition
+    title: "Sobald eine Karte mit Investition (X) ins Spiel kommt, darf der Spieler, der diese Karte kontrolliert, bis zu X Gold von seiner Goldreserve auf diese Karte verschieben."
+  shadow:
+    name: Schatten
+    title: "Eine Karte mit Schatten (X) kann man für 2 Gold verdeckt im Schattenbereich ihres kontrollierenden Spielers aufmarschieren lassen. Jene Karte kann später gespielt werden (falls es sich um ein Ereignis handelt) oder offen ins Spiel geholt werden (falls es sich um einen Charakter, Ort oder eine Verstärkung handelt), indem der Spieler X Gold bezahlt."
