@@ -102,6 +102,7 @@ jms_i18n_routing:
     hosts:
         en: "%website_url%"
         es: "es.%website_url%"
+        de: "de.%website_url%"
     redirect_to_host: true
 
 # Swiftmailer Configuration
