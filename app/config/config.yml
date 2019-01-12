@@ -20,6 +20,7 @@ parameters:
     supported_locales:
         - en
         - es
+        - de
 
 framework:
     #esi: ~
