@@ -3,12 +3,15 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Model\DecklistManager;
 use AppBundle\Entity\Decklist;
 
 class DefaultController extends Controller
 {
+    use LocaleAwareTemplating;
+
     public function indexAction()
     {
         $response = new Response();
@@ -118,13 +121,13 @@ class DefaultController extends Controller
         return $response;
     }
 
-    public function aboutAction()
+    public function aboutAction(Request $request)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        return $this->render('AppBundle:Default:about.html.twig', array(
+        return $this->render($this->getLocaleSpecificViewPath('about', $request->getLocale()), array(
                 "pagetitle" => "About",
                 "game_name" => $this->container->getParameter('game_name'),
         ), $response);

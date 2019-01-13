@@ -22,6 +22,7 @@ use AppBundle\Entity\Pack;
 
 class SocialController extends Controller
 {
+    use LocaleAwareTemplating;
 
     /**
      * Checks to see if a deck can be published in its current saved state
@@ -1131,9 +1132,16 @@ class SocialController extends Controller
 
         $users = $dbh->executeQuery("SELECT * FROM user WHERE donation>0 ORDER BY donation DESC, username", [])->fetchAll(\PDO::FETCH_ASSOC);
 
-        return $this->render('AppBundle:Default:donators.html.twig', array(
-                    'pagetitle' => 'The Gracious Donators',
-                    'donators' => $users
-                        ), $response);
+        return $this->render(
+            $this->getLocaleSpecificViewPath(
+                'donators',
+                $request->getLocale()
+            ),
+            array(
+                'pagetitle' => 'The Gracious Donators',
+                'donators' => $users
+            ),
+            $response
+        );
     }
 }
