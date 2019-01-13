@@ -1,0 +1,23 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block title %}Über diese Seite{% endblock %}
+
+{% block body %}
+<div class="main white container">
+
+<h1>{{ block('title') }}</h1>
+
+<p>Diese Seite ist der Bereitstellung eines schnellen, mächtigen und vollständigen Deckbauers und einer Suchmaschine für {{ game_name }}-Karten gewidmet, inklusive Beschreibungen und Abbildungen der Karten.</p>
+<p>Diese Seite ist optimiert für mobiles Browsen (WebKit).</p>
+
+<h3>Credits</h3>
+
+<p>Ich möchte besonders danken:</p>
+<ul>
+    <li>SP für das Bereitstellen der Domain</li>
+    <li>den Crazy Bear-Riders für das Testen vor der Veröffentlichung, insbesondere mplain and alexmonk</li>
+    <li><a href="http://agotgame.com/en">agotgame</a> für die Idee der farbkodierten Kartentyp-Symbole</li>
+</ul>
+
+</div>
+{% endblock %}

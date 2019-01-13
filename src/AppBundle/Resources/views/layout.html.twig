@@ -107,7 +107,7 @@
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown">
                 <span class="lang-sm" lang="{{ app.request.locale | default(default_locale) }}"></span>
-                <span class="caret">
+                <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
                 {% for supported_locale in supported_locales %}
@@ -166,7 +166,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.1.7/highcharts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.9.0/js/bootstrap-markdown.min.js"></script>
     {% javascripts 
-      '@AppBundle/Resources/public/js/bootstrap-markdown.es.js' %}
+      '@AppBundle/Resources/public/js/bootstrap-markdown.es.js'
+      '@AppBundle/Resources/public/js/bootstrap-markdown.de.js'
+    %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 

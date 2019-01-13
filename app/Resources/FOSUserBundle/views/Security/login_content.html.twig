@@ -31,6 +31,6 @@
     {% endif %}
     
     <input type="submit" id="_submit" name="_submit" class="btn btn-primary" value="{{ 'security.login.submit'|trans }}" />
-    <a href="{{ path('fos_user_registration_register') }}" class="btn btn-link">Register</a>
-    <a href="{{ path('fos_user_resetting_request') }}" class="btn btn-link">Forgot your password?</a>
+    <a href="{{ path('fos_user_registration_register') }}" class="btn btn-link">{{ 'registration.submit'|trans }}</a>
+    <a href="{{ path('fos_user_resetting_request') }}" class="btn btn-link">{{ 'resetting.request.submit'|trans }}</a>
 </form>

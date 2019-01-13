@@ -14,7 +14,7 @@
             iconlibrary: 'fa',
             hiddenButtons: ['cmdHeading', 'cmdImage', 'cmdCode'],
             footer: Translator.trans('decklist.publish.editor.hint'),
-            language: "es",
+            language: Translator.locale,
             additionalButtons:
                     [[{
                                 name: "groupCard",
