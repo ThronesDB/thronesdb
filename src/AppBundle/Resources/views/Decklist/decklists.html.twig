@@ -92,9 +92,9 @@ $(function () {
 	    {% endif %}
 	</h5>
 	<div class="restricted-list-info">
-		<em>Restricted List:</em>
-		<span class="fa {% if decklist.isLegalForJoust %}fa-times{% else %}fa-check{% endif %}"> Joust</span> |
-		<span class="fa {% if decklist.isLegalForMelee %}fa-times{% else %}fa-check{% endif %}"> Melee</span>
+		<em>{{ 'decklist.list.restrictedlist.title' | trans }}:</em>
+		<span class="fa {% if decklist.isLegalForJoust %}fa-times{% else %}fa-check{% endif %}"> {{ 'decklist.list.restrictedlist.joust' | trans }}</span> |
+		<span class="fa {% if decklist.isLegalForMelee %}fa-times{% else %}fa-check{% endif %}"> {{ 'decklist.list.restrictedlist.melee' | trans }}</span>
 	</div>
 	</article>
 </td>
