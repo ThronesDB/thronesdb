@@ -340,7 +340,10 @@ decklist:
         core: "Grundspiel / Erweiterungen"
         all: Alle
         none: Keine
-
+    restrictedlist:
+      title: Liste Eingeschränkter Karten
+      joust: Tjost
+      melee: Buhurt
 search:
   label: Suche
   setbrowse: Packs durchsuchen

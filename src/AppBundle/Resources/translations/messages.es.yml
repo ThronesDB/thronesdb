@@ -339,7 +339,10 @@ decklist:
         core: "Caja básica / Deluxe"
         all: todo
         none: ninguno
-
+    restrictedlist:
+      title: Lista de cartas restringidas
+      joust: Justa
+      melee: Contienda
 search:
   label: Buscar
   setbrowse: Explorar capítulos

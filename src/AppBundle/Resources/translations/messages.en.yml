@@ -340,7 +340,10 @@ decklist:
         core: "Core / Deluxe"
         all: all
         none: none
-
+    restrictedlist:
+      title: Restricted List
+      joust: Joust
+      melee: Melee
 search:
   label: Search
   setbrowse: Browse by set
