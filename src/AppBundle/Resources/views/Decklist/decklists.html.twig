@@ -91,6 +91,11 @@ $(function () {
         </span>
 	    {% endif %}
 	</h5>
+	<div class="restricted-list-info">
+		<em>Restricted List:</em>
+		<span class="fa {% if decklist.isLegalForJoust %}fa-times{% else %}fa-check{% endif %}"> Joust</span> |
+		<span class="fa {% if decklist.isLegalForMelee %}fa-times{% else %}fa-check{% endif %}"> Melee</span>
+	</div>
 	</article>
 </td>
 </tr>
