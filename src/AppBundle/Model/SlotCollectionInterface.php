@@ -87,4 +87,15 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
      * @return \AppBundle\Model\SlotCollectionDecorator
      */
     public function filterByTrait($trait);
+
+    /**
+     * @return boolean
+     */
+    public function isLegalForMelee();
+
+    /**
+     * @return boolean
+     */
+    public function isLegalforJoust();
+
 }

@@ -641,4 +641,20 @@ class Deck extends \AppBundle\Model\ExportableDeck implements \JsonSerializable,
     {
         return $this->majorVersion . "." . $this->minorVersion;
     }
+
+    /**
+     * @see SlotCollectionInterface::isLegalForMelee()
+     */
+    public function isLegalForMelee()
+    {
+        return $this->getSlots()->isLegalForMelee();
+    }
+
+    /**
+     * @see SlotCollectionInterface::isLegalForJoust()
+     */
+    public function isLegalForJoust()
+    {
+        return $this->getSlots()->isLegalForJoust();
+    }
 }

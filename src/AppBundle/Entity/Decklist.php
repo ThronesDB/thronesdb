@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Model\SlotCollectionInterface;
 use AppBundle\Model\SlotCollectionProviderInterface;
 
 class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializable, SlotCollectionProviderInterface
@@ -764,5 +765,21 @@ class Decklist extends \AppBundle\Model\ExportableDeck implements \JsonSerializa
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * @see SlotCollectionInterface::isLegalForMelee()
+     */
+    public function isLegalForMelee()
+    {
+        return $this->getSlots()->isLegalForMelee();
+    }
+
+    /**
+     * @see SlotCollectionInterface::isLegalForJoust()
+     */
+    public function isLegalForJoust()
+    {
+        return $this->getSlots()->isLegalForJoust();
     }
 }

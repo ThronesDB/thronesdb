@@ -2,7 +2,8 @@
 
 namespace AppBundle\Model;
 
-use AppBundle\Entity\Pack;
+use AppBundle\Classes\RestrictedListChecker;
+use AppBundle\Entity\Decklistslot;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -12,9 +13,15 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
 {
     protected $slots;
 
+    /**
+     * @var RestrictedListChecker
+     */
+    protected $restrictedListChecker;
+
     public function __construct(\Doctrine\Common\Collections\Collection $slots)
     {
         $this->slots = $slots;
+        $this->restrictedListChecker = new RestrictedListChecker();
     }
 
     public function add($element)
@@ -262,5 +269,31 @@ class SlotCollectionDecorator implements \AppBundle\Model\SlotCollectionInterfac
         }
         ksort($arr);
         return $arr;
+    }
+
+    public function isLegalForMelee()
+    {
+        $slots = $this->getSlots()->getValues();
+        $cardCodes = [];
+        /**
+         * @var Decklistslot $slot;
+         */
+        foreach ($slots as $slot) {
+            $cardCodes[] = $slot->getCard()->getCode();
+        }
+        return $this->restrictedListChecker->isLegalForMelee($cardCodes);
+    }
+
+    public function isLegalForJoust()
+    {
+        $slots = $this->getSlots()->getValues();
+        $cardCodes = [];
+        /**
+         * @var Decklistslot $slot;
+         */
+        foreach ($slots as $slot) {
+            $cardCodes[] = $slot->getCard()->getCode();
+        }
+        return $this->restrictedListChecker->isLegalForJoust($cardCodes);
     }
 }
