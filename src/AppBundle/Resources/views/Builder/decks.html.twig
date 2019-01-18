@@ -79,13 +79,18 @@
 		</td>
 		<td>
 			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}
+			<div class="restricted-list-info">
+				<em>{{ 'decklist.list.restrictedlist.title' | trans }}:</em>
+				<span class="fa {% if deck.isLegalForJoust %}fa-times{% else %}fa-check{% endif %}"> {{ 'decklist.list.restrictedlist.joust' | trans }}</span> |
+				<span class="fa {% if deck.isLegalForMelee %}fa-times{% else %}fa-check{% endif %}"> {{ 'decklist.list.restrictedlist.melee' | trans }}</span>
+			</div>
 			{% if deck.problem is not null %}
-			<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(deck.problem) }}</div>
+				<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(deck.problem) }}</div>
 			{% endif %}
 			<div class="tags">
-			{% for tag in deck.tags|split(' ') %}
-			<span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
-			{% endfor %}
+				{% for tag in deck.tags|split(' ') %}
+					<span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
+				{% endfor %}
 			</div>
 		</td>
 		<td class="decks-actions text-right">
