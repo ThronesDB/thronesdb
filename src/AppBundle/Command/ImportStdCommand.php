@@ -28,7 +28,7 @@ class ImportStdCommand extends ContainerAwareCommand
     {
         $this
         ->setName('app:import:std')
-        ->setDescription('Import cards data file in json format from a copy of https://github.com/Alsciende/thronesdb-json-data')
+        ->setDescription('Import cards data file in json format from a copy of https://github.com/ThronesDB/thronesdb-json-data')
         ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
