@@ -88,6 +88,33 @@
 			  </div>
 			</div>
 
+			<!-- Restricted List -->
+			<table class="table table-condensed" id="table-predecessor">
+				<thead>
+				<tr>
+					<th colspan="4">
+						<span class="fa fa-bell"></span>
+						{{ 'decklist.list.restrictedlist.title' | trans }}
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>
+						<span class="fa {% if deck.isLegalForJoust %}fa-check{% else %}fa-times{% endif %}">
+							{{ 'decklist.list.restrictedlist.joust' | trans }}
+						</span>
+					</td>
+					<td>
+						<span class="fa {% if deck.isLegalForMelee %}fa-check{% else %}fa-times{% endif %}">
+							{{ 'decklist.list.restrictedlist.melee' | trans }}
+						</span>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+
 			{% include 'AppBundle:Builder:deck-charts.html.twig' %}
 			{% include 'AppBundle:Builder:draw-simulator.html.twig' %}
 
