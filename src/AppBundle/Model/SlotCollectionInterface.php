@@ -2,11 +2,24 @@
 
 namespace AppBundle\Model;
 
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Interface for a collection of SlotInterface
  */
 interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \ArrayAccess
 {
+    /**
+     * Adds a slot to the collection.
+     * @param SlotInterface $slot
+     */
+    public function add(SlotInterface $slot);
+
+    /**
+     * Removes a slot from the collection.
+     * @param SlotInterface $slot
+     */
+    public function removeElement(SlotInterface $slot);
     /**
      * Get quantity of cards
      * @return integer
@@ -89,13 +102,26 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
     public function filterByTrait($trait);
 
     /**
+     * Checks Restricted List compliance for the Melee format.
      * @return boolean
      */
     public function isLegalForMelee();
 
     /**
+     * Checks Restricted List compliance for the Joust format.
      * @return boolean
      */
     public function isLegalforJoust();
 
+    /**
+     * Returns the collection of slots.
+     * @return Collection
+     */
+    public function getSlots();
+
+    /**
+     * Returns a map of limits and total copies per card in the collection, keyed off by card name.
+     * @return array
+     */
+    public function getCopiesAndDeckLimit();
 }
