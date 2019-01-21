@@ -345,6 +345,8 @@ class ReviewController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
+        $fromEmail = $this->getParameter('email_sender_address');
+
         /* @var $user User */
         $user = $this->getUser();
         if (!$user) {
@@ -392,7 +394,7 @@ class ReviewController extends Controller
         foreach ($spool as $email => $view) {
             $message = Swift_Message::newInstance()
                     ->setSubject("[thronesdb] New review comment")
-                    ->setFrom(array("alsciende@thronesdb.com" => $user->getUsername()))
+                    ->setFrom(array($fromEmail => $user->getUsername()))
                     ->setTo($email)
                     ->setBody($this->renderView($view, $email_data), 'text/html');
             $this->get('mailer')->send($message);
