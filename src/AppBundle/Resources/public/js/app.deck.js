@@ -463,16 +463,16 @@
 
         var restrictedListContents = '<em>' + Translator.trans('restrictedlist.title') +':</em> ';
         if (deck.is_joust_restricted_list_compliant()) {
-            restrictedListContents += '<span class="fa fa-check text-success">';
+            restrictedListContents += '<span class="fa fa-check text-success"> ';
         } else {
-            restrictedListContents += '<span class="fa fa-times text-danger">';
+            restrictedListContents += '<span class="fa fa-times text-danger"> ';
         }
         restrictedListContents += Translator.trans('restrictedlist.joust') + '</span> | ';
 
         if (deck.is_melee_restricted_list_compliant()) {
-            restrictedListContents += '<span class="fa fa-check text-success">';
+            restrictedListContents += '<span class="fa fa-check text-success"> ';
         } else {
-            restrictedListContents += '<span class="fa fa-times text-danger">';
+            restrictedListContents += '<span class="fa fa-times text-danger"> ';
         }
         restrictedListContents += Translator.trans('restrictedlist.melee') + '</span>';
 
