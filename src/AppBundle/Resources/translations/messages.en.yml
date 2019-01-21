@@ -109,9 +109,9 @@ decks:
       name: Name
       cancel: Cancel edits
     meta:
-      drawdeck: "{0} Draw deck: %count% cards | {1} Draw deck: %count% card | ]1,Inf] Draw deck: %count% cards"
-      plotdeck: "{0} Plot deck: %count% cards | {1} Plot deck: %count% card | ]1,Inf] Plot deck: %count% cards"
-      packs: "Packs: %packs%"
+      drawdeck: "{0} <em>Draw deck:</em> %count% cards | {1} <em>Draw deck</em>: %count% card | ]1,Inf] <em>Draw deck</em>: %count% cards"
+      plotdeck: "{0} <em>Plot deck:</em> %count% cards | {1} <em>Plot deck</em>: %count% card | ]1,Inf] <em>Plot deck</em>: %count% cards"
+      packs: "<em>Packs</em>: %packs%"
   form:
     build: Build New Deck
     uploadarchive: Upload archive
@@ -340,10 +340,6 @@ decklist:
         core: "Core / Deluxe"
         all: all
         none: none
-    restrictedlist:
-      title: Restricted List
-      joust: Joust
-      melee: Melee
 search:
   label: Search
   setbrowse: Browse by set
@@ -485,4 +481,7 @@ keyword:
   shadow:
     name: Shadow
     title: "A card with shadow (X) can be marshaled facedown into its controller’s shadows area for 2 gold. That card can later be played (if it is an event) or brought into play faceup (if it is a character, location, or attachment) by paying X gold."
-  
+restrictedlist:
+  title: Restricted List
+  joust: Joust
+  melee: Melee

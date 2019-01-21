@@ -4,7 +4,7 @@
         <tr>
             <th colspan="4">
                 <span class="fa fa-bell"></span>
-                {{ 'decklist.list.restrictedlist.title' | trans }}
+                {{ 'restrictedlist.title' | trans }}
             </th>
         </tr>
     </thead>
@@ -12,12 +12,12 @@
         <tr>
             <td>
                 <span class="fa {% if decklist.isLegalForJoust %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
-                    {{ 'decklist.list.restrictedlist.joust' | trans }}
+                    {{ 'restrictedlist.joust' | trans }}
                 </span>
             </td>
             <td>
                 <span class="fa {% if decklist.isLegalForMelee %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
-                    {{ 'decklist.list.restrictedlist.melee' | trans }}
+                    {{ 'restrictedlist.melee' | trans }}
                 </span>
             </td>
         </tr>
