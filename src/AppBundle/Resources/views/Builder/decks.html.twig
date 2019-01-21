@@ -81,8 +81,8 @@
 			<a href="{{ path('deck_view',{deck_id:deck.id}) }}" class="deck-name">{{ deck.name }}</a> {{ deck.version }}
 			<div class="restricted-list-info">
 				<em>{{ 'decklist.list.restrictedlist.title' | trans }}:</em>
-				<span class="fa {% if deck.isLegalForJoust %}fa-check{% else %}fa-times{% endif %}"> {{ 'decklist.list.restrictedlist.joust' | trans }}</span> |
-				<span class="fa {% if deck.isLegalForMelee %}fa-check{% else %}fa-times{% endif %}"> {{ 'decklist.list.restrictedlist.melee' | trans }}</span>
+				<span class="fa {% if deck.isLegalForJoust %}fa-check text-success{% else %}fa-times text-danger{% endif %}"> {{ 'decklist.list.restrictedlist.joust' | trans }}</span> |
+				<span class="fa {% if deck.isLegalForMelee %}fa-check text-success{% else %}fa-times text-danger{% endif %}"> {{ 'decklist.list.restrictedlist.melee' | trans }}</span>
 			</div>
 			{% if deck.problem is not null %}
 				<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> {{ deck_validation_helper.getProblemLabel(deck.problem) }}</div>

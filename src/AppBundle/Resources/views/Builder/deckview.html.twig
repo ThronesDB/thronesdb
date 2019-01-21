@@ -101,12 +101,12 @@
 				<tbody>
 				<tr>
 					<td>
-						<span class="fa {% if deck.isLegalForJoust %}fa-check{% else %}fa-times{% endif %}">
+						<span class="fa {% if deck.isLegalForJoust %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
 							{{ 'decklist.list.restrictedlist.joust' | trans }}
 						</span>
 					</td>
 					<td>
-						<span class="fa {% if deck.isLegalForMelee %}fa-check{% else %}fa-times{% endif %}">
+						<span class="fa {% if deck.isLegalForMelee %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
 							{{ 'decklist.list.restrictedlist.melee' | trans }}
 						</span>
 					</td>
