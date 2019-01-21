@@ -461,6 +461,24 @@
         }).join(', ');
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
+        var restrictedListContents = '<em>' + Translator.trans('restrictedlist.title') +':</em> ';
+        if (deck.is_joust_restricted_list_compliant()) {
+            restrictedListContents += '<span class="fa fa-check text-success">';
+        } else {
+            restrictedListContents += '<span class="fa fa-times text-danger">';
+        }
+        restrictedListContents += Translator.trans('restrictedlist.joust') + '</span> | ';
+
+        if (deck.is_melee_restricted_list_compliant()) {
+            restrictedListContents += '<span class="fa fa-check text-success">';
+        } else {
+            restrictedListContents += '<span class="fa fa-times text-danger">';
+        }
+        restrictedListContents += Translator.trans('restrictedlist.melee') + '</span>';
+
+        var restrictedListSection = $('<div>' + restrictedListContents +'</div>');
+        deck.update_layout_section(data, 'meta', restrictedListSection);
+
         if(problem) {
             deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> ' + problem_labels[problem] + '</div>'));
         }
