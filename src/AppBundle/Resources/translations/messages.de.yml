@@ -109,9 +109,9 @@ decks:
       name: Name
       cancel: Änderungen verwerfen
     meta:
-      drawdeck: "{0} Nachziehstapel: %count% Karten | {1} Nachziehstapel: %count% Karte | ]1,Inf] Nachziehstapel: %count% Karten"
-      plotdeck: "{0} Strategiestapel: %count% Karten | {1} Strategiestapel: %count% Karte | ]1,Inf] Strategiestapel: %count% Karten"
-      packs: "Packs: %packs%"
+      drawdeck: "{0} <em>Nachziehstapel:</em> %count% Karten | {1} <em>Nachziehstapel:</em> %count% Karte | ]1,Inf] <em>Nachziehstapel:</em> %count% Karten"
+      plotdeck: "{0} <em>Strategiestapel:</em> %count% Karten | {1} <em>Strategiestapel:</em> %count% Karte | ]1,Inf] <em>Strategiestapel:</em> %count% Karten"
+      packs: "<em>Packs:</em> %packs%"
   form:
     build: Neue Deckliste erstellen
     uploadarchive: Archiv hochladen

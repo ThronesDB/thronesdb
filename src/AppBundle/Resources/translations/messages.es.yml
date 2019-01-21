@@ -109,9 +109,9 @@ decks:
       name: Nombre
       cancel: Cancelar cambios
     meta:
-      drawdeck: "{0} Mazo de robo: %count% cartas | {1} Mazo de robo: %count% carta | ]1,Inf] Mazo de robo: %count% cartas"
-      plotdeck: "{0} Mazo de tramas: %count% cartas | {1} Mazo de tramas: %count% carta | ]1,Inf] Mazo de tramas: %count% cartas"
-      packs: "Capítulos: %packs%"
+      drawdeck: "{0} <em>Mazo de robo:</em> %count% cartas | {1} <em>Mazo de robo:</em> %count% carta | ]1,Inf] <em>Mazo de robo:</em> %count% cartas"
+      plotdeck: "{0} <em>Mazo de tramas:</em> %count% cartas | {1} <em>Mazo de tramas:</em> %count% carta | ]1,Inf] <em>Mazo de tramas:</em> %count% cartas"
+      packs: "<em>Capítulos:</em> %packs%"
   form:
     build: Construir nuevo mazo
     uploadarchive: Subir archivo
