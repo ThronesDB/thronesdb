@@ -61,35 +61,9 @@
 	<div class="row">
 		<div class="col-md-6">
 			<div id="deck-content" style="margin-bottom:10px"></div>
-
-			<!-- Restricted List -->
-			<table class="table table-condensed" id="table-restricted-list">
-				<thead>
-				<tr>
-					<th colspan="4">
-						<span class="fa fa-bell"></span>
-						{{ 'decklist.list.restrictedlist.title' | trans }}
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr>
-					<td>
-						<span class="fa {% if decklist.isLegalForJoust %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
-							{{ 'decklist.list.restrictedlist.joust' | trans }}
-						</span>
-					</td>
-					<td>
-						<span class="fa {% if decklist.isLegalForMelee %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
-							{{ 'decklist.list.restrictedlist.melee' | trans }}
-						</span>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-
 			{% include 'AppBundle:Builder:deck-charts.html.twig' %}
 			{% include 'AppBundle:Builder:draw-simulator.html.twig' %}
+			{% include 'AppBundle:Decklist:restricted-list.html.twig' %}
 			{% include 'AppBundle:Decklist:table-predecessor.html.twig' %}
 			{% include 'AppBundle:Decklist:table-successor.html.twig' %}
 		</div>
