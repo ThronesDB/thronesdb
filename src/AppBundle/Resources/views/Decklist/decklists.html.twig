@@ -57,7 +57,7 @@ $(function () {
 
 {% include 'AppBundle:Default:pagination.html.twig' %}
 
-<table class="table">
+<table class="table decklists">
 <thead></thead>
 <tbody>
 
@@ -91,6 +91,11 @@ $(function () {
         </span>
 	    {% endif %}
 	</h5>
+	<div class="restricted-list-info">
+		<em>{{ 'restrictedlist.title' | trans }}:</em>
+		<span class="fa {% if decklist.isLegalForJoust %}fa-check text-success{% else %}fa-times text-danger{% endif %}"> {{ 'restrictedlist.joust' | trans }}</span> |
+		<span class="fa {% if decklist.isLegalForMelee %}fa-check text-success{% else %}fa-times text-danger{% endif %}"> {{ 'restrictedlist.melee' | trans }}</span>
+	</div>
 	</article>
 </td>
 </tr>
