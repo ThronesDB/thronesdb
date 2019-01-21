@@ -1,5 +1,5 @@
 <form method="GET" action="{{ path('decklists_list', {type:'find'}) }}"
-	role="form">
+	role="form" autocomplete="off">
 	<div class="row" style="margin-bottom:1em">
 		<div class="col-sm-4">
 			<div class="form-group">
@@ -13,7 +13,7 @@
             <div class="form-group">
 				<label for="">{{ 'decklist.list.search.used.label' | trans }}</label>
 				{{ cards|default('')|raw }}
-				<input type="text" class="form-control" id="card" autocomplete="off" placeholder="{{ 'decklist.list.search.used.hint' | trans }}">
+				<input type="text" class="form-control" id="card" placeholder="{{ 'decklist.list.search.used.hint' | trans }}">
 			</div>
 		</div>
 		<div class="col-sm-4">
