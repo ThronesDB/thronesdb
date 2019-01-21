@@ -582,6 +582,9 @@ class SocialController extends Controller
 
         $comment_text = trim($request->get('comment'));
         if ($decklist && !empty($comment_text)) {
+
+            $fromEmail = $this->getParameter('email_sender_address');
+
             $comment_text = preg_replace(
                     '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
                 '[$1]($0)',
@@ -652,7 +655,7 @@ class SocialController extends Controller
             foreach ($spool as $email => $view) {
                 $message = \Swift_Message::newInstance()
                         ->setSubject("[thronesdb] New comment")
-                        ->setFrom(array("alsciende@thronesdb.com" => $user->getUsername()))
+                        ->setFrom(array($fromEmail => $user->getUsername()))
                         ->setTo($email)
                         ->setBody($this->renderView($view, $email_data), 'text/html');
                 $this->get('mailer')->send($message);
