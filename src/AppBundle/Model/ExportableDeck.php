@@ -152,8 +152,8 @@ abstract class ExportableDeck implements SlotCollectionProviderInterface
             'agendas' => $agendas_code,
             'agendaurls' => $agenda_urls,
             'version' => $this->getVersion(),
-            'isLegalForJoust' => $this->isLegalForMelee(),
-            'isLegalForMelee' => $this->isLegalForJoust(),
+            'isLegalForJoust' => $this->isLegalForJoust(),
+            'isLegalForMelee' => $this->isLegalForMelee(),
 
         ];
 
