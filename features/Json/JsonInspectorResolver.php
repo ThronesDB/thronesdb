@@ -27,7 +27,9 @@ class JsonInspectorResolver implements ArgumentResolver
 
         $parameters = $constructor->getParameters();
         foreach ($parameters as $parameter) {
-            if (null !== $parameter->getClass() && 'Ubirak\RestApiBehatExtension\Json\JsonInspector' === $parameter->getClass()->name) {
+            if (null !== $parameter->getClass()
+                && 'Ubirak\RestApiBehatExtension\Json\JsonInspector' === $parameter->getClass()->name
+            ) {
                 $arguments[$parameter->name] = $this->jsonInspector;
             }
         }

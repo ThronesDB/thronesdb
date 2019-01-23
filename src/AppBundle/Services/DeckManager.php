@@ -12,8 +12,13 @@ use AppBundle\Helper\AgendaHelper;
 
 class DeckManager
 {
-    public function __construct(EntityManager $doctrine, DeckValidationHelper $deck_validation_helper, AgendaHelper $agenda_helper, Diff $diff, Logger $logger)
-    {
+    public function __construct(
+        EntityManager $doctrine,
+        DeckValidationHelper $deck_validation_helper,
+        AgendaHelper $agenda_helper,
+        Diff $diff,
+        Logger $logger
+    ) {
         $this->doctrine = $doctrine;
         $this->deck_validation_helper = $deck_validation_helper;
         $this->agenda_helper = $agenda_helper;

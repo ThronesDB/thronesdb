@@ -18,7 +18,8 @@ trait LocaleAwareTemplating
      * Passing in `about` as template base name, and `de` as language code will return
      * `AppBundle:Default:about.de.html.twig`.
      *
-     * You can get the lang code for the currently active locale by invoking `Request::getLocale()` from a controller action.
+     * You can get the lang code for the currently active locale by invoking `Request::getLocale()`
+     * from a controller action.
      *
      * @param string $templateBaseName
      * @param string $langCode
@@ -44,7 +45,7 @@ trait LocaleAwareTemplating
         $tokens[] = $engine;
 
         // rm any blank strings from tokens list
-        $tokens = array_values(array_filter($tokens, function($fragment) {
+        $tokens = array_values(array_filter($tokens, function ($fragment) {
             return (trim($fragment) !== '');
         }));
 

@@ -25,17 +25,19 @@ class ImportTransCommand extends ContainerAwareCommand
     {
         $this
         ->setName('app:import:trans')
-        ->setDescription('Import translation data in json format from a copy of https://github.com/ThronesDB/thronesdb-json-data')
+        ->setDescription(
+            'Import translation data in json format from a copy of https://github.com/ThronesDB/thronesdb-json-data'
+        )
         ->addOption(
-                'locale',
-                'l',
-                InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                "Locale(s) to import"
+            'locale',
+            'l',
+            InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
+            "Locale(s) to import"
         )
         ->addArgument(
-                'path',
-                InputArgument::REQUIRED,
-                'Path to the repository'
+            'path',
+            InputArgument::REQUIRED,
+            'Path to the repository'
         )
         ;
     }
@@ -74,7 +76,11 @@ class ImportTransCommand extends ContainerAwareCommand
             
             $output->writeln("Importing translations for <info>cards</info> in <info>${locale}</info>");
             foreach ($fileSystemIterator as $fileInfo) {
-                $output->writeln("Importing translations for <info>cards</info> from <info>".$fileInfo->getFilename()."</info>");
+                $output->writeln(
+                    "Importing translations for <info>cards</info> from <info>"
+                    . $fileInfo->getFilename() .
+                    "</info>"
+                );
                 $this->importCardsJsonFile($fileInfo, $locale);
             }
             
@@ -145,13 +151,11 @@ class ImportTransCommand extends ContainerAwareCommand
             }
             if ($currentTypedValue !== null) {
                 switch ($type) {
-                    case 'date': {
+                    case 'date':
                         $currentJsonValue = $currentTypedValue->format('Y-m-d');
                         break;
-                    }
-                    case 'datetime': {
+                    case 'datetime':
                         $currentJsonValue = $currentTypedValue->format('Y-m-d H:i:s');
-                    }
                 }
             }
         }
@@ -227,7 +231,13 @@ class ImportTransCommand extends ContainerAwareCommand
         $data = json_decode($content, true);
     
         if ($data === null) {
-            throw new \Exception("File [".$fileinfo->getPathname()."] contains incorrect JSON (error code ".json_last_error().")");
+            throw new \Exception(
+                "File ["
+                . $fileinfo->getPathname()
+                . "] contains incorrect JSON (error code "
+                . json_last_error()
+                . ")"
+            );
         }
     
         return $data;

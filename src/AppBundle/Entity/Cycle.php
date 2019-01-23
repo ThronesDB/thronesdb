@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace AppBundle\Entity;
 
-class Cycle implements  \Serializable
+class Cycle implements \Serializable
 {
     public function serialize()
     {

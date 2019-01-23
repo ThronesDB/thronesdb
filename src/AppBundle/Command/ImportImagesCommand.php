@@ -39,7 +39,7 @@ class ImportImagesCommand extends ContainerAwareCommand
                 continue;
             }
 
-            if($cgdbId === 1 && $position >= 198 && $position <= 205) {
+            if ($cgdbId === 1 && $position >= 198 && $position <= 205) {
                 $position = $position . 'B';
             }
 
@@ -51,7 +51,14 @@ class ImportImagesCommand extends ContainerAwareCommand
                 $card->setImageUrl($url);
                 $output->writeln(sprintf('Found image for %s %s at url %s', $card->getCode(), $card->getName(), $url));
             } else {
-                $output->writeln(sprintf('<error>Image missing for %s %s at url %s</error>', $card->getCode(), $card->getName(), $url));
+                $output->writeln(
+                    sprintf(
+                        '<error>Image missing for %s %s at url %s</error>',
+                        $card->getCode(),
+                        $card->getName(),
+                        $url
+                    )
+                );
             }
         }
 

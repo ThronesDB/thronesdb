@@ -30,7 +30,9 @@ class DefaultController extends Controller
         }
         
         $decklists_by_faction = [];
-        $factions = $this->getDoctrine()->getRepository('AppBundle:Faction')->findBy(['isPrimary' => true], ['code' => 'ASC']);
+        $factions = $this->getDoctrine()
+            ->getRepository('AppBundle:Faction')
+            ->findBy(['isPrimary' => true], ['code' => 'ASC']);
         
         foreach ($factions as $faction) {
             $array = [];
@@ -39,8 +41,8 @@ class DefaultController extends Controller
             $decklist_manager->setFaction($faction);
             $paginator = $decklist_manager->findDecklistsByPopularity();
             /**
-        	 * @var $decklist Decklist
-        	 */
+             * @var $decklist Decklist
+             */
             $decklist = $paginator->getIterator()->current();
             
             if ($decklist) {
@@ -74,7 +76,9 @@ class DefaultController extends Controller
         
         return $this->render('AppBundle:Default:index.html.twig', [
             'pagetitle' =>  "$game_name Deckbuilder",
-            'pagedescription' => "Build your deck for $game_name by $publisher_name. Browse the cards and the thousand of decklists submitted by the community. Publish your own decks and get feedback.",
+            'pagedescription' => "Build your deck for $game_name by $publisher_name."
+                . " Browse the cards and the thousand of decklists submitted by the community."
+                . " Publish your own decks and get feedback.",
             'decklists_by_faction' => $decklists_by_faction
         ], $response);
     }
@@ -87,7 +91,7 @@ class DefaultController extends Controller
 
         $page = $this->renderView(
             'AppBundle:Default:rulesreference.html.twig',
-                array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Rules Reference")
+            array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Rules Reference")
         );
         $response->setContent($page);
         return $response;
@@ -101,7 +105,7 @@ class DefaultController extends Controller
 
         $page = $this->renderView(
             'AppBundle:Default:faq.html.twig',
-                array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "F.A.Q")
+            array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "F.A.Q")
         );
         $response->setContent($page);
         return $response;
@@ -115,7 +119,10 @@ class DefaultController extends Controller
 
         $page = $this->renderView(
             'AppBundle:Default:tournamentregulations.html.twig',
-                array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Tournament Regulations")
+            array(
+                "pagetitle" => $this->get("translator")->trans("nav.rules"),
+                "pagedescription" => "Tournament Regulations"
+            )
         );
         $response->setContent($page);
         return $response;

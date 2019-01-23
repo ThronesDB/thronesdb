@@ -15,16 +15,16 @@ class SearchCommand extends ContainerAwareCommand
         ->setName('app:search')
         ->setDescription('Search cards')
         ->addArgument(
-                'query',
-                \Symfony\Component\Console\Input\InputArgument::REQUIRED,
-                "Search query, eg e:core"
+            'query',
+            \Symfony\Component\Console\Input\InputArgument::REQUIRED,
+            "Search query, eg e:core"
         )
         ->addOption(
-                'output',
-                'o',
-                \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED,
-                "Properties of each card to output (comma-separated list)",
-                'name'
+            'output',
+            'o',
+            \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED,
+            "Properties of each card to output (comma-separated list)",
+            'name'
         )
         ;
     }
@@ -44,7 +44,7 @@ class SearchCommand extends ContainerAwareCommand
         
         $result = [];
         
-        $rows = $service->get_search_rows($conditions, 'set');
+        $rows = $service->getSearchRows($conditions, 'set');
         foreach ($rows as $card) {
             $cardinfo = $service->getCardInfo($card, false, null);
             $filtered = array_filter($cardinfo, function ($key) use ($fields) {

@@ -80,7 +80,7 @@ class DeckValidationHelper
         foreach ($slots->getAgendas() as $agenda) {
             if ($agenda->getCard()->getCode() === '05045') {
                 $expectedPlotDeckSize = 12;
-            } else if ($agenda->getCard()->getCode() === '10045') {
+            } elseif ($agenda->getCard()->getCode() === '10045') {
                 $expectedPlotDeckSize = 10;
                 $expectedMaxDoublePlot = 2;
             }

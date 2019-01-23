@@ -47,8 +47,14 @@ class DeckImportServiceTest extends TestCase
         $this->mockEntityManager = m::mock(EntityManager::class);
         $this->mockCardRepository = m::mock(CardRepository::class);
         $this->mockPackRepository  = m::mock(PackRepository::class);
-        $this->mockEntityManager->shouldReceive('getRepository')->with('AppBundle:Card')->andReturn($this->mockCardRepository);
-        $this->mockEntityManager->shouldReceive('getRepository')->with('AppBundle:Pack')->andReturn($this->mockPackRepository);
+        $this->mockEntityManager
+            ->shouldReceive('getRepository')
+            ->with('AppBundle:Card')
+            ->andReturn($this->mockCardRepository);
+        $this->mockEntityManager
+            ->shouldReceive('getRepository')
+            ->with('AppBundle:Pack')
+            ->andReturn($this->mockPackRepository);
         $this->service = new DeckImportService($this->mockEntityManager);
     }
 
@@ -74,7 +80,12 @@ class DeckImportServiceTest extends TestCase
             ["3x His Viper Eyes (Wolves of the North)", 3, "His Viper Eyes", "Wolves of the North"],
             ["1 Burning on the Sand (There Is My Claim)", 1, "Burning on the Sand", "There Is My Claim"],
             ["1 Secret Schemes (The Red Wedding)", 1, "Secret Schemes", "The Red Wedding"],
-            ["2 \"The Last of the Giants\" (Watchers on the Wall)", 2, "\"The Last of the Giants\"", "Watchers on the Wall"],
+            [
+                '2 "The Last of the Giants" (Watchers on the Wall)',
+                2,
+                '"The Last of the Giants"',
+                "Watchers on the Wall"
+            ],
         ];
     }
 
@@ -91,7 +102,10 @@ class DeckImportServiceTest extends TestCase
         $pack->setId(2000);
         $pack->setName($expectedPackName);
         $this->mockPackRepository->expects('findAll')->andReturn([ $pack ]);
-        $this->mockCardRepository->expects('findOneBy')->with(['name' => $expectedName, 'pack' => $pack->getId()])->andReturn($card);
+        $this->mockCardRepository
+            ->expects('findOneBy')
+            ->with(['name' => $expectedName, 'pack' => $pack->getId()])
+            ->andReturn($card);
         $data = $this->service->parseTextImport($input);
         $this->assertEquals($expectedQuantity, $data['content'][$cardCode]);
     }
@@ -107,7 +121,7 @@ class DeckImportServiceTest extends TestCase
             ["3x His Viper Eyes (WotN)", 3, "His Viper Eyes", "WotN"],
             ["1 Burning on the Sand (TIMC)", 1, "Burning on the Sand", "TIMC"],
             ["1 Secret Schemes (TRW)", 1, "Secret Schemes", "TRW"],
-            ["2 \"The Last of the Giants\" (WotW)", 2, "\"The Last of the Giants\"", "WotW"],
+            ['2 "The Last of the Giants" (WotW)', 2, '"The Last of the Giants"', "WotW"],
         ];
     }
 
@@ -125,7 +139,9 @@ class DeckImportServiceTest extends TestCase
         $pack->setName('does not matter');
         $pack->setCode($expectedPackCode);
         $this->mockPackRepository->expects('findAll')->andReturn([ $pack ]);
-        $this->mockCardRepository->expects('findOneBy')->with(['name' => $expectedName, 'pack' => $pack->getId()])->andReturn($card);
+        $this->mockCardRepository->expects('findOneBy')
+            ->with(['name' => $expectedName, 'pack' => $pack->getId()])
+            ->andReturn($card);
         $data = $this->service->parseTextImport($input);
         $this->assertEquals($expectedQuantity, $data['content'][$cardCode]);
     }

@@ -48,23 +48,31 @@ class SocialController extends Controller
 
         $yesterday = (new \DateTime())->modify('-24 hours');
         if (false && $user->getDateCreation() > $yesterday) {
-            $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.antispam.newbie'));
+            $this->get('session')
+                ->getFlashBag()
+                ->set('error', $translator->trans('decklist.publish.errors.antispam.newbie'));
             return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
         }
 
-        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user");
+        $query = $em->createQuery(
+            "SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user"
+        );
         $query->setParameter('date', $yesterday);
         $query->setParameter('user', $user);
         $decklistsSinceYesterday = $query->getSingleScalarResult();
 
         if (false && $decklistsSinceYesterday > $user->getReputation()) {
-            $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.antispam.limit'));
+            $this->get('session')
+                ->getFlashBag()
+                ->set('error', $translator->trans('decklist.publish.errors.antispam.limit'));
             return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
         }
 
         $lastPack = $deck->getLastPack();
         if (!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new \DateTime()) {
-            $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.unreleased'));
+            $this->get('session')
+                ->getFlashBag()
+                ->set('error', $translator->trans('decklist.publish.errors.unreleased'));
             return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
         }
 
@@ -76,7 +84,8 @@ class SocialController extends Controller
 
         $new_content = json_encode($deck->getSlots()->getContent());
         $new_signature = md5($new_content);
-        $old_decklists = $this->getDoctrine()->getRepository('AppBundle:Decklist')->findBy(['signature' => $new_signature]);
+        $old_decklists = $this->getDoctrine()
+            ->getRepository('AppBundle:Decklist')->findBy(['signature' => $new_signature]);
 
         /* @var $decklist \AppBundle\Entity\Decklist */
         foreach ($old_decklists as $decklist) {
@@ -85,12 +94,15 @@ class SocialController extends Controller
                     'decklist_id' => $decklist->getId(),
                     'decklist_name' => $decklist->getNameCanonical()
                 ));
-                $this->get('session')->getFlashBag()->set('warning', $translator->trans('decklist.publish.warnings.published', array("%url%" => $url)));
+                $this->get('session')
+                    ->getFlashBag()
+                    ->set('warning', $translator->trans('decklist.publish.warnings.published', array("%url%" => $url)));
             }
         }
 
         // decklist for the form ; won't be persisted
-        $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
+        $decklist = $this->get('decklist_factory')
+            ->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
 
         $tournaments = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->findAll();
 
@@ -122,7 +134,9 @@ class SocialController extends Controller
             ]);
         }
 
-        $query = $em->createQuery("SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user");
+        $query = $em->createQuery(
+            "SELECT COUNT(d) FROM AppBundle:Decklist d WHERE d.dateCreation>:date AND d.user=:user"
+        );
         $query->setParameter('date', $yesterday);
         $query->setParameter('user', $user);
         $decklistsSinceYesterday = $query->getSingleScalarResult();
@@ -142,7 +156,11 @@ class SocialController extends Controller
             throw $this->createAccessDeniedException("Access denied to this object.");
         }
 
-        $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $name = filter_var(
+            $request->request->get('name'),
+            FILTER_SANITIZE_STRING,
+            FILTER_FLAG_NO_ENCODE_QUOTES
+        );
         $descriptionMd = trim($request->request->get('descriptionMd'));
 
         $tournament_id = filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
@@ -198,7 +216,8 @@ class SocialController extends Controller
             throw $this->createNotFoundException("Decklist not found");
         }
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId()) {
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+            && $user->getId() !== $decklist->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied");
         }
 
@@ -231,11 +250,18 @@ class SocialController extends Controller
             throw $this->createNotFoundException("Decklist not found");
         }
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN') && $user->getId() !== $decklist->getUser()->getId()) {
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+            && $user->getId() !== $decklist->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied");
         }
 
-        $name = trim(filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES));
+        $name = trim(
+            filter_var(
+                $request->request->get('name'),
+                FILTER_SANITIZE_STRING,
+                FILTER_FLAG_NO_ENCODE_QUOTES
+            )
+        );
         $name = substr($name, 0, 60);
         if (empty($name)) {
             $name = "Untitled";
@@ -255,7 +281,9 @@ class SocialController extends Controller
                 $precedent_id = null;
             }
         }
-        $precedent = ($precedent_id && $precedent_id != $decklist_id) ? $em->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
+        $precedent = ($precedent_id && $precedent_id != $decklist_id)
+            ? $em->getRepository('AppBundle:Decklist')->find($precedent_id)
+            : null;
 
         $decklist->setName($name);
         $decklist->setNameCanonical($this->get('texts')->slugify($name) . '-' . $decklist->getVersion());
@@ -336,7 +364,10 @@ class SocialController extends Controller
         $categories = [];
         $on = 0;
         $off = 0;
-        $categories[] = array("label" => $this->get("translator")->trans('decklist.list.search.allowed.core'), "packs" => []);
+        $categories[] = array(
+            "label" => $this->get("translator")->trans('decklist.list.search.allowed.core'),
+            "packs" => []
+        );
         $list_cycles = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findAll();
         foreach ($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
@@ -351,7 +382,12 @@ class SocialController extends Controller
                 } else {
                     $off++;
                 }
-                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === null);
+                $categories[0]["packs"][] = array(
+                    "id" => $first_pack->getId(),
+                    "label" => $first_pack->getName(),
+                    "checked" => $checked,
+                    "future" => $first_pack->getDateRelease() === null
+                );
             } else {
                 $category = array("label" => $cycle->getName(), "packs" => []);
                 foreach ($cycle->getPacks() as $pack) {
@@ -361,7 +397,12 @@ class SocialController extends Controller
                     } else {
                         $off++;
                     }
-                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === null);
+                    $category['packs'][] = array(
+                        "id" => $pack->getId(),
+                        "label" => $pack->getName(),
+                        "checked" => $checked,
+                        "future" => $pack->getDateRelease() === null
+                    );
                 }
                 $categories[] = $category;
             }
@@ -395,7 +436,7 @@ class SocialController extends Controller
      * displays the lists of decklists
      */
 
-    public function listAction($type, $faction = null, $page = 1, Request $request)
+    public function listAction(Request $request, $type, $faction = null, $page = 1)
     {
         $translator = $this->get('translator');
 
@@ -489,7 +530,8 @@ class SocialController extends Controller
         }
 
         $duplicate = $decklistRepo->findDuplicate($decklist);
-        if ($duplicate->getDateCreation() >= $decklist->getDateCreation() || $duplicate->getId() === $decklist->getId()) {
+        if ($duplicate->getDateCreation() >= $decklist->getDateCreation()
+            || $duplicate->getId() === $decklist->getId()) {
             $duplicate = null;
         }
 
@@ -582,11 +624,12 @@ class SocialController extends Controller
 
         $comment_text = trim($request->get('comment'));
         if ($decklist && !empty($comment_text)) {
-
             $fromEmail = $this->getParameter('email_sender_address');
 
             $comment_text = preg_replace(
-                    '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
+                '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)'
+                . '(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))'
+                . '(?::\d+)?)(?:[^\s]*)?%iu',
                 '[$1]($0)',
                 $comment_text
             );
@@ -636,7 +679,9 @@ class SocialController extends Controller
             }
             foreach ($mentionned_usernames as $mentionned_username) {
                 /* @var $mentionned_user User */
-                $mentionned_user = $this->getDoctrine()->getRepository('AppBundle:User')->findOneBy(array('username' => $mentionned_username));
+                $mentionned_user = $this->getDoctrine()
+                    ->getRepository('AppBundle:User')
+                    ->findOneBy(array('username' => $mentionned_username));
                 if ($mentionned_user && $mentionned_user->getIsNotifMention()) {
                     if (!isset($spool[$mentionned_user->getEmail()])) {
                         $spool[$mentionned_user->getEmail()] = 'AppBundle:Emails:newcomment_mentionned.html.twig';
@@ -648,7 +693,14 @@ class SocialController extends Controller
             $email_data = array(
                 'username' => $user->getUsername(),
                 'decklist_name' => $decklist->getName(),
-                'url' => $this->generateUrl('decklist_detail', array('decklist_id' => $decklist->getId(), 'decklist_name' => $decklist->getNameCanonical()), UrlGeneratorInterface::ABSOLUTE_URL) . '#' . $comment->getId(),
+                'url' => $this->generateUrl(
+                    'decklist_detail',
+                    array(
+                        'decklist_id' => $decklist->getId(),
+                        'decklist_name' => $decklist->getNameCanonical()
+                    ),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ) . '#' . $comment->getId(),
                 'comment' => $comment_html,
                 'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL)
             );
@@ -748,7 +800,7 @@ class SocialController extends Controller
         $dbh = $this->getDoctrine()->getConnection();
 
         $list = $dbh->executeQuery(
-                        "SELECT
+            "SELECT
     			l.id,
     			(
     				SELECT COUNT(s.id)
@@ -928,7 +980,7 @@ class SocialController extends Controller
         $dbh = $this->getDoctrine()->getConnection();
 
         $comments = $dbh->executeQuery(
-                        "SELECT SQL_CALC_FOUND_ROWS
+            "SELECT SQL_CALC_FOUND_ROWS
 				c.id,
 				c.text,
 				c.date_creation,
@@ -1001,7 +1053,7 @@ class SocialController extends Controller
         $dbh = $this->getDoctrine()->getConnection();
 
         $comments = $dbh->executeQuery(
-                        "SELECT SQL_CALC_FOUND_ROWS
+            "SELECT SQL_CALC_FOUND_ROWS
 				c.id,
 				c.text,
 				c.date_creation,
@@ -1084,7 +1136,12 @@ class SocialController extends Controller
                 } else {
                     $off++;
                 }
-                $categories[0]["packs"][] = array("id" => $first_pack->getId(), "label" => $first_pack->getName(), "checked" => $checked, "future" => $first_pack->getDateRelease() === null);
+                $categories[0]["packs"][] = array(
+                    "id" => $first_pack->getId(),
+                    "label" => $first_pack->getName(),
+                    "checked" => $checked,
+                    "future" => $first_pack->getDateRelease() === null
+                );
             } else {
                 $category = array("label" => $cycle->getName(), "packs" => []);
                 foreach ($cycle->getPacks() as $pack) {
@@ -1094,7 +1151,12 @@ class SocialController extends Controller
                     } else {
                         $off++;
                     }
-                    $category['packs'][] = array("id" => $pack->getId(), "label" => $pack->getName(), "checked" => $checked, "future" => $pack->getDateRelease() === null);
+                    $category['packs'][] = array(
+                        "id" => $pack->getId(),
+                        "label" => $pack->getName(),
+                        "checked" => $checked,
+                        "future" => $pack->getDateRelease() === null
+                    );
                 }
                 $categories[] = $category;
             }
@@ -1133,7 +1195,8 @@ class SocialController extends Controller
         /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->getDoctrine()->getConnection();
 
-        $users = $dbh->executeQuery("SELECT * FROM user WHERE donation>0 ORDER BY donation DESC, username", [])->fetchAll(\PDO::FETCH_ASSOC);
+        $users = $dbh->executeQuery("SELECT * FROM user WHERE donation>0 ORDER BY donation DESC, username", [])
+            ->fetchAll(\PDO::FETCH_ASSOC);
 
         return $this->render(
             $this->getLocaleSpecificViewPath(

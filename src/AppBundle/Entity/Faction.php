@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-class Faction implements  \Serializable
+class Faction implements \Serializable
 {
     public function serialize()
     {

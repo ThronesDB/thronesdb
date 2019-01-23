@@ -137,7 +137,14 @@ class ApiContext implements Context
      */
     private function sendRequest()
     {
-        $this->client->request($this->method, $this->path, $this->parameters, $this->files, $this->server, $this->content);
+        $this->client->request(
+            $this->method,
+            $this->path,
+            $this->parameters,
+            $this->files,
+            $this->server,
+            $this->content
+        );
         $this->response = $this->client->getResponse();
     }
 

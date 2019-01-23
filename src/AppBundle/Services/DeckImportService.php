@@ -39,22 +39,26 @@ class DeckImportService
 
         // load all packs upfront and map them by their names and codes for easy lookup below
         $packs = $this->em->getRepository('AppBundle:Pack')->findAll();
-        $packsByName = array_combine(array_map(function(Pack $pack) { return $pack->getName(); }, $packs), $packs);
-        $packsByCode = array_combine(array_map(function(Pack $pack) { return $pack->getCode(); }, $packs), $packs);
+        $packsByName = array_combine(array_map(function (Pack $pack) {
+            return $pack->getName();
+        }, $packs), $packs);
+        $packsByCode = array_combine(array_map(function (Pack $pack) {
+            return $pack->getCode();
+        }, $packs), $packs);
 
         foreach ($lines as $line) {
             $matches = [];
             $packNameOrCode = null;
             $card = null;
 
-            if (preg_match('/^\s*(\d)x?([^(]+) \(([^)]+)/u', $line, $matches)){
+            if (preg_match('/^\s*(\d)x?([^(]+) \(([^)]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
                 $packNameOrCode = trim($matches[3]);
             } elseif (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\:" ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
-            }elseif (preg_match('/^\s*#\d{3}\s(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
+            } elseif (preg_match('/^\s*#\d{3}\s(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
             } elseif (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {

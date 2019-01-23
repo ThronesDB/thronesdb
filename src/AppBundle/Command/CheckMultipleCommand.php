@@ -47,10 +47,22 @@ class CheckMultipleCommand extends ContainerAwareCommand
 
         foreach ($cards as $card) {
             if ($count[$card->getName()] === 1 && $card->getIsMultiple() === true) {
-                $output->writeln(sprintf('<error>Card %s %s must not be multiple.</error>', $card->getCode(), $card->getName()));
+                $output->writeln(
+                    sprintf(
+                        '<error>Card %s %s must not be multiple.</error>',
+                        $card->getCode(),
+                        $card->getName()
+                    )
+                );
             }
             if ($count[$card->getName()] > 1 && $card->getIsMultiple() === false) {
-                $output->writeln(sprintf('<error>Card %s %s must be multiple.</error>', $card->getCode(), $card->getName()));
+                $output->writeln(
+                    sprintf(
+                        '<error>Card %s %s must be multiple.</error>',
+                        $card->getCode(),
+                        $card->getName()
+                    )
+                );
             }
         }
     }

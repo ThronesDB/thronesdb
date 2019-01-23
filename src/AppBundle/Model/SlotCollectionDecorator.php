@@ -133,7 +133,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         }
 
         $packs =  array_values($packs);
-        usort($packs, function ($arr1 , $arr2) {
+        usort($packs, function ($arr1, $arr2) {
             /** @var Pack $pack1 */
             $pack1 = $arr1['pack'];
             /** @var Pack $pack2 */
@@ -142,13 +142,13 @@ class SlotCollectionDecorator implements SlotCollectionInterface
             $cycle2 = $pack2->getCycle();
             if ($cycle1->getPosition() > $cycle2->getPosition()) {
                 return 1;
-            } else if ($cycle1->getPosition() < $cycle2->getPosition()) {
+            } elseif ($cycle1->getPosition() < $cycle2->getPosition()) {
                 return -1;
             }
 
             if ($pack1->getPosition() > $pack2->getPosition()) {
                 return 1;
-            } else if ($pack1->getPosition() < $pack2->getPosition()) {
+            } elseif ($pack1->getPosition() < $pack2->getPosition()) {
                 return -1;
             }
             return 0;
@@ -176,13 +176,13 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     public function getSlotsByCycleOrder()
     {
         $slots_array = [];
-        foreach ($this->slots as $slot){
+        foreach ($this->slots as $slot) {
             $slots_array[] = $slot;
         }
 
         usort($slots_array, array($this, "sortByCardCode"));
         $cycles = [];
-        foreach ($slots_array as $slot){
+        foreach ($slots_array as $slot) {
             $cycles[$slot->getCard()->getPack()->getCycle()->getName()][] = $slot;
         }
         return $cycles;
@@ -250,7 +250,10 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     {
         $drawDeck = [];
         foreach ($this->slots as $slot) {
-            if ($slot->getCard()->getType()->getCode() === 'character' || $slot->getCard()->getType()->getCode() === 'location' || $slot->getCard()->getType()->getCode() === 'attachment' || $slot->getCard()->getType()->getCode() === 'event') {
+            if ($slot->getCard()->getType()->getCode() === 'character'
+                || $slot->getCard()->getType()->getCode() === 'location'
+                || $slot->getCard()->getType()->getCode() === 'attachment'
+                || $slot->getCard()->getType()->getCode() === 'event') {
                 $drawDeck[] = $slot;
             }
         }
@@ -314,7 +317,10 @@ class SlotCollectionDecorator implements SlotCollectionInterface
                 ];
             } else {
                 $copiesAndDeckLimit[$cardName]['copies'] += $slot->getQuantity();
-                $copiesAndDeckLimit[$cardName]['deck_limit'] = min($slot->getCard()->getDeckLimit(), $copiesAndDeckLimit[$cardName]['deck_limit']);
+                $copiesAndDeckLimit[$cardName]['deck_limit'] = min(
+                    $slot->getCard()->getDeckLimit(),
+                    $copiesAndDeckLimit[$cardName]['deck_limit']
+                );
             }
         }
         return $copiesAndDeckLimit;

@@ -18,7 +18,7 @@ class Reviews
         $dbh = $this->doctrine->getConnection();
     
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
+            "SELECT SQL_CALC_FOUND_ROWS
                 r.id,
                 r.date_creation,
                 r.text_html,
@@ -41,7 +41,6 @@ class Reviews
         		and p.date_release is not null
                 order by r.date_creation desc
                 limit $start, $limit"
-    
         )->fetchAll(\PDO::FETCH_ASSOC);
     
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
@@ -52,13 +51,13 @@ class Reviews
         );
     }
 
-    public function by_author($user_id, $start = 0, $limit = 30)
+    public function byAuthor($user_id, $start = 0, $limit = 30)
     {
         /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->doctrine->getConnection();
     
         $rows = $dbh->executeQuery(
-                "SELECT SQL_CALC_FOUND_ROWS
+            "SELECT SQL_CALC_FOUND_ROWS
                 r.id,
                 r.date_creation,
                 r.text_html,
@@ -81,11 +80,9 @@ class Reviews
         		and p.date_release is not null
         		order by c.code asc
                 limit $start, $limit",
-    
             array(
                         $user_id
                 )
-    
         )->fetchAll(\PDO::FETCH_ASSOC);
     
         $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];

@@ -2,15 +2,19 @@
 
 namespace AppBundle\Listener;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+
 class CoreExceptionListener
 {
 
     /**
      * Handles security related exceptions.
      *
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event An GetResponseForExceptionEvent instance
+     * @param GetResponseForExceptionEvent $event An GetResponseForExceptionEvent instance
      */
-    public function onCoreException(\Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event)
+    public function onCoreException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
         $request = $event->getRequest();
@@ -18,14 +22,14 @@ class CoreExceptionListener
             return;
         }
         $statusCode = $exception->getCode();
-        if (!array_key_exists($statusCode, \Symfony\Component\HttpFoundation\Response::$statusTexts)) {
+        if (!array_key_exists($statusCode, Response::$statusTexts)) {
             $statusCode = 500;
         }
         $content = [
             'success' => false,
             'message' => $exception->getMessage()
         ];
-        $response = new \Symfony\Component\HttpFoundation\JsonResponse($content, $statusCode, array('Content-Type' => 'application/json'));
+        $response = new JsonResponse($content, $statusCode, array('Content-Type' => 'application/json'));
         $event->setResponse($response);
     }
 }

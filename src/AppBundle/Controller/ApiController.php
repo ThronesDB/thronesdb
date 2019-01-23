@@ -73,7 +73,11 @@ class ApiController extends Controller
                 "available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
                 "known" => intval($real),
                 "total" => $max,
-                "url" => $this->get('router')->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+                "url" => $this->get('router')->generate(
+                    'cards_list',
+                    array('pack_code' => $pack->getCode()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
             );
         }
 
@@ -279,7 +283,7 @@ class ApiController extends Controller
 
         $cards = array();
         $last_modified = null;
-        if ($query && $rows = $this->get('cards_data')->get_search_rows($conditions, "set")) {
+        if ($query && $rows = $this->get('cards_data')->getSearchRows($conditions, "set")) {
             for ($rowindex = 0; $rowindex < count($rows); $rowindex++) {
                 if (empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) {
                     $last_modified = $rows[$rowindex]->getDateUpdate();

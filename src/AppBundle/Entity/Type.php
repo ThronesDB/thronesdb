@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace AppBundle\Entity;
 
-class Type implements  \Serializable
+class Type implements \Serializable
 {
     public function serialize()
     {
