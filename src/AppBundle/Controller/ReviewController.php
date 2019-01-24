@@ -56,7 +56,9 @@ class ReviewController extends Controller
         $review_raw = trim($request->get('review'));
 
         $review_raw = preg_replace(
-                '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
+            '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)'
+            . '(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*'
+            . '(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
             '[$1]($0)',
             $review_raw
         );
@@ -107,7 +109,9 @@ class ReviewController extends Controller
         $review_raw = trim($request->get('review'));
 
         $review_raw = preg_replace(
-                '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
+            '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)'
+            . '(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*'
+            . '(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))(?::\d+)?)(?:[^\s]*)?%iu',
             '[$1]($0)',
             $review_raw
         );
@@ -200,7 +204,7 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function listAction($page = 1, Request $request)
+    public function listAction(Request $request, $page = 1)
     {
         $response = new Response();
         $response->setPublic();
@@ -267,7 +271,7 @@ class ReviewController extends Controller
                         ), $response);
     }
 
-    public function byauthorAction($user_id, $page = 1, Request $request)
+    public function byauthorAction(Request $request, $user_id, $page = 1)
     {
         $response = new Response();
         $response->setPublic();
@@ -322,21 +326,21 @@ class ReviewController extends Controller
         }
 
         return $this->render('AppBundle:Reviews:reviews.html.twig', array(
-                    'pagetitle' => $pagetitle,
-                    'pagedescription' => "Read the latest user-submitted reviews on the cards.",
-                    'reviews' => $reviews,
-                    'url' => $request->getRequestUri(),
-                    'route' => $route,
-                    'pages' => $pages,
-                    'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, $params + array(
-                        "user_id" => $user_id,
-                        "page" => $prevpage
-                    )),
-                    'nexturl' => $currpage == $nbpages ? null : $this->generateUrl($route, $params + array(
-                        "user_id" => $user_id,
-                        "page" => $nextpage
-                    ))
-                        ), $response);
+            'pagetitle' => $pagetitle,
+            'pagedescription' => "Read the latest user-submitted reviews on the cards.",
+            'reviews' => $reviews,
+            'url' => $request->getRequestUri(),
+            'route' => $route,
+            'pages' => $pages,
+            'prevurl' => $currpage == 1 ? null : $this->generateUrl($route, $params + array(
+                "user_id" => $user_id,
+                "page" => $prevpage
+            )),
+            'nexturl' => $currpage == $nbpages ? null : $this->generateUrl($route, $params + array(
+                "user_id" => $user_id,
+                "page" => $nextpage
+            ))
+        ), $response);
     }
 
     public function commentAction(Request $request)
@@ -387,7 +391,11 @@ class ReviewController extends Controller
         $email_data = array(
             'username' => $user->getUsername(),
             'card_name' => $review->getCard()->getName(),
-            'url' => $this->generateUrl('cards_zoom', array('card_code' => $review->getCard()->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+            'url' => $this->generateUrl(
+                'cards_zoom',
+                array('card_code' => $review->getCard()->getCode()),
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
             'comment' => $comment->getText(),
             'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL)
         );

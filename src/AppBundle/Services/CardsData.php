@@ -2,6 +2,7 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Controller\SearchController;
 use AppBundle\Entity\Card;
 use AppBundle\Entity\Cycle;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -20,8 +21,14 @@ class CardsData
     /** @var \Symfony\Component\Asset\Packages $packages */
     private $packages;
 
-    public function __construct(Registry $doctrine, RequestStack $request_stack, Router $router, \Symfony\Component\Asset\Packages $packages, TranslatorInterface $translator, $rootDir)
-    {
+    public function __construct(
+        Registry $doctrine,
+        RequestStack $request_stack,
+        Router $router,
+        \Symfony\Component\Asset\Packages $packages,
+        TranslatorInterface $translator,
+        $rootDir
+    ) {
         $this->doctrine = $doctrine;
         $this->request_stack = $request_stack;
         $this->router = $router;
@@ -62,9 +69,22 @@ class CardsData
      */
     public function addAbbrTags($text)
     {
-        static $keywords = ['renown', 'intimidate', 'stealth', 'insight', 'limited', 'pillage', 'terminal', 'ambush', 'bestow', 'shadow'];
+        static $keywords = [
+            'renown',
+            'intimidate',
+            'stealth',
+            'insight',
+            'limited',
+            'pillage',
+            'terminal',
+            'ambush',
+            'bestow',
+            'shadow'
+        ];
 
-        $locale = $this->request_stack->getCurrentRequest() ? $this->request_stack->getCurrentRequest()->getLocale() : 'en';
+        $locale = $this->request_stack->getCurrentRequest()
+            ? $this->request_stack->getCurrentRequest()->getLocale()
+            : 'en';
 
         foreach ($keywords as $keyword) {
             $translated = $this->translator->trans('keyword.' . $keyword . ".name", array(), "messages", $locale);
@@ -108,7 +128,11 @@ class CardsData
                     "code" => $pack->getCode(),
                     "label" => $label,
                     "available" => $pack->getDateRelease() ? true : false,
-                    "url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+                    "url" => $this->router->generate(
+                        'cards_list',
+                        array('pack_code' => $pack->getCode()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
                 );
             }
         }
@@ -117,7 +141,10 @@ class CardsData
 
     public function allsetsdatathreaded()
     {
-        $list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy([], array("position" => "ASC"));
+        $list_cycles = $this->doctrine->getRepository('AppBundle:Cycle')->findBy(
+            [],
+            array("position" => "ASC")
+        );
         $cycles = [];
 
         /* @var $cycle \AppBundle\Entity\Cycle */
@@ -133,7 +160,11 @@ class CardsData
                     "code" => $pack->getCode(),
                     "label" => $label,
                     "available" => $pack->getDateRelease() ? true : false,
-                    "url" => $this->router->generate('cards_list', array('pack_code' => $pack->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+                    "url" => $this->router->generate(
+                        'cards_list',
+                        array('pack_code' => $pack->getCode()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
                 ];
             }
 
@@ -144,7 +175,11 @@ class CardsData
                     "code" => $cycle->getCode(),
                     "label" => $cycle->getName(),
                     "packs" => $packs,
-                    "url" => $this->router->generate('cards_cycle', array('cycle_code' => $cycle->getCode()), UrlGeneratorInterface::ABSOLUTE_URL),
+                    "url" => $this->router->generate(
+                        'cards_cycle',
+                        array('cycle_code' => $cycle->getCode()),
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
                 ];
             }
         }
@@ -158,7 +193,7 @@ class CardsData
         return $factions;
     }
 
-    public function get_search_rows($conditions, $sortorder, $forceempty = false)
+    public function getSearchRows($conditions, $sortorder, $forceempty = false)
     {
         $i = 0;
 
@@ -175,238 +210,263 @@ class CardsData
 
         foreach ($conditions as $condition) {
             $searchCode = array_shift($condition);
-            $searchName = \AppBundle\Controller\SearchController::$searchKeys[$searchCode];
-            $searchType = \AppBundle\Controller\SearchController::$searchTypes[$searchCode];
+            $searchName = SearchController::$searchKeys[$searchCode];
+            $searchType = SearchController::$searchTypes[$searchCode];
             $operator = array_shift($condition);
 
             switch ($searchType) {
-                case 'boolean': {
-                        switch ($searchCode) {
-                            default: {
-                                    if (($operator == ':' && $condition[0]) || ($operator == '!' && !$condition[0])) {
-                                        $qb->andWhere("(c.$searchName = 1)");
-                                    } else {
-                                        $qb->andWhere("(c.$searchName = 0)");
-                                    }
-                                    $i++;
-                                    break;
-                                }
-                        }
-                        break;
+                case 'boolean':
+                    switch ($searchCode) {
+                        default:
+                            if (($operator == ':' && $condition[0]) || ($operator == '!' && !$condition[0])) {
+                                $qb->andWhere("(c.$searchName = 1)");
+                            } else {
+                                $qb->andWhere("(c.$searchName = 0)");
+                            }
+                            $i++;
+                            break;
                     }
-                case 'integer': {
-                        switch ($searchCode) {
-                            case 'c': // cycle
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':': $or[] = "(y.position = ?$i)";
-                                                break;
-                                            case '!': $or[] = "(y.position != ?$i)";
-                                                break;
-                                        }
-                                        $qb->setParameter($i++, $arg);
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
+                    break;
+                case 'integer':
+                    switch ($searchCode) {
+                        case 'c': // cycle
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "(y.position = ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "(y.position != ?$i)";
+                                        break;
                                 }
-                            default: {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':': $or[] = "(c.$searchName = ?$i)";
-                                                break;
-                                            case '!': $or[] = "(c.$searchName != ?$i)";
-                                                break;
-                                            case '<': $or[] = "(c.$searchName < ?$i)";
-                                                break;
-                                            case '>': $or[] = "(c.$searchName > ?$i)";
-                                                break;
-                                        }
-                                        $qb->setParameter($i++, $arg);
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
+                                $qb->setParameter($i++, $arg);
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
+                        default:
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "(c.$searchName = ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "(c.$searchName != ?$i)";
+                                        break;
+                                    case '<':
+                                            $or[] = "(c.$searchName < ?$i)";
+                                        break;
+                                    case '>':
+                                            $or[] = "(c.$searchName > ?$i)";
+                                        break;
                                 }
-                        }
-                        break;
+                                $qb->setParameter($i++, $arg);
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
                     }
-                case 'code': {
-                        switch ($searchCode) {
-                            case 'e': {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':': $or[] = "(p.code = ?$i)";
-                                                break;
-                                            case '!': $or[] = "(p.code != ?$i)";
-                                                break;
-                                            case '<':
-                                                if (!isset($qb2)) {
-                                                    $qb2 = $this->doctrine->getRepository('AppBundle:Pack')->createQueryBuilder('p2');
-                                                    $or[] = $qb->expr()->lt('p.dateRelease', '(' . $qb2->select('p2.dateRelease')->where("p2.code = ?$i")->getDql() . ')');
-                                                }
-                                                break;
-                                            case '>':
-                                                if (!isset($qb3)) {
-                                                    $qb3 = $this->doctrine->getRepository('AppBundle:Pack')->createQueryBuilder('p3');
-                                                    $or[] = $qb->expr()->gt('p.dateRelease', '(' . $qb3->select('p3.dateRelease')->where("p3.code = ?$i")->getDql() . ')');
-                                                }
-                                                break;
+                    break;
+                case 'code':
+                    switch ($searchCode) {
+                        case 'e':
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "(p.code = ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "(p.code != ?$i)";
+                                        break;
+                                    case '<':
+                                        if (!isset($qb2)) {
+                                            $qb2 = $this->doctrine
+                                                ->getRepository('AppBundle:Pack')
+                                                ->createQueryBuilder('p2');
+                                            $or[] = $qb->expr()->lt(
+                                                'p.dateRelease',
+                                                '('
+                                                . $qb2->select('p2.dateRelease')
+                                                    ->where("p2.code = ?$i")
+                                                    ->getDql()
+                                                . ')'
+                                            );
                                         }
-                                        $qb->setParameter($i++, $arg);
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
-                                }
-                            default: // type and faction
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':': $or[] = "($searchCode.code = ?$i)";
-                                                break;
-                                            case '!': $or[] = "($searchCode.code != ?$i)";
-                                                break;
+                                        break;
+                                    case '>':
+                                        if (!isset($qb3)) {
+                                            $qb3 = $this->doctrine
+                                                ->getRepository('AppBundle:Pack')
+                                                ->createQueryBuilder('p3');
+                                            $or[] = $qb->expr()->gt(
+                                                'p.dateRelease',
+                                                '('
+                                                . $qb3->select('p3.dateRelease')
+                                                    ->where("p3.code = ?$i")
+                                                    ->getDql()
+                                                . ')'
+                                            );
                                         }
-                                        $qb->setParameter($i++, $arg);
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
+                                        break;
                                 }
-                        }
-                        break;
+                                $qb->setParameter($i++, $arg);
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
+                        default: // type and faction
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "($searchCode.code = ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "($searchCode.code != ?$i)";
+                                        break;
+                                }
+                                $qb->setParameter($i++, $arg);
+                            }
+                                $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
                     }
-                case 'string': {
-                        switch ($searchCode) {
-                            case '': // name or index
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        $code = preg_match('/^\d\d\d\d\d$/u', $arg);
-                                        $acronym = preg_match('/^[A-Z]{2,}$/', $arg);
-                                        if ($code) {
-                                            $or[] = "(c.code = ?$i)";
-                                            $qb->setParameter($i++, $arg);
-                                        } elseif ($acronym) {
-                                            $or[] = "(BINARY(c.name) like ?$i)";
-                                            $qb->setParameter($i++, "%$arg%");
-                                            $like = implode('% ', str_split($arg));
-                                            $or[] = "(REPLACE(c.name, '-', ' ') like ?$i)";
-                                            $qb->setParameter($i++, "$like%");
-                                        } else {
-                                            $or[] = "(c.name like ?$i)";
-                                            $qb->setParameter($i++, "%$arg%");
-                                        }
-                                    }
-                                    $qb->andWhere(implode(" or ", $or));
-                                    break;
-                                }
-                            case 'x': // text
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':': $or[] = "(c.text like ?$i)";
-                                                break;
-                                            case '!': $or[] = "(c.text is null or c.text not like ?$i)";
-                                                break;
-                                        }
-                                        $qb->setParameter($i++, "%$arg%");
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
-                                }
-                            case 'a': // flavor
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':': $or[] = "(c.flavor like ?$i)";
-                                                break;
-                                            case '!': $or[] = "(c.flavor is null or c.flavor not like ?$i)";
-                                                break;
-                                        }
-                                        $qb->setParameter($i++, "%$arg%");
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
-                                }
-                            case 'k': // subtype (traits)
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':':
-                                                $or[] = "((c.traits = ?$i) or (c.traits like ?" . ($i + 1) . ") or (c.traits like ?" . ($i + 2) . ") or (c.traits like ?" . ($i + 3) . "))";
-                                                $qb->setParameter($i++, "$arg.");
-                                                $qb->setParameter($i++, "$arg. %");
-                                                $qb->setParameter($i++, "%. $arg.");
-                                                $qb->setParameter($i++, "%. $arg. %");
-                                                break;
-                                            case '!':
-                                                $or[] = "(c.traits is null or ((c.traits != ?$i) and (c.traits not like ?" . ($i + 1) . ") and (c.traits not like ?" . ($i + 2) . ") and (c.traits not like ?" . ($i + 3) . ")))";
-                                                $qb->setParameter($i++, "$arg.");
-                                                $qb->setParameter($i++, "$arg. %");
-                                                $qb->setParameter($i++, "%. $arg.");
-                                                $qb->setParameter($i++, "%. $arg. %");
-                                                break;
-                                        }
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
-                                }
-                            case 'i': // illustrator
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case ':': $or[] = "(c.illustrator = ?$i)";
-                                                break;
-                                            case '!': $or[] = "(c.illustrator != ?$i)";
-                                                break;
-                                        }
-                                        $qb->setParameter($i++, $arg);
-                                    }
-                                    $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                    break;
-                                }
-                            case 'd': // designer
-                            {
-                                $or = [];
-                                foreach ($condition as $arg) {
-                                    switch ($operator) {
-                                        case ':': $or[] = "(c.designer like ?$i)";
-                                            break;
-                                        case '!': $or[] = "(c.designer is null or c.designer not like ?$i)";
-                                            break;
-                                    }
+                    break;
+                case 'string':
+                    switch ($searchCode) {
+                        case '': // name or index
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                $code = preg_match('/^\d\d\d\d\d$/u', $arg);
+                                $acronym = preg_match('/^[A-Z]{2,}$/', $arg);
+                                if ($code) {
+                                    $or[] = "(c.code = ?$i)";
+                                    $qb->setParameter($i++, $arg);
+                                } elseif ($acronym) {
+                                    $or[] = "(BINARY(c.name) like ?$i)";
+                                    $qb->setParameter($i++, "%$arg%");
+                                    $like = implode('% ', str_split($arg));
+                                    $or[] = "(REPLACE(c.name, '-', ' ') like ?$i)";
+                                    $qb->setParameter($i++, "$like%");
+                                } else {
+                                    $or[] = "(c.name like ?$i)";
                                     $qb->setParameter($i++, "%$arg%");
                                 }
-                                $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                                break;
                             }
-                            case 'r': // release
-                                {
-                                    $or = [];
-                                    foreach ($condition as $arg) {
-                                        switch ($operator) {
-                                            case '<': $or[] = "(p.dateRelease <= ?$i)";
-                                                break;
-                                            case '>': $or[] = "(p.dateRelease > ?$i or p.dateRelease IS NULL)";
-                                                break;
-                                        }
-                                        if ($arg == "now") {
-                                            $qb->setParameter($i++, new \DateTime());
-                                        } else {
-                                            $qb->setParameter($i++, new \DateTime($arg));
-                                        }
-                                    }
-                                    $qb->andWhere(implode(" or ", $or));
-                                    break;
+                            $qb->andWhere(implode(" or ", $or));
+                            break;
+                        case 'x': // text
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "(c.text like ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "(c.text is null or c.text not like ?$i)";
+                                        break;
                                 }
-                        }
+                                $qb->setParameter($i++, "%$arg%");
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
+                        case 'a': // flavor
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "(c.flavor like ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "(c.flavor is null or c.flavor not like ?$i)";
+                                        break;
+                                }
+                                $qb->setParameter($i++, "%$arg%");
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
+                        case 'k': // subtype (traits)
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                        $or[] = "((c.traits = ?$i) or (c.traits like ?"
+                                            . ($i + 1)
+                                            . ") or (c.traits like ?"
+                                            . ($i + 2)
+                                            . ") or (c.traits like ?"
+                                            . ($i + 3)
+                                            . "))";
+                                        $qb->setParameter($i++, "$arg.");
+                                        $qb->setParameter($i++, "$arg. %");
+                                        $qb->setParameter($i++, "%. $arg.");
+                                        $qb->setParameter($i++, "%. $arg. %");
+                                        break;
+                                    case '!':
+                                        $or[] = "(c.traits is null or ((c.traits != ?$i) and (c.traits not like ?"
+                                            . ($i + 1)
+                                            . ") and (c.traits not like ?"
+                                            . ($i + 2)
+                                            . ") and (c.traits not like ?"
+                                            . ($i + 3)
+                                            . ")))";
+                                        $qb->setParameter($i++, "$arg.");
+                                        $qb->setParameter($i++, "$arg. %");
+                                        $qb->setParameter($i++, "%. $arg.");
+                                        $qb->setParameter($i++, "%. $arg. %");
+                                        break;
+                                }
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
+                        case 'i': // illustrator
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "(c.illustrator = ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "(c.illustrator != ?$i)";
+                                        break;
+                                }
+                                $qb->setParameter($i++, $arg);
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
+                        case 'd': // designer
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                            $or[] = "(c.designer like ?$i)";
+                                        break;
+                                    case '!':
+                                            $or[] = "(c.designer is null or c.designer not like ?$i)";
+                                        break;
+                                }
+                                $qb->setParameter($i++, "%$arg%");
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
+                        case 'r': // release
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case '<':
+                                            $or[] = "(p.dateRelease <= ?$i)";
+                                        break;
+                                    case '>':
+                                            $or[] = "(p.dateRelease > ?$i or p.dateRelease IS NULL)";
+                                        break;
+                                }
+                                if ($arg == "now") {
+                                    $qb->setParameter($i++, new \DateTime());
+                                } else {
+                                    $qb->setParameter($i++, new \DateTime($arg));
+                                }
+                            }
+                                $qb->andWhere(implode(" or ", $or));
+                            break;
                         break;
                     }
             }
@@ -416,15 +476,20 @@ class CardsData
             return;
         }
         switch ($sortorder) {
-            case 'set': $qb->orderBy('y.position')->addOrderBy('p.position')->addOrderBy('c.position');
+            case 'set':
+                $qb->orderBy('y.position')->addOrderBy('p.position')->addOrderBy('c.position');
                 break;
-            case 'faction': $qb->orderBy('c.faction')->addOrderBy('c.type');
+            case 'faction':
+                $qb->orderBy('c.faction')->addOrderBy('c.type');
                 break;
-            case 'type': $qb->orderBy('c.type')->addOrderBy('c.faction');
+            case 'type':
+                $qb->orderBy('c.type')->addOrderBy('c.faction');
                 break;
-            case 'cost': $qb->orderBy('c.type')->addOrderBy('c.cost')->addOrderBy('c.income');
+            case 'cost':
+                $qb->orderBy('c.type')->addOrderBy('c.cost')->addOrderBy('c.income');
                 break;
-            case 'strength': $qb->orderBy('c.type')->addOrderBy('c.strength')->addOrderBy('c.initiative');
+            case 'strength':
+                $qb->orderBy('c.type')->addOrderBy('c.strength')->addOrderBy('c.initiative');
                 break;
         }
         $qb->addOrderBy('c.name');
@@ -450,7 +515,11 @@ class CardsData
 
         foreach ($associationMappings as $fieldName => $associationMapping) {
             if ($associationMapping['isOwningSide']) {
-                $getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
+                $getter = str_replace(
+                    ' ',
+                    '',
+                    ucwords(str_replace('_', ' ', "get_$fieldName"))
+                );
                 $associationEntity = $card->$getter();
                 if (!$associationEntity) {
                     continue;
@@ -462,7 +531,11 @@ class CardsData
         }
 
         foreach ($fieldNames as $fieldName) {
-            $getter = str_replace(' ', '', ucwords(str_replace('_', ' ', "get_$fieldName")));
+            $getter = str_replace(
+                ' ',
+                '',
+                ucwords(str_replace('_', ' ', "get_$fieldName"))
+            );
             $value = $card->$getter();
             switch ($metadata->getTypeOfField($fieldName)) {
                 case 'datetime':
@@ -477,7 +550,11 @@ class CardsData
             $cardinfo[$fieldName] = $value;
         }
 
-        $cardinfo['url'] = $this->router->generate('cards_zoom', array('card_code' => $card->getCode()), UrlGeneratorInterface::ABSOLUTE_URL);
+        $cardinfo['url'] = $this->router->generate(
+            'cards_zoom',
+            array('card_code' => $card->getCode()),
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
 
         if ($card->getIsMultiple()) {
             $cardinfo['label'] = $card->getName() . ' (' . $card->getPack()->getCode() . ')';
@@ -538,8 +615,10 @@ class CardsData
                 }
                 $etat = 2;
             } else {
-                if (preg_match('/^"([^"]*)"(.*)/u', $query, $match) // jeton "texte libre entre guillements"
-                        || preg_match('/^([\p{L}\p{N}\-\&]+)(.*)/u', $query, $match) // jeton "texte autorisé sans guillements"
+                if (preg_match('/^"([^"]*)"(.*)/u', $query, $match)
+                    // jeton "texte libre entre guillements"
+                        || preg_match('/^([\p{L}\p{N}\-\&]+)(.*)/u', $query, $match)
+                    // jeton "texte autorisé sans guillements"
                 ) {
                     if (($etat == 2 && count($cond) == 2) || $etat == 3) {
                         $cond[] = $match[1];
@@ -584,7 +663,7 @@ class CardsData
             $searchCode = $l[0];
             $searchOp = $l[1];
 
-            if (in_array($searchOp, $numeric) && \AppBundle\Controller\SearchController::$searchTypes[$searchCode] !== 'integer') {
+            if (in_array($searchOp, $numeric) && SearchController::$searchTypes[$searchCode] !== 'integer') {
                 // operator is numeric but searched property is not
                 unset($conditions[$i]);
             }
@@ -597,22 +676,25 @@ class CardsData
     {
         // reconstruction de la bonne chaine de recherche pour affichage
         return implode(" ", array_map(
-                        function ($l) {
+            function ($l) {
                             return ($l[0] ? $l[0] . $l[1] : "")
                             . implode("|", array_map(
-                                            function ($s) {
+                                function ($s) {
                                                 return preg_match("/^[\p{L}\p{N}\-\&]+$/u", $s) ? $s : "\"$s\"";
-                                            },
+                                },
                                 array_slice($l, 2)
-                    ));
-                        },
+                            ));
+            },
             $conditions
         ));
     }
 
-    public function get_reviews($card)
+    public function getReviews($card)
     {
-        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(array('card' => $card), array('nbVotes' => 'DESC'));
+        $reviews = $this->doctrine->getRepository('AppBundle:Review')->findBy(
+            array('card' => $card),
+            array('nbVotes' => 'DESC')
+        );
 
         $response = $reviews;
 

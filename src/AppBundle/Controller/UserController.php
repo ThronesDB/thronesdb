@@ -147,7 +147,9 @@ class UserController extends Controller
 
                     $content['is_author'] = ($user_id == $decklist->getUser()->getId());
 
-                    $content['can_delete'] = ($decklist->getNbcomments() == 0) && ($decklist->getNbfavorites() == 0) && ($decklist->getnbVotes() == 0);
+                    $content['can_delete'] = ($decklist->getNbcomments() == 0)
+                        && ($decklist->getNbfavorites() == 0)
+                        && ($decklist->getnbVotes() == 0);
                 }
             }
 

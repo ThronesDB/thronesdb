@@ -20,8 +20,8 @@ class TwigCacheCommand extends ContainerAwareCommand
         ->addArgument(
             'names',
             InputArgument::IS_ARRAY,
-               'Example AppBundle:Default:footer.html.twig',
-                null
+            'Example AppBundle:Default:footer.html.twig',
+            null
         )->addOption('clear', 'c', InputOption::VALUE_NONE, 'delete cache files');
     }
 

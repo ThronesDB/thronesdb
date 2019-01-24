@@ -21,9 +21,9 @@ class DonatorCommand extends ContainerAwareCommand
             'Email address or username of user'
         )
         ->addArgument(
-                'donation',
-                InputArgument::OPTIONAL,
-                'Amount of donation'
+            'donation',
+            InputArgument::OPTIONAL,
+            'Amount of donation'
         )
         ;
     }

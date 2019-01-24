@@ -28,12 +28,14 @@ class ImportStdCommand extends ContainerAwareCommand
     {
         $this
         ->setName('app:import:std')
-        ->setDescription('Import cards data file in json format from a copy of https://github.com/ThronesDB/thronesdb-json-data')
+        ->setDescription(
+            'Import cards data file in json format from a copy of https://github.com/ThronesDB/thronesdb-json-data'
+        )
         ->addArgument(
-                'path',
-                InputArgument::REQUIRED,
-                'Path to the repository'
-                )
+            'path',
+            InputArgument::REQUIRED,
+            'Path to the repository'
+        )
         
         ;
     }
@@ -274,20 +276,22 @@ class ImportStdCommand extends ContainerAwareCommand
             }
             if ($currentTypedValue !== null) {
                 switch ($type) {
-                    case 'date': {
+                    case 'date':
                         $currentJsonValue = $currentTypedValue->format('Y-m-d');
                         break;
-                    }
-                    case 'datetime': {
+                    case 'datetime':
                         $currentJsonValue = $currentTypedValue->format('Y-m-d H:i:s');
-                    }
                 }
             }
         }
         
         $different = ($currentJsonValue !== $newJsonValue);
         if ($different) {
-            $this->output->writeln("Changing the <info>$fieldName</info> of <info>".$entity->toString()."</info> ($currentJsonValue => $newJsonValue)");
+            $this->output->writeln(
+                "Changing the <info>$fieldName</info> of <info>"
+                . $entity->toString()
+                . "</info> ($currentJsonValue => $newJsonValue)"
+            );
             $setter = 'set'.ucfirst($fieldName);
             $entity->$setter($newTypedValue);
         }
@@ -468,7 +472,13 @@ class ImportStdCommand extends ContainerAwareCommand
         $data = json_decode($content, true);
     
         if ($data === null) {
-            throw new \Exception("File [".$fileinfo->getPathname()."] contains incorrect JSON (error code ".json_last_error().")");
+            throw new \Exception(
+                "File ["
+                . $fileinfo->getPathname()
+                . "] contains incorrect JSON (error code "
+                . json_last_error()
+                . ")"
+            );
         }
     
         return $data;

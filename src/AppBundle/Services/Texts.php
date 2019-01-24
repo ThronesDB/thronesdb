@@ -53,7 +53,7 @@ class Texts
      */
     public function markdown($string)
     {
-        return $this->purify($this->img_responsive($this->transform($string)));
+        return $this->purify($this->imgResponsive($this->transform($string)));
     }
     
     /**
@@ -78,10 +78,10 @@ class Texts
 
     /**
      * adds class="img-responsive" to every <img> tag
-     * @param unknown $string
+     * @param string $string
      * @return string
      */
-    public function img_responsive($string)
+    public function imgResponsive($string)
     {
         return preg_replace('/<img/', '<img class="img-responsive"', $string);
     }

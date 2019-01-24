@@ -85,7 +85,9 @@ class SearchController extends Controller
         $traits = array_filter(array_keys($traits));
         sort($traits);
 
-        $list_illustrators = $dbh->executeQuery("SELECT DISTINCT c.illustrator FROM card c WHERE c.illustrator != '' ORDER BY c.illustrator")->fetchAll();
+        $list_illustrators = $dbh->executeQuery(
+            "SELECT DISTINCT c.illustrator FROM card c WHERE c.illustrator != '' ORDER BY c.illustrator"
+        )->fetchAll();
         $illustrators = array_map(function ($card) {
             return $card["illustrator"];
         }, $list_illustrators);
@@ -112,7 +114,14 @@ class SearchController extends Controller
         $game_name = $this->container->getParameter('game_name');
         $publisher_name = $this->container->getParameter('publisher_name');
         
-        $meta = $card->getName().", a ".$card->getFaction()->getName()." ".$card->getType()->getName()." card for $game_name from the set ".$card->getPack()->getName()." published by $publisher_name.";
+        $meta = $card->getName()
+             . ", a "
+            . $card->getFaction()->getName()
+            . " "
+            . $card->getType()->getName()
+            . " card for $game_name from the set "
+            . $card->getPack()->getName()
+            . " published by $publisher_name.";
 
         return $this->forward(
             'AppBundle:Search:display',
@@ -257,14 +266,32 @@ class SearchController extends Controller
         $conditions = $this->get('cards_data')->syntax($q);
         if (count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
             if ($conditions[0][0] == array_search('pack', SearchController::$searchKeys)) {
-                $url = $this->get('router')->generate('cards_list', array('pack_code' => $conditions[0][2], 'view' => $view, 'sort' => $sort, 'page' => $page));
+                $url = $this->get('router')->generate(
+                    'cards_list',
+                    array(
+                        'pack_code' => $conditions[0][2],
+                        'view' => $view,
+                        'sort' => $sort,
+                        'page' => $page
+                    )
+                );
                 return $this->redirect($url);
             }
             if ($conditions[0][0] == array_search('cycle', SearchController::$searchKeys)) {
                 $cycle_position = $conditions[0][2];
-                $cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array('position' => $cycle_position));
+                $cycle = $this->getDoctrine()
+                    ->getRepository('AppBundle:Cycle')
+                    ->findOneBy(array('position' => $cycle_position));
                 if ($cycle) {
-                    $url = $this->get('router')->generate('cards_cycle', array('cycle_code' => $cycle->getCode(), 'view' => $view, 'sort' => $sort, 'page' => $page));
+                    $url = $this->get('router')->generate(
+                        'cards_cycle',
+                        array(
+                            'cycle_code' => $cycle->getCode(),
+                            'view' => $view,
+                            'sort' => $sort,
+                            'page' => $page
+                        )
+                    );
                     return $this->redirect($url);
                 }
             }
@@ -284,7 +311,7 @@ class SearchController extends Controller
         );
     }
 
-    public function displayAction($q, $view="card", $sort, $page=1, $pagetitle="", $meta="", Request $request)
+    public function displayAction(Request $request, $q, $sort, $view = "card", $page = 1, $pagetitle = "", $meta = "")
     {
         $response = new Response();
         $response->setPublic();
@@ -315,8 +342,7 @@ class SearchController extends Controller
 
         // reconstruction de la bonne chaine de recherche pour affichage
         $q = $this->get('cards_data')->buildQueryFromConditions($conditions);
-        if ($q && $rows = $this->get('cards_data')->get_search_rows($conditions, $sort)) {
-
+        if ($q && $rows = $this->get('cards_data')->getSearchRows($conditions, $sort)) {
             if (count($rows) == 1) {
                 $view = 'card';
                 $includeReviews = true;
@@ -325,13 +351,17 @@ class SearchController extends Controller
             if ($pagetitle == "") {
                 if (count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
                     if ($conditions[0][0] == "e") {
-                        $pack = $this->getDoctrine()->getRepository('AppBundle:Pack')->findOneBy(array("code" => $conditions[0][2]));
+                        $pack = $this->getDoctrine()
+                            ->getRepository('AppBundle:Pack')
+                            ->findOneBy(array("code" => $conditions[0][2]));
                         if ($pack) {
                             $pagetitle = $pack->getName();
                         }
                     }
                     if ($conditions[0][0] == "c") {
-                        $cycle = $this->getDoctrine()->getRepository('AppBundle:Cycle')->findOneBy(array("code" => $conditions[0][2]));
+                        $cycle = $this->getDoctrine()
+                            ->getRepository('AppBundle:Cycle')
+                            ->findOneBy(array("code" => $conditions[0][2]));
                         if ($cycle) {
                             $pagetitle = $cycle->getName();
                         }
@@ -362,7 +392,7 @@ class SearchController extends Controller
                 }
                 $cardinfo['available'] = $availability[$pack->getCode()];
                 if ($includeReviews) {
-                    $cardinfo['reviews'] = $this->get('cards_data')->get_reviews($card);
+                    $cardinfo['reviews'] = $this->get('cards_data')->getReviews($card);
                 }
                 $cards[] = $cardinfo;
             }
@@ -436,18 +466,31 @@ class SearchController extends Controller
         $next = $repo->findNextCard($card);
         return $this->renderView('AppBundle:Search:setnavigation.html.twig', array(
                 "prevtitle" => $prev ? $prev->getName() : "",
-                "prevhref" => $prev ? $this->get('router')->generate('cards_zoom', array('card_code' => $prev->getCode())) : "",
+                "prevhref" => $prev ? $this->get('router')
+                    ->generate(
+                        'cards_zoom',
+                        array('card_code' => $prev->getCode())
+                    ) : "",
                 "nexttitle" => $next ? $next->getName() : "",
-                "nexthref" => $next ? $this->get('router')->generate('cards_zoom', array('card_code' => $next->getCode())) : "",
+                "nexthref" => $next ? $this->get('router')
+                    ->generate(
+                        'cards_zoom',
+                        array('card_code' => $next->getCode())
+                    ) : "",
                 "settitle" => $card->getPack()->getName(),
-                "sethref" => $this->get('router')->generate('cards_list', array('pack_code' => $card->getPack()->getCode())),
+                "sethref" => $this->get('router')
+                    ->generate(
+                        'cards_list',
+                        array('pack_code' => $card->getPack()->getCode())
+                    ),
         ));
     }
 
-    public function paginationItem($q = null, $v, $s, $ps, $pi, $total)
+    public function paginationItem($q, $v, $s, $ps, $pi, $total)
     {
         return $this->renderView('AppBundle:Search:paginationitem.html.twig', array(
-            "href" => $q == null ? "" : $this->get('router')->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'page' => $pi)),
+            "href" => $q == null ? "" : $this->get('router')
+                ->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'page' => $pi)),
             "ps" => $ps,
             "pi" => $pi,
             "s" => $ps*($pi-1)+1,

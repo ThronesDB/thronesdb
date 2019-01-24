@@ -27,7 +27,11 @@ class DecklistFactory
         
         $problem = $this->deckValidationHelper->findProblem($deck);
         if ($problem) {
-            throw new \Exception('This deck cannot be published because it is invalid: "'.$this->deckValidationHelper->getProblemLabel($problem).'".');
+            throw new \Exception(
+                'This deck cannot be published because it is invalid: "'
+                . $this->deckValidationHelper->getProblemLabel($problem)
+                . '".'
+            );
         }
 
         // all good for decklist publication

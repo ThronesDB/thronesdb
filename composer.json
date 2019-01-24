@@ -57,6 +57,7 @@
         "mockery/mockery": "^1.2",
         "phpunit/phpunit": "^6.5",
         "sensio/generator-bundle": "^3.0",
+        "squizlabs/php_codesniffer": "@stable",
         "symfony/expression-language": "^4.0",
         "symfony/phpunit-bridge": "^3.0"
     },

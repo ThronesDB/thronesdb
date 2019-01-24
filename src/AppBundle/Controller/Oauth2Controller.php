@@ -122,8 +122,10 @@ class Oauth2Controller extends Controller
 
 
     /**
-     * Save one Deck of the authenticated user. The parameters are the same as in the response to the load method, but only a few are writable.
-     * So you can parse the result from the load, change a few values, then send the object as the param of an ajax request.
+     * Save one Deck of the authenticated user. The parameters are the same as in the response to the load method,
+     * but only a few are writable.
+     * So you can parse the result from the load, change a few values,
+     * then send the object as the param of an ajax request.
      * If successful, id of Deck is in the msg
      *
      * @ApiDoc(
@@ -140,11 +142,29 @@ class Oauth2Controller extends Controller
      *  },
      *  parameters={
      *      {"name"="name", "dataType"="string", "required"=true, "description"="Name of the Deck"},
-     *      {"name"="decklist_id", "dataType"="integer", "required"=false, "description"="Identifier of the Decklist from which the Deck is copied"},
-     *      {"name"="description_md", "dataType"="string", "required"=false, "description"="Description of the Decklist in Markdown"},
-     *      {"name"="faction_code", "dataType"="string", "required"=false, "description"="Code of the faction of the Deck"},
+     *      {
+     *          "name"="decklist_id",
+     *          "dataType"="integer",
+     *          "required"=false,
+     *          "description"="Identifier of the Decklist from which the Deck is copied"},
+     *      {
+     *          "name"="description_md",
+     *          "dataType"="string",
+     *          "required"=false,
+     *          "description"="Description of the Decklist in Markdown"},
+     *      {
+     *          "name"="faction_code",
+     *          "dataType"="string",
+     *          "required"=false,
+     *          "description"="Code of the faction of the Deck"
+     *      },
      *      {"name"="tags", "dataType"="string", "required"=false, "description"="Space-separated list of tags"},
-     *      {"name"="slots", "dataType"="string", "required"=true, "description"="Content of the Decklist as a JSON object"},
+     *      {
+     *          "name"="slots",
+     *          "dataType"="string",
+     *          "required"=true,
+     *          "description"="Content of the Decklist as a JSON object"
+     *      },
      *  },
      * )
      *
@@ -164,14 +184,21 @@ class Oauth2Controller extends Controller
             }
         }
 
-        $faction_code = filter_var($request->get('faction_code'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $faction_code = filter_var(
+            $request->get('faction_code'),
+            FILTER_SANITIZE_STRING,
+            FILTER_FLAG_NO_ENCODE_QUOTES
+        );
         if (!$faction_code) {
             return new JsonResponse([
                 'success' => false,
                 'msg'     => "Faction code missing",
             ]);
         }
-        $faction = $this->getDoctrine()->getManager()->getRepository('AppBundle:Faction')->findOneBy(['code' => $faction_code]);
+        $faction = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('AppBundle:Faction')
+            ->findOneBy(['code' => $faction_code]);
         if (!$faction) {
             return new JsonResponse([
                 'success' => false,
@@ -195,7 +222,11 @@ class Oauth2Controller extends Controller
             }
         }
 
-        $name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $name = filter_var(
+            $request->get('name'),
+            FILTER_SANITIZE_STRING,
+            FILTER_FLAG_NO_ENCODE_QUOTES
+        );
         if (!$name) {
             return new JsonResponse([
                 'success' => false,
@@ -207,7 +238,17 @@ class Oauth2Controller extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('deck_manager')->save($this->getUser(), $deck, $decklist_id, $name, $faction, $description, $tags, $slots, null);
+        $this->get('deck_manager')->save(
+            $this->getUser(),
+            $deck,
+            $decklist_id,
+            $name,
+            $faction,
+            $description,
+            $tags,
+            $slots,
+            null
+        );
 
         $this->getDoctrine()->getManager()->flush();
 
@@ -234,9 +275,24 @@ class Oauth2Controller extends Controller
      *      },
      *  },
      *  parameters={
-     *      {"name"="description_md", "dataType"="string", "required"=false, "description"="Description of the Decklist in Markdown"},
-     *      {"name"="tournament_id", "dataType"="integer", "required"=false, "description"="Identifier of the Tournament type of the Decklist"},
-     *      {"name"="precedent_id", "dataType"="integer", "required"=false, "description"="Identifier of the Predecessor of the Decklist"},
+     *      {
+     *          "name"="description_md",
+     *          "dataType"="string",
+     *          "required"=false,
+     *          "description"="Description of the Decklist in Markdown"
+     *      },
+     *      {
+     *          "name"="tournament_id",
+     *          "dataType"="integer",
+     *          "required"=false,
+     *          "description"="Identifier of the Tournament type of the Decklist"
+     *      },
+     *      {
+     *          "name"="precedent_id",
+     *          "dataType"="integer",
+     *          "required"=false,
+     *          "description"="Identifier of the Predecessor of the Decklist"
+     *      },
      *  },
      * )
      *
@@ -252,10 +308,16 @@ class Oauth2Controller extends Controller
             throw $this->createAccessDeniedException("Access denied to this object.");
         }
 
-        $name = filter_var($request->request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $name = filter_var(
+            $request->request->get('name'),
+            FILTER_SANITIZE_STRING,
+            FILTER_FLAG_NO_ENCODE_QUOTES
+        );
         $descriptionMd = trim($request->request->get('description_md'));
 
-        $tournament_id = intval(filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT));
+        $tournament_id = intval(
+            filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT)
+        );
         $tournament = $this->getDoctrine()->getManager()->getRepository('AppBundle:Tournament')->find($tournament_id);
 
         $precedent_id = trim($request->request->get('precedent'));
@@ -267,7 +329,9 @@ class Oauth2Controller extends Controller
                 $precedent_id = null;
             }
         }
-        $precedent = $precedent_id ? $this->getDoctrine()->getRepository('AppBundle:Decklist')->find($precedent_id) : null;
+        $precedent = $precedent_id
+            ? $this->getDoctrine()->getRepository('AppBundle:Decklist')->find($precedent_id)
+            : null;
 
         try {
             $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);

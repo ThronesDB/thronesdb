@@ -19,10 +19,10 @@ class PowerFunction extends FunctionNode
     public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
         return sprintf(
-                "POW(%s,%d)",
-                $this->basePrimary->dispatch($sqlWalker),
-                $this->exponentPrimary->dispatch($sqlWalker)
-                );
+            "POW(%s,%d)",
+            $this->basePrimary->dispatch($sqlWalker),
+            $this->exponentPrimary->dispatch($sqlWalker)
+        );
     }
 
     /**
