@@ -2,42 +2,48 @@
 
 {% block body %}
 
-<div class="main white container">
+    <div class="main white container">
 
-<div class="jumbotron background-{{ user.color }}-10">
-  <h1><span class="{{ user.color }}">{{ user.username }}</span>
-  {% if user.donation > 0 %}<span class="fa fa-gift donator" title="ThronesDB Gracious Donator"></span>{% endif %}
-    <small>{{ user.reputation }}</small></h1>
-	<p>
-        Member since {{ user.dateCreation|date('Y-m-d') }}.
-        <div>
-        {% if user.decklists|length > 1 %}
-            <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">{{ user.decklists|length }} published decklists.</a>
-        {% else %}
-            {% if user.decklists|length == 1 %}
-                <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">One published decklist.</a>
-            {% else %}
-                No published decklist.
+        <div class="jumbotron background-{{ user.color }}-10">
+            <h1><span class="{{ user.color }}">{{ user.username }}</span>
+                {% if user.donation > 0 %}<span class="fa fa-gift donator"
+                                                title="ThronesDB Gracious Donator"></span>{% endif %}
+                <small>{{ user.reputation }}</small>
+            </h1>
+            <p>
+                Member since {{ user.dateCreation|date('Y-m-d') }}.
+            <div>
+                {% if user.decklists|length > 1 %}
+                    <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">{{ user.decklists|length }}
+                        published decklists.</a>
+                {% else %}
+                    {% if user.decklists|length == 1 %}
+                        <a href="{{ path('decklists_list',{type:'find',page:1,author:user.username}) }}">One published
+                            decklist.</a>
+                    {% else %}
+                        No published decklist.
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div>
+                {% if user.reviews|length > 1 %}
+                    <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{{ user.reviews|length }}
+                        published reviews.</a>
+                {% else %}
+                    {% if user.reviews|length == 1 %}
+                        <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">One published
+                            reviews.</a>
+                    {% else %}
+                        No published reviews.
+                    {% endif %}
+                {% endif %}
+            </div>
+            </p>
+            {% if user.resume %}
+                <p><em>{{ user.resume }}</em></p>
             {% endif %}
-        {% endif %}
         </div>
-        <div>
-        {% if user.reviews|length > 1 %}
-            <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">{{ user.reviews|length }} published reviews.</a>
-        {% else %}
-            {% if user.reviews|length == 1 %}
-                <a href="{{ path('card_reviews_list_byauthor',{page:1,user_id:user.id}) }}">One published reviews.</a>
-            {% else %}
-                No published reviews.
-            {% endif %}
-        {% endif %}
-        </div>
-	</p>
-    {% if user.resume %}
-        <p><em>{{ user.resume }}</em></p>
-    {% endif %}
-</div>
 
-</div> <!-- .container -->
+    </div> <!-- .container -->
 
 {% endblock %}

@@ -3,30 +3,30 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block body %}
-<div class="main white container">
+    <div class="main white container">
 
-{{ searchbar|raw }}
+        {{ searchbar|raw }}
 
-<div id="list">
+        <div id="list">
 
-{{ pagination|raw }}
+            {{ pagination|raw }}
 
-{% if cards|length > 0 %}
+            {% if cards|length > 0 %}
 
-{% block main %}{% endblock %}
+                {% block main %}{% endblock %}
 
-{% else %}
+            {% else %}
 
-<div class="col-sm-12" style="margin-top:10px">
-	<p class="alert alert-warning">Your query didn't match any card.</p>
-</div>
-	
-{% endif %}
+                <div class="col-sm-12" style="margin-top:10px">
+                    <p class="alert alert-warning">Your query didn't match any card.</p>
+                </div>
 
-{{ pagination|raw }}
+            {% endif %}
 
-</div>
+            {{ pagination|raw }}
 
-</div>
+        </div>
+
+    </div>
 
 {% endblock %}

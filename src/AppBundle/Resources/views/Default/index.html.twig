@@ -3,60 +3,66 @@
 
 {% block body %}
 
-<div class="main container">
-<h1 class="site-title hidden-xs">Thr<span style="position:relative">o<span class="icon icon-power" style="position:absolute;left: .65em;top: 1.2em;font-size: 30%;"></span></span>nesDB</h1>
-<div class="site-slogan">{{ 'slogan' | trans }}</div>
-</div> <!-- .container -->
+    <div class="main container">
+        <h1 class="site-title hidden-xs">Thr<span style="position:relative">o<span class="icon icon-power"
+                                                                                   style="position:absolute;left: .65em;top: 1.2em;font-size: 30%;"></span></span>nesDB
+        </h1>
+        <div class="site-slogan">{{ 'slogan' | trans }}</div>
+    </div> <!-- .container -->
 
-<div class="main container">
-    <div class="row">
-    {% for data in decklists_by_faction %}
-    <div class="col-md-6" style="margin-bottom:30px">
-        <div class="bg-faction bg-{{ data.faction.code }}" style="padding:10px 10px 5px 10px">
-            <div class="media">
-              <div class="media-left" style="font-size:30px">
-                  <span class="icon icon-{{ data.faction.code }}"></span>
-              </div>
-              <div class="media-body">
-                  <h4 class="media-heading" style="white-space:nowrap"><a href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a></h4>
-                  <div class="small">
-                    {% set username %}
-                      <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span>
-                    {% endset %}
-                    {{ 'userby' | trans({'%user%': username}) | raw }}
-                    &middot;
-                    <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time>
-                  </div>
-              </div>
-            </div>
-        </div>
-        <div style="background-color: white; padding: 10px 20px 20px 20px">
-            <div class="small pull-right">
-                {{ macros.decklist_social_icons(data.decklist ) }}
-            </div>
-            <div>{{ data.factions }}</div>
-            <p>{{ data.count_by_type|raw }}</p>
-            <div class="text-center small"><a href="{{ path('decklists_list',{type:'find',faction:data.faction.code}) }}">{{ 'seemore.faction' | trans }}</a></div>
-            <div style="clear:both"></div>
+    <div class="main container">
+        <div class="row">
+            {% for data in decklists_by_faction %}
+                <div class="col-md-6" style="margin-bottom:30px">
+                    <div class="bg-faction bg-{{ data.faction.code }}" style="padding:10px 10px 5px 10px">
+                        <div class="media">
+                            <div class="media-left" style="font-size:30px">
+                                <span class="icon icon-{{ data.faction.code }}"></span>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading" style="white-space:nowrap"><a
+                                            href="{{ path('decklist_detail',{decklist_id:data.decklist.id,decklist_name:data.decklist.nameCanonical}) }}">{{ data.decklist.name }}</a>
+                                </h4>
+                                <div class="small">
+                                    {% set username %}
+                                        <span class="username">{{ macros.username_colorless(data.decklist.user) }}</span>
+                                    {% endset %}
+                                    {{ 'userby' | trans({'%user%': username}) | raw }}
+                                    &middot;
+                                    <time datetime="{{ data.decklist.dateCreation|date('c') }}">{{ data.decklist.dateCreation|date('M d, Y') }}</time>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background-color: white; padding: 10px 20px 20px 20px">
+                        <div class="small pull-right">
+                            {{ macros.decklist_social_icons(data.decklist ) }}
+                        </div>
+                        <div>{{ data.factions }}</div>
+                        <p>{{ data.count_by_type|raw }}</p>
+                        <div class="text-center small"><a
+                                    href="{{ path('decklists_list',{type:'find',faction:data.faction.code}) }}">{{ 'seemore.faction' | trans }}</a>
+                        </div>
+                        <div style="clear:both"></div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
-    {% endfor %}
-    </div>
-</div>
 
 {% endblock %}
 
 {% block javascripts %}
-<script type="application/ld+json">
-{
-   "@context": "http://schema.org",
-   "@type": "WebSite",
-   "url": "https://thronesdb.com/",
-   "potentialAction": {
-     "@type": "SearchAction",
-     "target": "http://thronesdb.com/find/?q={search_term_string}",
-     "query-input": "required name=search_term_string"
-   }
-}
-</script>
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "url": "https://thronesdb.com/",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "http://thronesdb.com/find/?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
 {% endblock %}

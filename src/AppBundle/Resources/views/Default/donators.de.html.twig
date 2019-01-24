@@ -2,24 +2,29 @@
 
 {% block body %}
 
-<div class="main white container">
-<div class="row">
+    <div class="main white container">
+        <div class="row">
 
-<div class="col-md-12">
-<h1>Die großzügigen Spender/innen</h1>
-<p class="lead">ThronesDB wäre ohne sie nicht dieselbe Seite. Vielen, vielen Dank.</p>
-<p>Um zu spenden und den Betrieb dieser Seite zu unterstützen kannst du <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZTDRSEFTF8XZJ&currency_code=EUR&source=url">Paypal (€)</a> oder <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZTDRSEFTF8XZJ&currency_code=USD&source=url">Paypal ($)</a> verwenden.</p>
-<ul>
-{% for donator in donators %}
-<li>
-    <a href="{{ path('user_profile_public', {user_id:donator.id,user_name:donator.username|e('url')}) }}" class="username {{ donator.faction }}">{{ donator.username }}</a>
-    <span class="fa fa-gift donator" title="ThronesDB Großzügige Spender/innen"></span>
-</li>
-{% endfor %}
-</ul>
-</div>
+            <div class="col-md-12">
+                <h1>Die großzügigen Spender/innen</h1>
+                <p class="lead">ThronesDB wäre ohne sie nicht dieselbe Seite. Vielen, vielen Dank.</p>
+                <p>Um zu spenden und den Betrieb dieser Seite zu unterstützen kannst du <a
+                            href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZTDRSEFTF8XZJ&currency_code=EUR&source=url">Paypal
+                        (€)</a> oder <a
+                            href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=ZTDRSEFTF8XZJ&currency_code=USD&source=url">Paypal
+                        ($)</a> verwenden.</p>
+                <ul>
+                    {% for donator in donators %}
+                        <li>
+                            <a href="{{ path('user_profile_public', {user_id:donator.id,user_name:donator.username|e('url')}) }}"
+                               class="username {{ donator.faction }}">{{ donator.username }}</a>
+                            <span class="fa fa-gift donator" title="ThronesDB Großzügige Spender/innen"></span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
 
-</div>
-</div> <!-- .container -->
+        </div>
+    </div> <!-- .container -->
 
 {% endblock %}
