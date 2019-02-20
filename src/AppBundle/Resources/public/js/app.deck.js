@@ -25,11 +25,14 @@
             card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a>'),
             layouts = {},
             layout_data = {},
-            // restricted list v2.0, 2018-10-08
+            // restricted list, see FAQ v2.1
             joust_restricted_list = [
                 "01100",
                 "01109",
                 "03038",
+                "02091",
+                "02092",
+                "02102",
                 "04001",
                 "04017",
                 "05010",
@@ -44,7 +47,10 @@
                 "09017",
                 "09023",
                 "10045",
-                "10050"
+                "10050",
+                "11021",
+                "11033",
+                "11034"
             ],
             melee_restricted_list = [
                 "01001",
@@ -57,16 +63,21 @@
                 "02024",
                 "02060",
                 "03003",
+                "03038",
                 "04003",
                 "04118",
                 "05001",
                 "05010",
+                "05049",
                 "06004",
                 "06039",
+                "06040",
                 "06098",
                 "07036",
                 "08098",
-                "09028"
+                "09028",
+                "11054",
+                "11076",
             ];
 
 
@@ -109,7 +120,7 @@
 
     /**
      * @memberOf deck
-     * @param {object} data 
+     * @param {object} data
      */
     deck.init = function init(data)
     {
@@ -137,9 +148,9 @@
 
     /**
      * Sets the slots of the deck
-     * 
+     *
      * @memberOf deck
-     * @param {object} slots 
+     * @param {object} slots
      */
     deck.set_slots = function set_slots(slots)
     {
@@ -246,7 +257,7 @@
 
     /**
      * @memberOf deck
-     * @param {object} sort 
+     * @param {object} sort
      */
     deck.get_draw_deck = function get_draw_deck(sort)
     {
@@ -259,7 +270,7 @@
 
     /**
      * @memberOf deck
-     * @param {object} sort 
+     * @param {object} sort
      */
     deck.get_draw_deck_size = function get_draw_deck_size(sort)
     {
@@ -269,7 +280,7 @@
 
     /**
      * @memberOf deck
-     * @param {object} sort 
+     * @param {object} sort
      */
     deck.get_plot_deck = function get_plot_deck(sort)
     {
@@ -325,7 +336,7 @@
     /**
      * @memberOf deck
      * @returns the number of plot cards
-     * @param {object} sort 
+     * @param {object} sort
      */
     deck.get_plot_deck_size = function get_plot_deck_size(sort)
     {
@@ -336,7 +347,7 @@
     /**
      * @memberOf deck
      * @returns the number of different plot cards
-     * @param {object} sort 
+     * @param {object} sort
      */
     deck.get_plot_deck_variety = function get_plot_deck_variety(sort)
     {
@@ -404,7 +415,7 @@
 
         /**
      * @memberOf deck
-     * @param {object} container 
+     * @param {object} container
      * @param {object} options
      */
     deck.display = function display(container, options)
@@ -436,7 +447,7 @@
 
         var problem = deck.get_problem();
         var agendas = deck.get_agendas();
-        
+
         deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/' + deck.get_faction_code() + '.png" class="img-responsive">'));
         agendas.forEach(function (agenda) {
             deck.update_layout_section(data, 'images', $('<div><img src="' + agenda.image_url + '" class="img-responsive">'));
@@ -764,7 +775,7 @@
                 return 'too_many_agendas';
             }
         }
-        
+
         // no more than 1 agenda
         if(deck.get_nb_cards(deck.get_agendas()) > expectedMaxAgendaCount) {
             return 'too_many_agendas';
@@ -781,7 +792,7 @@
             return value.nb_copies > value.deck_limit;
         }))) {
             return 'too_many_copies';
-        }            
+        }
 
         // no invalid card
         if(deck.get_invalid_cards().length > 0) {
