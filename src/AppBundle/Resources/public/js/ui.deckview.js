@@ -54,6 +54,9 @@
             case 'btn-export-markdown':
                 ui.export_markdown(app.deck);
                 break;
+            case 'btn-export-agotcards':
+                ui.export_agotcards(app.deck);
+                break;
         }
     };
 

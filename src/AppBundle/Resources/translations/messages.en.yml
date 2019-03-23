@@ -120,7 +120,7 @@ decks:
       label: Import Deck
       copypaste: Copy/paste
       file: File
-    selection: 
+    selection:
       label: With Selection
       compare:
         label: Compare
@@ -139,6 +139,7 @@ decks:
       text: Text file
       text_cycle: Text file, sorted by Cycle
     export:
+      agotcards: AGoT.cards
       markdown: Markdown
       plaintext: Plain text
     sort:
@@ -277,7 +278,7 @@ decklist:
     versions: Versions
     published: published
     duplicate: Duplicate of %duplicate%
-    comments: 
+    comments:
       count: "{0} No comments | {1} %count% comment | ]1,Inf] %count% comments"
       hint: "Enter your comment in Markdown format. Type # to enter a card name. Type $ to enter a symbol. Type @ to enter a user name."
       submit: Submit comment
@@ -319,7 +320,7 @@ decklist:
       faction:
         label: Faction
         any: any
-      author: 
+      author:
         label: Author name
         hint: Enter author name
       used:

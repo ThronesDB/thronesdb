@@ -120,7 +120,7 @@ decks:
       label: Deckliste importieren
       copypaste: Kopieren/Einfügen
       file: Datei
-    selection: 
+    selection:
       label: Mit Auswahl
       compare:
         label: Vergleichen
@@ -139,6 +139,7 @@ decks:
       octgn: OCTGN-Datei
       text_cycle: Textdatei, sortiert nach Zyklus
     export:
+      agotcards: AGoT.cards
       markdown: Markdown
       plaintext: einfacher Text
     sort:
@@ -319,7 +320,7 @@ decklist:
       faction:
         label: Fraktion
         any: beliebig
-      author: 
+      author:
         label: Name des Autors / der Autorin
         hint: Gib den Namen des Autors / der Autorin ein.
       used:
@@ -334,7 +335,7 @@ decklist:
         date: Nach Datum
         likes: Nach Anzahl der \"Gefällt mir\"
         reputation: Nach Ansehen des Autors / der Autorin
-      allowed: 
+      allowed:
         label: Zulässige Packs
         onoff: "(%on% Ja, %off% Nein)"
         core: "Grundspiel / Erweiterungen"
