@@ -93,7 +93,6 @@
         var cards = app.deck.get_cards();
         var i, n;
         var counter = 0;
-        console.log(cards);
 
         restricted_list = restricted_list || [];
 
