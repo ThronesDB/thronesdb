@@ -120,7 +120,7 @@ decks:
       label: Importar mazo
       copypaste: Copiar/pegar
       file: Fichero
-    selection: 
+    selection:
       label: Con los seleccionados
       compare:
         label: Comparar
@@ -139,6 +139,7 @@ decks:
       text: Fichero de texto
       text_cycle: Fichero de texto, ordenado por ciclo
     export:
+      agotcards: AGoT.cards
       markdown: Markdown
       plaintext: Texto sin formato
     sort:
@@ -318,7 +319,7 @@ decklist:
       faction:
         label: Facción
         any: cualquiera
-      author: 
+      author:
         label: Nombre del autor
         hint: Introduce el nombre del autor
       used:
@@ -333,7 +334,7 @@ decklist:
         date: por Fecha
         likes: por Número de \"me gusta\"
         reputation: por Reputación del autor
-      allowed: 
+      allowed:
         label: Capítulos permitidos
         onoff: "(%on% sí, %off% no)"
         core: "Caja básica / Deluxe"

@@ -91,6 +91,56 @@
         return lines;
     }
 
+    function build_agotcards(deck) {
+        var lines = [];
+        var included_packs = deck.get_included_packs({ 'cycle_position': 1, 'position': 1 });
+
+        var agendas = deck.get_agendas();
+        var sortOrder = { "name": 1 };
+        var sections = {
+            "Plots": deck.get_plot_deck(sortOrder),
+            "Characters": deck.get_characters(sortOrder),
+            "Attachments": deck.get_attachments(sortOrder),
+            "Locations":  deck.get_locations(sortOrder),
+            'Events': deck.get_events(sortOrder)
+        };
+
+        var print_card_line = function(card, show_quantity) {
+            var out = "";
+            show_quantity = !!show_quantity;
+
+            if (show_quantity) {
+                out = out + card.indeck + 'x ';
+            }
+            out  = out + '[agot]' + card.name + ' ('+ card.pack_code + ')[/agot]';
+            return out;
+        };
+
+        lines.push(deck.get_faction_name());
+        lines.push("");
+        agendas.forEach(function(card) {
+            lines.push(print_card_line(card, false) + "  ");
+        });
+
+        lines.push("");
+        if (included_packs.length > 1) {
+            lines.push("Packs: From " + included_packs[0].name + ' to ' + included_packs[included_packs.length - 1].name);
+        } else {
+            lines.push("Packs: From " + included_packs[0].name);
+        }
+
+        Object.getOwnPropertyNames(sections).forEach(function(section) {
+            lines.push("");
+            lines.push(section + " (" + deck.get_nb_cards(sections[section]) + "):");
+            lines.push("");
+            sections[section].forEach(function(card) {
+                lines.push(print_card_line(card, true));
+            });
+        });
+
+        return lines;
+    }
+
     /**
      * called when the DOM is loaded
      * @memberOf ui
@@ -125,6 +175,11 @@
 
     ui.export_markdown = function export_markdown(deck) {
         $('#export-deck').html(build_markdown(deck).join("\n"));
+        $('#exportModal').modal('show');
+    };
+
+    ui.export_agotcards = function export_agotcards(deck) {
+        $('#export-deck').html(build_agotcards(deck).join("\n"));
         $('#exportModal').modal('show');
     };
 
