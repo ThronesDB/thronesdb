@@ -25,7 +25,11 @@
                         <select class="form-control" name="tournament" id="tournament">
                             <option value="">{{ 'decklist.publish.no' | trans }}</option>
                             {% for tournament in tournaments %}
-                                <option value="{{ tournament.id }}"{% if decklist.tournament and tournament.id == decklist.tournament.id %} selected{% endif %}>{{ tournament.description }}</option>
+                                {% if decklist.tournament and tournament.id == decklist.tournament.id %}
+                                    <option value="{{ tournament.id }}" selected>{{ tournament.description }}</option>
+                                {% elseif tournament.active %}
+                                    <option value="{{ tournament.id }}">{{ tournament.description }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>

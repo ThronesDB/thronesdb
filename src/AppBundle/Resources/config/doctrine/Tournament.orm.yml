@@ -15,3 +15,8 @@ AppBundle\Entity\Tournament:
         description:
             type: string
             length: 60
+        active:
+            type: boolean
+            nullable: false
+            options:
+                default: true
