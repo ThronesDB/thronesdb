@@ -23,6 +23,11 @@ class Tournament
     private $decklists;
 
     /**
+     * @var boolean
+     */
+    protected $active;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -62,6 +67,22 @@ class Tournament
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive() : bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active) : void
+    {
+        $this->active = $active;
     }
 
     /**
