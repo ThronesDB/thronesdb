@@ -341,6 +341,9 @@ decklist:
         core: "Core / Deluxe"
         all: all
         none: none
+      tournament:
+        any: any
+        label: Tournament Tier
 search:
   label: Search
   setbrowse: Browse by set

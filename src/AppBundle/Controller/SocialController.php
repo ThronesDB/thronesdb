@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Tournament;
 use \DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -352,6 +353,7 @@ class SocialController extends Controller
 
         $cards_code = $request->query->get('cards');
         $faction_code = filter_var($request->query->get('faction'), FILTER_SANITIZE_STRING);
+        $tournament = filter_var($request->query->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
         $author_name = filter_var($request->query->get('author'), FILTER_SANITIZE_STRING);
         $decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
         $sort = $request->query->get('sort');
@@ -408,16 +410,27 @@ class SocialController extends Controller
             }
         }
 
+        $activeTournamentTiers = $this->getDoctrine()
+            ->getRepository(Tournament::class)
+            ->findBy(['active'=> true]);
+
+        $inactiveTournamentTiers = $this->getDoctrine()
+            ->getRepository(Tournament::class)
+            ->findBy(['active'=> false]);
+
         $params = array(
             'allowed' => $categories,
             'on' => $on,
             'off' => $off,
             'author' => $author_name,
-            'name' => $decklist_name
+            'name' => $decklist_name,
+            'activeTournamentTiers' => $activeTournamentTiers,
+            'inactiveTournamentTiers' => $inactiveTournamentTiers,
         );
         $params['sort_' . $sort] = ' selected="selected"';
         $params['factions'] = $this->getDoctrine()->getRepository('AppBundle:Faction')->findAllAndOrderByName();
         $params['faction_selected'] = $faction_code;
+        $params['selectedTournament'] = $tournament;
 
         if (!empty($cards_code) && is_array($cards_code)) {
             $cards = $this->getDoctrine()->getRepository('AppBundle:Card')->findAllByCodes($cards_code);
@@ -1162,16 +1175,27 @@ class SocialController extends Controller
             }
         }
 
+        $activeTournamentTiers = $this->getDoctrine()
+            ->getRepository(Tournament::class)
+            ->findBy(['active'=> true]);
+
+        $inactiveTournamentTiers = $this->getDoctrine()
+            ->getRepository(Tournament::class)
+            ->findBy(['active'=> false]);
+
         $searchForm = $this->renderView(
             'AppBundle:Search:form.html.twig',
             array(
-            'factions' => $factions,
-            'allowed' => $categories,
-            'on' => $on,
-            'off' => $off,
-            'author' => '',
-            'name' => '',
-                )
+                'factions' => $factions,
+                'allowed' => $categories,
+                'on' => $on,
+                'off' => $off,
+                'author' => '',
+                'name' => '',
+                'activeTournamentTiers' => $activeTournamentTiers,
+                'inactiveTournamentTiers' => $inactiveTournamentTiers,
+                'selectedTournament' => 0
+            )
         );
 
         return $this->render('AppBundle:Decklist:decklists.html.twig', array(

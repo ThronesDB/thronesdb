@@ -341,6 +341,9 @@ decklist:
         core: "Grundspiel / Erweiterungen"
         all: Alle
         none: Keine
+      tournament:
+        any: beliebig
+        label: Turnierebenen
 search:
   label: Suche
   setbrowse: Packs durchsuchen
