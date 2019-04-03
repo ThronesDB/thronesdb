@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Helper;
 
 use AppBundle\Entity\Card;
@@ -92,6 +93,7 @@ class DeckValidationHelper
                 return 'agenda';
             }
         }
+
         return null;
     }
 
@@ -104,7 +106,8 @@ class DeckValidationHelper
         if (!$problem) {
             return '';
         }
-        return $this->translator->trans('decks.problems.' . $problem);
+
+        return $this->translator->trans('decks.problems.'.$problem);
     }
 
     /**
@@ -144,6 +147,7 @@ class DeckValidationHelper
                 $invalidCards[] = $slot->getCard();
             }
         }
+
         return $invalidCards;
     }
 
@@ -169,9 +173,15 @@ class DeckValidationHelper
                 if (preg_match("/$trait\\./", $card->getTraits())) {
                     return $card->getType()->getCode() === 'character';
                 }
-                return false;
-        }
 
+                return false;
+            case '13079': // Kingdom of Shadows
+                $langKey = $this->translator->trans('card.keywords.shadow');
+                return (!$card->getIsLoyal()
+                    && $card->getType()->getCode() === 'character'
+                    && $card->hasShadowKeyword($langKey));
+
+        }
         return false;
     }
 
@@ -224,6 +234,7 @@ class DeckValidationHelper
         if ($matchingFactionPlots < 12) {
             return false;
         }
+
         return true;
     }
 
@@ -243,6 +254,7 @@ class DeckValidationHelper
         if ($count > 15) {
             return false;
         }
+
         return true;
     }
 
@@ -253,11 +265,12 @@ class DeckValidationHelper
      */
     protected function validateKings(SlotCollectionInterface $slots, Card $agenda): bool
     {
-        $trait = $this->translator->trans('card.traits.' . ($agenda->getCode() === '04037' ? 'winter' : 'summer'));
+        $trait = $this->translator->trans('card.traits.'.($agenda->getCode() === '04037' ? 'winter' : 'summer'));
         $matchingTraitPlots = $slots->getPlotDeck()->filterByTrait($trait)->countCards();
         if ($matchingTraitPlots > 0) {
             return false;
         }
+
         return true;
     }
 
@@ -274,6 +287,7 @@ class DeckValidationHelper
         if ($matchingTraitPlotsUniqueCount !== 5 || $matchingTraitPlotsTotalCount !== 5) {
             return false;
         }
+
         return true;
     }
 
@@ -289,6 +303,7 @@ class DeckValidationHelper
         if ($agendas->countCards() - $matchingTraitAgendas->countCards() !== 1) {
             return false;
         }
+
         return true;
     }
 
@@ -305,6 +320,7 @@ class DeckValidationHelper
                 return false;
             }
         }
+
         return true;
     }
 
@@ -319,6 +335,7 @@ class DeckValidationHelper
         if ($matchingMaesters < 12) {
             return false;
         }
+
         return true;
     }
 
