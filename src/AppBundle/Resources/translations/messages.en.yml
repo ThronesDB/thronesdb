@@ -254,7 +254,7 @@ decks:
 decklist:
   publish:
     name: Name
-    placedhigh: Placed high in a tournament?
+    placedhigh: Placed high in a tournament? If so, then please specify the tournament tier.
     no: No
     derived: Derived from (copy id or address of the decklist this one is inspired from)
     description: Description
@@ -341,6 +341,9 @@ decklist:
         core: "Core / Deluxe"
         all: all
         none: none
+      tournament:
+        any: any
+        label: Tournament tier
 search:
   label: Search
   setbrowse: Browse by set

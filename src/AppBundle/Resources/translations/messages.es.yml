@@ -253,7 +253,7 @@ decks:
 decklist:
   publish:
     name: Nombre
-    placedhigh: ¿Consiguió una posición alta en un torneo?
+    placedhigh: ¿Consiguió una posición alta en un torneo? Si es así, por favor especifique la categoría del torneo.
     no: No
     derived: Derivado de (copia el id o la dirección del mazo del cual se ha inspirado éste)
     description: Descripción
@@ -340,6 +340,9 @@ decklist:
         core: "Caja básica / Deluxe"
         all: todo
         none: ninguno
+      tournament:
+        any: cualquiera
+        label: Categoría de torneo
 search:
   label: Buscar
   setbrowse: Explorar capítulos

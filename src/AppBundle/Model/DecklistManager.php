@@ -177,6 +177,8 @@ class DecklistManager
 
         $decklist_name = filter_var($request->query->get('name'), FILTER_SANITIZE_STRING);
 
+        $tournament = filter_var($request->query->get('tournament'), FILTER_SANITIZE_NUMBER_INT);
+
         $sort = $request->query->get('sort');
 
         $packs = $request->query->get('packs');
@@ -198,6 +200,12 @@ class DecklistManager
             $qb->andWhere('d.name like :deckname');
             $qb->setParameter('deckname', "%$decklist_name%");
         }
+
+        if (!empty($tournament)) {
+            $qb->andWhere('d.tournament = :tournament');
+            $qb->setParameter('tournament', $tournament);
+        }
+
         if (!empty($cards_code) || !empty($packs)) {
             if (!empty($cards_code)) {
                 foreach ($cards_code as $i => $card_code) {

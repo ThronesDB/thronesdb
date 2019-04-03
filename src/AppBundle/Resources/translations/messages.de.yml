@@ -254,7 +254,7 @@ decks:
 decklist:
   publish:
     name: Name
-    placedhigh: Eine gute Platzierung bei einem Turnier erreicht?
+    placedhigh: Eine gute Platzierung bei einem Turnier erreicht? Wenn ja, dann bitte gib die Turnierstufe an.
     no: Nein
     derived: Basierend auf (Kopiere die ID oder die Adresse der Deckliste, auf der diese basiert.)
     description: Beschreibung
@@ -341,6 +341,9 @@ decklist:
         core: "Grundspiel / Erweiterungen"
         all: Alle
         none: Keine
+      tournament:
+        any: beliebig
+        label: Turnierstufen
 search:
   label: Suche
   setbrowse: Packs durchsuchen

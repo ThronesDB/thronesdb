@@ -18,6 +18,25 @@
                 <input type="text" class="form-control" id="card"
                        placeholder="{{ 'decklist.list.search.used.hint' | trans }}">
             </div>
+            <div class="form-group">
+                <label for="tournament">{{ 'decklist.list.search.tournament.label' | trans }}</label>
+                <select class="form-control" id="tournament" name="tournament">
+                    <option value="">{{ 'decklist.list.search.tournament.any' | trans }}</option>
+                    {% for tier in activeTournamentTiers %}
+                        <option value="{{ tier.id }}"{% if tier.id == selectedTournament %} selected{% endif %}>
+                            {{ tier.description }}
+                        </option>
+                    {% endfor %}
+                    {% if not inactiveTournamentTiers is empty %}
+                        <option disabled>――――――――</option>
+                    {% endif %}
+                    {% for tier in inactiveTournamentTiers %}
+                        <option value="{{ tier.id }}"{% if tier.id == selectedTournament %} selected{% endif %}>
+                            {{ tier.description }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
         </div>
         <div class="col-sm-4">
             <div class="form-group">
