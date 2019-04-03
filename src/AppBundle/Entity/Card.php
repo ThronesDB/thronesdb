@@ -1035,7 +1035,7 @@ class Card implements \Serializable
      */
     public function hasShadowKeyword($shadow): bool
     {
-        // "Shadow (<cost>).", with <cost> being either a digit or the letter "X"
+        // "Shadow (<cost>).", with <cost> being either digits or the letter "X"
         $regex = "/${shadow} \\(([0-9]+|X)\\)\\./";
         // check if first line in the card text has that keyword.
         $textLines = explode("\n", $this->getText());
