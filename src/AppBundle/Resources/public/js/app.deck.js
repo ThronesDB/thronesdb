@@ -84,6 +84,21 @@
 
 
     /*
+     * Checks a given card's text has the "Shadow" keyword.
+     * @param {Object} card
+     * @param {String} shadow The i18n'ed word "Shadow".
+     * @returns {boolean}
+     */
+    var card_has_shadow_keyword = function(card, shadow) {
+        // "Shadow (<cost>).", with <cost> being either digits or the letter "X"
+        var regex = new RegExp(shadow + ' \\(([0-9]+|X)\\)\\.');
+        var text = card.text || '';
+        // check if first line in the card text has that keyword.
+        var textLines = text.split("\n");
+        return regex.test(textLines[0]);
+    };
+
+    /*
      * Validates the current deck against a given list of restricted cards.
      * @param {Array} restricted_list
      * @return {boolean}
@@ -967,6 +982,8 @@
                 return card.faction_code === deck.get_minor_faction_code(agenda);
             case '09045':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.maester')) !== -1;
+            case '13079':
+                return card.type_code === 'character' && card_has_shadow_keyword(card, Translator.trans('card.keywords.shadow'));
         }
     };
 
