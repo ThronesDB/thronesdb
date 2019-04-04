@@ -177,9 +177,7 @@ class DeckValidationHelper
                 return false;
             case '13079': // Kingdom of Shadows
                 $langKey = $this->translator->trans('card.keywords.shadow');
-                return (!$card->getIsLoyal()
-                    && $card->getType()->getCode() === 'character'
-                    && $card->hasShadowKeyword($langKey));
+                return $card->getType()->getCode() === 'character' && $card->hasShadowKeyword($langKey);
 
         }
         return false;
