@@ -15,7 +15,7 @@ class CardRepository extends EntityRepository
             ->join('c.faction', 'f')
             ->join('c.pack', 'p')
             ->join('p.cycle', 'y')
-            ->orderBY('c.code', 'ASC');
+            ->orderBy('c.code', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -27,7 +27,7 @@ class CardRepository extends EntityRepository
             ->join('c.pack', 'p')
             ->join('c.type', 't')
             ->andWhere('t.code = ?1')
-            ->orderBY('c.code', 'ASC');
+            ->orderBy('c.code', 'ASC');
 
         $qb->setParameter(1, $type);
 
@@ -54,7 +54,7 @@ class CardRepository extends EntityRepository
             ->join('c.pack', 'p')
             ->join('p.cycle', 'y')
             ->andWhere('c.code in (?1)')
-            ->orderBY('c.code', 'ASC');
+            ->orderBy('c.code', 'ASC');
 
         $qb->setParameter(1, $codes);
 
