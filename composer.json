@@ -22,6 +22,7 @@
     },
     "require": {
         "php": ">=7.1.0",
+        "ext-fileinfo": "*",
         "ext-json": "*",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-migrations-bundle": "^2.0",

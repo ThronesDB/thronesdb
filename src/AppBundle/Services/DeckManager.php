@@ -2,9 +2,13 @@
 
 namespace AppBundle\Services;
 
+use AppBundle\Entity\Faction;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Bridge\Monolog\Logger;
 use AppBundle\Entity\Deckchange;
 use AppBundle\Helper\DeckValidationHelper;
@@ -38,16 +42,18 @@ class DeckManager
     }
 
     /**
-     *
-     * @param unknown $user
+     * @param User $user
      * @param Deck $deck
-     * @param unknown $decklist_id
-     * @param unknown $name
-     * @param unknown $faction
-     * @param unknown $description
-     * @param unknown $tags
-     * @param unknown $content
-     * @param unknown $source_deck
+     * @param int $decklist_id
+     * @param string $name
+     * @param Faction $faction
+     * @param string $description
+     * @param string|array $tags
+     * @param array $content
+     * @param Deck $source_deck
+     * @return int
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function save($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
     {

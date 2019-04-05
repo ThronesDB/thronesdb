@@ -14,11 +14,8 @@
                     class="fa fa-upload"></span> {{ 'forms.import' | trans }}</a>
         <button type="button" class="btn btn-default btn-lg" onclick="$('#fileModal').modal('show')"><span
                     class="fa fa-upload"></span> {{ 'forms.upload' | trans }}</button>
-        <button type="button" class="btn btn-default btn-lg" onclick="$('#archiveModal').modal('show')"><span
-                    class="fa fa-upload"></span> {{ 'decks.form.uploadarchive' | trans }}</a>
     </div>
 
     {% include 'AppBundle:Modale:file.html.twig' %}
-    {% include 'AppBundle:Modale:archive.html.twig' %}
 
 {% endblock %}

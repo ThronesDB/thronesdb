@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Card;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 
 class CardRepository extends EntityRepository
@@ -15,7 +16,7 @@ class CardRepository extends EntityRepository
             ->join('c.faction', 'f')
             ->join('c.pack', 'p')
             ->join('p.cycle', 'y')
-            ->orderBY('c.code', 'ASC');
+            ->orderBy('c.code', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
@@ -27,7 +28,7 @@ class CardRepository extends EntityRepository
             ->join('c.pack', 'p')
             ->join('c.type', 't')
             ->andWhere('t.code = ?1')
-            ->orderBY('c.code', 'ASC');
+            ->orderBy('c.code', 'ASC');
 
         $qb->setParameter(1, $type);
 
@@ -54,7 +55,7 @@ class CardRepository extends EntityRepository
             ->join('c.pack', 'p')
             ->join('p.cycle', 'y')
             ->andWhere('c.code in (?1)')
-            ->orderBY('c.code', 'ASC');
+            ->orderBy('c.code', 'ASC');
 
         $qb->setParameter(1, $codes);
 
@@ -90,6 +91,30 @@ class CardRepository extends EntityRepository
         $qb = $this->createQueryBuilder('c')
             ->select('DISTINCT c.traits')
             ->andWhere("c.traits != ''");
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Retrieves all agendas eligible for deck building.
+     * @param array $excludedAgendas a list of codes of agendas to exclude.
+     * @return array
+     */
+    public function getAgendasForNewDeckWizard($excludedAgendas = array()): array
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c, p')
+            ->join('c.pack', 'p')
+            ->join('c.type', 't')
+            ->where('t.code = :type')
+            ->orderBy('c.name', 'ASC');
+
+        $qb->setParameter(':type', 'agenda');
+
+        if (! empty($excludedAgendas)) {
+            $qb->andWhere($qb->expr()->notIn('c.code', ':codes'));
+            $qb->setParameter(':codes', $excludedAgendas, Connection::PARAM_STR_ARRAY);
+        }
+
         return $qb->getQuery()->getResult();
     }
 }

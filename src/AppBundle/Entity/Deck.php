@@ -3,12 +3,15 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Model\ExportableDeck;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use JsonSerializable;
 
 /**
  * Class Deck
  * @package AppBundle\Entity
  */
-class Deck extends ExportableDeck implements \JsonSerializable
+class Deck extends ExportableDeck implements JsonSerializable
 {
     /**
      * @var string
@@ -31,12 +34,12 @@ class Deck extends ExportableDeck implements \JsonSerializable
     private $minorVersion;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $children;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $changes;
 
@@ -55,9 +58,9 @@ class Deck extends ExportableDeck implements \JsonSerializable
      */
     public function __construct()
     {
-        $this->slots = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->changes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->slots = new ArrayCollection();
+        $this->children = new ArrayCollection();
+        $this->changes = new ArrayCollection();
         $this->minorVersion = 0;
         $this->majorVersion = 0;
     }
@@ -217,7 +220,7 @@ class Deck extends ExportableDeck implements \JsonSerializable
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getChildren()
     {
@@ -251,7 +254,7 @@ class Deck extends ExportableDeck implements \JsonSerializable
     /**
      * Get changes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getChanges()
     {
