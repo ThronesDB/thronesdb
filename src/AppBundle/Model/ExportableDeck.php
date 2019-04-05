@@ -2,6 +2,10 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\Faction;
+use AppBundle\Entity\User;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Base class for both deck and deck-list models.
  *
@@ -23,7 +27,7 @@ abstract class ExportableDeck implements SlotCollectionProviderInterface
     protected $name;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     protected $slots;
 
@@ -38,12 +42,12 @@ abstract class ExportableDeck implements SlotCollectionProviderInterface
     protected $dateUpdate;
 
     /**
-     * @var \AppBundle\Entity\User
+     * @var User
      */
     protected $user;
 
     /**
-     * @var \AppBundle\Entity\Faction
+     * @var Faction
      */
     protected $faction;
 
@@ -60,7 +64,7 @@ abstract class ExportableDeck implements SlotCollectionProviderInterface
     /**
      * Get faction
      *
-     * @return \AppBundle\Entity\Faction
+     * @return Faction
      */
     public function getFaction()
     {
@@ -108,7 +112,7 @@ abstract class ExportableDeck implements SlotCollectionProviderInterface
     }
 
     /**
-     * @return \AppBundle\Model\SlotCollectionInterface
+     * @return SlotCollectionInterface
      */
     public function getSlots()
     {
@@ -117,7 +121,7 @@ abstract class ExportableDeck implements SlotCollectionProviderInterface
 
 
     /**
-     * @return \AppBundle\Entity\User
+     * @return User
      */
     public function getUser()
     {
