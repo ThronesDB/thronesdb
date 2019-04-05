@@ -22,7 +22,9 @@
     },
     "require": {
         "php": ">=7.1.0",
+        "ext-fileinfo": "*",
         "ext-json": "*",
+        "ext-zip": "*",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.5",
