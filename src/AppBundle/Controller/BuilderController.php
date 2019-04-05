@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Card;
 use AppBundle\Entity\Decklist;
 use AppBundle\Entity\Faction;
 use AppBundle\Entity\User;
@@ -19,7 +18,6 @@ use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Deckchange;
-use ZipArchive;
 
 /**
  * Class BuilderController
@@ -731,110 +729,6 @@ class BuilderController extends Controller
                 'decklist_id' => $decklist_id,
             )
         );
-    }
-
-    public function downloadallAction()
-    {
-        /* @var $user User */
-        $user = $this->getUser();
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        $decks = $this->get('deck_manager')->getByUser($user, false);
-
-        $file = tempnam("tmp", "zip");
-        $zip = new ZipArchive();
-        $res = $zip->open($file, ZipArchive::OVERWRITE);
-        if ($res === true) {
-            foreach ($decks as $deck) {
-                $content = [];
-                foreach ($deck['cards'] as $slot) {
-                    /** @var Card $card */
-                    $card = $em->getRepository('AppBundle:Card')->findOneBy(array('code' => $slot['card_code']));
-                    if (!$card) {
-                        continue;
-                    }
-                    $cardname = $card->getName();
-                    $packname = $card->getPack()->getName();
-                    if ($packname == 'Core Set') {
-                        $packname = 'Core';
-                    }
-                    $qty = $slot['qty'];
-                    $content[] = "$cardname ($packname) x$qty";
-                }
-                $filename = str_replace('/', ' ', $deck['name']).'.txt';
-                $zip->addFromString($filename, implode("\r\n", $content));
-            }
-            $zip->close();
-        }
-        $response = new Response();
-        $response->headers->set('Content-Type', 'application/zip');
-        $response->headers->set('Content-Length', filesize($file));
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify('thronesdb').'.zip'
-            )
-        );
-
-        $response->setContent(file_get_contents($file));
-        unlink($file);
-
-        return $response;
-    }
-
-    public function uploadallAction(Request $request)
-    {
-        // time-consuming task
-        ini_set('max_execution_time', 300);
-
-        $uploadedFile = $request->files->get('uparchive');
-        if (!isset($uploadedFile)) {
-            return new Response('No file');
-        }
-
-        $filename = $uploadedFile->getPathname();
-
-        if (function_exists("finfo_open")) {
-            // return mime type ala mimetype extension
-            $finfo = finfo_open(FILEINFO_MIME);
-
-            // check to see if the mime-type is 'zip'
-            if (substr(finfo_file($finfo, $filename), 0, 15) !== 'application/zip') {
-                return new Response('Bad file');
-            }
-        }
-
-        $zip = new ZipArchive;
-        $res = $zip->open($filename);
-        if ($res === true) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $name = $zip->getNameIndex($i);
-                $parse = $this->parseTextImport($zip->getFromIndex($i));
-
-                $deck = new Deck();
-                $em->persist($deck);
-                $this->get('deck_manager')->save(
-                    $this->getUser(),
-                    $deck,
-                    null,
-                    $name,
-                    '',
-                    '',
-                    $parse['content']
-                );
-            }
-        }
-        $zip->close();
-
-        $em->flush();
-
-        $this->get('session')
-            ->getFlashBag()
-            ->set('notice', "Decks imported.");
-
-        return $this->redirect($this->generateUrl('decks_list'));
     }
 
     /**
