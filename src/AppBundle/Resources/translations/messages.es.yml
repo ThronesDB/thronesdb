@@ -375,6 +375,8 @@ pag:
   cardscount: "{0} No hay cartas | {1} Una carta | ]1,Inf] %count% cartas"
 
 card:
+  keywords:
+    shadow: Sombra
   traits:
     summer: Verano
     winter: Invierno

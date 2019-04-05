@@ -9,14 +9,14 @@ class Card implements \Serializable
         $parts = explode('_', $snake);
         return implode('', array_map('ucfirst', $parts));
     }
-    
+
     public function serialize()
     {
         $serialized = [];
         if (empty($this->code)) {
             return $serialized;
         }
-    
+
         $mandatoryFields = [
                 'code',
                 'deck_limit',
@@ -29,20 +29,20 @@ class Card implements \Serializable
                 'is_multiple',
                 'octgn_id',
         ];
-    
+
         $optionalFields = [
                 'illustrator',
                 'flavor',
                 'text',
                 'cost',
         ];
-    
+
         $externalFields = [
                 'faction',
                 'pack',
                 'type'
         ];
-    
+
         switch ($this->type->getCode()) {
             case 'agenda':
             case 'title':
@@ -66,7 +66,7 @@ class Card implements \Serializable
                 $mandatoryFields[] = 'reserve';
                 break;
         }
-    
+
         foreach ($optionalFields as $optionalField) {
             $getter = 'get' . $this->snakeToCamel($optionalField);
             $serialized[$optionalField] = $this->$getter();
@@ -74,17 +74,17 @@ class Card implements \Serializable
                 unset($serialized[$optionalField]);
             }
         }
-    
+
         foreach ($mandatoryFields as $mandatoryField) {
             $getter = 'get' . $this->snakeToCamel($mandatoryField);
             $serialized[$mandatoryField] = $this->$getter();
         }
-    
+
         foreach ($externalFields as $externalField) {
             $getter = 'get' . $this->snakeToCamel($externalField);
             $serialized[$externalField.'_code'] = $this->$getter()->getCode();
         }
-    
+
         ksort($serialized);
         return $serialized;
     }
@@ -93,12 +93,12 @@ class Card implements \Serializable
     {
         throw new \Exception("unserialize() method unsupported");
     }
-    
+
     public function toString()
     {
         return $this->name;
     }
-    
+
     /**
      * @var integer
      */
@@ -253,7 +253,7 @@ class Card implements \Serializable
         $this->isIntrigue = false;
         $this->isPower = false;
         $this->isMultiple = false;
-         
+
         $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -1026,5 +1026,19 @@ class Card implements \Serializable
         $this->imageUrl = $imageUrl;
 
         return $this;
+    }
+
+    /**
+     * Checks if this card has the "Shadow" keyword.
+     * @param string $shadow The keyword "Shadow" in whatever language.
+     * @return bool
+     */
+    public function hasShadowKeyword($shadow): bool
+    {
+        // "Shadow (<cost>).", with <cost> being either digits or the letter "X"
+        $regex = "/${shadow} \\(([0-9]+|X)\\)\\./";
+        // check if first line in the card text has that keyword.
+        $textLines = explode("\n", $this->getText());
+        return preg_match($regex, $textLines[0]) ? true : false;
     }
 }
