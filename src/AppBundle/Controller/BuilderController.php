@@ -17,6 +17,17 @@ use AppBundle\Entity\Deckchange;
 
 class BuilderController extends Controller
 {
+    /**
+     * @const EXCLUDED_AGENDAS Codes of agendas that should not be available for selection in the new deck wizard.
+     * @todo Hardwiring those is good enough for now, rethink this if/as this list grows [ST 2019/04/04]
+     */
+    const EXCLUDED_AGENDAS = [
+        '00001', // The Power of Wealth (VDS)
+        '00002', // Protectors of the Realm (VDS)
+        '00003', // Treaty (VDS)
+        '00004', // Uniting the Seven Kingdoms (VDS)
+    ];
+
     public function buildformAction(Request $request)
     {
         $response = new Response();
@@ -27,7 +38,7 @@ class BuilderController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $factions = $em->getRepository('AppBundle:Faction')->findPrimaries();
-        $agendas = $em->getRepository('AppBundle:Card')->findByType("agenda");
+        $agendas = $em->getRepository('AppBundle:Card')->getAgendasForNewDeckWizard(self::EXCLUDED_AGENDAS);
 
         return $this->render('AppBundle:Builder:initbuild.html.twig', [
                     'pagetitle' => $this->get('translator')->trans('decks.form.new'),
@@ -151,7 +162,7 @@ class BuilderController extends Controller
                 'error' => "Unable to recognize the Faction of the deck."
             ]);
         }
-        
+
         $this->get('deck_manager')->save(
             $this->getUser(),
             new Deck(),
