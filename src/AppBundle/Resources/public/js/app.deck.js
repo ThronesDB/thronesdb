@@ -82,6 +82,16 @@
                 "11076"
             ];
 
+    var factions = {
+        '01198': 'baratheon',
+        '01199': 'greyjoy',
+        '01200': 'lannister',
+        '01201': 'martell',
+        '01202': 'thenightswatch',
+        '01203': 'stark',
+        '01204': 'targaryen',
+        '01205': 'tyrell'
+    };
 
     /*
      * Checks a given card's text has the "Shadow" keyword.
@@ -906,25 +916,23 @@
     };
 
     /**
+     * Returns all list of all faction codes.
+     * @memberOf deck
+     * @returns {Array}
+     */
+    deck.get_all_faction_codes = function get_all_faction_codes()
+    {
+        return _.values(factions);
+    };
+
+    /**
      * @memberOf deck
      * @param {object} agenda
      * @returns {string}
      */
     deck.get_minor_faction_code = function get_minor_faction_code(agenda)
     {
-        // special case for the Core Set Banners
-        var banners_core_set = {
-            '01198': 'baratheon',
-            '01199': 'greyjoy',
-            '01200': 'lannister',
-            '01201': 'martell',
-            '01202': 'thenightswatch',
-            '01203': 'stark',
-            '01204': 'targaryen',
-            '01205': 'tyrell'
-        };
-
-        return banners_core_set[agenda.code];
+        return factions[agenda.code];
     };
 
     deck.get_invalid_cards = function get_invalid_cards()
