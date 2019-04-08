@@ -178,9 +178,18 @@
     {
         $('[data-filter=faction_code]').find('input[name=neutral]').prop("checked", true).parent().addClass('active');
         $('[data-filter=faction_code]').find('input[name=' + app.deck.get_faction_code() + ']').prop("checked", true).parent().addClass('active');
-        var minor_faction_codes = app.deck.get_minor_faction_codes();
-        for(var i = 0; i < minor_faction_codes.length; i++) {
-            $('[data-filter=faction_code]').find('input[name=' + minor_faction_codes[i] + ']').prop("checked", true).parent().addClass('active');
+
+        var agendas = app.deck.get_agendas() || [];
+        var faction_codes = [];
+
+        // special case - for "The Conclave" and "Kingdom of Shadows" pre-select all factions.
+        if (agendas.length && ("09045" === agendas[0]['code'] || "13079" === agendas[0]['code'])) {
+            faction_codes = app.deck.get_all_faction_codes();
+        } else {
+            faction_codes = app.deck.get_minor_faction_codes();
+        }
+        for(var i = 0; i < faction_codes.length; i++) {
+            $('[data-filter=faction_code]').find('input[name=' + faction_codes[i] + ']').prop("checked", true).parent().addClass('active');
         }
 
         $('[data-filter=type_code]').find('input[name=character]').prop("checked", true).parent().addClass('active');
