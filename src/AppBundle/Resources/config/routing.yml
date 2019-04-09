@@ -89,8 +89,3 @@ tournamentregulations:
     path: /tournamentregulations
     defaults:
         _controller: AppBundle:Default:tournamentregulations
-
-ffg:
-    path: /ffg
-    defaults:
-        _controller: AppBundle:Default:ffg
