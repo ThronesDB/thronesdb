@@ -117,7 +117,11 @@
                             <td class="hidden-xs">
                                 <img src="/bundles/app/images/factions/{{ deck.faction.code }}.png">
                                 {% for agenda in deck.slots.agendas %}
-                                    <img src="{{ agenda.card.imageUrl }}">
+                                    {% if agenda.card.imageUrl %}
+                                        <img src="{{ agenda.card.imageUrl }}">
+                                    {% else %}
+                                        <img src="/bundles/app/images/no-card.png">
+                                    {% endif %}
                                 {% endfor %}
                             </td>
                             <td>
