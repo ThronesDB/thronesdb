@@ -4,6 +4,7 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\Faction;
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Deck;
 use AppBundle\Entity\Deckslot;
@@ -30,15 +31,14 @@ class DeckManager
         $this->logger = $logger;
     }
 
-    public function getByUser($user, $decode_variation = false)
+    /**
+     * @param User $user
+     * @return Collection
+     * @see User::getDecks()
+     */
+    public function getByUser(User $user)
     {
-        $decks = $user->getDecks();
-        $list = [];
-        foreach ($decks as $deck) {
-            $list[] = $deck->jsonSerialize(false);
-        }
-
-        return $list;
+        return $user->getDecks();
     }
 
     /**

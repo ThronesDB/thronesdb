@@ -664,10 +664,10 @@ class BuilderController extends Controller
 
     public function listAction()
     {
-        /* @var $user User */
+        /* @var User $user */
         $user = $this->getUser();
 
-        $decks = $this->get('deck_manager')->getByUser($user, false);
+        $decks = $this->get('deck_manager')->getByUser($user);
 
         /* @todo refactor this out, use DQL not raw SQL [ST 2019/04/04] */
         $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
@@ -677,7 +677,8 @@ class BuilderController extends Controller
         if (count($decks)) {
             $tags = [];
             foreach ($decks as $deck) {
-                $tags[] = $deck['tags'];
+                /** @var Deck $deck */
+                $tags[] = $deck->getTags();
             }
             $tags = array_unique($tags);
 
