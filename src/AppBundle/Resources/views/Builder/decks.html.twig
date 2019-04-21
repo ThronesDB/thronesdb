@@ -115,12 +115,15 @@
                         <tr data-id="{{ deck.id }}">
                             <td><input type="checkbox"></td>
                             <td class="hidden-xs">
-                                <img src="/bundles/app/images/factions/{{ deck.faction.code }}.png">
+                                <img
+                                    src="/bundles/app/images/factions/{{ deck.faction.code }}.png"
+                                    title="{{ deck.faction.name }}"
+                                >
                                 {% for agenda in deck.slots.agendas %}
                                     {% if agenda.card.imageUrl %}
-                                        <img src="{{ agenda.card.imageUrl }}">
+                                        <img src="{{ agenda.card.imageUrl }}" title="{{ agenda.card.name }}">
                                     {% else %}
-                                        <img src="/bundles/app/images/no-card.png">
+                                        <img src="/bundles/app/images/no-card.png" title="{{ agenda.card.name }}">
                                     {% endif %}
                                 {% endfor %}
                             </td>
