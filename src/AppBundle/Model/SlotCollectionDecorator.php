@@ -167,6 +167,9 @@ class SlotCollectionDecorator implements SlotCollectionInterface
                 $slotsByType[$slot->getCard()->getType()->getCode()][] = $slot;
             }
         }
+        foreach ($slotsByType as &$slots) {
+            usort($slots, array($this, 'sortByCardName'));
+        }
         return $slotsByType;
     }
 
@@ -385,8 +388,19 @@ class SlotCollectionDecorator implements SlotCollectionInterface
      * @param SlotInterface $s2
      * @return int
      */
-    protected function sortByCardCode(SlotInterface $s1, SlotInterface $s2)
+    protected function sortByCardCode(SlotInterface $s1, SlotInterface $s2) : int
     {
         return intval($s1->getCard()->getCode(), 10) - intval($s2->getCard()->getCode(), 10);
+    }
+
+    /**
+     * Sorting callback.
+     * @param SlotInterface $s1
+     * @param SlotInterface $s2
+     * @return int
+     */
+    protected function sortByCardName(SlotInterface $s1, SlotInterface $s2) : int
+    {
+        return strcmp($s1->getCard()->getName(), $s2->getCard()->getName()) ?: $this->sortByCardCode($s1, $s2);
     }
 }
