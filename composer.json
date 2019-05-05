@@ -60,7 +60,7 @@
         "phpunit/phpunit": "^6.5",
         "sensio/generator-bundle": "^3.0",
         "squizlabs/php_codesniffer": "@stable",
-        "symfony/expression-language": "^4.0",
+        "symfony/expression-language": "3.4.*",
         "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {
