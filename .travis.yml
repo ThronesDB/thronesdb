@@ -1,0 +1,49 @@
+language: php
+services: mysql
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - ./vendor/bin/.phpunit
+
+env:
+  global:
+    - SYMFONY_PHPUNIT_DIR=./vendor/bin/.phpunit
+    - SYMFONY_DEPRECATIONS_HELPER=29
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 7.1.18
+    - php: 7.2
+    - php: 7.3
+
+before_install:
+  - composer self-update
+  - mysql -e "create database IF NOT EXISTS ilios;" -uroot
+  - echo $TRAVIS_PHP_VERSION
+  - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - cp ${TRAVIS_BUILD_DIR}/app/config/parameters.yml.travis ${TRAVIS_BUILD_DIR}/app/config/parameters.yml
+install:
+  - composer install --no-interaction --prefer-dist -d ${TRAVIS_BUILD_DIR}
+
+before_script:
+  - bin/console doctrine:database:create --env=dev
+  - bin/console doctrine:migrations:migrate  --env=dev --no-interaction
+  - bin/console cache:clear --env=test --no-interaction
+
+script:
+  # this checks that the source code follows the Symfony Code Syntax rules
+  - ./vendor/bin/phpcs src tests app
+  # this checks that the YAML config files contain no syntax errors
+  - ./bin/console lint:yaml app/config
+  # this checks that the Twig template files contain no syntax errors
+  - ./bin/console lint:twig src
+  # this checks that the application doesn't use dependencies with known security vulnerabilities
+  - ./bin/console security:check
+  # this checks that Doctrine's mapping configurations are valid
+  - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
+  # run unit tests
+  - ./vendor/bin/phpunit tests
