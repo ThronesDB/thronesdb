@@ -46,4 +46,4 @@ script:
   # this checks that Doctrine's mapping configurations are valid
   - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
   # run unit tests
-  - ./vendor/bin/phpunit tests
+  - ./vendor/bin/phpunit --exclude-group=api tests
