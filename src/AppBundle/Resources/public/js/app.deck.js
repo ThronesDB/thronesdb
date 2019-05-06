@@ -134,6 +134,21 @@
         return is_valid;
     };
 
+    /**
+     * Creates a new line-item for a given card to a given DOM element.
+     * @param {Object} card The card object
+     * @param {jQuery} $section The section element
+     * @return {jQuery} The given section, with the line item appended.
+     * @see get_layout_data_one_section()
+     */
+    var append_card_line_to_section = function append_card_line_to_section(card, $section) {
+        var $elem = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
+        $elem.append($(card_line_tpl({card: card})));
+        $elem.prepend(card.indeck + 'x ');
+        $elem.appendTo($section);
+        return $section;
+    };
+
     /*
      * Templates for the different deck layouts, see deck.get_layout_data
      */
@@ -249,11 +264,19 @@
      * @memberOf deck
      * @returns boolean
      */
-    deck.is_alliance = function is_alliance()
-    {
-        return !(_.isUndefined(_.find(deck.get_agendas(), function (card)
-        {
+    deck.is_alliance = function is_alliance() {
+        return !(_.isUndefined(_.find(deck.get_agendas(), function(card) {
             return card.code === '06018';
+        })));
+    };
+
+    /**
+     * @memberOf deck
+     * @returns boolean
+     */
+    deck.is_rains_of_castamere = function is_rains_of_castamere() {
+        return !(_.isUndefined(_.find(deck.get_agendas(), function(card) {
+            return card.code === '05045';
         })));
     };
 
@@ -551,13 +574,13 @@
                 layout_template = 5;
                 break;
             case "cost":
-                deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
+                deck.update_layout_section(data, 'plots', deck.get_layout_data_plot_section(deck.is_rains_of_castamere()));
                 deck.update_layout_section(data, "cards", deck.get_layout_section({'cost': 1, 'name': 1}, {'cost': 1}, { type_code: { '$nin': ['agenda', 'plot'] }}));
                 layout_template = 4;
                 break;
             case "type":
             default:
-                deck.update_layout_section(data, 'plots', deck.get_layout_data_one_section('type_code', 'plot', 'type_name'));
+                deck.update_layout_section(data, 'plots', deck.get_layout_data_plot_section(deck.is_rains_of_castamere()));
                 deck.update_layout_section(data, 'characters', deck.get_layout_data_one_section('type_code', 'character', 'type_name'));
                 deck.update_layout_section(data, 'attachments', deck.get_layout_data_one_section('type_code', 'attachment', 'type_name'));
                 deck.update_layout_section(data, 'locations', deck.get_layout_data_one_section('type_code', 'location', 'type_name'));
@@ -631,21 +654,59 @@
 
     deck.get_layout_data_one_section = function get_layout_data_one_section(sortKey, sortValue, displayLabel)
     {
-        var section = $('<div>');
+        var $section = $('<div>');
         var query = {};
         query[sortKey] = sortValue;
         var cards = deck.get_cards({name: 1}, query);
         if(cards.length) {
-            $(header_tpl({code: sortValue, name: cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo(section);
-            cards.forEach(function (card)
-            {
-                var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-                $div.append($(card_line_tpl({card: card})));
-                $div.prepend(card.indeck + 'x ');
-                $div.appendTo(section);
+            $(header_tpl({code: sortValue, name: cards[0][displayLabel], quantity: deck.get_nb_cards(cards)})).appendTo($section);
+            cards.forEach(function(card) {
+                $section = append_card_line_to_section(card, $section);
             });
         }
-        return section;
+        return $section;
+    };
+
+    /**
+     * @param {boolean} isRains
+     * @return {jQuery}
+     */
+    deck.get_layout_data_plot_section = function get_layout_data_plot_section(isRains) {
+        if (isRains) {
+            return deck.get_layout_data_rains_of_castamere_plot_section();
+        }
+        return deck.get_layout_data_one_section('type_code', 'plot', 'type_name');
+    };
+
+    /**
+     * @return {jQuery}
+     */
+    deck.get_layout_data_rains_of_castamere_plot_section = function get_layout_data_rains_of_castamere_plot_section() {
+        var $section = $('<div>');
+        var cards = deck.get_cards({name: 1}, { 'type_code': 'plot'});
+        var schemePlots = _.filter(cards, function(card) {
+            return card.traits.indexOf(Translator.trans('card.traits.scheme') + '.') !== -1;
+        });
+        var nonSchemePlots = _.filter(cards, function(card) {
+            return card.traits.indexOf(Translator.trans('card.traits.scheme') + '.') === -1;
+        });
+        var $elem;
+
+        if (cards.length) {
+            $(header_tpl({code: 'plot', name: cards[0]['type_name'], quantity: deck.get_nb_cards(cards)})).appendTo($section);
+
+            nonSchemePlots.forEach(function(card) {
+                $section = append_card_line_to_section(card, $section);
+            });
+
+            $elem = $('<br>');
+            $elem.appendTo($section);
+
+            schemePlots.forEach(function(card) {
+                $section = append_card_line_to_section(card, $section);
+            });
+        }
+        return $section;
     };
 
     /**
