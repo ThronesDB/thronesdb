@@ -4,6 +4,11 @@ namespace AppBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Class ApiControllerTest
+ * @package AppBundle\Tests\Controller
+ * @group api
+ */
 class ApiControllerTest extends WebTestCase
 {
     public function testGetCard()
@@ -33,7 +38,7 @@ class ApiControllerTest extends WebTestCase
         $this->assertInternalType('array', $data);
         $this->assertNotEmpty($data);
     }
-    
+
     public function testListCardsByPack()
     {
         $client = static::createClient();
@@ -51,7 +56,7 @@ class ApiControllerTest extends WebTestCase
             $this->assertEquals("Core", $item['pack_code']);
         }
     }
-    
+
     public function testListPacks()
     {
         $client = static::createClient();
