@@ -194,8 +194,17 @@ class ImportStdCommand extends ContainerAwareCommand
     {
         $result = [];
 
+        $position = [];
+
         $packsData = $this->getDataFromFile($fileinfo);
         foreach ($packsData as $packData) {
+            $cycleCode = $packData['cycle_code'];
+            if (array_key_exists($cycleCode, $position)) {
+                $position[$cycleCode] = $position[$cycleCode] + 1;
+            } else {
+                $position[$cycleCode] = 1;
+            }
+            $packData['position'] = $position[$cycleCode];
             $pack = $this->getEntityFromData('AppBundle\Entity\Pack', $packData, [
                     'code',
                     'name',
