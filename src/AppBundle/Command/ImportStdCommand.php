@@ -130,10 +130,19 @@ class ImportStdCommand extends ContainerAwareCommand
 
         $output->writeln("Importing Cards...");
         $fileSystemIterator = $this->getFileSystemIterator($path);
-        $imported = [];
+        $rawData = [];
         foreach ($fileSystemIterator as $fileinfo) {
-            $imported = array_merge($imported, $this->importCardsJsonFile($fileinfo));
+            $baseName = $fileinfo->getBasename('.json');
+            $rawData[$baseName] = $this->readCardsFromJsonFile($fileinfo);
         }
+
+        $multiNames = $this->extractCardNamesWithMultipleInstances($rawData);
+
+        $imported = [];
+        foreach ($rawData as $cardsData) {
+            $imported = array_merge($imported, $this->importCards($cardsData, $multiNames));
+        }
+
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
             if (!$helper->ask($input, $output, $question)) {
@@ -265,24 +274,17 @@ class ImportStdCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param SplFileInfo $fileinfo
+     * @param array $cardsData
+     * @param array $multiNames
      * @return array
      * @throws ORMException
      * @throws Exception
      */
-    protected function importCardsJsonFile(SplFileInfo $fileinfo)
+    protected function importCards(array $cardsData, array $multiNames)
     {
         $result = [];
-
-        $code = $fileinfo->getBasename('.json');
-
-        $pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
-        if (!$pack) {
-            throw new Exception("Unable to find Pack [$code]");
-        }
-
-        $cardsData = $this->getDataFromFile($fileinfo);
         foreach ($cardsData as $cardData) {
+            $cardData['is_multiple'] = in_array($cardData['name'], $multiNames);
             $card = $this->getEntityFromData('AppBundle\Entity\Card', $cardData, [
                     'code',
                     'deck_limit',
@@ -346,7 +348,7 @@ class ImportStdCommand extends ContainerAwareCommand
                         break;
                     case 'datetime':
                         /* @var DateTime $currentTypedValue*/
-                    $currentJsonValue = $currentTypedValue->format('Y-m-d H:i:s');
+                        $currentJsonValue = $currentTypedValue->format('Y-m-d H:i:s');
                 }
             }
         }
@@ -672,5 +674,45 @@ class ImportStdCommand extends ContainerAwareCommand
         foreach ($entities as $entity) {
             $this->collections[$entityShortName][$entity->getCode()] = $entity;
         }
+    }
+
+    /**
+     * @param SplFileInfo $fileInfo
+     * @return array
+     * @throws Exception
+     */
+    protected function readCardsFromJsonFile(SplFileInfo $fileInfo)
+    {
+        $code = $fileInfo->getBasename('.json');
+
+        $pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
+        if (!$pack) {
+            throw new Exception("Unable to find Pack [$code]");
+        }
+
+        return $this->getDataFromFile($fileInfo);
+    }
+
+    /**
+     * @param array $rawData
+     * @return array
+     */
+    protected function extractCardNamesWithMultipleInstances(array $rawData)
+    {
+        $names = [];
+        foreach ($rawData as $cardsData) {
+            foreach ($cardsData as $cardData) {
+                $name = $cardData['name'];
+                if (array_key_exists($name, $names)) {
+                    $names[$name] = $names[$name] + 1;
+                } else {
+                    $names[$name] = 1;
+                }
+            }
+        }
+
+        return array_keys(array_filter($names, function ($value) {
+            return ($value > 1);
+        }));
     }
 }
