@@ -2,7 +2,13 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Command\Command;
+use DateTime;
+use Doctrine\ORM\ORMException;
+use Exception;
+use GlobIterator;
+use SplFileInfo;
+use SplFileObject;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,10 +16,13 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\ORM\EntityManager;
-use AppBundle\Entity\Cycle;
-use AppBundle\Entity\Pack;
 use AppBundle\Entity\Card;
 
+/**
+ * Data import command.
+ * Class ImportStdCommand
+ * @package AppBundle\Command
+ */
 class ImportStdCommand extends ContainerAwareCommand
 {
     /* @var $em EntityManager */
@@ -22,8 +31,14 @@ class ImportStdCommand extends ContainerAwareCommand
     /* @var $output OutputInterface */
     private $output;
 
+    /**
+     * @var array
+     */
     private $collections = [];
 
+    /**
+     * @inheritdoc
+     */
     protected function configure()
     {
         $this
@@ -35,18 +50,20 @@ class ImportStdCommand extends ContainerAwareCommand
             'path',
             InputArgument::REQUIRED,
             'Path to the repository'
-        )
-
-        ;
+        );
     }
 
+    /**
+     * @inheritdoc
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');
-        $this->em = $this->getContainer()->get('doctrine')->getEntityManager();
+        $this->em = $this->getContainer()->get('doctrine')->getManager();
         $this->output = $output;
 
-        /* @var $helper \Symfony\Component\Console\Helper\QuestionHelper */
+        /* @var $helper QuestionHelper */
         $helper = $this->getHelper('question');
 
         // factions
@@ -127,7 +144,13 @@ class ImportStdCommand extends ContainerAwareCommand
         $output->writeln("Done.");
     }
 
-    protected function importFactionsJsonFile(\SplFileInfo $fileinfo)
+    /**
+     * @param SplFileInfo $fileinfo
+     * @return array
+     * @throws ORMException
+     * @throws Exception
+     */
+    protected function importFactionsJsonFile(SplFileInfo $fileinfo)
     {
         $result = [];
 
@@ -147,7 +170,13 @@ class ImportStdCommand extends ContainerAwareCommand
         return $result;
     }
 
-    protected function importTypesJsonFile(\SplFileInfo $fileinfo)
+    /**
+     * @param SplFileInfo $fileinfo
+     * @return array
+     * @throws ORMException
+     * @throws Exception
+     */
+    protected function importTypesJsonFile(SplFileInfo $fileinfo)
     {
         $result = [];
 
@@ -166,7 +195,13 @@ class ImportStdCommand extends ContainerAwareCommand
         return $result;
     }
 
-    protected function importCyclesJsonFile(\SplFileInfo $fileinfo)
+    /**
+     * @param SplFileInfo $fileinfo
+     * @return array
+     * @throws ORMException
+     * @throws Exception
+     */
+    protected function importCyclesJsonFile(SplFileInfo $fileinfo)
     {
         $result = [];
         $position = 0;
@@ -189,7 +224,13 @@ class ImportStdCommand extends ContainerAwareCommand
         return $result;
     }
 
-    protected function importPacksJsonFile(\SplFileInfo $fileinfo)
+    /**
+     * @param SplFileInfo $fileinfo
+     * @return array
+     * @throws ORMException
+     * @throws Exception
+     */
+    protected function importPacksJsonFile(SplFileInfo $fileinfo)
     {
         $result = [];
 
@@ -223,7 +264,13 @@ class ImportStdCommand extends ContainerAwareCommand
         return $result;
     }
 
-    protected function importCardsJsonFile(\SplFileInfo $fileinfo)
+    /**
+     * @param SplFileInfo $fileinfo
+     * @return array
+     * @throws ORMException
+     * @throws Exception
+     */
+    protected function importCardsJsonFile(SplFileInfo $fileinfo)
     {
         $result = [];
 
@@ -231,7 +278,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
         $pack = $this->em->getRepository('AppBundle:Pack')->findOneBy(['code' => $code]);
         if (!$pack) {
-            throw new \Exception("Unable to find Pack [$code]");
+            throw new Exception("Unable to find Pack [$code]");
         }
 
         $cardsData = $this->getDataFromFile($fileinfo);
@@ -267,6 +314,13 @@ class ImportStdCommand extends ContainerAwareCommand
         return $result;
     }
 
+    /**
+     * @param $entity
+     * @param $entityName
+     * @param $fieldName
+     * @param $newJsonValue
+     * @throws Exception
+     */
     protected function copyFieldValueToEntity($entity, $entityName, $fieldName, $newJsonValue)
     {
         $metadata = $this->em->getClassMetadata($entityName);
@@ -282,15 +336,17 @@ class ImportStdCommand extends ContainerAwareCommand
         // if the field is a data, the default assumptions above are wrong
         if (in_array($type, ['date', 'datetime'])) {
             if ($newJsonValue !== null) {
-                $newTypedValue = new \DateTime($newJsonValue);
+                $newTypedValue = new DateTime($newJsonValue);
             }
             if ($currentTypedValue !== null) {
                 switch ($type) {
                     case 'date':
+                        /* @var DateTime $currentTypedValue*/
                         $currentJsonValue = $currentTypedValue->format('Y-m-d');
                         break;
                     case 'datetime':
-                        $currentJsonValue = $currentTypedValue->format('Y-m-d H:i:s');
+                        /* @var DateTime $currentTypedValue*/
+                    $currentJsonValue = $currentTypedValue->format('Y-m-d H:i:s');
                 }
             }
         }
@@ -307,13 +363,21 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param $entity
+     * @param $entityName
+     * @param $data
+     * @param $key
+     * @param bool $isMandatory
+     * @throws Exception
+     */
     protected function copyKeyToEntity($entity, $entityName, $data, $key, $isMandatory = true)
     {
         $metadata = $this->em->getClassMetadata($entityName);
 
         if (!key_exists($key, $data)) {
             if ($isMandatory) {
-                throw new \Exception("Missing key [$key] in ".json_encode($data));
+                throw new Exception("Missing key [$key] in ".json_encode($data));
             } else {
                 $data[$key] = null;
             }
@@ -321,17 +385,26 @@ class ImportStdCommand extends ContainerAwareCommand
         $value = $data[$key];
 
         if (!key_exists($key, $metadata->fieldNames)) {
-            throw new \Exception("Missing column [$key] in entity ".$entityName);
+            throw new Exception("Missing column [$key] in entity ".$entityName);
         }
         $fieldName = $metadata->fieldNames[$key];
 
         $this->copyFieldValueToEntity($entity, $entityName, $fieldName, $value);
     }
 
+    /**
+     * @param $entityName
+     * @param $data
+     * @param $mandatoryKeys
+     * @param $foreignKeys
+     * @param $optionalKeys
+     * @return object|null
+     * @throws Exception
+     */
     protected function getEntityFromData($entityName, $data, $mandatoryKeys, $foreignKeys, $optionalKeys)
     {
         if (!key_exists('code', $data)) {
-            throw new \Exception("Missing key [code] in ".json_encode($data));
+            throw new Exception("Missing key [code] in ".json_encode($data));
         }
 
         $entity = $this->em->getRepository($entityName)->findOneBy(['code' => $data['code']]);
@@ -352,15 +425,15 @@ class ImportStdCommand extends ContainerAwareCommand
             $foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
 
             if (!key_exists($key, $data)) {
-                throw new \Exception("Missing key [$key] in ".json_encode($data));
+                throw new Exception("Missing key [$key] in ".json_encode($data));
             }
 
             $foreignCode = $data[$key];
             if (!key_exists($foreignEntityShortName, $this->collections)) {
-                throw new \Exception("No collection for [$foreignEntityShortName] in ".json_encode($data));
+                throw new Exception("No collection for [$foreignEntityShortName] in ".json_encode($data));
             }
             if (!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
-                throw new \Exception("Invalid code [$foreignCode] for key [$key] in ".json_encode($data));
+                throw new Exception("Invalid code [$foreignCode] for key [$key] in ".json_encode($data));
             }
             $foreignEntity = $this->collections[$foreignEntityShortName][$foreignCode];
 
@@ -382,8 +455,15 @@ class ImportStdCommand extends ContainerAwareCommand
         if ($entity->serialize() !== $orig) {
             return $entity;
         }
+
+        return null;
     }
 
+    /**
+     * @param Card $card
+     * @param $data
+     * @throws Exception
+     */
     protected function importAgendaData(Card $card, $data)
     {
         $mandatoryKeys = [
@@ -394,6 +474,11 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param Card $card
+     * @param $data
+     * @throws Exception
+     */
     protected function importAttachmentData(Card $card, $data)
     {
         $mandatoryKeys = [
@@ -405,6 +490,11 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param Card $card
+     * @param $data
+     * @throws Exception
+     */
     protected function importCharacterData(Card $card, $data)
     {
         $mandatoryKeys = [
@@ -420,6 +510,11 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param Card $card
+     * @param $data
+     * @throws Exception
+     */
     protected function importEventData(Card $card, $data)
     {
         $mandatoryKeys = [
@@ -431,6 +526,11 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param Card $card
+     * @param $data
+     * @throws Exception
+     */
     protected function importLocationData(Card $card, $data)
     {
         $mandatoryKeys = [
@@ -442,6 +542,11 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param Card $card
+     * @param $data
+     * @throws Exception
+     */
     protected function importPlotData(Card $card, $data)
     {
         $mandatoryKeys = [
@@ -456,6 +561,11 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * @param Card $card
+     * @param $data
+     * @throws Exception
+     */
     protected function importTitleData(Card $card, $data)
     {
         $mandatoryKeys = [
@@ -466,10 +576,15 @@ class ImportStdCommand extends ContainerAwareCommand
         }
     }
 
-    protected function getDataFromFile(\SplFileInfo $fileinfo)
+    /**
+     * @param SplFileInfo $fileinfo
+     * @return mixed
+     * @throws Exception
+     */
+    protected function getDataFromFile(SplFileInfo $fileinfo)
     {
         $file = $fileinfo->openFile('r');
-        $file->setFlags(\SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE);
+        $file->setFlags(SplFileObject::SKIP_EMPTY | SplFileObject::DROP_NEW_LINE);
 
         $lines = [];
         foreach ($file as $line) {
@@ -482,7 +597,7 @@ class ImportStdCommand extends ContainerAwareCommand
         $data = json_decode($content, true);
 
         if ($data === null) {
-            throw new \Exception(
+            throw new Exception(
                 "File ["
                 . $fileinfo->getPathname()
                 . "] contains incorrect JSON (error code "
@@ -494,46 +609,60 @@ class ImportStdCommand extends ContainerAwareCommand
         return $data;
     }
 
+    /**
+     * @param $path
+     * @param $filename
+     * @return SplFileInfo
+     * @throws Exception
+     */
     protected function getFileInfo($path, $filename)
     {
         $fs = new Filesystem();
 
         if (!$fs->exists($path)) {
-            throw new \Exception("No repository found at [$path]");
+            throw new Exception("No repository found at [$path]");
         }
 
         $filepath = "$path/$filename";
 
         if (!$fs->exists($filepath)) {
-            throw new \Exception("No $filename file found at [$path]");
+            throw new Exception("No $filename file found at [$path]");
         }
 
-        return new \SplFileInfo($filepath);
+        return new SplFileInfo($filepath);
     }
 
+    /**
+     * @param $path
+     * @return GlobIterator
+     * @throws Exception
+     */
     protected function getFileSystemIterator($path)
     {
         $fs = new Filesystem();
 
         if (!$fs->exists($path)) {
-            throw new \Exception("No repository found at [$path]");
+            throw new Exception("No repository found at [$path]");
         }
 
         $directory = 'pack';
 
         if (!$fs->exists("$path/$directory")) {
-            throw new \Exception("No '$directory' directory found at [$path]");
+            throw new Exception("No '$directory' directory found at [$path]");
         }
 
-        $iterator = new \GlobIterator("$path/$directory/*.json");
+        $iterator = new GlobIterator("$path/$directory/*.json");
 
         if (!$iterator->count()) {
-            throw new \Exception("No json file found at [$path/set]");
+            throw new Exception("No json file found at [$path/set]");
         }
 
         return $iterator;
     }
 
+    /**
+     * @param $entityShortName
+     */
     protected function loadCollection($entityShortName)
     {
         $this->collections[$entityShortName] = [];
