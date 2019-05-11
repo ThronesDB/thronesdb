@@ -99,7 +99,6 @@ class ImportStdCommand extends ContainerAwareCommand
         $output->writeln("Importing Packs...");
         $packsFileInfo = $this->getFileInfo($path, 'packs.json');
         $imported = $this->importPacksJsonFile($packsFileInfo);
-        $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
             if (!$helper->ask($input, $output, $question)) {
