@@ -35,6 +35,16 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    AppBundle\Services\DataimportFileLocator:
+        public: true
+        arguments: ['%kernel.root_dir%']
+
+    # makes classes in src/AppBundle/DataFixtures available to be used as services
+    AppBundle\DataFixtures\:
+        resource: '../../src/AppBundle/DataFixtures'
+        tags: ['doctrine.fixture.orm']
+        arguments: [ '@AppBundle\Services\DataimportFileLocator']
+
     # core exception listener
     core_exception_listener:
         class: AppBundle\Listener\CoreExceptionListener

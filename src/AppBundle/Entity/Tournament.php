@@ -2,6 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 /**
  * Tournament
  */
@@ -18,7 +21,7 @@ class Tournament
     private $description;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $decklists;
 
@@ -32,7 +35,15 @@ class Tournament
      */
     public function __construct()
     {
-        $this->decklists = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->decklists = new ArrayCollection();
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -88,11 +99,11 @@ class Tournament
     /**
      * Add decklist
      *
-     * @param \AppBundle\Entity\Decklist $decklist
+     * @param Decklist $decklist
      *
      * @return Tournament
      */
-    public function addDecklist(\AppBundle\Entity\Decklist $decklist)
+    public function addDecklist(Decklist $decklist)
     {
         $this->decklists[] = $decklist;
 
@@ -102,9 +113,9 @@ class Tournament
     /**
      * Remove decklist
      *
-     * @param \AppBundle\Entity\Decklist $decklist
+     * @param Decklist $decklist
      */
-    public function removeDecklist(\AppBundle\Entity\Decklist $decklist)
+    public function removeDecklist(Decklist $decklist)
     {
         $this->decklists->removeElement($decklist);
     }
@@ -112,7 +123,7 @@ class Tournament
     /**
      * Get decklists
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDecklists()
     {
