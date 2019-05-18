@@ -32,6 +32,7 @@ install:
 before_script:
   - bin/console doctrine:database:create --env=dev
   - bin/console doctrine:migrations:migrate  --env=dev --no-interaction
+  - bin/console doctrine:fixtures:load  --env=prod --no-interaction
   - bin/console cache:clear --env=test --no-interaction
 
 script:

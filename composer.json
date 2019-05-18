@@ -25,6 +25,7 @@
         "ext-fileinfo": "*",
         "ext-json": "*",
         "doctrine/doctrine-bundle": "^1.6",
+        "doctrine/doctrine-fixtures-bundle": "^3.1",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.5",
         "erusev/parsedown": "^1.6",
