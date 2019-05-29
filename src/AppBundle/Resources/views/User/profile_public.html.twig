@@ -6,7 +6,7 @@
 
         <div class="jumbotron background-{{ user.color }}-10">
             <h1><span class="{{ user.color }}">{{ user.username }}</span>
-                {% if user.donation > 0 %}<span class="fa fa-gift donator"
+                {% if user.donation > 0 %}<span class="fas fa-gift donator"
                                                 title="ThronesDB Gracious Donator"></span>{% endif %}
                 <small>{{ user.reputation }}</small>
             </h1>

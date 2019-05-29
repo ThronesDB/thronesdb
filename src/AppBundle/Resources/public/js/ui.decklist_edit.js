@@ -21,7 +21,7 @@
                                 data: [{
                                         name: "cmdCard",
                                         title: Translator.trans('decklist.publish.editor.cardtolink'),
-                                        icon: "fa fa-clone",
+                                        icon: "fas fa-clone",
                                         callback: ui.on_button_card
                                     }]
                             }, {
@@ -37,17 +37,17 @@
                                 data: [{
                                         name: "cmdCustom1",
                                         title: Translator.trans('decklist.publish.editor.heading', {number: 1}),
-                                        icon: "fa fa-header",
+                                        icon: "fas fa-heading",
                                         callback: _.partial(ui.on_button_heading, '#')
                                     }, {
                                         name: "cmdCustom2",
                                         title: Translator.trans('decklist.publish.editor.heading', {number: 2}),
-                                        icon: "fa fa-header small",
+                                        icon: "fas fa-heading small",
                                         callback: _.partial(ui.on_button_heading, '##')
                                     }, {
                                         name: "cmdCustom3",
                                         title: Translator.trans('decklist.publish.editor.heading', {number: 3}),
-                                        icon: "fa fa-header smaller",
+                                        icon: "fas fa-heading smaller",
                                         callback: _.partial(ui.on_button_heading, '###')
                                     }]
                             }]]

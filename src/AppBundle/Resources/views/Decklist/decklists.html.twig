@@ -62,7 +62,7 @@
                                 href="{{ linkurl }}">{{ 'decklist.list.types.mydecklists' | trans }}</a></li>
                     {% set linkurl = path('decklists_searchform') %}
                     <li class="{% if url == linkurl %}active{% endif %}"><a href="{{ linkurl }}"><span
-                                    class="fa fa-search"></span> {{ 'forms.search' | trans }}</a></li>
+                                    class="fas fa-search"></span> {{ 'forms.search' | trans }}</a></li>
                 </ul>
 
             </div>
@@ -106,23 +106,31 @@
                                         <time class="pull-right"
                                               datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>
                                         <span class="username">
-    		<a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}"
+            <a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}"
                class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
-    		{% if decklist.user.donation > 0 %}<span class="fa fa-gift donator"
+            {% if decklist.user.donation > 0 %}<span class="fas fa-gift donator"
                                                      title="ThronesDB Gracious Donator"></span>{% endif %}
-    		<small class="reputation">{{ decklist.user.reputation }}</small>
-		</span>
+            <small class="reputation">{{ decklist.user.reputation }}</small>
+        </span>
                                         {% if decklist.tournament %}
                                             <span class="text-success" style="margin-left:1em">
-            <span class="fa fa-certificate"></span> {{ decklist.tournament.description }}
+            <span class="fas fa-certificate"></span> {{ decklist.tournament.description }}
         </span>
                                         {% endif %}
                                     </h5>
                                     <div class="restricted-list-info">
                                         <em>{{ 'restrictedlist.title' | trans }}:</em>
-                                        <span class="fa {% if decklist.isLegalForJoust %}fa-check text-success{% else %}fa-times text-danger{% endif %}"> {{ 'restrictedlist.joust' | trans }}</span>
+                                        {% if decklist.isLegalForJoust %}
+                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'restrictedlist.joust' | trans }}</span>
+                                        {% else %}
+                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'restrictedlist.joust' | trans }}</span>
+                                        {% endif %}
                                         |
-                                        <span class="fa {% if decklist.isLegalForMelee %}fa-check text-success{% else %}fa-times text-danger{% endif %}"> {{ 'restrictedlist.melee' | trans }}</span>
+                                        {% if decklist.isLegalForMelee %}
+                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'restrictedlist.melee' | trans }}</span>
+                                        {% else %}
+                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'restrictedlist.melee' | trans }}</span>
+                                        {% endif %}
                                     </div>
                                 </article>
                             </td>

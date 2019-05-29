@@ -19,13 +19,13 @@
                     <div class="col-md-12">
                         <a href="{{ path('deck_buildform') }}"
                            class="btn btn-default btn-sm"{% if cannotcreate %} disabled="disabled"{% endif %}>
-                            <span class="fa fa-plus"></span>
+                            <span class="fas fa-plus"></span>
                             {{ 'decks.form.new' | trans }}
                         </a>
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle btn-sm"
                                     data-toggle="dropdown"{% if cannotcreate %} disabled="disabled"{% endif %}>
-                                <span class="fa fa-upload"></span>
+                                <span class="fas fa-file-import"></span>
                                 {{ 'decks.form.import.label' | trans }}
                                 <span class="caret"></span>
                             </button>
@@ -49,13 +49,13 @@
                     <div class="col-md-12">
                         <div class="btn-group" id="btn-group-selection">
                             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
-                                <span class="fa fa-check-square-o"></span>
+                                <span class="fas fa-check"></span>
                                 {{ 'decks.form.selection.label' | trans }}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li class="dropdown-header">
-                                    <span class="fa fa-exchange"></span>
+                                    <span class="fas fa-exchange-alt"></span>
                                     {{ 'decks.form.selection.compare.label' | trans }}
                                 </li>
                                 <li>
@@ -64,7 +64,7 @@
                                     </a>
                                 </li>
                                 <li class="dropdown-header">
-                                    <span class="fa fa-tag"></span>
+                                    <span class="fas fa-tag"></span>
                                     {{ 'decks.form.selection.tags.label' | trans }}
                                 </li>
                                 <li>
@@ -79,12 +79,12 @@
                                     </a>
                                 </li>
                                 <li class="dropdown-header">
-                                    <span class="fa fa-trash-o"></span>
+                                    <span class="fas fa-trash-alt"></span>
                                     {{ 'decks.form.selection.delete.label' | trans }}
                                 </li>
                                 <li>
                                     <a href="#" id="btn-delete-selected">
-                                        <span style="color:red" class="fa fa-exclamation-triangle"></span>
+                                        <span style="color:red" class="fas fa-exclamation-triangle"></span>
                                         {{ 'decks.form.selection.delete.selected' | trans }}
                                     </a>
                                 </li>
@@ -132,17 +132,34 @@
                                    class="deck-name">{{ deck.name }}</a> {{ deck.version }}
                                 <div class="restricted-list-info">
                                     <em>{{ 'restrictedlist.title' | trans }}:</em>
-                                    <span class="fa {% if deck.isLegalForJoust %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
-                                        {{ 'restrictedlist.joust' | trans }}
-                                    </span>
+                                    {% if deck.isLegalForJoust %}
+                                        <span class="text-success">
+                                            <i class="fas fa-check"></i>
+                                            {{ 'restrictedlist.joust' | trans }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-danger">
+                                            <i class="fas fa-times"></i>
+                                            {{ 'restrictedlist.joust' | trans }}
+                                        </span>
+                                    {% endif %}
                                     |
-                                    <span class="fa {% if deck.isLegalForMelee %}fa-check text-success{% else %}fa-times text-danger{% endif %}">
-                                        {{ 'restrictedlist.melee' | trans }}
-                                    </span>
+                                    {% if deck.isLegalForMelee %}
+                                        <span class="text-success">
+                                            <i class="fas fa-check"></i>
+                                            {{ 'restrictedlist.melee' | trans }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-danger">
+                                            <i class="fas fa-times"></i>
+                                            {{ 'restrictedlist.melee' | trans }}
+                                        </span>
+                                    {% endif %}
+
                                 </div>
                                 {% if deck.problem is not null %}
                                     <div class="text-danger small">
-                                        <span class="fa fa-exclamation-triangle"></span>
+                                        <span class="fas fa-exclamation-triangle"></span>
                                         {{ deck_validation_helper.getProblemLabel(deck.problem) }}
                                     </div>
                                 {% endif %}
@@ -155,21 +172,21 @@
                             <td class="decks-actions text-right">
                                 <a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default"
                                    data-toggle="tooltip" title="{{ 'forms.edit' | trans }}">
-                                    <span class="fa fa-pencil fa-fw"></span>
+                                    <span class="fas fa-pencil-alt fa-fw"></span>
                                 </a>
                                 <a href="{{ path('deck_publish_form',{deck_id:deck.id}) }}"
                                    class="btn btn-xs btn-default" data-toggle="tooltip"
                                    title="{{ 'forms.publish' | trans }}">
-                                    <span class="fa fa-share fa-fw"></span>
+                                    <span class="fas fa-share fa-fw"></span>
                                 </a>
                                 <button class="btn btn-xs btn-default btn-delete-deck" data-toggle="tooltip"
                                         title="{{ 'forms.delete' | trans }}">
-                                    <span class="fa fa-trash-o fa-fw"></span>
+                                    <span class="fas fa-trash-alt fa-fw"></span>
                                 </button>
                                 <a href="{{ path('deck_clone', {deck_id:deck.id}) }}"
                                    class="btn btn-xs btn-default" data-toggle="tooltip"
                                    title="{{ 'forms.clone' | trans }}">
-                                    <span class="fa fa-clone fa-fw"></span></a>
+                                    <span class="fas fa-clone fa-fw"></span></a>
                             </td>
                         </tr>
                     {% endfor %}

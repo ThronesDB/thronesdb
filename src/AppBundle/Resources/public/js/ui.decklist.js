@@ -204,14 +204,14 @@
     {
         if(app.user.data && app.user.data.is_author) {
             $('.comment-hide-button').remove();
-            $('<a href="#" class="comment-hide-button"><span class="text-danger fa fa-times" style="margin-left:.5em"></span></a>').appendTo('.collapse.in > .comment-date').on('click', function (event)
+            $('<a href="#" class="comment-hide-button"><span class="text-danger" style="margin-left:.5em"><i class="fas fa-times"></i></span></a>').appendTo('.collapse.in > .comment-date').on('click', function (event)
             {
                 if(confirm('Do you really want to hide this comment for everybody?')) {
                     ui.hide_comment($(this).closest('td'));
                 }
                 return false;
             });
-            $('<a href="#" class="comment-hide-button"><span class="text-success fa fa-check" style="margin-left:.5em"></span></a>').appendTo('.collapse:not(.in) > .comment-date').on('click', function (event)
+            $('<a href="#" class="comment-hide-button"><span class="text-success" style="margin-left:.5em"><i class="fas fa-check"></i></span></a>').appendTo('.collapse:not(.in) > .comment-date').on('click', function (event)
             {
                 if(confirm('Do you really want to unhide this comment?')) {
                     ui.unhide_comment($(this).closest('td'));

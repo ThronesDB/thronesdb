@@ -1,27 +1,27 @@
 <a href="{{ path('decklist_edit', {decklist_id:decklist.id}) }}" title="{{ 'decklist.view.toolbar.edit' | trans }}"
    id="decklist-edit" class="btn btn-sm btn-default" style="display:none">
-    <span class="fa fa-pencil text-primary"></span> {{ 'forms.edit' | trans }}
+    <span class="fas fa-pencil-alt text-primary"></span> {{ 'forms.edit' | trans }}
 </a>
 <a href="#" title="Delete decklist" id="decklist-delete" class="btn btn-sm btn-default" style="display:none">
-    <span class="fa fa-trash-o text-danger"></span> {{ 'forms.delete' | trans }}
+    <span class="fas fa-trash-alt text-danger"></span> {{ 'forms.delete' | trans }}
 </a>
 <a href="{{ path('deck_copy', {decklist_id:decklist.id}) }}" class="btn btn-sm btn-default">
-    <span class="fa fa-save"></span> <span class="hidden-xs">{{ 'forms.copy' | trans }}</span>
+    <span class="fas fa-save"></span> <span class="hidden-xs">{{ 'forms.copy' | trans }}</span>
 </a>
 <div class="btn-group">
     <button type="button" class="btn  btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
         <span></span> <span class="hidden-sm">{{ 'forms.actions' | trans }}</span> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu" role="menu">
-        <li class="dropdown-header"><span class="fa fa-clipboard"></span> {{ 'forms.export' | trans }}</li>
+        <li class="dropdown-header"><span class="fas fa-file-export"></span> {{ 'forms.export' | trans }}</li>
         <li><a id="btn-export-plaintext" href="#">{{ 'decks.form.export.plaintext' | trans }}</a></li>
         <li><a id="btn-export-markdown" href="#">{{ 'decks.form.export.markdown' | trans }}</a></li>
         <li><a id="btn-export-agotcards" href="#">{{ 'decks.form.export.agotcards' | trans }}</a></li>
-        <li class="dropdown-header"><span class="fa fa-download"></span> {{ 'forms.download' | trans }}</li>
+        <li class="dropdown-header"><span class="fas fa-file-download"></span> {{ 'forms.download' | trans }}</li>
         <li><a href="#" id="btn-download-text">{{ 'decks.form.download.text' | trans }}</a></li>
         <li><a href="#" id="btn-download-text-cycle">{{ 'decks.form.download.text_cycle' | trans }}</a></li>
         <li><a href="#" id="btn-download-octgn">{{ 'decks.form.download.octgn' | trans }}</a></li>
-        <li class="dropdown-header"><span class="fa fa-sort"></span> {{ 'forms.sort' | trans }}</li>
+        <li class="dropdown-header"><span class="fas fa-sort"></span> {{ 'forms.sort' | trans }}</li>
         <li><a href="#" id="btn-sort-default">{{ 'decks.form.sort.by_type' | trans }}</a></li>
         <li><a href="#" id="btn-sort-name">{{ 'decks.form.sort.by_name' | trans }}</a></li>
         <li><a href="#" id="btn-sort-set">{{ 'decks.form.sort.by_set' | trans }}</a></li>
