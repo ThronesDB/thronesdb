@@ -16,7 +16,7 @@
 
         {% if deck.isUnsaved %}
             <div class="alert alert-danger" role="alert" id="deck-unsaved-alert">
-                <span class="fa fa-exclamation-triangle"></span>
+                <span class="fas fa-exclamation-triangle"></span>
                 {{ 'decks.edit.unsaved' | trans }}
             </div>
         {% endif %}
@@ -27,7 +27,7 @@
             <div class="col-md-6">
 
                 <div id="deck" class="deck-loading">
-                    <i class="fa fa-spinner fa-spin fa-5x"></i>
+                    <i class="fas fa-spinner fa-spin fa-5x"></i>
                 </div>
 
                 <form method="POST" action="{{ path('deck_save') }}" id="save_form" role="form"
@@ -58,28 +58,28 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li role="presentation" class="active">
                             <a href="#tab-pane-build" aria-controls="tab-pane-build" role="tab" data-toggle="tab">
-                                <span class="fa fa-puzzle-piece"></span> {{ 'decks.edit.tabs.build' | trans }}
+                                <span class="fas fa-puzzle-piece"></span> {{ 'decks.edit.tabs.build' | trans }}
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#tab-pane-infos" aria-controls="tab-pane-infos" role="tab" data-toggle="tab">
-                                <span class="fa fa-pencil-square-o"></span> {{ 'decks.edit.tabs.notes' | trans }}
+                                <span class="fas fa-edit"></span> {{ 'decks.edit.tabs.notes' | trans }}
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#tab-pane-draw" aria-controls="tab-pane-draw" role="tab" data-toggle="tab">
-                                <span class="fa fa-repeat"></span> {{ 'decks.edit.tabs.test' | trans }}
+                                <span class="fas fa-redo-alt"></span> {{ 'decks.edit.tabs.test' | trans }}
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#tab-pane-charts" aria-controls="tab-pane-charts" role="tab" data-toggle="tab">
-                                <span class="fa fa-bar-chart"></span> {{ 'decks.edit.tabs.charts' | trans }}
+                                <span class="fas fa-chart-bar"></span> {{ 'decks.edit.tabs.charts' | trans }}
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#tab-pane-history" aria-controls="tab-pane-history" role="tab" data-toggle="tab"
                                id="tab-header-history">
-                                <span class="fa fa-history"></span> {{ 'decks.edit.tabs.history' | trans }}
+                                <span class="fas fa-history"></span> {{ 'decks.edit.tabs.history' | trans }}
                             </a>
                         </li>
                     </ul>

@@ -524,16 +524,16 @@
 
         var restrictedListContents = '<em>' + Translator.trans('restrictedlist.title') +':</em> ';
         if (deck.is_joust_restricted_list_compliant()) {
-            restrictedListContents += '<span class="fa fa-check text-success"> ';
+            restrictedListContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
-            restrictedListContents += '<span class="fa fa-times text-danger"> ';
+            restrictedListContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
         restrictedListContents += Translator.trans('restrictedlist.joust') + '</span> | ';
 
         if (deck.is_melee_restricted_list_compliant()) {
-            restrictedListContents += '<span class="fa fa-check text-success"> ';
+            restrictedListContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
-            restrictedListContents += '<span class="fa fa-times text-danger"> ';
+            restrictedListContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
         restrictedListContents += Translator.trans('restrictedlist.melee') + '</span>';
 
@@ -541,7 +541,7 @@
         deck.update_layout_section(data, 'meta', restrictedListSection);
 
         if(problem) {
-            deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fa fa-exclamation-triangle"></span> ' + problem_labels[problem] + '</div>'));
+            deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fas fa-exclamation-triangle"></span> ' + problem_labels[problem] + '</div>'));
         }
 
         var layout_template = 2;

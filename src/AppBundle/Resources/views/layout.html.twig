@@ -18,7 +18,7 @@
 
     <link href='https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,700,700i|Julius+Sans+One|Open+Sans:400,400i,700,700i|Open+Sans+Condensed:300'
           rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qtip2/2.1.1/jquery.qtip.css">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.9.0/css/bootstrap-markdown.min.css">
@@ -92,7 +92,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown hidden-xs hidden-lg">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-expanded="false"><span class="fa fa-search"></span></a>
+                               aria-expanded="false"><span class="fas fa-search"></span></a>
                             <div class="dropdown-menu">
                                 <form action="{{ path('cards_find') }}">
                                     <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}"
@@ -101,7 +101,7 @@
                             </div>
                         </li>
                         <li id="login">
-                            <a href="#" class="disabled"><span class="fa fa-user"></span></a>
+                            <a href="#" class="disabled"><span class="fas fa-user"></span></a>
                         </li>
                         <!-- locale selection -->
                         {% if _route is not empty %}

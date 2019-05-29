@@ -9,11 +9,11 @@
     </div>
     <div style="text-align:center">
         <a href="{{ path('deck_buildform') }}" class="btn btn-default btn-lg"><span
-                    class="fa fa-plus"></span> {{ 'decks.form.build' | trans }}</a>
+                    class="fas fa-plus"></span> {{ 'decks.form.build' | trans }}</a>
         <a href="{{ path('deck_import') }}" class="btn btn-default btn-lg"><span
-                    class="fa fa-upload"></span> {{ 'forms.import' | trans }}</a>
+                    class="fas fa-file-import"></span> {{ 'forms.import' | trans }}</a>
         <button type="button" class="btn btn-default btn-lg" onclick="$('#fileModal').modal('show')"><span
-                    class="fa fa-upload"></span> {{ 'forms.upload' | trans }}</button>
+                    class="fas fa-file-upload"></span> {{ 'forms.upload' | trans }}</button>
     </div>
 
     {% include 'AppBundle:Modale:file.html.twig' %}

@@ -47,17 +47,17 @@
                     <div style="margin-bottom:5px">
                         {% if is_owner %}
                             <a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span
-                                        class="fa fa-pencil"></span> {{ 'forms.edit' | trans }}</a>
+                                        class="fas fa-pencil-alt"></span> {{ 'forms.edit' | trans }}</a>
                             <a href="{{ path('deck_publish_form', {deck_id:deck_id}) }}" id="btn-publish"
-                               class="btn btn-success"><span class="fa fa-share"></span> {{ 'forms.publish' | trans }}
+                               class="btn btn-success"><span class="fas fa-share"></span> {{ 'forms.publish' | trans }}
                             </a>
                             <button type="button" id="btn-delete" class="btn btn-danger"><span
-                                        class="fa fa-trash"></span> {{ 'forms.delete' | trans }}</button>
+                                        class="fas fa-trash-alt"></span> {{ 'forms.delete' | trans }}</button>
                         {% endif %}
                         <a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span
-                                    class="fa fa-clone"></span> {{ 'forms.clone' | trans }}</a>
+                                    class="fas fa-clone"></span> {{ 'forms.clone' | trans }}</a>
                         <button type="button" id="btn-print" class="btn btn-default"><span
-                                    class="fa fa-print"></span> {{ 'forms.print' | trans }}</button>
+                                    class="fas fa-print"></span> {{ 'forms.print' | trans }}</button>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -65,14 +65,14 @@
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li class="dropdown-header"><span
-                                            class="fa fa-clipboard"></span> {{ 'forms.export' | trans }}</li>
+                                            class="fas fa-file-export"></span> {{ 'forms.export' | trans }}</li>
                                 <li><a id="btn-export-plaintext"
                                        href="#">{{ 'decks.form.export.plaintext' | trans }}</a></li>
                                 <li><a id="btn-export-markdown" href="#">{{ 'decks.form.export.markdown' | trans }}</a>
                                 <li><a id="btn-export-agotcards" href="#">{{ 'decks.form.export.agotcards' | trans }}</a>
                                 </li>
                                 <li class="dropdown-header"><span
-                                            class="fa fa-download"></span> {{ 'forms.download' | trans }}</li>
+                                            class="fas fa-file-download"></span> {{ 'forms.download' | trans }}</li>
                                 <li>
                                     <a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text">{{ 'decks.form.download.text' | trans }}</a>
                                 </li>
@@ -82,7 +82,7 @@
                                 <li>
                                     <a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=octgn">{{ 'decks.form.download.octgn' | trans }}</a>
                                 </li>
-                                <li class="dropdown-header"><span class="fa fa-sort"></span> {{ 'forms.sort' | trans }}
+                                <li class="dropdown-header"><span class="fas fa-sort"></span> {{ 'forms.sort' | trans }}
                                 </li>
                                 <li><a href="#" id="btn-sort-default">{{ 'decks.form.sort.by_type' | trans }}</a></li>
                                 <li><a href="#" id="btn-sort-name">{{ 'decks.form.sort.by_name' | trans }}</a></li>
@@ -121,7 +121,7 @@
                 <table class="table table-condensed" id="table-predecessor">
                     <thead>
                     <tr>
-                        <th colspan="4"><span class="fa fa-share"></span> {{ 'decks.published.title' | trans }}</th>
+                        <th colspan="4"><span class="fas fa-share"></span> {{ 'decks.published.title' | trans }}</th>
                     </tr>
                     </thead>
                     <tbody>
