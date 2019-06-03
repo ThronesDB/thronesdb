@@ -15,7 +15,6 @@ class RestrictedListChecker
      * @var array
      */
     const JOUST_RESTRICTED_CARDS = [
-        "01100",
         "01109",
         "02091",
         "02092",
@@ -40,7 +39,10 @@ class RestrictedListChecker
         "10050",
         "11021",
         "11033",
-        "11034"
+        "11034",
+        "11051",
+        "11076",
+        "12045",
     ];
 
     /**
