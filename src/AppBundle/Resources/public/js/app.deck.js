@@ -25,9 +25,8 @@
             card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a>'),
             layouts = {},
             layout_data = {},
-            // restricted list, see FAQ v2.1
+            // restricted list, see FAQ v2.2
             joust_restricted_list = [
-                "01100",
                 "01109",
                 "02091",
                 "02092",
@@ -52,7 +51,10 @@
                 "10050",
                 "11021",
                 "11033",
-                "11034"
+                "11034",
+                "11051",
+                "11076",
+                "12045",
             ],
             melee_restricted_list = [
                 "01001",
