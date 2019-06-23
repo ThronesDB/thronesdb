@@ -29,3 +29,6 @@ parameters:
 
   # Analytics & AdSense
   google_analytics_tracking_code: UA-00000000-1
+
+  # Allow search engines to index this site
+  allow_search_engine_tracking: false
