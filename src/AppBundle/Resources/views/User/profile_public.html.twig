@@ -5,9 +5,14 @@
     <div class="main white container">
 
         <div class="jumbotron background-{{ user.color }}-10">
-            <h1><span class="{{ user.color }}">{{ user.username }}</span>
-                {% if user.donation > 0 %}<span class="fas fa-gift donator"
-                                                title="ThronesDB Gracious Donator"></span>{% endif %}
+            <h1>
+                <span class="{{ user.color }}">{{ user.username }}</span>
+                {% if user.role('ROLE_ADMIN') %}
+                    <span class="fas fa-user-tie admin" title="Administrator"></span>
+                {% endif %}
+                {% if user.donation > 0 %}
+                    <span class="fas fa-gift donator" title="ThronesDB Gracious Donator"></span>
+                {% endif %}
                 <small>{{ user.reputation }}</small>
             </h1>
             <p>
