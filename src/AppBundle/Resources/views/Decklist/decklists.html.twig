@@ -106,12 +106,16 @@
                                         <time class="pull-right"
                                               datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d') }}</time>
                                         <span class="username">
-            <a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}"
-               class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
-            {% if decklist.user.donation > 0 %}<span class="fas fa-gift donator"
-                                                     title="ThronesDB Gracious Donator"></span>{% endif %}
-            <small class="reputation">{{ decklist.user.reputation }}</small>
-        </span>
+                                            <a href="{{ path('user_profile_public', {user_id:decklist.user.id,user_name:decklist.user.username|e('url')}) }}"
+                                               class="{{ decklist.user.color }}">{{ decklist.user.username }}</a>
+                                            {% if decklist.user.role('ROLE_ADMIN') %}
+                                                <span class="fas fa-user-tie admin" title="Administrator"></span>
+                                            {% endif %}
+                                            {% if decklist.user.donation > 0 %}
+                                                <span class="fas fa-gift donator" title="ThronesDB Gracious Donator"></span>
+                                            {% endif %}
+                                            <small class="reputation">{{ decklist.user.reputation }}</small>
+                                        </span>
                                         {% if decklist.tournament %}
                                             <span class="text-success" style="margin-left:1em">
             <span class="fas fa-certificate"></span> {{ decklist.tournament.description }}
