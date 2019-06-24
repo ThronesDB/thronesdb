@@ -290,7 +290,7 @@ class ReviewController extends Controller
 
         $pagetitle = "Card Reviews by " . $user->getUsername();
 
-        $dql = "SELECT r FROM AppBundle:Review r WHERE r.user = :user ORDER BY r.date_creation DESC";
+        $dql = "SELECT r FROM AppBundle:Review r WHERE r.user = :user ORDER BY r.dateCreation DESC";
         $query = $em->createQuery($dql)->setFirstResult($start)->setMaxResults($limit)->setParameter('user', $user);
 
         $paginator = new Paginator($query, false);
