@@ -33,12 +33,13 @@
                     <div class="row" style="margin-bottom:1em;padding-bottom:1em;border-bottom:1px solid #ddd">
                         <div class="col-lg-12">
                             <div class="review-header">
-                                <img src="{{ review.card.imageUrl }}" alt="{{ review.card.name }}" class="pull-right"
-                                     style="width:100px;margin:0 0 10px 10px">
-                                <h4 style="text-align:right"><a
-                                            href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}"
-                                            data-code="{{ review.card.code }}"
-                                            class="card-name">{{ review.card.name }}</a></h4>
+                                <h4>
+                                    <a href="{{ path('cards_zoom',{card_code:review.card.code}) }}#review-{{ review.id }}"
+                                       data-code="{{ review.card.code }}"
+                                       class="card-name">
+                                         {{ review.card.name }}
+                                    </a>
+                                </h4>
                             </div>
                             <article class="review" data-code="{{ review.id }}" id="review-{{ review.id }}">
                                 <div class="review-like">
@@ -49,6 +50,8 @@
                                 </div>
                                 <div class="review-content">
                                     <div class="review-text">
+                                        <img src="{{ review.card.imageUrl }}" alt="{{ review.card.name }}" class="pull-right"
+                                             style="width:100px;margin:0 0 10px 10px">
                                         {{ review.textHtml|raw }}
                                     </div>
                                     <div class="review-date">
