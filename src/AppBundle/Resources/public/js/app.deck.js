@@ -188,6 +188,10 @@
                 deck.set_slots(data.slots);
             });
         }
+
+        if (localStorage) {
+            deck.sort_type = localStorage.getItem('sort');
+        }
     };
 
     /**
@@ -449,7 +453,7 @@
 
     deck.change_sort = function(sort_type) {
         if (localStorage) {
-            localStorage.setItem('ui.deck.sort', sort_type);
+            localStorage.setItem('sort', sort_type);
         }
         deck.sort_type = sort_type;
         if ($("#deck")) {
