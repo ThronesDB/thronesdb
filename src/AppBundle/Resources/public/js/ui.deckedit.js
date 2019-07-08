@@ -151,12 +151,12 @@
         {
             // checked or unchecked ? checked by default
             var checked = true;
+
             // if not yet available, uncheck pack
-            if(record.available === "")
+            if(record.available === "") {
                 checked = false;
-            // if user checked it previously, check pack
-            if(localStorage && localStorage.getItem('set_code_' + record.code) !== null)
-                checked = true;
+            }
+
             // if pack used by cards in deck, check pack
             var cards = app.data.cards.find({
                 pack_code: record.code,
@@ -164,8 +164,18 @@
                     '$gt': 0
                 }
             });
-            if(cards.length)
+            if(cards.length) {
                 checked = true;
+            }
+
+            // if user checked or unchecked it previously, check or uncheck it
+            if (localStorage) {
+                if (localStorage.getItem('set_code_' + record.code) === '1') {
+                    checked = true;
+                } else if (localStorage.getItem('set_code_' + record.code) === '0') {
+                    checked = false;
+                }
+            }
 
             $('<li><a href="#"><label><input type="checkbox" name="' + record.code + '"' + (checked ? ' checked="checked"' : '') + '>' + record.name + '</label></a></li>').appendTo('[data-filter=pack_code]');
         });
@@ -395,13 +405,34 @@
     };
 
     /**
+     * @memberOf ui
+     * @param event
+     */
+    ui.on_pack_code_change = function(event) {
+        if ($(event.target).is('[type="checkbox"]') && event.target.name && localStorage) {
+            if (event.target.checked) {
+                localStorage.setItem("set_code_" + event.target.name, '1');
+            } else {
+                localStorage.setItem("set_code_" + event.target.name, '0');
+            }
+        }
+        ui.refresh_list();
+    };
+
+    /**
      * sets up event handlers ; dataloaded not fired yet
      * @memberOf ui
      */
     ui.setup_event_handlers = function setup_event_handlers()
     {
+        $('[data-filter=pack_code]').on('change', 'label', ui.on_pack_code_change);
 
-        $('[data-filter]').on({
+        $('[data-filter=faction_code]').on({
+            change: ui.refresh_list,
+            cqlick: ui.on_click_filter
+        }, 'label');
+
+        $('[data-filter=type_code]').on({
             change: ui.refresh_list,
             click: ui.on_click_filter
         }, 'label');

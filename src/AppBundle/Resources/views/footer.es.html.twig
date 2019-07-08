@@ -4,8 +4,11 @@
         <ul class="list-inline">
             <li><a href="{{ path('about') }}">Sobre este sitio</a></li>
             <li><a href="{{ path('api_intro') }}">API</a></li>
-            <li><a href="{{ path('donators') }}">Donadores</a> <span class="fas fa-gift donator"
-                                                                     title="Los Gentiles Donadores"></span></li>
+            <li>
+                <a href="{{ path('donators') }}">Donadores</a>
+                <span class="fas fa-gift donator" title="Los Gentiles Donadores"></span>
+            </li>
+            <li><a href="javascript:localStorage.clear()">Borrar datos</a></li>
         </ul>
     </div>
     <div class="col-md-8">
