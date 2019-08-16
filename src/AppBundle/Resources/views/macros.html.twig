@@ -43,23 +43,23 @@
 {% endmacro %}
 
 {% macro decklist_social_icons(decklist) %}
-<span class="social-icons">
-    <a id="social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom"
-        title="{{ 'decklist.view.social.like' | trans }}">
+    <span class="social-icons">
+    <span class="social-icon-like" data-toggle="tooltip" data-placement="bottom"
+          title="{{ 'decklist.view.social.like' | trans }}">
         <span class="fas fa-heart"></span> <span class="num">{{ decklist.nbVotes }}</span>
-    </a>
-    <a id="social-icon-favorite" href="#" class="social-icon-favorite" data-toggle="tooltip" data-placement="bottom"
-        title="{{ 'decklist.view.social.favorite' | trans }}">
+    </span>
+    <span class="social-icon-favorite" data-toggle="tooltip" data-placement="bottom"
+          title="{{ 'decklist.view.social.favorite' | trans }}">
         <span class="fas fa-star"></span> <span class="num">{{ decklist.nbFavorites }}</span>
-    </a>
-    <a id="social-icon-comment" href="#comment-form" class="social-icon-comment" data-toggle="tooltip"
-        data-placement="bottom" title="{{ 'decklist.view.social.comment' | trans }}">
+    </span>
+    <span class="social-icon-comment" data-toggle="tooltip"
+          data-placement="bottom" title="{{ 'decklist.view.social.comment' | trans }}">
         <span class="fas fa-comment"></span> <span class="num">{{ decklist.nbComments }}</span>
-    </a>
-    <a class="social-icon-version" data-toggle="tooltip" data-placement="bottom"
-        title="{{ 'decklist.view.social.version' | trans }}">
+    </span>
+    <span class="social-icon-version" data-toggle="tooltip" data-placement="bottom"
+          title="{{ 'decklist.view.social.version' | trans }}">
         <span class="fas fa-code-branch"></span> <span class="num">{{ decklist.version }}</span>
-    </a>
+    </span>
 </span>
 {% endmacro %}
 
