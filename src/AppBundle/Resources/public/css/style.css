@@ -217,14 +217,6 @@ ol {
 .list-factions li label {
 }
 
-/************ DECK GALLERY **********/
-
-#deck-gallery table { width: 100%; table-layout: fixed; border-collapse: collapse; overflow: hidden }
-#deck-gallery table td { padding: 0 }
-#deck-gallery table td > div { height: 100px; overflow: visible; position: relative }
-#deck-gallery table td > div > img { height: 100% ; border: 1px solid white; border-radius: 10px;}
-#deck-gallery table td > div > div { background: rgba(0, 0, 0, 0.5); position: absolute; left: 1px; bottom: 1px; color: white; width: 24px; height: 24px; line-height: 24px; font-size: 16px; font-weight: bold; text-align: center; border-radius: 15px; font-family: monospace }
-
 /********* DRAW SIMULATOR ************/
 
 #table-draw-simulator-content img {width:98px;height:136px;float:left;margin:5px;box-shadow: black 0px 0px 5px;border-radius: 5px;}
