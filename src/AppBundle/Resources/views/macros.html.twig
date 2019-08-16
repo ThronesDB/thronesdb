@@ -9,7 +9,7 @@
 {% macro decklist_table_row(decklist) %}
     <tr>
         <td class="decklist-name">
-            <a href="{{ path('decklist_detail', { 'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url') }) }}">{{ decklist.name }}</a>
+            <a href="{{ path('decklist_detail', {'decklist_id': decklist.id, 'decklist_name': decklist.nameCanonical|e('url')}) }}">{{ decklist.name }}</a>
         </td>
         <td><span class="fas fa-heart social-icon-like"></span> {{ decklist.nbVotes }}</td>
         <td><span class="fas fa-star social-icon-favorite"></span> {{ decklist.nbFavorites }}</td>
@@ -52,7 +52,7 @@
         title="{{ 'decklist.view.social.favorite' | trans }}">
         <span class="fas fa-star"></span> <span class="num">{{ decklist.nbFavorites }}</span>
     </a>
-    <a id="social-icon-comment" href="#comment-form" class="social-icon-comment" data-toggle="tooltip"
+    <a id="social-icon-comment" href="{{ path("decklist_detail", {"decklist_id": decklist.id, "decklist_name": decklist.nameCanonical|e('url'), "_fragment": "comment-form" }) }}" class="social-icon-comment" data-toggle="tooltip"
         data-placement="bottom" title="{{ 'decklist.view.social.comment' | trans }}">
         <span class="fas fa-comment"></span> <span class="num">{{ decklist.nbComments }}</span>
     </a>
