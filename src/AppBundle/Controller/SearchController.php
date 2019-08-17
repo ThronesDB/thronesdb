@@ -113,7 +113,7 @@ class SearchController extends Controller
 
         $game_name = $this->container->getParameter('game_name');
         $publisher_name = $this->container->getParameter('publisher_name');
-        
+
         $meta = $card->getName()
              . ", a "
             . $card->getFaction()->getName()
@@ -146,7 +146,7 @@ class SearchController extends Controller
 
         $game_name = $this->container->getParameter('game_name');
         $publisher_name = $this->container->getParameter('publisher_name');
-        
+
         $meta = $pack->getName().", a set of cards for $game_name"
                 .($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
                 ." by $publisher_name.";
@@ -177,7 +177,7 @@ class SearchController extends Controller
 
         $game_name = $this->container->getParameter('game_name');
         $publisher_name = $this->container->getParameter('publisher_name');
-        
+
         $meta = $cycle->getName().", a cycle of datapack for $game_name published by $publisher_name.";
 
         $key = array_search('cycle', SearchController::$searchKeys);
@@ -332,7 +332,7 @@ class SearchController extends Controller
             'short' => 1000,
         );
         $includeReviews = false;
-        
+
         if (!array_key_exists($view, $pagesizes)) {
             $view = 'list';
         }
@@ -344,7 +344,6 @@ class SearchController extends Controller
         $q = $this->get('cards_data')->buildQueryFromConditions($conditions);
         if ($q && $rows = $this->get('cards_data')->getSearchRows($conditions, $sort)) {
             if (count($rows) == 1) {
-                $view = 'card';
                 $includeReviews = true;
             }
 
