@@ -2,247 +2,166 @@
 
 namespace AppBundle\Entity;
 
-class Card implements \Serializable
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Exception;
+use Serializable;
+
+/**
+ * Class Card
+ * @package AppBundle\Entity
+ */
+class Card implements Serializable
 {
-    private function snakeToCamel($snake)
-    {
-        $parts = explode('_', $snake);
-        return implode('', array_map('ucfirst', $parts));
-    }
-
-    public function serialize()
-    {
-        $serialized = [];
-        if (empty($this->code)) {
-            return $serialized;
-        }
-
-        $mandatoryFields = [
-                'code',
-                'deck_limit',
-                'position',
-                'quantity',
-                'name',
-                'traits',
-                'is_loyal',
-                'is_unique',
-                'is_multiple',
-                'octgn_id',
-        ];
-
-        $optionalFields = [
-                'illustrator',
-                'flavor',
-                'text',
-                'cost',
-        ];
-
-        $externalFields = [
-                'faction',
-                'pack',
-                'type'
-        ];
-
-        switch ($this->type->getCode()) {
-            case 'agenda':
-            case 'title':
-                break;
-            case 'attachment':
-            case 'event':
-            case 'location':
-                $mandatoryFields[] = 'cost';
-                break;
-            case 'character':
-                $mandatoryFields[] = 'cost';
-                $mandatoryFields[] = 'strength';
-                $mandatoryFields[] = 'is_military';
-                $mandatoryFields[] = 'is_intrigue';
-                $mandatoryFields[] = 'is_power';
-                break;
-            case 'plot':
-                $mandatoryFields[] = 'claim';
-                $mandatoryFields[] = 'income';
-                $mandatoryFields[] = 'initiative';
-                $mandatoryFields[] = 'reserve';
-                break;
-        }
-
-        foreach ($optionalFields as $optionalField) {
-            $getter = 'get' . $this->snakeToCamel($optionalField);
-            $serialized[$optionalField] = $this->$getter();
-            if (!isset($serialized[$optionalField]) || $serialized[$optionalField] === '') {
-                unset($serialized[$optionalField]);
-            }
-        }
-
-        foreach ($mandatoryFields as $mandatoryField) {
-            $getter = 'get' . $this->snakeToCamel($mandatoryField);
-            $serialized[$mandatoryField] = $this->$getter();
-        }
-
-        foreach ($externalFields as $externalField) {
-            $getter = 'get' . $this->snakeToCamel($externalField);
-            $serialized[$externalField.'_code'] = $this->$getter()->getCode();
-        }
-
-        ksort($serialized);
-        return $serialized;
-    }
-
-    public function unserialize($serialized)
-    {
-        throw new \Exception("unserialize() method unsupported");
-    }
-
-    public function toString()
-    {
-        return $this->name;
-    }
+    /**
+     * @var integer
+     */
+    protected $id;
 
     /**
      * @var integer
      */
-    private $id;
-
-    /**
-     * @var integer
-     */
-    private $position;
+    protected $position;
 
     /**
      * @var string
      */
-    private $code;
+    protected $code;
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      */
-    private $cost;
+    protected $cost;
 
     /**
      * @var string
      */
-    private $text;
+    protected $text;
 
     /**
      * @var \DateTime
      */
-    private $dateCreation;
+    protected $dateCreation;
 
     /**
      * @var \DateTime
      */
-    private $dateUpdate;
+    protected $dateUpdate;
 
     /**
      * @var integer
      */
-    private $quantity;
+    protected $quantity;
 
     /**
      * @var integer
      */
-    private $income;
+    protected $income;
 
     /**
      * @var integer
      */
-    private $initiative;
+    protected $initiative;
 
     /**
      * @var integer
      */
-    private $claim;
+    protected $claim;
 
     /**
      * @var integer
      */
-    private $reserve;
+    protected $reserve;
 
     /**
      * @var integer
      */
-    private $deckLimit;
+    protected $deckLimit;
 
     /**
      * @var integer
      */
-    private $strength;
+    protected $strength;
 
     /**
      * @var string
      */
-    private $traits;
+    protected $traits;
 
     /**
      * @var string
      */
-    private $flavor;
+    protected $flavor;
 
     /**
      * @var string
      */
-    private $illustrator;
+    protected $illustrator;
 
     /**
      * @var boolean
      */
-    private $isUnique;
+    protected $isUnique;
 
     /**
      * @var boolean
      */
-    private $isLoyal;
+    protected $isLoyal;
 
     /**
      * @var boolean
      */
-    private $isMilitary;
+    protected $isMilitary;
 
     /**
      * @var boolean
      */
-    private $isIntrigue;
+    protected $isIntrigue;
 
     /**
      * @var boolean
      */
-    private $isPower;
+    protected $isPower;
 
     /**
      * @var string
      */
-    private $octgnId;
+    protected $octgnId;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $reviews;
+    protected $reviews;
 
     /**
-     * @var \AppBundle\Entity\Pack
+     * @var Pack
      */
-    private $pack;
+    protected $pack;
 
     /**
-     * @var \AppBundle\Entity\Type
+     * @var Type
      */
-    private $type;
+    protected $type;
 
     /**
-     * @var \AppBundle\Entity\Faction
+     * @var Faction
      */
-    private $faction;
+    protected $faction;
 
     /**
      * @var boolean
      */
-    private $isMultiple;
+    protected $isMultiple;
+
+    /**
+     * @var string|null
+     */
+    protected $imageUrl;
 
     /**
      * Constructor
@@ -254,7 +173,7 @@ class Card implements \Serializable
         $this->isPower = false;
         $this->isMultiple = false;
 
-        $this->reviews = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->reviews = new ArrayCollection();
     }
 
     /**
@@ -822,11 +741,11 @@ class Card implements \Serializable
     /**
      * Add review
      *
-     * @param \AppBundle\Entity\Review $review
+     * @param Review $review
      *
      * @return Card
      */
-    public function addReview(\AppBundle\Entity\Review $review)
+    public function addReview(Review $review)
     {
         $this->reviews[] = $review;
 
@@ -836,9 +755,9 @@ class Card implements \Serializable
     /**
      * Remove review
      *
-     * @param \AppBundle\Entity\Review $review
+     * @param Review $review
      */
-    public function removeReview(\AppBundle\Entity\Review $review)
+    public function removeReview(Review $review)
     {
         $this->reviews->removeElement($review);
     }
@@ -846,7 +765,7 @@ class Card implements \Serializable
     /**
      * Get reviews
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getReviews()
     {
@@ -856,11 +775,11 @@ class Card implements \Serializable
     /**
      * Set pack
      *
-     * @param \AppBundle\Entity\Pack $pack
+     * @param Pack $pack
      *
      * @return Card
      */
-    public function setPack(\AppBundle\Entity\Pack $pack = null)
+    public function setPack(Pack $pack = null)
     {
         $this->pack = $pack;
 
@@ -870,7 +789,7 @@ class Card implements \Serializable
     /**
      * Get pack
      *
-     * @return \AppBundle\Entity\Pack
+     * @return Pack
      */
     public function getPack()
     {
@@ -880,11 +799,11 @@ class Card implements \Serializable
     /**
      * Set type
      *
-     * @param \AppBundle\Entity\Type $type
+     * @param Type $type
      *
      * @return Card
      */
-    public function setType(\AppBundle\Entity\Type $type = null)
+    public function setType(Type $type = null)
     {
         $this->type = $type;
 
@@ -894,7 +813,7 @@ class Card implements \Serializable
     /**
      * Get type
      *
-     * @return \AppBundle\Entity\Type
+     * @return Type
      */
     public function getType()
     {
@@ -904,11 +823,11 @@ class Card implements \Serializable
     /**
      * Set faction
      *
-     * @param \AppBundle\Entity\Faction $faction
+     * @param Faction $faction
      *
      * @return Card
      */
-    public function setFaction(\AppBundle\Entity\Faction $faction = null)
+    public function setFaction(Faction $faction = null)
     {
         $this->faction = $faction;
 
@@ -918,7 +837,7 @@ class Card implements \Serializable
     /**
      * Get faction
      *
-     * @return \AppBundle\Entity\Faction
+     * @return Faction
      */
     public function getFaction()
     {
@@ -937,7 +856,7 @@ class Card implements \Serializable
             return "";
         }
 
-        return $cost ?? (string) $income;
+        return $cost ?? (string)$income;
     }
 
     /**
@@ -951,12 +870,14 @@ class Card implements \Serializable
         if (is_null($strength) and is_null($initiative)) {
             return -1;
         }
+
         return max($strength, $initiative);
     }
+
     /**
      * @var string
      */
-    private $designer;
+    protected $designer;
 
 
     /**
@@ -1004,11 +925,6 @@ class Card implements \Serializable
     }
 
     /**
-     * @var string|null
-     */
-    private $imageUrl;
-
-    /**
      * @return string|null
      */
     public function getImageUrl()
@@ -1039,6 +955,114 @@ class Card implements \Serializable
         $regex = "/${shadow} \\(([0-9]+|X)\\)\\./";
         // check if first line in the card text has that keyword.
         $textLines = explode("\n", $this->getText());
+
         return preg_match($regex, $textLines[0]) ? true : false;
+    }
+
+    /**
+     * @return array
+     */
+    public function serialize()
+    {
+        $serialized = [];
+        if (empty($this->code)) {
+            return $serialized;
+        }
+
+        $mandatoryFields = [
+            'code',
+            'deck_limit',
+            'position',
+            'quantity',
+            'name',
+            'traits',
+            'is_loyal',
+            'is_unique',
+            'is_multiple',
+            'octgn_id',
+        ];
+
+        $optionalFields = [
+            'illustrator',
+            'flavor',
+            'text',
+            'cost',
+        ];
+
+        $externalFields = [
+            'faction',
+            'pack',
+            'type',
+        ];
+
+        switch ($this->type->getCode()) {
+            case 'agenda':
+            case 'title':
+                break;
+            case 'attachment':
+            case 'event':
+            case 'location':
+                $mandatoryFields[] = 'cost';
+                break;
+            case 'character':
+                $mandatoryFields[] = 'cost';
+                $mandatoryFields[] = 'strength';
+                $mandatoryFields[] = 'is_military';
+                $mandatoryFields[] = 'is_intrigue';
+                $mandatoryFields[] = 'is_power';
+                break;
+            case 'plot':
+                $mandatoryFields[] = 'claim';
+                $mandatoryFields[] = 'income';
+                $mandatoryFields[] = 'initiative';
+                $mandatoryFields[] = 'reserve';
+                break;
+        }
+
+        foreach ($optionalFields as $optionalField) {
+            $getter = 'get'.$this->snakeToCamel($optionalField);
+            $serialized[$optionalField] = $this->$getter();
+            if (!isset($serialized[$optionalField]) || $serialized[$optionalField] === '') {
+                unset($serialized[$optionalField]);
+            }
+        }
+
+        foreach ($mandatoryFields as $mandatoryField) {
+            $getter = 'get'.$this->snakeToCamel($mandatoryField);
+            $serialized[$mandatoryField] = $this->$getter();
+        }
+
+        foreach ($externalFields as $externalField) {
+            $getter = 'get'.$this->snakeToCamel($externalField);
+            $serialized[$externalField.'_code'] = $this->$getter()->getCode();
+        }
+
+        ksort($serialized);
+
+        return $serialized;
+    }
+
+    /**
+     * @param string $serialized
+     * @throws Exception
+     */
+    public function unserialize($serialized)
+    {
+        throw new Exception("unserialize() method unsupported");
+    }
+
+    /**
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->name;
+    }
+
+    protected function snakeToCamel($snake)
+    {
+        $parts = explode('_', $snake);
+
+        return implode('', array_map('ucfirst', $parts));
     }
 }

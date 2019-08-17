@@ -3,104 +3,108 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Model\ExportableDeck;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use JsonSerializable;
 
 /**
  * Class Decklist
  * @package AppBundle\Entity
  */
-class Decklist extends ExportableDeck implements \JsonSerializable
+class Decklist extends ExportableDeck implements JsonSerializable
 {
     /**
      * @var string
      */
-    private $nameCanonical;
+    protected $nameCanonical;
 
     /**
      * @var string
      */
-    private $descriptionHtml;
+    protected $descriptionHtml;
 
     /**
      * @var string
      */
-    private $signature;
+    protected $signature;
 
     /**
      * @var integer
      */
-    private $nbVotes;
+    protected $nbVotes;
 
     /**
      * @var integer
      */
-    private $nbFavorites;
+    protected $nbFavorites;
 
     /**
      * @var integer
      */
-    private $nbComments;
+    protected $nbComments;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $comments;
+    protected $comments;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $successors;
+    protected $successors;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $children;
+    protected $children;
 
     /**
      * @var Pack
      */
-    private $lastPack;
+    protected $lastPack;
 
     /**
      * @var Deck
      */
-    private $parent;
+    protected $parent;
 
     /**
      * @var Decklist
      */
-    private $precedent;
+    protected $precedent;
 
     /**
      * @var Tournament
      */
-    private $tournament;
+    protected $tournament;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $favorites;
+    protected $favorites;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $votes;
+    protected $votes;
 
     /**
      * @var integer
      */
-    private $version;
+    protected $version;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->slots = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->successors = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->favorites = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->votes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->slots = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->successors = new ArrayCollection();
+        $this->children = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
+        $this->votes = new ArrayCollection();
     }
 
     /**
@@ -144,7 +148,7 @@ class Decklist extends ExportableDeck implements \JsonSerializable
     /**
      * Set dateCreation
      *
-     * @param \DateTime $dateCreation
+     * @param DateTime $dateCreation
      *
      * @return Decklist
      */
@@ -158,7 +162,7 @@ class Decklist extends ExportableDeck implements \JsonSerializable
     /**
      * Set dateUpdate
      *
-     * @param \DateTime $dateUpdate
+     * @param DateTime $dateUpdate
      *
      * @return Decklist
      */
@@ -354,7 +358,7 @@ class Decklist extends ExportableDeck implements \JsonSerializable
     /**
      * Get comments
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getComments()
     {
@@ -388,7 +392,7 @@ class Decklist extends ExportableDeck implements \JsonSerializable
     /**
      * Get successors
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getSuccessors()
     {
@@ -422,7 +426,7 @@ class Decklist extends ExportableDeck implements \JsonSerializable
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getChildren()
     {
@@ -580,7 +584,7 @@ class Decklist extends ExportableDeck implements \JsonSerializable
     /**
      * Get favorites
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFavorites()
     {
@@ -614,7 +618,7 @@ class Decklist extends ExportableDeck implements \JsonSerializable
     /**
      * Get votes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getVotes()
     {

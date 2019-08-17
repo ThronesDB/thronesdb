@@ -2,41 +2,42 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
+
 /**
  * Comment
  */
 class Comment
 {
-    
     /**
      * @var integer
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $text;
+    protected $text;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
-    private $dateCreation;
+    protected $dateCreation;
 
     /**
      * @var boolean
      */
-    private $isHidden;
+    protected $isHidden;
 
     /**
-     * @var \AppBundle\Entity\User
+     * @var User
      */
-    private $user;
+    protected $user;
 
     /**
-     * @var \AppBundle\Entity\Decklist
+     * @var Decklist
      */
-    private $decklist;
+    protected $decklist;
 
 
     /**
@@ -76,7 +77,7 @@ class Comment
     /**
      * Set dateCreation
      *
-     * @param \DateTime $dateCreation
+     * @param DateTime $dateCreation
      *
      * @return Comment
      */
@@ -90,7 +91,7 @@ class Comment
     /**
      * Get dateCreation
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateCreation()
     {
@@ -124,11 +125,11 @@ class Comment
     /**
      * Set user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param User $user
      *
      * @return Comment
      */
-    public function setUser(\AppBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -138,7 +139,7 @@ class Comment
     /**
      * Get user
      *
-     * @return \AppBundle\Entity\User
+     * @return User
      */
     public function getUser()
     {
@@ -148,11 +149,11 @@ class Comment
     /**
      * Set decklist
      *
-     * @param \AppBundle\Entity\Decklist $decklist
+     * @param Decklist $decklist
      *
      * @return Comment
      */
-    public function setDecklist(\AppBundle\Entity\Decklist $decklist = null)
+    public function setDecklist(Decklist $decklist = null)
     {
         $this->decklist = $decklist;
 
@@ -162,7 +163,7 @@ class Comment
     /**
      * Get decklist
      *
-     * @return \AppBundle\Entity\Decklist
+     * @return Decklist
      */
     public function getDecklist()
     {
