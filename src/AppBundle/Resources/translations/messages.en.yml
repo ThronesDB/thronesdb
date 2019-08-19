@@ -101,7 +101,7 @@ decks:
     notes:
       tags:
         label: Tags
-        hint: Tags are for easy filtering in your list of decks, e.g. <i>competitive</i> or <i>melee</i>.
+        hint: Tags are for easy filtering in your list of decks, e.g. <i>competitive</i> or <i>melee</i>. Separate tags with spaces.
       notes:
         label: Notes
         hint: "Type # to enter a card name. Type $ to enter a symbol."
