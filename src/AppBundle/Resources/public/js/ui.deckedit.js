@@ -191,14 +191,15 @@
 
         var agendas = app.deck.get_agendas() || [];
         var faction_codes = [];
+        var i;
 
-        // special case - for "The Conclave" and "Kingdom of Shadows" pre-select all factions.
-        if (agendas.length && ("09045" === agendas[0]['code'] || "13079" === agendas[0]['code'])) {
+        // special case - for "The Conclave", "Kingdom of Shadows", and "The White Book" pre-select all factions.
+        if (agendas.length && -1 !== ["09045", "13079", "13099"].indexOf(agendas[0]['code'])) {
             faction_codes = app.deck.get_all_faction_codes();
         } else {
             faction_codes = app.deck.get_minor_faction_codes();
         }
-        for(var i = 0; i < faction_codes.length; i++) {
+        for(i = 0; i < faction_codes.length; i++) {
             $('[data-filter=faction_code]').find('input[name=' + faction_codes[i] + ']').prop("checked", true).parent().addClass('active');
         }
 

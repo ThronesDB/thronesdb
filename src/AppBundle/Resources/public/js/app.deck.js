@@ -894,7 +894,7 @@
         }
 
         // the condition(s) of the agendas must be fulfilled
-        var agendas = deck.get_agendas();
+        agendas = deck.get_agendas();
         for(var i=0; i<agendas.length; i++) {
             if(!deck.validate_agenda(agendas[i])) {
                 return 'agenda';
@@ -904,6 +904,15 @@
 
     deck.validate_agenda = function validate_agenda(agenda)
     {
+        var validate_the_white_book = function() {
+            var i, n;
+            var names = [];
+            var guards = deck.get_cards(null, {type_code: 'character', traits: new RegExp(Translator.trans('card.traits.kingsguard') + '\\.')});
+            for (i = 0, n = guards.length; i < n; i++) {
+                names.push(guards[i].name);
+            }
+            return _.uniq(names).length >= 7;
+        };
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -966,6 +975,8 @@
                     return false;
                 }
                 break;
+            case '13099':
+                return validate_the_white_book();
         }
         return true;
     };
@@ -1059,6 +1070,8 @@
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.maester')) !== -1;
             case '13079':
                 return card.type_code === 'character' && card_has_shadow_keyword(card, Translator.trans('card.keywords.shadow'));
+            case '13099':
+                return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.kingsguard')) !== -1;
         }
     };
 

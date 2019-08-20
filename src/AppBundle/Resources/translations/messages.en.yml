@@ -384,6 +384,7 @@ card:
     scheme: Scheme
     banner: Banner
     maester: Maester
+    kingsguard: Kingsguard
   reviews:
     title: Reviews
     none: No review yet for this card.

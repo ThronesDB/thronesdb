@@ -13,6 +13,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class DeckValidationHelper
 {
+
     /**
      * @var AgendaHelper
      */
@@ -168,16 +169,21 @@ class DeckValidationHelper
             case '01204':
             case '01205':
                 return $this->agenda_helper->getMinorFactionCode($agenda) === $card->getFaction()->getCode();
-            case '09045':
+            case '09045': // The Conclave
                 $trait = $this->translator->trans('card.traits.maester');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
                     return $card->getType()->getCode() === 'character';
                 }
-
                 return false;
             case '13079': // Kingdom of Shadows
                 $langKey = $this->translator->trans('card.keywords.shadow');
                 return $card->getType()->getCode() === 'character' && $card->hasShadowKeyword($langKey);
+            case '13099': // The White Book
+                $trait = $this->translator->trans('card.traits.kingsguard');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
         }
         return false;
     }
@@ -214,6 +220,8 @@ class DeckValidationHelper
                 return $this->validateConclave($slots);
             case '11079':
                 return $this->validateFreeFolk($slots);
+            case '13099':
+                return $this->validateTheWhiteBook($slots);
             default:
                 return true;
         }
@@ -334,6 +342,22 @@ class DeckValidationHelper
         }
 
         return true;
+    }
+
+    /**
+     * Special deck validation rules for the "The White Book" agenda.
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateTheWhiteBook(SlotCollectionInterface $slots): bool
+    {
+        $trait = $this->translator->trans('card.traits.kingsguard');
+        $slots = $slots->getDrawDeck()->filterByTrait($trait);
+        $names = [];
+        foreach ($slots as $slot) {
+            $names[] = $slot->getCard()->getName();
+        };
+        return count(array_unique($names)) >= 7;
     }
 
     /**

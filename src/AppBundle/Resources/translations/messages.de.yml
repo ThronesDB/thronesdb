@@ -384,6 +384,7 @@ card:
     scheme: Komplott
     banner: Banner
     maester: Maester
+    kingsguard: Königsgarde
   reviews:
     title: Karten-Rezensionen
     none: Noch keine Rezensionen dieser Karte.
