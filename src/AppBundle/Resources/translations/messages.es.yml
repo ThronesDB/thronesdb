@@ -383,6 +383,7 @@ card:
     scheme: Conspiración
     banner: Estandarte
     maester: Maestre
+    kingsguard: Guardia Real
   reviews:
     title: Reseñas
     none: Aún no hay reseñas para esta carta.
