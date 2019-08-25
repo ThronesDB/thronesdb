@@ -48,5 +48,3 @@ Event{% if events|length > 1 %}s{% endif %}
 {% for slot in events %}
 {{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }})
 {% endfor %}
-
-{{ footer|default('') }}
