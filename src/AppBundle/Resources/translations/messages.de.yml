@@ -101,7 +101,7 @@ decks:
     notes:
       tags:
         label: Tags
-        hint: Die Tags dienen zum Filtern deiner Decklisten, z.B., <i>Turnier</i> o <i>Buhurt</i>.
+        hint: Die Tags dienen zum Filtern deiner Decklisten, z.B., <i>Turnier</i> o <i>Buhurt</i>. Trenne Tags mit Leerzeichen.
       notes:
         label: Notizen
         hint: "Tippe # um einen Kartennamen oder $ um ein Spielsymbol einzugeben."
