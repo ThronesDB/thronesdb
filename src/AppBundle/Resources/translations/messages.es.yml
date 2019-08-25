@@ -101,7 +101,7 @@ decks:
     notes:
       tags:
         label: Etiquetas
-        hint: Las etiquetas son útiles para filtrar tu lista de mazos, p. ej., <i>competitivo</i> o <i>justa</i>.
+        hint: Las etiquetas son útiles para filtrar tu lista de mazos, p. ej., <i>competitivo</i> o <i>justa</i>. Separa las etiquetas con espacios.
       notes:
         label: Notas
         hint: "Escribe # para introducir el nombre de una carta. Escribe $ para introducir un símbolo."
