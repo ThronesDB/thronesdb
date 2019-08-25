@@ -805,13 +805,13 @@ class SocialController extends Controller
                 'username' => $user->getUsername(),
                 'decklist_name' => $decklist->getName(),
                 'url' => $this->generateUrl(
-                        'decklist_detail',
-                        array(
+                    'decklist_detail',
+                    array(
                             'decklist_id' => $decklist->getId(),
                             'decklist_name' => $decklist->getNameCanonical(),
                         ),
-                        UrlGeneratorInterface::ABSOLUTE_URL
-                    ).'#'.$comment->getId(),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ).'#'.$comment->getId(),
                 'comment' => $comment_html,
                 'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL),
             );
