@@ -4,34 +4,34 @@
         <card qty="1" id="{{ deck.faction.octgnId }}">{{ deck.faction.name }}</card>
     </section>
     <section name="Agenda" shared="False">
-        {% for agenda in deck.agendas %}
+{% for agenda in deck.agendas %}
             <card qty="1" id="{{ agenda.card.octgnId }}">{{ agenda.card.name }}</card>
-        {% endfor %}
+{% endfor %}
     </section>
     <section name="Plots" shared="False">
-        {% for slot in deck.slots_by_type.plot %}
+{% for slot in deck.slots_by_type.plot %}
             <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
-        {% endfor %}
+{% endfor %}
     </section>
     <section name="Characters" shared="False">
-        {% for slot in deck.slots_by_type.character %}
+{% for slot in deck.slots_by_type.character %}
             <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
-        {% endfor %}
+{% endfor %}
     </section>
     <section name="Locations" shared="False">
-        {% for slot in deck.slots_by_type.location %}
+{% for slot in deck.slots_by_type.location %}
             <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
-        {% endfor %}
+{% endfor %}
     </section>
     <section name="Attachments" shared="False">
-        {% for slot in deck.slots_by_type.attachment %}
+{% for slot in deck.slots_by_type.attachment %}
             <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
-        {% endfor %}
+{% endfor %}
     </section>
     <section name="Events" shared="False">
-        {% for slot in deck.slots_by_type.event %}
+{% for slot in deck.slots_by_type.event %}
             <card qty="{{ slot.quantity }}" id="{{ slot.card.octgnId }}">{{ slot.card.name }}</card>
-        {% endfor %}
+{% endfor %}
     </section>
     <notes><![CDATA[]]></notes>
 </deck>
