@@ -58,6 +58,11 @@
                 ui.export_agotcards(app.deck);
                 break;
         }
+        
+        if (action_id !== 'btn-publish' &&
+            action_id !== 'btn-clone' ) {
+            event.preventDefault();
+        }
     };
 
     /**
