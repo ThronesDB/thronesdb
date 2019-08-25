@@ -74,6 +74,8 @@
                 ui.export_agotcards(app.deck);
                 break;
         }
+        
+        event.preventDefault();
     };
 
     ui.send_like = function send_like(event)
