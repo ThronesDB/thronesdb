@@ -21,5 +21,3 @@ From {{ first_pack.pack.name }}{% if first_pack.nb > 1 %} ({{ first_pack.nb }}){
 {{ slot.quantity }}x {{ slot.card.name }} ({{ slot.card.pack.name }} #{{ slot.card.position }})
 {% endfor %}
 {% endfor %}
-
-{{ footer|default('') }}
