@@ -841,6 +841,8 @@
             } else if(agenda && agenda.code === '10045') {
                 expectedPlotDeckSize = 10;
                 expectedMaxDoublePlot = 2;
+            } else if(agenda && agenda.code === '13118') {
+                expectedMinCardCount = 75;
             }
         });
         // exactly 7 plots
@@ -913,6 +915,21 @@
             }
             return _.uniq(names).length >= 7;
         };
+        var validate_valyrian_steel = function() {
+            var i, n;
+            var names = [];
+            var attachments = deck.get_cards(null, {type_code: 'attachment'});
+            for (i = 0, n = attachments.length; i < n; i++) {
+                if (attachments[i].indeck > 1) {
+                    return false;
+                }
+                if (-1 !== names.indexOf(attachments[i])) {
+                    return false;
+                }
+                names.push(attachments[i].name);
+            }
+            return true;
+        };
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -977,6 +994,8 @@
                 break;
             case '13099':
                 return validate_the_white_book();
+            case '13118':
+                return validate_valyrian_steel();
         }
         return true;
     };
