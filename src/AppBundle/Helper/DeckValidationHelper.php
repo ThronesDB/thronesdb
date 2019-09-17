@@ -5,6 +5,7 @@ namespace AppBundle\Helper;
 use AppBundle\Entity\Card;
 use AppBundle\Model\ExportableDeck;
 use AppBundle\Model\SlotCollectionInterface;
+use AppBundle\Model\SlotInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -42,19 +43,29 @@ class DeckValidationHelper
     public function findProblem(ExportableDeck $deck)
     {
         $slots = $deck->getSlots();
-
         $plotDeck = $slots->getPlotDeck();
         $plotDeckSize = $plotDeck->countCards();
 
-        /* @var integer $expectedPlotDeckSize Expected number of plots */
         $expectedPlotDeckSize = 7;
         $expectedMaxDoublePlot = 1;
+        $expectedMaxAgendaCount = 1;
+        $expectedMinCardCount = 60;
+
         foreach ($slots->getAgendas() as $agenda) {
-            if ($agenda->getCard()->getCode() === '05045') {
-                $expectedPlotDeckSize = 12;
-            } elseif ($agenda->getCard()->getCode() === '10045') {
-                $expectedPlotDeckSize = 10;
-                $expectedMaxDoublePlot = 2;
+            $code = $agenda->getCard()->getCode();
+            switch ($code) {
+                case '05045': // The Wars To Come
+                    $expectedPlotDeckSize = 12;
+                    break;
+                case '10045': // "The Rains of Castamere"
+                    $expectedPlotDeckSize = 10;
+                    $expectedMaxDoublePlot = 2;
+                    break;
+                case '13118': // Valyrian Steel
+                    $expectedMinCardCount = 75;
+                    break;
+                default:
+                    // do nothing here
             }
         }
         if ($plotDeckSize > $expectedPlotDeckSize) {
@@ -68,12 +79,12 @@ class DeckValidationHelper
         if (count($plotDeck) < $expectedPlotDeckSpread) {
             return 'too_many_different_plots';
         }
-        $expectedMaxAgendaCount = 1;
-        $expectedMinCardCount = 60;
+
         if ($slots->isAlliance()) {
             $expectedMaxAgendaCount = 3;
             $expectedMinCardCount = 75;
         }
+
         if ($slots->getAgendas()->countCards() > $expectedMaxAgendaCount) {
             return 'too_many_agendas';
         }
@@ -222,6 +233,8 @@ class DeckValidationHelper
                 return $this->validateFreeFolk($slots);
             case '13099':
                 return $this->validateTheWhiteBook($slots);
+            case '13118':
+                return $this->validateValyrianSteel($slots);
             default:
                 return true;
         }
@@ -382,6 +395,29 @@ class DeckValidationHelper
             }
         }
 
+        return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateValyrianSteel(SlotCollectionInterface $slots): bool
+    {
+        $names = [];
+        // Your deck cannot include more than 1 copy of each attachment (by title).
+        $slots = $slots->getDrawDeck()->filterByType('attachment');
+        /* @var SlotInterface $slot */
+        foreach ($slots as $slot) {
+            $name = $slot->getCard()->getName();
+            if (in_array($name, $names)) {
+                return false;
+            }
+            if (1 < $slot->getQuantity()) {
+                return false;
+            }
+            $names[] = $name;
+        }
         return true;
     }
 }
