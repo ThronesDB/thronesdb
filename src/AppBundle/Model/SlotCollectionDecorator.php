@@ -294,6 +294,20 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     /**
      * @inheritdoc
      */
+    public function excludeByType($type_code)
+    {
+        $slots = [];
+        foreach ($this->slots as $slot) {
+            if ($slot->getCard()->getType()->getCode() !== $type_code) {
+                $slots[] = $slot;
+            }
+        }
+        return new SlotCollectionDecorator(new ArrayCollection($slots));
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function filterByTrait($trait)
     {
         $slots = [];
