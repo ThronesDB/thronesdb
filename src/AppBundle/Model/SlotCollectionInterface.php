@@ -2,12 +2,16 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Entity\Pack;
+use ArrayAccess;
+use Countable;
 use Doctrine\Common\Collections\Collection;
+use IteratorAggregate;
 
 /**
  * Interface for a collection of SlotInterface
  */
-interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \ArrayAccess
+interface SlotCollectionInterface extends Countable, IteratorAggregate, ArrayAccess
 {
     /**
      * Adds a slot to the collection.
@@ -25,13 +29,13 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
      * @return integer
      */
     public function countCards();
-    
+
     /**
      * Get included packs
-     * @return \AppBundle\Entity\Pack[]
+     * @return Pack[]
      */
     public function getIncludedPacks();
-    
+
     /**
      * Get all slots sorted by type code (including plots)
      * @return array
@@ -43,25 +47,25 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
      * @return array
      */
     public function getSlotsByCycleOrder();
-    
+
     /**
      * Get all slot counts sorted by type code (excluding plots)
      * @return array
      */
     public function getCountByType();
-    
+
     /**
      * Get the plot deck
-     * @return \AppBundle\Model\SlotCollectionInterface
+     * @return SlotCollectionInterface
      */
     public function getPlotDeck();
 
     /**
      * Get all the agendas
-     * @return \AppBundle\Model\SlotCollectionInterface
+     * @return SlotCollectionInterface
      */
     public function getAgendas();
-    
+
     /**
      * Return true is agenda is Alliance (06018)
      * @return boolean
@@ -70,34 +74,41 @@ interface SlotCollectionInterface extends \Countable, \IteratorAggregate, \Array
 
     /**
      * Get the draw deck
-     * @return \AppBundle\Model\SlotCollectionInterface
+     * @return SlotCollectionInterface
      */
     public function getDrawDeck();
-    
+
     /**
      * Get the content as an array card_code => qty
      * @return array
      */
     public function getContent();
-    
+
     /**
      *
      * @param string $faction_code
-     * @return \AppBundle\Model\SlotCollectionDecorator
+     * @return SlotCollectionDecorator
      */
     public function filterByFaction($faction_code);
-    
+
     /**
-     *
+     * Returns only cards that match the given type.
      * @param string $type_code
-     * @return \AppBundle\Model\SlotCollectionDecorator
+     * @return SlotCollectionDecorator
      */
     public function filterByType($type_code);
-    
+
+    /**
+     * Returns only any cards that don't match the given type.
+     * @param string $type_code
+     * @return SlotCollectionDecorator
+     */
+    public function excludeByType($type_code);
+
     /**
      *
      * @param string $trait
-     * @return \AppBundle\Model\SlotCollectionDecorator
+     * @return SlotCollectionDecorator
      */
     public function filterByTrait($trait);
 

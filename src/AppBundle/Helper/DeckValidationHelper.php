@@ -404,11 +404,17 @@ class DeckValidationHelper
      */
     protected function validateValyrianSteel(SlotCollectionInterface $slots): bool
     {
-        $names = [];
         // Your deck cannot include more than 1 copy of each attachment (by title).
-        $slots = $slots->getDrawDeck()->filterByType('attachment');
+        $names = [];
+
+        $nonAttachmentSlots = $slots->getDrawDeck()->excludeByType('attachment');
+        foreach ($nonAttachmentSlots as $slot) {
+            $names[] = $slot->getCard()->getName();
+        }
+
+        $attachmentsSlots = $slots->getDrawDeck()->filterByType('attachment');
         /* @var SlotInterface $slot */
-        foreach ($slots as $slot) {
+        foreach ($attachmentsSlots as $slot) {
             $name = $slot->getCard()->getName();
             if (in_array($name, $names)) {
                 return false;

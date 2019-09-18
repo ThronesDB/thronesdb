@@ -919,11 +919,17 @@
             var i, n;
             var names = [];
             var attachments = deck.get_cards(null, {type_code: 'attachment'});
+            var notAttachments = deck.get_cards(null, {type_code: {'$nin': ['agenda', 'attachment', 'plot']}});
+
+            for (i = 0, n = notAttachments.length; i < n; i++) {
+                names.push(notAttachments[i].name);
+            }
+
             for (i = 0, n = attachments.length; i < n; i++) {
                 if (attachments[i].indeck > 1) {
                     return false;
                 }
-                if (-1 !== names.indexOf(attachments[i])) {
+                if (-1 !== names.indexOf(attachments[i].name)) {
                     return false;
                 }
                 names.push(attachments[i].name);
