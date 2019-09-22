@@ -87,4 +87,5 @@ AppBundle\Entity\Deck:
             column: minor_version
         uuid:
             type: uuid
+            nullable: true
             unique: true

@@ -22,7 +22,7 @@ final class Version20190922213719 extends AbstractMigration
      */
     public function up(Schema $schema) : void
     {
-        $this->addSql('ALTER TABLE deck ADD uuid CHAR(36) NOT NULL COMMENT \'(DC2Type:uuid)\'');
+        $this->addSql('ALTER TABLE deck ADD uuid CHAR(36) COMMENT \'(DC2Type:uuid)\'');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_4FAC3637D17F50A6 ON deck (uuid)');
     }
 
