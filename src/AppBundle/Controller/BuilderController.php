@@ -8,6 +8,7 @@ use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -120,7 +121,7 @@ class BuilderController extends Controller
         $deck->setProblem('too_few_cards');
         $deck->setTags(join(' ', array_unique($tags)));
         $deck->setUser($this->getUser());
-
+        $deck->setUuid(Uuid::uuid4());
         if ($agenda) {
             $slot = new Deckslot();
             $slot->setCard($agenda);
@@ -205,9 +206,12 @@ class BuilderController extends Controller
             );
         }
 
+        $deck = new Deck();
+        $deck->setUuid(Uuid::uuid4());
+
         $this->get('deck_manager')->save(
             $this->getUser(),
-            new Deck(),
+            $deck,
             null,
             $name,
             $data['faction'],
@@ -419,6 +423,7 @@ class BuilderController extends Controller
         $is_copy = (boolean)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
         if ($is_copy || !$id) {
             $deck = new Deck();
+            $deck->setUuid(Uuid::uuid4());
         }
 
         $content = (array)json_decode($request->get('content'));

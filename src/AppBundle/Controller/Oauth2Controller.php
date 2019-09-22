@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -176,6 +177,7 @@ class Oauth2Controller extends Controller
 
         if (!$id) {
             $deck = new Deck();
+            $deck->setUuid(Uuid::uuid4());
             $this->getDoctrine()->getManager()->persist($deck);
         } else {
             $deck = $this->getDoctrine()->getRepository('AppBundle:Deck')->find($id);
