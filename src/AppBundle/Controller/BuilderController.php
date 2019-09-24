@@ -549,13 +549,13 @@ class BuilderController extends Controller
     }
 
     /**
-     * @param $deck_id
+     * @param $deck_uuid
      * @return Response
      */
-    public function viewAction($deck_id)
+    public function viewAction($deck_uuid)
     {
         /** @var Deck $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         if (!$deck) {
             return $this->render(
@@ -586,7 +586,6 @@ class BuilderController extends Controller
             array(
                 'pagetitle' => "Deckbuilder",
                 'deck' => $deck,
-                'deck_id' => $deck_id,
                 'is_owner' => $is_owner,
                 'tournaments' => $tournaments,
             )

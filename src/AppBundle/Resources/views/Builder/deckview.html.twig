@@ -46,15 +46,15 @@
                 <div style="margin-bottom:20px" id="btn-group-deck">
                     <div style="margin-bottom:5px">
                         {% if is_owner %}
-                            <a href="{{ path('deck_edit', {deck_id:deck_id}) }}" class="btn btn-primary"><span
+                            <a href="{{ path('deck_edit', {deck_uuid: deck.uuid}) }}" class="btn btn-primary"><span
                                         class="fas fa-pencil-alt"></span> {{ 'forms.edit' | trans }}</a>
-                            <a href="{{ path('deck_publish_form', {deck_id:deck_id}) }}" id="btn-publish"
+                            <a href="{{ path('deck_publish_form', {deck_uuid: deck.uuid}) }}" id="btn-publish"
                                class="btn btn-success"><span class="fas fa-share"></span> {{ 'forms.publish' | trans }}
                             </a>
                             <button type="button" id="btn-delete" class="btn btn-danger"><span
                                         class="fas fa-trash-alt"></span> {{ 'forms.delete' | trans }}</button>
                         {% endif %}
-                        <a href="{{ path('deck_clone', {deck_id:deck_id}) }}" id="btn-clone" class="btn btn-info"><span
+                        <a href="{{ path('deck_clone', {deck_uuid:deck.uuid}) }}" id="btn-clone" class="btn btn-info"><span
                                     class="fas fa-clone"></span> {{ 'forms.clone' | trans }}</a>
                         <button type="button" id="btn-print" class="btn btn-default"><span
                                     class="fas fa-print"></span> {{ 'forms.print' | trans }}</button>
@@ -74,13 +74,13 @@
                                 <li class="dropdown-header"><span
                                             class="fas fa-file-download"></span> {{ 'forms.download' | trans }}</li>
                                 <li>
-                                    <a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text">{{ 'decks.form.download.text' | trans }}</a>
+                                    <a href="{{ path('deck_download', {deck_uuid:deck.uuid}) }}?format=text">{{ 'decks.form.download.text' | trans }}</a>
                                 </li>
                                 <li>
-                                    <a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=text_cycle">{{ 'decks.form.download.text_cycle' | trans }}</a>
+                                    <a href="{{ path('deck_download', {deck_uuid:deck.uuid}) }}?format=text_cycle">{{ 'decks.form.download.text_cycle' | trans }}</a>
                                 </li>
                                 <li>
-                                    <a href="{{ path('deck_download', {deck_id:deck_id}) }}?format=octgn">{{ 'decks.form.download.octgn' | trans }}</a>
+                                    <a href="{{ path('deck_download', {deck_uuid:deck.uuid}) }}?format=octgn">{{ 'decks.form.download.octgn' | trans }}</a>
                                 </li>
                                 <li class="dropdown-header"><span class="fas fa-sort"></span> {{ 'forms.sort' | trans }}
                                 </li>
