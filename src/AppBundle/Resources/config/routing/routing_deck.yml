@@ -17,28 +17,28 @@ deck_save:
         _controller: AppBundle:Builder:save
 
 deck_edit:
-    path: /edit/{deck_id}
+    path: /edit/{deck_uuid}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:edit
     requirements:
-        deck_id: \d+
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
 
 deck_view:
-    path: /view/{deck_id}
+    path: /view/{deck_uuid}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:view
     requirements:
-        deck_id: \d+
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
 
 deck_clone:
-    path: /clone/{deck_id}
+    path: /clone/{deck_uuid}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:clone
     requirements:
-        deck_id: \d+
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
 
 deck_delete:
     path: /delete
@@ -72,19 +72,20 @@ deck_copy:
         decklist_id: \d+
 
 deck_publish_form:
-    path: /publish/{deck_id}
+    path: /publish/{deck_uuid}
     methods: [GET]
     defaults:
         _controller: AppBundle:Social:publishForm
-
+    requirements:
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
 
 deck_download:
-    path: /export/octgn/{deck_id}
+    path: /export/octgn/{deck_uuid}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:download
     requirements:
-        deck_id: \d+
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
 
 deck_autosave:
     path: /autosave
@@ -93,10 +94,10 @@ deck_autosave:
         _controller: AppBundle:Builder:autosave
 
 decks_diff:
-    path: /compare/{deck1_id}/{deck2_id}
+    path: /compare/{deck1_uuid}/{deck2_uuid}
     methods: [GET]
     defaults:
         _controller: AppBundle:Builder:compare
     requirements:
-        deck1_id: \d+
-        deck2_id: \d+
+        deck1_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+        deck2_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
