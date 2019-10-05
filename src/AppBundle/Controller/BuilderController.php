@@ -524,10 +524,10 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function editAction($deck_id)
+    public function editAction($deck_uuid)
     {
         /** @var Deck $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         if ($this->getUser()->getId() != $deck->getUser()->getId()) {
             return $this->render(
