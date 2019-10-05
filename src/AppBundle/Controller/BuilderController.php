@@ -335,13 +335,13 @@ class BuilderController extends Controller
         return $response;
     }
 
-    public function cloneAction($deck_id)
+    public function cloneAction($deck_uuid)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         /* @var $deck Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
