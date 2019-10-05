@@ -133,7 +133,7 @@ class BuilderController extends Controller
         $em->persist($deck);
         $em->flush();
 
-        return $this->redirect($this->get('router')->generate('deck_edit', ['deck_id' => $deck->getId()]));
+        return $this->redirect($this->get('router')->generate('deck_edit', ['deck_uuid' => $deck->getUuid()]));
     }
 
     public function importAction()
