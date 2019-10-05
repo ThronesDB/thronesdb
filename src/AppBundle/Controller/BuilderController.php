@@ -593,19 +593,19 @@ class BuilderController extends Controller
     }
 
     /**
-     * @param int $deck1_id
-     * @param int $deck2_id
+     * @param int $deck1_uuid
+     * @param int $deck2_uuid
      * @return Response
      */
-    public function compareAction($deck1_id, $deck2_id)
+    public function compareAction($deck1_uuid, $deck2_uuid)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
         /* @var Deck $deck1 */
-        $deck1 = $entityManager->getRepository('AppBundle:Deck')->find($deck1_id);
+        $deck1 = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck1_uuid]);
 
         /* @var Deck $deck2 */
-        $deck2 = $entityManager->getRepository('AppBundle:Deck')->find($deck2_id);
+        $deck2 = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck2_uuid]);
 
         if (!$deck1 || !$deck2) {
             return $this->render(
