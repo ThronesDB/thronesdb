@@ -112,7 +112,7 @@
                 <table class="table table-expanded list-decks">
                     <tbody id="decks">
                     {% for deck in decks %}
-                        <tr data-id="{{ deck.id }}">
+                        <tr data-id="{{ deck.id }}" data-uuid="{{ deck.uuid }}">
                             <td><input type="checkbox"></td>
                             <td class="hidden-xs">
                                 <img
