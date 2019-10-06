@@ -155,22 +155,25 @@
 
     ui.do_diff = function do_diff(ids)
     {
-        location.href = Routing.generate('decks_diff', {deck1_id: ids[0], deck2_id: ids[1]});
+        location.href = Routing.generate('decks_diff', {deck1_uuid: ids[0], deck2_uuid: ids[1]});
     };
 
     ui.do_action_selection = function do_action_selection(event)
     {
         event.stopPropagation();
         var action_id = $(this).attr('id');
-        var ids = $('.list-decks input:checked').map(function (index, elt)
-        {
+        var ids = $('.list-decks input:checked').map(function (index, elt) {
             return $(elt).closest('tr').data('id');
         }).get();
-        if(!action_id || !ids.length)
+        var uuids = $('.list-decks input:checked').map(function(index, elt) {
+           return $(elt).closest('tr').data('uuid');
+        });
+        if(!action_id || !ids.length || !uuids.length) {
             return;
+        }
         switch(action_id) {
             case 'btn-compare':
-                ui.do_diff(ids);
+                ui.do_diff(uuids);
                 break;
             case 'btn-tag-add':
                 ui.tag_add(ids);
