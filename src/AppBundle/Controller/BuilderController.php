@@ -601,11 +601,12 @@ class BuilderController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        /* @var Deck $deck1 */
-        $deck1 = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck1_uuid]);
+        $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck');
 
+        /* @var Deck $deck1 */
+        $deck1 = $repo->findOneBy(['uuid' => $deck1_uuid]);
         /* @var Deck $deck2 */
-        $deck2 = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck2_uuid]);
+        $deck2 = $repo->findOneBy(['uuid' => $deck2_uuid]);
 
         if (!$deck1 || !$deck2) {
             return $this->render(
