@@ -187,12 +187,6 @@
             case 'btn-delete-selected':
                 ui.confirm_delete_all(ids);
                 break;
-            case 'btn-download-text':
-                ui.download_text_selection(ids);
-                break;
-            case 'btn-download-octgn':
-                ui.download_octgn_selection(ids);
-                break;
         }
         return false;
     };
