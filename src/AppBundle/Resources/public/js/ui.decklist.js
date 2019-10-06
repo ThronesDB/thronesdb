@@ -10,7 +10,7 @@
     ui.setup_event_handlers = function setup_event_handlers()
     {
 
-        $('#decklist-delete').on('click', ui.delete_form);
+        $('.decklist-delete').on('click', ui.delete_form);
         $('.social .social-icon-like').on('click', ui.send_like);
         $('.social .social-icon-favorite').on('click', ui.send_favorite);
         $('#btn-group-decklist button[id],a[id]').on('click', ui.do_action_decklist);
@@ -74,7 +74,7 @@
                 ui.export_agotcards(app.deck);
                 break;
         }
-        
+
         event.preventDefault();
     };
 
@@ -190,15 +190,15 @@
     ui.add_author_actions = function add_author_actions()
     {
         if(app.user.data && app.user.data.is_author) {
-            $('#decklist-edit').show();
+            $('.decklist-edit').show();
             if(app.user.data.can_delete) {
-                $('#decklist-delete').show();
+                $('.decklist-delete').show();
             } else {
-                $('#decklist-delete').remove();
+                $('.decklist-delete').remove();
             }
         } else {
-            $('#decklist-edit').remove();
-            $('#decklist-delete').remove();
+            $('.decklist-edit').remove();
+            $('.decklist-delete').remove();
         }
     };
 
