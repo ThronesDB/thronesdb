@@ -226,13 +226,13 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function downloadAction(Request $request, $deck_id)
+    public function downloadAction(Request $request, $deck_uuid)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         /* @var $deck Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
