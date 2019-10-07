@@ -8,6 +8,7 @@ use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -120,7 +121,7 @@ class BuilderController extends Controller
         $deck->setProblem('too_few_cards');
         $deck->setTags(join(' ', array_unique($tags)));
         $deck->setUser($this->getUser());
-
+        $deck->setUuid(Uuid::uuid4());
         if ($agenda) {
             $slot = new Deckslot();
             $slot->setCard($agenda);
@@ -132,7 +133,7 @@ class BuilderController extends Controller
         $em->persist($deck);
         $em->flush();
 
-        return $this->redirect($this->get('router')->generate('deck_edit', ['deck_id' => $deck->getId()]));
+        return $this->redirect($this->get('router')->generate('deck_edit', ['deck_uuid' => $deck->getUuid()]));
     }
 
     public function importAction()
@@ -205,9 +206,12 @@ class BuilderController extends Controller
             );
         }
 
+        $deck = new Deck();
+        $deck->setUuid(Uuid::uuid4());
+
         $this->get('deck_manager')->save(
             $this->getUser(),
-            new Deck(),
+            $deck,
             null,
             $name,
             $data['faction'],
@@ -222,13 +226,13 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function downloadAction(Request $request, $deck_id)
+    public function downloadAction(Request $request, $deck_uuid)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         /* @var $deck Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
@@ -331,13 +335,13 @@ class BuilderController extends Controller
         return $response;
     }
 
-    public function cloneAction($deck_id)
+    public function cloneAction($deck_uuid)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         /* @var $deck Deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
@@ -419,6 +423,7 @@ class BuilderController extends Controller
         $is_copy = (boolean)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
         if ($is_copy || !$id) {
             $deck = new Deck();
+            $deck->setUuid(Uuid::uuid4());
         }
 
         $content = (array)json_decode($request->get('content'));
@@ -519,10 +524,10 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
-    public function editAction($deck_id)
+    public function editAction($deck_uuid)
     {
         /** @var Deck $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         if ($this->getUser()->getId() != $deck->getUser()->getId()) {
             return $this->render(
@@ -544,13 +549,13 @@ class BuilderController extends Controller
     }
 
     /**
-     * @param $deck_id
+     * @param $deck_uuid
      * @return Response
      */
-    public function viewAction($deck_id)
+    public function viewAction($deck_uuid)
     {
         /** @var Deck $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
 
         if (!$deck) {
             return $this->render(
@@ -581,7 +586,6 @@ class BuilderController extends Controller
             array(
                 'pagetitle' => "Deckbuilder",
                 'deck' => $deck,
-                'deck_id' => $deck_id,
                 'is_owner' => $is_owner,
                 'tournaments' => $tournaments,
             )
@@ -589,19 +593,20 @@ class BuilderController extends Controller
     }
 
     /**
-     * @param int $deck1_id
-     * @param int $deck2_id
+     * @param int $deck1_uuid
+     * @param int $deck2_uuid
      * @return Response
      */
-    public function compareAction($deck1_id, $deck2_id)
+    public function compareAction($deck1_uuid, $deck2_uuid)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        /* @var Deck $deck1 */
-        $deck1 = $entityManager->getRepository('AppBundle:Deck')->find($deck1_id);
+        $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Deck');
 
+        /* @var Deck $deck1 */
+        $deck1 = $repo->findOneBy(['uuid' => $deck1_uuid]);
         /* @var Deck $deck2 */
-        $deck2 = $entityManager->getRepository('AppBundle:Deck')->find($deck2_id);
+        $deck2 = $repo->findOneBy(['uuid' => $deck2_uuid]);
 
         if (!$deck1 || !$deck2) {
             return $this->render(

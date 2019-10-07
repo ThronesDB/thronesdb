@@ -7,6 +7,7 @@
             date_update,
             description_md,
             id,
+            uuid,
             name,
             tags,
             faction_code,
@@ -182,6 +183,7 @@
         date_update = data.date_update;
         description_md = data.description_md;
         id = data.id;
+        uuid = data.uuid;
         name = data.name;
         tags = data.tags;
         faction_code = data.faction_code;

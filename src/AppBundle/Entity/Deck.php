@@ -6,6 +6,7 @@ use AppBundle\Model\ExportableDeck;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JsonSerializable;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class Deck
@@ -52,6 +53,11 @@ class Deck extends ExportableDeck implements JsonSerializable
      * @var Decklist
      */
     private $parent;
+
+    /**
+     * @var UuidInterface
+     */
+    protected $uuid;
 
     /**
      * Constructor
@@ -517,7 +523,7 @@ class Deck extends ExportableDeck implements JsonSerializable
         $array = parent::getArrayExport();
         $array['problem'] = $this->getProblem();
         $array['tags'] = $this->getTags();
-
+        $array['uuid'] = $this->getUuid();
         return $array;
     }
 
@@ -535,5 +541,17 @@ class Deck extends ExportableDeck implements JsonSerializable
         }
 
         return false;
+    }
+
+
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
+        return $this;
+    }
+
+    public function getUuid()
+    {
+        return $this->uuid;
     }
 }

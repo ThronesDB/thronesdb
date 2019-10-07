@@ -112,7 +112,7 @@
                 <table class="table table-expanded list-decks">
                     <tbody id="decks">
                     {% for deck in decks %}
-                        <tr data-id="{{ deck.id }}">
+                        <tr data-id="{{ deck.id }}" data-uuid="{{ deck.uuid }}">
                             <td><input type="checkbox"></td>
                             <td class="hidden-xs">
                                 <img
@@ -128,7 +128,7 @@
                                 {% endfor %}
                             </td>
                             <td>
-                                <a href="{{ path('deck_view',{deck_id:deck.id}) }}"
+                                <a href="{{ path('deck_view',{deck_uuid:deck.uuid}) }}"
                                    class="deck-name">{{ deck.name }}</a> {{ deck.version }}
                                 <div class="restricted-list-info">
                                     <em>{{ 'restrictedlist.title' | trans }}:</em>
@@ -170,11 +170,11 @@
                                 </div>
                             </td>
                             <td class="decks-actions text-right">
-                                <a href="{{ path('deck_edit',{deck_id:deck.id}) }}" class="btn btn-xs btn-default"
+                                <a href="{{ path('deck_edit',{deck_uuid:deck.uuid}) }}" class="btn btn-xs btn-default"
                                    data-toggle="tooltip" title="{{ 'forms.edit' | trans }}">
                                     <span class="fas fa-pencil-alt fa-fw"></span>
                                 </a>
-                                <a href="{{ path('deck_publish_form',{deck_id:deck.id}) }}"
+                                <a href="{{ path('deck_publish_form',{deck_uuid:deck.uuid}) }}"
                                    class="btn btn-xs btn-default" data-toggle="tooltip"
                                    title="{{ 'forms.publish' | trans }}">
                                     <span class="fas fa-share fa-fw"></span>
@@ -183,7 +183,7 @@
                                         title="{{ 'forms.delete' | trans }}">
                                     <span class="fas fa-trash-alt fa-fw"></span>
                                 </button>
-                                <a href="{{ path('deck_clone', {deck_id:deck.id}) }}"
+                                <a href="{{ path('deck_clone', {deck_uuid:deck.uuid}) }}"
                                    class="btn btn-xs btn-default" data-toggle="tooltip"
                                    title="{{ 'forms.clone' | trans }}">
                                     <span class="fas fa-clone fa-fw"></span></a>

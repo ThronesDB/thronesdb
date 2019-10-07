@@ -39,12 +39,12 @@ class SocialController extends Controller
      * Checks to see if a deck can be published in its current saved state
      * If it is, displays the decklist edit form for initial publication of a deck.
      *
-     * @param string $deck_id
+     * @param string $deck_uuid
      * @return RedirectResponse|Response
      * @throws NonUniqueResultException
      * @throws Exception
      */
-    public function publishFormAction($deck_id)
+    public function publishFormAction($deck_uuid)
     {
         $translator = $this->get('translator');
 
@@ -58,7 +58,7 @@ class SocialController extends Controller
         }
 
         /* @var Deck $deck */
-        $deck = $em->getRepository('AppBundle:Deck')->find($deck_id);
+        $deck = $em->getRepository('AppBundle:Deck')->findOneBy(['uuid' => $deck_uuid]);
         if (!$deck || $deck->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException($translator->trans('decklist.publish.errors.unauthorized'));
         }
