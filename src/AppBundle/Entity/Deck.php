@@ -523,7 +523,7 @@ class Deck extends ExportableDeck implements JsonSerializable
         $array = parent::getArrayExport();
         $array['problem'] = $this->getProblem();
         $array['tags'] = $this->getTags();
-
+        $array['uuid'] = $this->getUuid();
         return $array;
     }
 
