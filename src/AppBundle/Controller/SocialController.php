@@ -69,7 +69,7 @@ class SocialController extends Controller
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.antispam.newbie'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
         }
 
         $query = $em->createQuery(
@@ -84,7 +84,7 @@ class SocialController extends Controller
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.antispam.limit'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
         }
 
         $lastPack = $deck->getLastPack();
@@ -93,14 +93,14 @@ class SocialController extends Controller
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.unreleased'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
         }
 
         $problem = $this->get('deck_validation_helper')->findProblem($deck);
         if ($problem) {
             $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.invalid'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_id' => $deck->getId()]));
+            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
         }
 
         $new_content = json_encode($deck->getSlots()->getContent());
