@@ -35,6 +35,10 @@ class BuilderController extends Controller
         '00002', // Protectors of the Realm (VDS)
         '00003', // Treaty (VDS)
         '00004', // Uniting the Seven Kingdoms (VDS)
+        '16027', // Aloof and Apart (TTWDFL)
+        '16028', // Dark Wings, Dark Words (TTWDFL)
+        '16029', // Knights of the Realm (TTWDFL)
+        '16030', // The Long Voyage (TTWDFL)
     ];
 
     public function buildformAction()

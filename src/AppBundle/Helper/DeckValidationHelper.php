@@ -62,7 +62,11 @@ class DeckValidationHelper
                     $expectedMaxDoublePlot = 2;
                     break;
                 case '13118': // Valyrian Steel
+                case '16028': // Dark Wings, Dark Words
                     $expectedMinCardCount = 75;
+                    break;
+                case '16030': // The Long Voyage
+                    $expectedMinCardCount = 100;
                     break;
                 default:
                     // do nothing here
@@ -235,6 +239,8 @@ class DeckValidationHelper
                 return $this->validateTheWhiteBook($slots);
             case '13118':
                 return $this->validateValyrianSteel($slots);
+            case '16028':
+                return $this->validateDarkWingsDarkWords($slots);
             default:
                 return true;
         }
@@ -413,6 +419,35 @@ class DeckValidationHelper
         }
 
         $attachmentsSlots = $slots->getDrawDeck()->filterByType('attachment');
+        /* @var SlotInterface $slot */
+        foreach ($attachmentsSlots as $slot) {
+            $name = $slot->getCard()->getName();
+            if (in_array($name, $names)) {
+                return false;
+            }
+            if (1 < $slot->getQuantity()) {
+                return false;
+            }
+            $names[] = $name;
+        }
+        return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateDarkWingsDarkWords(SlotCollectionInterface $slots): bool
+    {
+        // Your deck cannot include more than 1 copy of each event (by title).
+        $names = [];
+
+        $nonAttachmentSlots = $slots->getDrawDeck()->excludeByType('event');
+        foreach ($nonAttachmentSlots as $slot) {
+            $names[] = $slot->getCard()->getName();
+        }
+
+        $attachmentsSlots = $slots->getDrawDeck()->filterByType('event');
         /* @var SlotInterface $slot */
         foreach ($attachmentsSlots as $slot) {
             $name = $slot->getCard()->getName();
