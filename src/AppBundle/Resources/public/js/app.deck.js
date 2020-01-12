@@ -855,6 +855,8 @@
                 expectedMaxDoublePlot = 2;
             } else if (agenda && ['13118', '16028'].indexOf(agenda.code) > -1) {
                 expectedMinCardCount = 75;
+            } else if (agenda && agenda.code === '16030') {
+                expectedMinCardCount = 100;
             }
         });
         // exactly 7 plots

@@ -65,6 +65,9 @@ class DeckValidationHelper
                 case '16028': // Dark Wings, Dark Words
                     $expectedMinCardCount = 75;
                     break;
+                case '16030': // The Long Voyage
+                    $expectedMinCardCount = 100;
+                    break;
                 default:
                     // do nothing here
             }
