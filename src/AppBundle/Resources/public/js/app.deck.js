@@ -848,38 +848,38 @@
         var expectedMaxAgendaCount = 1;
         var expectedMinCardCount = 60;
         agendas.forEach(function (agenda) {
-            if(agenda && agenda.code === '05045') {
+            if (agenda && agenda.code === '05045') {
                 expectedPlotDeckSize = 12;
-            } else if(agenda && agenda.code === '10045') {
+            } else if (agenda && agenda.code === '10045') {
                 expectedPlotDeckSize = 10;
                 expectedMaxDoublePlot = 2;
-            } else if(agenda && agenda.code === '13118') {
+            } else if (agenda && ['13118', '16028'].indexOf(agenda.code) > -1) {
                 expectedMinCardCount = 75;
             }
         });
         // exactly 7 plots
-        if(deck.get_plot_deck_size() > expectedPlotDeckSize) {
+        if (deck.get_plot_deck_size() > expectedPlotDeckSize) {
             return 'too_many_plots';
         }
-        if(deck.get_plot_deck_size() < expectedPlotDeckSize) {
+        if (deck.get_plot_deck_size() < expectedPlotDeckSize) {
             return 'too_few_plots';
         }
 
         var expectedPlotDeckSpread = expectedPlotDeckSize - expectedMaxDoublePlot;
         // at least 6 different plots
-        if(deck.get_plot_deck_variety() < expectedPlotDeckSpread) {
+        if (deck.get_plot_deck_variety() < expectedPlotDeckSpread) {
             return 'too_many_different_plots';
         }
 
         // no more than 1 agenda, unless Alliance
-        if(deck.is_alliance()) {
+        if (deck.is_alliance()) {
             expectedMaxAgendaCount = 3;
             expectedMinCardCount = 75;
             var unwanted = _.find(deck.get_agendas(), function (agenda)
             {
                 return agenda.code !== '06018' && agenda.traits.indexOf(Translator.trans('card.traits.banner')) === -1;
             });
-            if(unwanted) {
+            if (unwanted) {
                 return 'too_many_agendas';
             }
         }
@@ -945,6 +945,27 @@
                     return false;
                 }
                 names.push(attachments[i].name);
+            }
+            return true;
+        };
+        var validate_dark_wings_dark_words = function() {
+            var i, n;
+            var names = [];
+            var events = deck.get_cards(null, {type_code: 'event'});
+            var notEvents = deck.get_cards(null, {type_code: {'$nin': ['agenda', 'event', 'plot']}});
+
+            for (i = 0, n = notEvents.length; i < n; i++) {
+                names.push(notEvents[i].name);
+            }
+
+            for (i = 0, n = events.length; i < n; i++) {
+                if (events[i].indeck > 1) {
+                    return false;
+                }
+                if (-1 !== names.indexOf(events[i].name)) {
+                    return false;
+                }
+                names.push(events[i].name);
             }
             return true;
         };
@@ -1014,6 +1035,8 @@
                 return validate_the_white_book();
             case '13118':
                 return validate_valyrian_steel();
+            case '16028':
+                return validate_dark_wings_dark_words();
         }
         return true;
     };
