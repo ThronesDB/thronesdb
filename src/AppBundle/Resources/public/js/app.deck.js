@@ -26,7 +26,7 @@
             card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a>'),
             layouts = {},
             layout_data = {},
-            // restricted list, see FAQ v2.3
+        // restricted list, see FAQ v3.0
             joust_restricted_list = [
                 "01109",
                 "02091",
@@ -42,6 +42,7 @@
                 "06038",
                 "06039",
                 "06040",
+                "06063",
                 "06098",
                 "06100",
                 "06103",
@@ -64,6 +65,10 @@
                 "12029",
                 "12045",
                 "12046",
+                "13044",
+                "13085",
+                "13086",
+                "13103",
             ],
             melee_restricted_list = [
                 "01001",
@@ -93,6 +98,7 @@
                 "09028",
                 "11054",
                 "11076",
+                "13107",
             ];
 
     var factions = {
