@@ -130,29 +130,29 @@
                             <td>
                                 <a href="{{ path('deck_view',{deck_uuid:deck.uuid}) }}"
                                    class="deck-name">{{ deck.name }}</a> {{ deck.version }}
-                                <div class="restricted-list-info">
-                                    <em>{{ 'restrictedlist.title' | trans }}:</em>
+                                <div class="tournament-legality-info">
+                                    <em>{{ 'tournamentLegality.title' | trans }}:</em>
                                     {% if deck.isLegalForJoust %}
                                         <span class="text-success">
                                             <i class="fas fa-check"></i>
-                                            {{ 'restrictedlist.joust' | trans }}
+                                            {{ 'tournamentLegality.joust' | trans }}
                                         </span>
                                     {% else %}
                                         <span class="text-danger">
                                             <i class="fas fa-times"></i>
-                                            {{ 'restrictedlist.joust' | trans }}
+                                            {{ 'tournamentLegality.joust' | trans }}
                                         </span>
                                     {% endif %}
                                     |
                                     {% if deck.isLegalForMelee %}
                                         <span class="text-success">
                                             <i class="fas fa-check"></i>
-                                            {{ 'restrictedlist.melee' | trans }}
+                                            {{ 'tournamentLegality.melee' | trans }}
                                         </span>
                                     {% else %}
                                         <span class="text-danger">
                                             <i class="fas fa-times"></i>
-                                            {{ 'restrictedlist.melee' | trans }}
+                                            {{ 'tournamentLegality.melee' | trans }}
                                         </span>
                                     {% endif %}
 

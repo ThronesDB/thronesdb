@@ -495,8 +495,8 @@ article.review .review-comment {
     background: rgba(255,0,0,.5);
 }
 
-/**************** Restricted List indicators *******/
-.decklists .restricted-list-info,
-#decks .restricted-list-info {
+/**************** Tournament Legality indicators *******/
+.decklists .tournament-legality-info,
+#decks .tournament-legality-info {
     font-size: small;
 }

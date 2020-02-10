@@ -546,23 +546,23 @@
         }).join(', ');
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
-        var restrictedListContents = '<em>' + Translator.trans('restrictedlist.title') +':</em> ';
+        var legalityContents = '<em>' + Translator.trans('tournamentLegality.title') +':</em> ';
         if (deck.is_joust_restricted_list_compliant()) {
-            restrictedListContents += '<span class="text-success"><i class="fas fa-check"></i> ';
+            legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
-            restrictedListContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
+            legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
-        restrictedListContents += Translator.trans('restrictedlist.joust') + '</span> | ';
+        legalityContents += Translator.trans('tournamentLegality.joust') + '</span> | ';
 
         if (deck.is_melee_restricted_list_compliant()) {
-            restrictedListContents += '<span class="text-success"><i class="fas fa-check"></i> ';
+            legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
-            restrictedListContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
+            legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
-        restrictedListContents += Translator.trans('restrictedlist.melee') + '</span>';
+        legalityContents += Translator.trans('tournamentLegality.melee') + '</span>';
 
-        var restrictedListSection = $('<div>' + restrictedListContents +'</div>');
-        deck.update_layout_section(data, 'meta', restrictedListSection);
+        var legalitySection = $('<div>' + legalityContents +'</div>');
+        deck.update_layout_section(data, 'meta', legalitySection);
 
         if(problem) {
             deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fas fa-exclamation-triangle"></span> ' + problem_labels[problem] + '</div>'));

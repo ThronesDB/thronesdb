@@ -488,7 +488,7 @@ keyword:
   shadow:
     name: Schatten
     title: "Eine Karte mit Schatten (X) kann man für 2 Gold verdeckt im Schattenbereich ihres kontrollierenden Spielers aufmarschieren lassen. Jene Karte kann später gespielt werden (falls es sich um ein Ereignis handelt) oder offen ins Spiel geholt werden (falls es sich um einen Charakter, Ort oder eine Verstärkung handelt), indem der Spieler X Gold bezahlt."
-restrictedlist:
-  title: Liste Eingeschränkter Karten
+tournamentLegality:
+  title: Turnierzulässigkeit
   joust: Tjost
   melee: Buhurt

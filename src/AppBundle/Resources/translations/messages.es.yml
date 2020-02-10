@@ -487,7 +487,7 @@ keyword:
   shadow:
     name: Sombra
     title: "A card with shadow (X) can be marshaled facedown into its controller’s shadows area for 2 gold. That card can later be played (if it is an event) or brought into play faceup (if it is a character, location, or attachment) by paying X gold."
-restrictedlist:
-  title: Lista de cartas restringidas
+tournamentLegality:
+  title: Tournament Legality
   joust: Justa
   melee: Contienda
