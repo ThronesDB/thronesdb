@@ -2,6 +2,7 @@
 
 namespace AppBundle\Model;
 
+use AppBundle\Classes\BannedListChecker;
 use AppBundle\Classes\RestrictedListChecker;
 use AppBundle\Entity\Decklistslot;
 use AppBundle\Entity\Pack;
@@ -24,6 +25,11 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     protected $restrictedListChecker;
 
     /**
+     * @var BannedListChecker
+     */
+    protected $bannedListChecker;
+
+    /**
      * SlotCollectionDecorator constructor.
      * @param Collection $slots
      */
@@ -31,6 +37,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     {
         $this->slots = $slots;
         $this->restrictedListChecker = new RestrictedListChecker();
+        $this->bannedListChecker = new BannedListChecker();
     }
 
     /**
@@ -377,7 +384,8 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();
         }
-        return $this->restrictedListChecker->isLegalForMelee($cardCodes);
+        return $this->bannedListChecker->isLegal($cardCodes)
+            && $this->restrictedListChecker->isLegalForMelee($cardCodes);
     }
 
     /**
@@ -393,7 +401,8 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();
         }
-        return $this->restrictedListChecker->isLegalForJoust($cardCodes);
+        return $this->bannedListChecker->isLegal($cardCodes)
+            && $this->restrictedListChecker->isLegalForJoust($cardCodes);
     }
 
     /**
