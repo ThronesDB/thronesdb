@@ -23,7 +23,8 @@
                     },
                     {}),
             header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
-            card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a>'),
+            card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
+            card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>');
             layouts = {},
             layout_data = {},
              // restricted list, see FAQ v3.0
@@ -216,7 +217,7 @@
      */
     var append_card_line_to_section = function append_card_line_to_section(card, $section) {
         var $elem = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-        $elem.append($(card_line_tpl({card: card})));
+        $elem.append($(card_line_tpl({card: card, labels: deck.get_card_labels(card)})));
         $elem.prepend(card.indeck + 'x ');
         $elem.appendTo($section);
         return $section;
@@ -583,7 +584,7 @@
 
         deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">' + faction_name + '</h4>'));
         agendas.forEach(function (agenda) {
-            var agenda_line = $('<h5>').append($(card_line_tpl({card: agenda})));
+            var agenda_line = $('<h5>').append($(card_line_tpl({card: agenda, labels: deck.get_card_labels(agenda)})));
             agenda_line.find('.icon').remove();
             deck.update_layout_section(data, 'meta', agenda_line);
         });
@@ -720,7 +721,7 @@
         cards.forEach(function (card) {
             var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
 
-            $div.append($(card_line_tpl({card:card})));
+            $div.append($(card_line_tpl({card:card, labels: deck.get_card_labels(card)})));
             $div.prepend(card.indeck+'x ');
             if (context && context === "number"){
                 $div.append(" | "+card.pack_name+" #"+card.position);
@@ -1143,6 +1144,36 @@
             return !deck.can_include_card(card);
         });
     };
+
+    deck.get_card_labels = function get_card_labels(card)
+    {
+        var labels = [];
+        var out = '';
+        var i, n;
+        if (-1 !== melee_restricted_list.indexOf(card.code)) {
+            labels.push({ name: '[J]', keyword: 'rl-joust', title: Translator.trans('keyword.rl-joust.title') });
+        }
+        if (-1 !== joust_restricted_list.indexOf(card.code)) {
+            labels.push({ name: '[M]', keyword: 'rl-melee', title: Translator.trans('keyword.rl-melee.title') });
+        }
+        if (-1 !== banned_list.indexOf(card.code)) {
+            labels.push({ name: '[B]', keyword: 'banned', title: Translator.trans('keyword.banned.title') });
+        }
+
+        if (! labels.length) {
+            return out;
+        }
+
+        out = out + ' ';
+        for (i = 0, n = labels.length; i < n; i++) {
+            out = out + ' ' + card_line_label_tpl({
+                label: labels[i].name,
+                keyword: labels[i].keyword,
+                title: labels[i].title
+            });
+        }
+        return out;
+    }
 
     /**
      * returns true if the deck can include the card as parameter

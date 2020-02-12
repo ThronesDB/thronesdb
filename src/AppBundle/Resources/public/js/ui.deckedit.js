@@ -526,7 +526,7 @@
                 DisplayColumnsTpl = _.template(
                         '<tr>'
                         + '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-                        + '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.label %></a></td>'
+                        + '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.label %></a><%= labels %></td>'
                         + '<td class="cost"><%= card.cost %><%= card.income %></td>'
                         + '<td class="cost"><%= card.strength %><%= card.initiative %></td>'
                         + '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
@@ -583,7 +583,8 @@
         var html = DisplayColumnsTpl({
             radios: radios,
             url: Routing.generate('cards_zoom', {card_code: card.code}),
-            card: card
+            card: card,
+            labels: app.deck.get_card_labels(card)
         });
         return $(html);
     };
