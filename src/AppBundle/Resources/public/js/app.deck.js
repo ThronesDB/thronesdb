@@ -26,7 +26,7 @@
             card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a>'),
             layouts = {},
             layout_data = {},
-        // restricted list, see FAQ v3.0
+             // restricted list, see FAQ v3.0
             joust_restricted_list = [
                 "01109",
                 "02091",
@@ -99,6 +99,45 @@
                 "11054",
                 "11076",
                 "13107",
+            ],
+            // "banned" cards, currently all cards from the TTWDFL pack [ST 2020/02/11]
+            banned_list = [
+                "16001",
+                "16002",
+                "16003",
+                "16004",
+                "16005",
+                "16006",
+                "16007",
+                "16008",
+                "16009",
+                "16010",
+                "16011",
+                "16012",
+                "16013",
+                "16014",
+                "16015",
+                "16016",
+                "16017",
+                "16018",
+                "16019",
+                "16020",
+                "16021",
+                "16022",
+                "16023",
+                "16024",
+                "16025",
+                "16026",
+                "16027",
+                "16028",
+                "16029",
+                "16030",
+                "16031",
+                "16032",
+                "16033",
+                "16034",
+                "16035",
+                "16036"
             ];
 
     var factions = {
@@ -125,6 +164,21 @@
         // check if first line in the card text has that keyword.
         var textLines = text.split("\n");
         return regex.test(textLines[0]);
+    };
+
+    /*
+     * Validates the current deck against a list of banned cards.
+     * @return {boolean}
+     */
+    var validate_against_banned_list = function() {
+        var cards = app.deck.get_cards();
+        var i, n;
+        for (i = 0, n = cards.length; i < n; i++) {
+            if (-1 !== banned_list.indexOf(cards[i].code)) {
+                return false;
+            }
+        }
+        return true;
     };
 
     /*
@@ -547,14 +601,15 @@
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
         var legalityContents = '<em>' + Translator.trans('tournamentLegality.title') +':</em> ';
-        if (deck.is_joust_restricted_list_compliant()) {
+        var isBannedListCompliant = deck.is_banned_list_compliant();
+        if (isBannedListCompliant && deck.is_joust_restricted_list_compliant()) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
         legalityContents += Translator.trans('tournamentLegality.joust') + '</span> | ';
 
-        if (deck.is_melee_restricted_list_compliant()) {
+        if (isBannedListCompliant && deck.is_melee_restricted_list_compliant()) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
@@ -1147,7 +1202,8 @@
      * Checks if the current deck complies with the restricted list for joust.
      * @return {boolean}
      */
-    deck.is_joust_restricted_list_compliant = function is_joust_restricted_list_compliant() {
+    deck.is_joust_restricted_list_compliant = function is_joust_restricted_list_compliant()
+    {
         return validate_deck_against_restricted_list(joust_restricted_list);
     };
 
@@ -1155,8 +1211,18 @@
      * Checks if the current deck complies with the restricted list for melee.
      * @return {boolean}
      */
-    deck.is_melee_restricted_list_compliant = function is_melee_restricted_list_compliant() {
+    deck.is_melee_restricted_list_compliant = function is_melee_restricted_list_compliant()
+    {
         return validate_deck_against_restricted_list(melee_restricted_list);
     };
+
+    /**
+     * Checks if the current deck complies with the "banned" list.
+     * @return {boolean}
+     */
+    deck.is_banned_list_compliant = function is_banned_list_compliant()
+    {
+        return validate_against_banned_list();
+    }
 
 })(app.deck = {}, jQuery);
