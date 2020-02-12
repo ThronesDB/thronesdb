@@ -1150,10 +1150,10 @@
         var labels = [];
         var out = '';
         var i, n;
-        if (-1 !== melee_restricted_list.indexOf(card.code)) {
+        if (-1 !== joust_restricted_list.indexOf(card.code)) {
             labels.push({ name: '[J]', keyword: 'rl-joust', title: Translator.trans('keyword.rl-joust.title') });
         }
-        if (-1 !== joust_restricted_list.indexOf(card.code)) {
+        if (-1 !== melee_restricted_list.indexOf(card.code)) {
             labels.push({ name: '[M]', keyword: 'rl-melee', title: Translator.trans('keyword.rl-melee.title') });
         }
         if (-1 !== banned_list.indexOf(card.code)) {
