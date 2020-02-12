@@ -122,18 +122,18 @@
         </span>
                                         {% endif %}
                                     </h5>
-                                    <div class="restricted-list-info">
-                                        <em>{{ 'restrictedlist.title' | trans }}:</em>
+                                    <div class="tournament-legality-info">
+                                        <em>{{ 'tournamentLegality.title' | trans }}:</em>
                                         {% if decklist.isLegalForJoust %}
-                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'restrictedlist.joust' | trans }}</span>
+                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'tournamentLegality.joust' | trans }}</span>
                                         {% else %}
-                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'restrictedlist.joust' | trans }}</span>
+                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'tournamentLegality.joust' | trans }}</span>
                                         {% endif %}
                                         |
                                         {% if decklist.isLegalForMelee %}
-                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'restrictedlist.melee' | trans }}</span>
+                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'tournamentLegality.melee' | trans }}</span>
                                         {% else %}
-                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'restrictedlist.melee' | trans }}</span>
+                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'tournamentLegality.melee' | trans }}</span>
                                         {% endif %}
                                     </div>
                                 </article>

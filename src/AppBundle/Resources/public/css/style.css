@@ -11,6 +11,7 @@ body {
 .card-content abbr[title] {
     border-bottom: none;
 }
+
 .card-name {
     font-family: 'Julius Sans One', sans-serif;
     font-weight: 700;
@@ -495,8 +496,16 @@ article.review .review-comment {
     background: rgba(255,0,0,.5);
 }
 
-/**************** Restricted List indicators *******/
-.decklists .restricted-list-info,
-#decks .restricted-list-info {
+/**************** Tournament Legality indicators *******/
+.decklists .tournament-legality-info,
+#decks .tournament-legality-info {
     font-size: small;
+}
+abbr.legality.rl-joust,
+abbr.legality.rl-melee {
+    color: #639;
+}
+
+abbr.legality.banned {
+    color: #f00;
 }

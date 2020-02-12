@@ -23,10 +23,11 @@
                     },
                     {}),
             header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
-            card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a>'),
+            card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
+            card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>');
             layouts = {},
             layout_data = {},
-        // restricted list, see FAQ v3.0
+             // restricted list, see FAQ v3.0
             joust_restricted_list = [
                 "01109",
                 "02091",
@@ -99,6 +100,45 @@
                 "11054",
                 "11076",
                 "13107",
+            ],
+            // "banned" cards, currently all cards from the TTWDFL pack [ST 2020/02/11]
+            banned_list = [
+                "16001",
+                "16002",
+                "16003",
+                "16004",
+                "16005",
+                "16006",
+                "16007",
+                "16008",
+                "16009",
+                "16010",
+                "16011",
+                "16012",
+                "16013",
+                "16014",
+                "16015",
+                "16016",
+                "16017",
+                "16018",
+                "16019",
+                "16020",
+                "16021",
+                "16022",
+                "16023",
+                "16024",
+                "16025",
+                "16026",
+                "16027",
+                "16028",
+                "16029",
+                "16030",
+                "16031",
+                "16032",
+                "16033",
+                "16034",
+                "16035",
+                "16036"
             ];
 
     var factions = {
@@ -125,6 +165,21 @@
         // check if first line in the card text has that keyword.
         var textLines = text.split("\n");
         return regex.test(textLines[0]);
+    };
+
+    /*
+     * Validates the current deck against a list of banned cards.
+     * @return {boolean}
+     */
+    var validate_against_banned_list = function() {
+        var cards = app.deck.get_cards();
+        var i, n;
+        for (i = 0, n = cards.length; i < n; i++) {
+            if (-1 !== banned_list.indexOf(cards[i].code)) {
+                return false;
+            }
+        }
+        return true;
     };
 
     /*
@@ -162,7 +217,7 @@
      */
     var append_card_line_to_section = function append_card_line_to_section(card, $section) {
         var $elem = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
-        $elem.append($(card_line_tpl({card: card})));
+        $elem.append($(card_line_tpl({card: card, labels: deck.get_card_labels(card)})));
         $elem.prepend(card.indeck + 'x ');
         $elem.appendTo($section);
         return $section;
@@ -529,7 +584,7 @@
 
         deck.update_layout_section(data, 'meta', $('<h4 style="font-weight:bold">' + faction_name + '</h4>'));
         agendas.forEach(function (agenda) {
-            var agenda_line = $('<h5>').append($(card_line_tpl({card: agenda})));
+            var agenda_line = $('<h5>').append($(card_line_tpl({card: agenda, labels: deck.get_card_labels(agenda)})));
             agenda_line.find('.icon').remove();
             deck.update_layout_section(data, 'meta', agenda_line);
         });
@@ -546,23 +601,24 @@
         }).join(', ');
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
-        var restrictedListContents = '<em>' + Translator.trans('restrictedlist.title') +':</em> ';
-        if (deck.is_joust_restricted_list_compliant()) {
-            restrictedListContents += '<span class="text-success"><i class="fas fa-check"></i> ';
+        var legalityContents = '<em>' + Translator.trans('tournamentLegality.title') +':</em> ';
+        var isBannedListCompliant = deck.is_banned_list_compliant();
+        if (isBannedListCompliant && deck.is_joust_restricted_list_compliant()) {
+            legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
-            restrictedListContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
+            legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
-        restrictedListContents += Translator.trans('restrictedlist.joust') + '</span> | ';
+        legalityContents += Translator.trans('tournamentLegality.joust') + '</span> | ';
 
-        if (deck.is_melee_restricted_list_compliant()) {
-            restrictedListContents += '<span class="text-success"><i class="fas fa-check"></i> ';
+        if (isBannedListCompliant && deck.is_melee_restricted_list_compliant()) {
+            legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
-            restrictedListContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
+            legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
-        restrictedListContents += Translator.trans('restrictedlist.melee') + '</span>';
+        legalityContents += Translator.trans('tournamentLegality.melee') + '</span>';
 
-        var restrictedListSection = $('<div>' + restrictedListContents +'</div>');
-        deck.update_layout_section(data, 'meta', restrictedListSection);
+        var legalitySection = $('<div>' + legalityContents +'</div>');
+        deck.update_layout_section(data, 'meta', legalitySection);
 
         if(problem) {
             deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fas fa-exclamation-triangle"></span> ' + problem_labels[problem] + '</div>'));
@@ -665,7 +721,7 @@
         cards.forEach(function (card) {
             var $div = $('<div>').addClass(deck.can_include_card(card) ? '' : 'invalid-card');
 
-            $div.append($(card_line_tpl({card:card})));
+            $div.append($(card_line_tpl({card:card, labels: deck.get_card_labels(card)})));
             $div.prepend(card.indeck+'x ');
             if (context && context === "number"){
                 $div.append(" | "+card.pack_name+" #"+card.position);
@@ -1089,6 +1145,36 @@
         });
     };
 
+    deck.get_card_labels = function get_card_labels(card)
+    {
+        var labels = [];
+        var out = '';
+        var i, n;
+        if (-1 !== joust_restricted_list.indexOf(card.code)) {
+            labels.push({ name: '[J]', keyword: 'rl-joust', title: Translator.trans('keyword.rl-joust.title') });
+        }
+        if (-1 !== melee_restricted_list.indexOf(card.code)) {
+            labels.push({ name: '[M]', keyword: 'rl-melee', title: Translator.trans('keyword.rl-melee.title') });
+        }
+        if (-1 !== banned_list.indexOf(card.code)) {
+            labels.push({ name: '[B]', keyword: 'banned', title: Translator.trans('keyword.banned.title') });
+        }
+
+        if (! labels.length) {
+            return out;
+        }
+
+        out = out + ' ';
+        for (i = 0, n = labels.length; i < n; i++) {
+            out = out + ' ' + card_line_label_tpl({
+                label: labels[i].name,
+                keyword: labels[i].keyword,
+                title: labels[i].title
+            });
+        }
+        return out;
+    }
+
     /**
      * returns true if the deck can include the card as parameter
      * @memberOf deck
@@ -1147,7 +1233,8 @@
      * Checks if the current deck complies with the restricted list for joust.
      * @return {boolean}
      */
-    deck.is_joust_restricted_list_compliant = function is_joust_restricted_list_compliant() {
+    deck.is_joust_restricted_list_compliant = function is_joust_restricted_list_compliant()
+    {
         return validate_deck_against_restricted_list(joust_restricted_list);
     };
 
@@ -1155,8 +1242,18 @@
      * Checks if the current deck complies with the restricted list for melee.
      * @return {boolean}
      */
-    deck.is_melee_restricted_list_compliant = function is_melee_restricted_list_compliant() {
+    deck.is_melee_restricted_list_compliant = function is_melee_restricted_list_compliant()
+    {
         return validate_deck_against_restricted_list(melee_restricted_list);
     };
+
+    /**
+     * Checks if the current deck complies with the "banned" list.
+     * @return {boolean}
+     */
+    deck.is_banned_list_compliant = function is_banned_list_compliant()
+    {
+        return validate_against_banned_list();
+    }
 
 })(app.deck = {}, jQuery);
