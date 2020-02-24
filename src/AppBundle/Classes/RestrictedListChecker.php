@@ -15,81 +15,81 @@ class RestrictedListChecker
      * @var array
      */
     const JOUST_RESTRICTED_CARDS = [
-        "01109",
-        "02091",
-        "02092",
-        "02102",
-        "03038",
-        "04001",
-        "04017",
-        "05010",
-        "05049",
-        "06004",
-        "06011",
-        "06038",
-        "06039",
-        "06040",
-        "06063",
-        "06098",
-        "06100",
-        "06103",
-        "09001",
-        "09017",
-        "09023",
-        "09051",
-        "10045",
-        "10048",
-        "10050",
-        "11021",
-        "11033",
-        "11034",
-        "11044",
-        "11051",
-        "11061",
-        "11076",
-        "11082",
-        "12002",
-        "12029",
-        "12045",
-        "12046",
-        "13044",
-        "13085",
-        "13086",
-        "13103",
+        "01109", // The Red Viper (Core)
+        "02091", // Raider from Pyke (CoW)
+        "02092", // Iron Mines (CoW)
+        "02102", // Ward (TS)
+        "03038", // To the Rose Banner! (WotN)
+        "04001", // The Dragon's Tail (AtSK)
+        "04017", // Tower of the Sun (AtSK)
+        "05010", // Taena Merryweather (LoCR)
+        "05049", // Littlefinger's Meddling (LoCR)
+        "06004", // All Men Are Fools (AMAF)
+        "06011", // Drowned Disciple (AMAF)
+        "06038", // Great Hall (GtR)
+        "06039", // "The Dornishman's Wife" (GtR)
+        "06040", // The Annals of Castle Black (GtR)
+        "06063", // Oldtown Informer (TRW)
+        "06098", // Flea Bottom (OR)
+        "06100", // Wheels Within Wheels (OR)
+        "06103", // Highgarden Minstrel (TBWB)
+        "09001", // Mace Tyrell (HoT)
+        "09017", // The Hightower (HoT)
+        "09023", // "Six Maids in a Pool" (HoT)
+        "09051", // Trade Routes (HoT)
+        "10045", // The Wars To Come (SoD)
+        "10048", // Forced March (SoD)
+        "10050", // Breaking Ties (SoD)
+        "11021", // Wyman Manderly (TMoW)
+        "11033", // Hizdahr zo Loraq (TMoW)
+        "11034", // Meereen (TMoW)
+        "11044", // Growing Ambition (SoKL)
+        "11051", // Drowned God Fanatic (SoKL)
+        "11061", // Meera Reed (MoD)
+        "11076", // A Mission in Essos (MoD)
+        "11082", // Skagos (IDP)
+        "12002", // Euron Crow's Eye (KotI)
+        "12029", // Desert Raider (KotI)
+        "12045", // Sea of Blood (KotI)
+        "12046", // We Take Westeros! (KotI)
+        "13044", // Unexpected Guile (PoS)
+        "13085", // Yoren (TB)
+        "13086", // Bound for the Wall (TB)
+        "13103", // The Queen's Retinue (LMHR)
     ];
 
     /**
      * @var array
      */
     const MELEE_RESTRICTED_CARDS = [
-        "01001",
-        "01013",
-        "01043",
-        "01078",
-        "01119",
-        "01162",
-        "02012",
-        "02024",
-        "02060",
-        "03003",
-        "03038",
-        "04003",
-        "04118",
-        "05001",
-        "05010",
-        "05049",
-        "06004",
-        "06011",
-        "06039",
-        "06040",
-        "06098",
-        "07036",
-        "08098",
-        "08120",
-        "09028",
-        "11054",
-        "11076",
-        "13107",
+        "01001", // A Clash of Kings (Core)
+        "01013", // Heads on Spikes (Core)
+        "01043", // Superior Claim (Core)
+        "01078", // Great Kraken (Core)
+        "01119", // Doran's Game (Core)
+        "01162", // Khal Drogo (Core)
+        "02012", // Rise of the Kraken (TtB)
+        "02024", // Lady Sansa's Rose (TRtW)
+        "02060", // The Lord of the Crossing (TKP)
+        "03003", // Eddard Stark (WotN)
+        "03038", // To the Rose Banner! (WotN)
+        "04003", // Riverrun (AtSK)
+        "04118", // Relentless Assault (TC)
+        "05001", // Cersei Lannister (LoCR)
+        "05010", // Taena Merryweather (LoCR)
+        "05049", // Littlefinger's Meddling (LoCR)
+        "06004", // All Men Are Fools (AMAF)
+        "06011", // Drowned Disciple (AMAF)
+        "06039", // "The Dornishman's Wife" (GtR)
+        "06040", // The Annals of Castle Black (GtR)
+        "06098", // Flea Bottom (OR)
+        "07036", // Plaza of Pride (WotW)
+        "08098", // "The Song of the Seven" (TFM)
+        "08120", // You Win Or You Die (SAT)
+        "09028", // Corpse Lake (HoT)
+        "11054", // Queensguard (SoKL)
+        "11076", // A Mission in Essos (MoD)
+        "13107", // Robert Baratheon (LMHR)
     ];
 
     /**
