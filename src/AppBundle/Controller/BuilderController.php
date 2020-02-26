@@ -35,6 +35,7 @@ class BuilderController extends Controller
         '00002', // Protectors of the Realm (VDS)
         '00003', // Treaty (VDS)
         '00004', // Uniting the Seven Kingdoms (VDS)
+        "00030", // The King's Voice (VHotK)
     ];
 
     public function buildformAction()
