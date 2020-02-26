@@ -52,6 +52,8 @@ decks:
   version: Versión %version%
   description: Descripción
   defaultemptydesc: "*Sin descripción*"
+  warnings:
+    unsupported_agenda: Agenda-specific rules and restrictions for "%agenda%" are not enforced, deck validation checks may return incorrect or incomplete results.
   problems:
     too_many_plots: Contiene demasiadas Tramas
     too_few_plots: Contiene muy pocas Tramas

@@ -52,6 +52,8 @@ decks:
   version: Version %version%
   description: Beschreibung
   defaultemptydesc: "*Keine Beschreibung*"
+  warnings:
+    unsupported_agenda: Agenda-spezifische Regeln und Einschränkungen für "%agenda%" werden nicht unterstützt, dies kann zu inkorrekten Ergebnissen in der Deckvalidierung führen.
   problems:
     too_many_plots: Enthält zu viele Strategiekarten
     too_few_plots: Enthält zu wenige Strategiekarten

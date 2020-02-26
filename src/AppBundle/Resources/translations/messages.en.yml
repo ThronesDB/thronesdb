@@ -52,6 +52,8 @@ decks:
   version: Version %version%
   description: Description
   defaultemptydesc: "*No description.*"
+  warnings:
+    unsupported_agenda: Agenda-specific rules and restrictions for "%agenda%" are not enforced, deck validation checks may return incorrect or incomplete results.
   problems:
     too_many_plots: Contains too many Plots
     too_few_plots: Contains too few Plots
