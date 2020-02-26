@@ -353,6 +353,17 @@
      * @memberOf deck
      * @returns boolean
      */
+    deck.is_the_kings_voice = function is_the_kings_voice()
+    {
+        return !(_.isUndefined(_.find(deck.get_agendas(), function (card) {
+            return card.code === '00030';
+        })));
+    };
+
+    /**
+     * @memberOf deck
+     * @returns boolean
+     */
     deck.is_rains_of_castamere = function is_rains_of_castamere() {
         return !(_.isUndefined(_.find(deck.get_agendas(), function(card) {
             return card.code === '05045';
@@ -576,6 +587,7 @@
 
         var problem = deck.get_problem();
         var agendas = deck.get_agendas();
+        var warnings = deck.get_warnings();
 
         deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/bundles/app/images/factions/' + deck.get_faction_code() + '.png" class="img-responsive">'));
         agendas.forEach(function (agenda) {
@@ -620,7 +632,12 @@
         var legalitySection = $('<div>' + legalityContents +'</div>');
         deck.update_layout_section(data, 'meta', legalitySection);
 
-        if(problem) {
+        if (warnings.length) {
+            warnings.forEach(function (warning) {
+                deck.update_layout_section(data, 'meta', $('<div class="text-warning small"><span class="fas fa-exclamation-circle"></span> ' + warning + '</div>'));
+            });
+        }
+        if (problem) {
             deck.update_layout_section(data, 'meta', $('<div class="text-danger small"><span class="fas fa-exclamation-triangle"></span> ' + problem_labels[problem] + '</div>'));
         }
 
@@ -804,6 +821,10 @@
             // card-specific rules
             switch(card.type_code) {
                 case 'agenda':
+                    if (deck.is_the_kings_voice()) {
+                        break;
+                    }
+
                     // is deck alliance before the change
                     var is_alliance = deck.is_alliance();
                     // is deck alliance with the new card
@@ -897,6 +918,22 @@
             }
         })
         return copies_and_deck_limit;
+    };
+
+    /**
+     * @memberOf deck
+     */
+    deck.get_warnings = function get_warnings()
+    {
+        var warnings = [];
+        var agendas = deck.get_agendas();
+        var unsupportedAgendas = ['00030'];
+        agendas.forEach(function (agenda) {
+            if (unsupportedAgendas.includes(agenda.code)) {
+                warnings.push(Translator.trans('decks.warnings.unsupported_agenda', {agenda: agenda.name}));
+            }
+        });
+        return warnings;
     };
 
     /**
