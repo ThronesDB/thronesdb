@@ -61,7 +61,6 @@
         "justinrainbow/json-schema": "^5.2",
         "mockery/mockery": "^1.2",
         "phpunit/phpunit": "^7",
-        "sensio/generator-bundle": "^3.0",
         "squizlabs/php_codesniffer": "@stable",
         "symfony/expression-language": "3.4.*",
         "symfony/phpunit-bridge": "^3.0"
