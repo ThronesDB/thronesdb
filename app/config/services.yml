@@ -87,12 +87,9 @@ services:
         public: true
         class: AppBundle\Helper\DeckValidationHelper
         arguments: ["@agenda_helper", "@translator"]
-    # ACHTUNG MINEN!
-    # Configure sendmail to run in piped mode.
-    # This is a kludge to get outbound email to work in production again.
-    # @link https://swiftmailer.symfony.com/docs/sending.html#using-the-sendmail-transport
-    # @link https://stackoverflow.com/a/33815443/307333
-    # @todo Revisit when upgrading to Symfony 4 and/or a newer host OS. [ST 2018/11/21]
+    # We're using MSMTP instead of sendmail.
+    # Specify it here.
+    # @link https://swiftmailer.symfony.com/docs/sending.html
     swiftmailer.mailer.default.transport:
         class:     Swift_SendmailTransport
-        arguments: ['/usr/sbin/sendmail -t']
+        arguments: ['/usr/bin/msmtp -t']
