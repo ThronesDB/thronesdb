@@ -13,17 +13,17 @@ class Faction implements \Serializable
                 'octgn_id' => $this->octgnId
         ];
     }
-    
+
     public function unserialize($serialized)
     {
         throw new \Exception("unserialize() method unsupported");
     }
-    
-    public function toString()
+
+    public function __toString()
     {
         return $this->name;
     }
-    
+
     /**
      * @var integer
      */

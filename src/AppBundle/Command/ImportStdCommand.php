@@ -357,7 +357,7 @@ class ImportStdCommand extends ContainerAwareCommand
         if ($different) {
             $this->output->writeln(
                 "Changing the <info>$fieldName</info> of <info>"
-                . $entity->toString()
+                . $entity
                 . "</info> ($currentJsonValue => $newJsonValue)"
             );
             $setter = 'set'.ucfirst($fieldName);
@@ -441,7 +441,7 @@ class ImportStdCommand extends ContainerAwareCommand
 
             $getter = 'get'.$foreignEntityShortName;
             if (!$entity->$getter() || $entity->$getter()->getId() !== $foreignEntity->getId()) {
-                $this->output->writeln("Changing the <info>$key</info> of <info>".$entity->toString()."</info>");
+                $this->output->writeln("Changing the <info>$key</info> of <info>". $entity ."</info>");
                 $setter = 'set'.$foreignEntityShortName;
                 $entity->$setter($foreignEntity);
             }
