@@ -1056,7 +1056,7 @@ class Card implements Serializable
      */
     public function __toString()
     {
-        return $this->name;
+        return $this->name ?: '';
     }
 
     protected function snakeToCamel($snake)

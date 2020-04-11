@@ -21,7 +21,7 @@ class Cycle implements \Serializable
 
     public function __toString()
     {
-        return $this->name;
+        return $this->name ?: '';
     }
 
     /**
