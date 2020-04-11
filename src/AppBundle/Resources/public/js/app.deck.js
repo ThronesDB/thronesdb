@@ -24,7 +24,7 @@
                     {}),
             header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
             card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
-            card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>');
+            card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
             layouts = {},
             layout_data = {},
              // restricted list, see FAQ v3.0
