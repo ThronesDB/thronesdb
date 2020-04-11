@@ -51,6 +51,15 @@ class Type implements \Serializable
     }
 
     /**
+     * Set id
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Get id
      *
      * @return integer
