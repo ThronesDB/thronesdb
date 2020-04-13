@@ -26,6 +26,11 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ImportStdCommand extends Command
 {
+    /**
+     * @var string
+     */
+    const PACKS_SUBDIRECTORY_NAME = 'packs';
+
     /* @var EntityManagerInterface $em */
     protected $em;
 
@@ -64,6 +69,7 @@ class ImportStdCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = $input->getArgument('path');
+        $path = rtrim($path, DIRECTORY_SEPARATOR);
 
         /* @var $helper QuestionHelper */
         $helper = $this->getHelper('question');
@@ -92,7 +98,7 @@ class ImportStdCommand extends Command
         // second, read raw packs and cards data
         $rawPacksData = [];
         $output->writeln("Importing Packs...");
-        $fileSystemIterator = $this->getFileSystemIterator($path);
+        $fileSystemIterator = $this->getPacksDirectoryFilesIterator($path);
         $imported = [];
         foreach ($fileSystemIterator as $fileinfo) {
             $baseName = $fileinfo->getBasename('.json');
@@ -617,7 +623,7 @@ class ImportStdCommand extends Command
             throw new Exception("No repository found at [$path]");
         }
 
-        $filepath = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        $filepath = $path . DIRECTORY_SEPARATOR . $filename;
 
         if (!$fs->exists($filepath)) {
             throw new Exception("No $filename file found at [$path]");
@@ -631,7 +637,7 @@ class ImportStdCommand extends Command
      * @return GlobIterator
      * @throws Exception
      */
-    protected function getFileSystemIterator($path)
+    protected function getPacksDirectoryFilesIterator($path)
     {
         $fs = new Filesystem();
 
@@ -639,16 +645,16 @@ class ImportStdCommand extends Command
             throw new Exception("No repository found at [$path]");
         }
 
-        $directory = 'packs';
+        $packsDirectoryPath = $path . DIRECTORY_SEPARATOR . self::PACKS_SUBDIRECTORY_NAME;
 
-        if (!$fs->exists("$path/$directory")) {
-            throw new Exception("No '$directory' directory found at [$path]");
+        if (!$fs->exists($packsDirectoryPath)) {
+            throw new Exception("No '" . self::PACKS_SUBDIRECTORY_NAME . "' directory found at [$path]");
         }
 
-        $iterator = new GlobIterator("$path/$directory/*.json");
+        $iterator = new GlobIterator($packsDirectoryPath . DIRECTORY_SEPARATOR . '*.json');
 
         if (!$iterator->count()) {
-            throw new Exception("No json file found at [$path/set]");
+            throw new Exception("No JSON files found in $packsDirectoryPath.");
         }
 
         return $iterator;
