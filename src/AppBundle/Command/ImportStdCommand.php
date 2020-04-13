@@ -236,14 +236,14 @@ class ImportStdCommand extends Command
                     $data['type_code'] = $item['type'];
                     $data['strength'] = null;
                     if (array_key_exists('strength', $item)) {
-                        $data['strength'] = ('X' === $item['strength'] ? null : $item['strength']);
+                        $data['strength'] = $this->convertXValue($item['strength']);
                     }
                     if (array_key_exists('plotStats', $item)) {
                         $plotStats = $item['plotStats'];
-                        $data['income'] = ('X' === $plotStats['income'] ? null : $plotStats['income']);
-                        $data['initiative'] = $plotStats['initiative'];
-                        $data['reserve'] = $plotStats['reserve'];
-                        $data['claim'] = ('X' === $plotStats['claim'] ? null : $plotStats['claim']);
+                        $data['income'] = $this->convertXValue($plotStats['income']);
+                        $data['initiative'] = $this->convertXValue($plotStats['initiative']);
+                        $data['reserve'] = $this->convertXValue($plotStats['reserve']);
+                        $data['claim'] = $this->convertXValue($plotStats['claim']);
                     }
                     if (array_key_exists('icons', $item)) {
                         $icons = $item['icons'];
@@ -748,5 +748,17 @@ class ImportStdCommand extends Command
             $cycles[]  = $cycle;
         }
         return $cycles;
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    protected function convertXValue($value)
+    {
+        if (in_array((string) $value, ['X', '-'])) {
+            return null;
+        }
+        return $value;
     }
 }
