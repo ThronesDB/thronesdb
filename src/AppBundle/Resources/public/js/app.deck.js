@@ -27,7 +27,7 @@
             card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
             layouts = {},
             layout_data = {},
-             // restricted list, see FAQ v3.0
+            // Restricted/Banned Lists issued by The Conclave (v1.0)
             joust_restricted_list = [
                 "01109", // The Red Viper (Core)
                 "02091", // Raider from Pyke (CoW)
@@ -47,13 +47,16 @@
                 "06098", // Flea Bottom (OR)
                 "06100", // Wheels Within Wheels (OR)
                 "06103", // Highgarden Minstrel (TBWB)
+                "08080", // The King in the North (FotOG)"
                 "09001", // Mace Tyrell (HoT)
                 "09017", // The Hightower (HoT)
                 "09023", // "Six Maids in a Pool" (HoT)
+                "09037", // Qotho (HoT)"
                 "09051", // Trade Routes (HoT)
                 "10045", // The Wars To Come (SoD)
                 "10048", // Forced March (SoD)
                 "10050", // Breaking Ties (SoD)
+                "11012", // Nighttime Marauders (TSC)"
                 "11021", // Wyman Manderly (TMoW)
                 "11033", // Hizdahr zo Loraq (TMoW)
                 "11034", // Meereen (TMoW)
@@ -62,14 +65,23 @@
                 "11061", // Meera Reed (MoD)
                 "11076", // A Mission in Essos (MoD)
                 "11082", // Skagos (IDP)
+                "11085", // Three-Finger Hobb (IDP)"
+                "11114", // Gifts for the Widow (DitD)"
                 "12002", // Euron Crow's Eye (KotI)
                 "12029", // Desert Raider (KotI)
                 "12045", // Sea of Blood (KotI)
                 "12046", // We Take Westeros! (KotI)
+                "12047", // Return to the Fields (KotI)"
                 "13044", // Unexpected Guile (PoS)
+                "13079", // Kingdom of Shadows (BtRK)"
                 "13085", // Yoren (TB)
                 "13086", // Bound for the Wall (TB)
                 "13103", // The Queen's Retinue (LMHR)
+                "14008", // Selyse Baratheon (FotS)"
+                "15022", // Overwhelming Numbers (DotE)"
+                "15030", // The Red Keep (DotE)"
+                "15033", // Clydas (DotE)"
+                "15045", // Bribery (DotE)"
             ],
             melee_restricted_list = [
                 "01001", // A Clash of Kings (Core)
@@ -101,7 +113,6 @@
                 "11076", // A Mission in Essos (MoD)
                 "13107", // Robert Baratheon (LMHR)
             ],
-            // "banned" cards, currently all cards from the TTWDFL pack [ST 2020/02/11]
             banned_list = [
                 "16001", // Ser Davos Seaworth (TTWDFL)
                 "16002", // Melisandre's Favor (TTWDFL)
