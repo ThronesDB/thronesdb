@@ -114,16 +114,11 @@ class ImportStdCommand extends Command
         $output->writeln("Done.");
 
         // third, cards
-
         $output->writeln("Importing Cards...");
-
+        $sortedCycles = $this->groupPacksInCycles($rawCyclesData, $rawPacksData);
         $multiNames = $this->extractCardNamesWithMultipleInstances($rawPacksData);
 
-        $imported = [];
-        foreach (array_values($rawPacksData) as $pack) {
-            $imported = array_merge($imported, $this->importCards($pack, $multiNames, $output));
-        }
-
+        $imported = $this->importCards($sortedCycles, $multiNames, $output);
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
             if (!$helper->ask($input, $output, $question)) {
@@ -203,85 +198,96 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param array $pack
+     * @param array $cycles
      * @param array $multiNames
      * @param OutputInterface $output
      * @return array
      * @throws Exception
      */
-    protected function importCards(array $pack, array $multiNames, OutputInterface $output)
+    protected function importCards(array $cycles, array $multiNames, OutputInterface $output)
     {
         $result = [];
-        $position = 1;
-        foreach ($pack['cards'] as $item) {
-            $data = [];
-            $data['code'] = $item['code'];
-            $data['cost'] = array_key_exists('cost', $item) ? (string) $item['cost'] : null;
-            $data['deck_limit'] = $item['deckLimit'];
-            $data['designer'] = array_key_exists('designer', $item) ? $item['designer'] : null;
-            $data['faction_code'] = $item['faction'];
-            $data['flavor'] = array_key_exists('flavor', $item) ? $item['flavor'] : '';
-            $data['illustrator'] = array_key_exists('illustrator', $item) ? $item['illustrator'] : null;
-            $data['is_loyal'] = array_key_exists('loyal', $item) ? $item['loyal'] : false;
-            $data['is_multiple'] = in_array($item['name'], $multiNames);
-            $data['is_unique'] = array_key_exists('unique', $item) ? $item['unique'] : false;
-            $data['name'] = $item['name'];
-            $data['octgn_id'] = array_key_exists('octgnId', $item) ? $item['octgnId'] : null;
-            $data['pack_code'] = $pack['code'];
-            $data['position'] = $position;
-            $data['quantity'] = $item['quantity'];
-            $data['text'] = $item['text'];
-            // @todo this is a stop-gap solution until errata can be imported properly. Fix this. [ST 2020/04/12]
-            if (array_key_exists('errata', $item) && $item['errata']) {
-                $data['text'] .= "\n<emErrata'd.</em>";
-            }
-            $data['traits'] = array_key_exists('traits', $item) ? implode('. ', $item['traits']) . '.' : '';
-            $data['type_code'] = $item['type'];
-            $data['strength'] = null;
-            if (array_key_exists('strength', $item)) {
-                $data['strength'] = ('X' === $item['strength'] ?  null : $item['strength']);
-            }
-            if (array_key_exists('plotStats', $item)) {
-                $plotStats = $item['plotStats'];
-                $data['income'] = ('X' === $plotStats['income'] ?  null : $plotStats['income']);
-                $data['initiative'] = $plotStats['initiative'];
-                $data['reserve'] = $plotStats['reserve'];
-                $data['claim'] = ('X' === $plotStats['claim'] ?  null : $plotStats['claim']);
-            }
-            if (array_key_exists('icons', $item)) {
-                $icons = $item['icons'];
-                $data['is_military'] = $icons['military'];
-                $data['is_intrigue'] = $icons['intrigue'];
-                $data['is_power'] = $icons['power'];
-            }
+        foreach ($cycles as $packs) {
+            $position = 1;
+            foreach ($packs as $pack) {
+                foreach ($pack['cards'] as $item) {
+                    $data = [];
+                    $data['code'] = $item['code'];
+                    $data['cost'] = array_key_exists('cost', $item) ? (string)$item['cost'] : null;
+                    $data['deck_limit'] = $item['deckLimit'];
+                    $data['designer'] = array_key_exists('designer', $item) ? $item['designer'] : null;
+                    $data['faction_code'] = $item['faction'];
+                    $data['flavor'] = array_key_exists('flavor', $item) ? $item['flavor'] : '';
+                    $data['illustrator'] = array_key_exists('illustrator', $item) ? $item['illustrator'] : null;
+                    $data['is_loyal'] = array_key_exists('loyal', $item) ? $item['loyal'] : false;
+                    $data['is_multiple'] = in_array($item['name'], $multiNames);
+                    $data['is_unique'] = array_key_exists('unique', $item) ? $item['unique'] : false;
+                    $data['name'] = $item['name'];
+                    $data['octgn_id'] = array_key_exists('octgnId', $item) ? $item['octgnId'] : null;
+                    $data['pack_code'] = $pack['code'];
+                    $data['position'] = $position;
+                    $data['quantity'] = $item['quantity'];
+                    $data['text'] = $item['text'];
+                    // @todo this is a stop-gap solution until errata can be imported properly. Fix this. [ST 2020/04/12]
+                    if (array_key_exists('errata', $item) && $item['errata']) {
+                        $data['text'] .= "\n<emErrata'd.</em>";
+                    }
+                    $data['traits'] = array_key_exists('traits', $item) ? implode('. ', $item['traits']).'.' : '';
+                    $data['type_code'] = $item['type'];
+                    $data['strength'] = null;
+                    if (array_key_exists('strength', $item)) {
+                        $data['strength'] = ('X' === $item['strength'] ? null : $item['strength']);
+                    }
+                    if (array_key_exists('plotStats', $item)) {
+                        $plotStats = $item['plotStats'];
+                        $data['income'] = ('X' === $plotStats['income'] ? null : $plotStats['income']);
+                        $data['initiative'] = $plotStats['initiative'];
+                        $data['reserve'] = $plotStats['reserve'];
+                        $data['claim'] = ('X' === $plotStats['claim'] ? null : $plotStats['claim']);
+                    }
+                    if (array_key_exists('icons', $item)) {
+                        $icons = $item['icons'];
+                        $data['is_military'] = $icons['military'];
+                        $data['is_intrigue'] = $icons['intrigue'];
+                        $data['is_power'] = $icons['power'];
+                    }
 
-            $position++;
+                    $position++;
 
-            $entity = $this->getEntityFromData(Card::class, $data, [
-                'name',
-                'code',
-                'deck_limit',
-                'position',
-                'quantity',
-                'text',
-                'flavor',
-                'is_loyal',
-                'is_unique',
-                'is_multiple'
-            ], [
-                'faction_code',
-                'pack_code',
-                'type_code'
-            ], [
-                'designer',
-                'illustrator',
-                'traits',
-                'cost',
-                'octgn_id'
-            ], $output);
-            if ($entity) {
-                $result[] = $entity;
-                $this->em->persist($entity);
+                    $entity = $this->getEntityFromData(
+                        Card::class,
+                        $data,
+                        [
+                            'name',
+                            'code',
+                            'deck_limit',
+                            'position',
+                            'quantity',
+                            'text',
+                            'flavor',
+                            'is_loyal',
+                            'is_unique',
+                            'is_multiple'
+                        ],
+                        [
+                            'faction_code',
+                            'pack_code',
+                            'type_code'
+                        ],
+                        [
+                            'designer',
+                            'illustrator',
+                            'traits',
+                            'cost',
+                            'octgn_id'
+                        ],
+                        $output
+                    );
+                    if ($entity) {
+                        $result[] = $entity;
+                        $this->em->persist($entity);
+                    }
+                }
             }
         }
         return $result;
@@ -722,5 +728,25 @@ class ImportStdCommand extends Command
             }
         }
         return $rhett;
+    }
+
+    /**
+     * Adds packs to cycles in their proper order.
+     * @param array $rawCyclesData
+     * @param array $rawPackData
+     * @return array
+     */
+    protected function groupPacksInCycles(array $rawCyclesData, array $rawPackData): array
+    {
+        $cycles = [];
+        foreach ($rawCyclesData as $rawCycle) {
+            $cycle = [];
+            foreach ($rawCycle['packs'] as $packCode) {
+                $pack = $rawPackData[$packCode];
+                $cycle[] = $pack;
+            }
+            $cycles[]  = $cycle;
+        }
+        return $cycles;
     }
 }
