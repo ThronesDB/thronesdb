@@ -7,15 +7,15 @@ ThronesDB
 
 This guide assumes you know how to use the command-line and that your machine has php and mysql installed.
 
-- install composer: https://getcomposer.org/download/
-- clone the repo somewhere
-- cd to it
+- install [composer](https://getcomposer.org/download/)
+- clone the [data repository](https://github.com/throneteki/throneteki-json-data)
+- clone this repo
+- `cd` to it
 - run `composer install` (at the end it will ask for the database configuration parameters)
 - run `php bin/console doctrine:database:create`
 - run `php bin/console doctrine:migrations:migrate`
 - run `php bin/console doctrine:fixtures:load --env=prod` to load default application data
-- run `php bin/console app:import:std ../throneteki-json-data` or whatever the path to your local clone of the 
-[Throneteki JSON Data repository](https://github.com/throneteki/throneteki-json-data) is.
+- run `php bin/console app:import:std ../throneteki-json-data` or whatever the path to the data repository is
 - run `php bin/console server:run`
 
 ## Setup an admin account
