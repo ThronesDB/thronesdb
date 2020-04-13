@@ -228,7 +228,7 @@ class ImportStdCommand extends Command
                     $data['position'] = $position;
                     $data['quantity'] = $item['quantity'];
                     $data['text'] = $item['text'];
-                    // @todo this is a stop-gap solution until errata can be imported properly. Fix this. [ST 2020/04/12]
+                    // @todo Replace this stop-gap solution and import errata properly. [ST 2020/04/12]
                     if (array_key_exists('errata', $item) && $item['errata']) {
                         $data['text'] .= "\n<emErrata'd.</em>";
                     }
