@@ -6,6 +6,7 @@ use AppBundle\Entity\Card;
 
 /**
  * Banned List Checker.
+ * The currently implemented BL were issued by The Conclave (v1.0), effective April 13th, 2020.
  *
  * Class BannedList
  * @package AppBundle\Classes

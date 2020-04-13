@@ -4,142 +4,153 @@
 {
 
     var date_creation,
-            date_update,
-            description_md,
-            id,
-            uuid,
-            name,
-            tags,
-            faction_code,
-            faction_name,
-            unsaved,
-            user_id,
-            problem_labels = _.reduce(
-                    ['too_many_plots', 'too_few_plots', 'too_many_different_plots', 'too_many_agendas', 'too_few_cards', 'too_many_copies', 'invalid_cards', 'agenda'],
-                    function (problems, key)
-                    {
-                        problems[key] = Translator.trans('decks.problems.' + key);
-                        return problems;
-                    },
-                    {}),
-            header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
-            card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
-            card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
-            layouts = {},
-            layout_data = {},
-             // restricted list, see FAQ v3.0
-            joust_restricted_list = [
-                "01109", // The Red Viper (Core)
-                "02091", // Raider from Pyke (CoW)
-                "02092", // Iron Mines (CoW)
-                "02102", // Ward (TS)
-                "03038", // To the Rose Banner! (WotN)
-                "04001", // The Dragon's Tail (AtSK)
-                "04017", // Tower of the Sun (AtSK)
-                "05010", // Taena Merryweather (LoCR)
-                "05049", // Littlefinger's Meddling (LoCR)
-                "06004", // All Men Are Fools (AMAF)
-                "06011", // Drowned Disciple (AMAF)
-                "06038", // Great Hall (GtR)
-                "06039", // "The Dornishman's Wife" (GtR)
-                "06040", // The Annals of Castle Black (GtR)
-                "06063", // Oldtown Informer (TRW)
-                "06098", // Flea Bottom (OR)
-                "06100", // Wheels Within Wheels (OR)
-                "06103", // Highgarden Minstrel (TBWB)
-                "09001", // Mace Tyrell (HoT)
-                "09017", // The Hightower (HoT)
-                "09023", // "Six Maids in a Pool" (HoT)
-                "09051", // Trade Routes (HoT)
-                "10045", // The Wars To Come (SoD)
-                "10048", // Forced March (SoD)
-                "10050", // Breaking Ties (SoD)
-                "11021", // Wyman Manderly (TMoW)
-                "11033", // Hizdahr zo Loraq (TMoW)
-                "11034", // Meereen (TMoW)
-                "11044", // Growing Ambition (SoKL)
-                "11051", // Drowned God Fanatic (SoKL)
-                "11061", // Meera Reed (MoD)
-                "11076", // A Mission in Essos (MoD)
-                "11082", // Skagos (IDP)
-                "12002", // Euron Crow's Eye (KotI)
-                "12029", // Desert Raider (KotI)
-                "12045", // Sea of Blood (KotI)
-                "12046", // We Take Westeros! (KotI)
-                "13044", // Unexpected Guile (PoS)
-                "13085", // Yoren (TB)
-                "13086", // Bound for the Wall (TB)
-                "13103", // The Queen's Retinue (LMHR)
-            ],
-            melee_restricted_list = [
-                "01001", // A Clash of Kings (Core)
-                "01013", // Heads on Spikes (Core)
-                "01043", // Superior Claim (Core)
-                "01078", // Great Kraken (Core)
-                "01119", // Doran's Game (Core)
-                "01162", // Khal Drogo (Core)
-                "02012", // Rise of the Kraken (TtB)
-                "02024", // Lady Sansa's Rose (TRtW)
-                "02060", // The Lord of the Crossing (TKP)
-                "03003", // Eddard Stark (WotN)
-                "03038", // To the Rose Banner! (WotN)
-                "04003", // Riverrun (AtSK)
-                "04118", // Relentless Assault (TC)
-                "05001", // Cersei Lannister (LoCR)
-                "05010", // Taena Merryweather (LoCR)
-                "05049", // Littlefinger's Meddling (LoCR)
-                "06004", // All Men Are Fools (AMAF)
-                "06011", // Drowned Disciple (AMAF)
-                "06039", // "The Dornishman's Wife" (GtR)
-                "06040", // The Annals of Castle Black (GtR)
-                "06098", // Flea Bottom (OR)
-                "07036", // Plaza of Pride (WotW)
-                "08098", // "The Song of the Seven" (TFM)
-                "08120", // You Win Or You Die (SAT)
-                "09028", // Corpse Lake (HoT)
-                "11054", // Queensguard (SoKL)
-                "11076", // A Mission in Essos (MoD)
-                "13107", // Robert Baratheon (LMHR)
-            ],
-            // "banned" cards, currently all cards from the TTWDFL pack [ST 2020/02/11]
-            banned_list = [
-                "16001", // Ser Davos Seaworth (TTWDFL)
-                "16002", // Melisandre's Favor (TTWDFL)
-                "16003", // Wintertime Marauders (TTWDFL)
-                "16004", // Conquer (TTWDFL)
-                "16005", // Spider's Whisperer (TTWDFL)
-                "16006", // Wheels Within Wheels (TTWDFL)
-                "16007", // Prince's Loyalist (TTWDFL)
-                "16008", // You Murdered Her Children (TTWDFL)
-                "16009", // Samwell Tarly (TTWDFL)
-                "16010", // Old Bear Mormont (TTWDFL)
-                "16011", // Catelyn Stark (TTWDFL)
-                "16012", // Snow Castle (TTWDFL)
-                "16013", // Mad King Aerys (TTWDFL)
-                "16014", // The Hatchlings' Feast (TTWDFL)
-                "16015", // The Queen of Thorns (TTWDFL)
-                "16016", // Olenna's Study (TTWDFL)
-                "16017", // Littlefinger (TTWDFL)
-                "16018", // Vale Refugee (TTWDFL)
-                "16019", // High Ground (TTWDFL)
-                "16020", // King's Landing (TTWDFL)
-                "16021", // Harrenhal (TTWDFL)
-                "16022", // Sky Cell (TTWDFL)
-                "16023", // Heads on Pikes (TTWDFL)
-                "16024", // Narrow Escape (TTWDFL)
-                "16025", // Seductive Promise (TTWDFL)
-                "16026", // Westeros Bleeds (TTWDFL)
-                "16027", // Aloof and Apart (TTWDFL)
-                "16028", // Dark Wings, Dark Words (TTWDFL)
-                "16029", // Knights of the Realm (TTWDFL)
-                "16030", // The Long Voyage (TTWDFL)
-                "16031", // Benjen's Cache (TTWDFL)
-                "16032", // Rioting (TTWDFL)
-                "16033", // Rule By Decree (TTWDFL)
-                "16034", // Search and Detain (TTWDFL)
-                "16035", // The Art of Seduction (TTWDFL)
-                "16036", // The Gathering Storm (TTWDFL)
-            ];
+        date_update,
+        description_md,
+        id,
+        uuid,
+        name,
+        tags,
+        faction_code,
+        faction_name,
+        unsaved,
+        user_id,
+        problem_labels = _.reduce(
+            ['too_many_plots', 'too_few_plots', 'too_many_different_plots', 'too_many_agendas', 'too_few_cards', 'too_many_copies', 'invalid_cards', 'agenda'],
+            function (problems, key){
+                problems[key] = Translator.trans('decks.problems.' + key);
+                return problems;
+            },
+            {}
+        ),
+        header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
+        card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
+        card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
+        layouts = {},
+        layout_data = {},
+        // Restricted/Banned Lists issued by The Conclave (v1.0)
+        joust_restricted_list = [
+            "01109", // The Red Viper (Core)
+            "02091", // Raider from Pyke (CoW)
+            "02092", // Iron Mines (CoW)
+            "02102", // Ward (TS)
+            "03038", // To the Rose Banner! (WotN)
+            "04001", // The Dragon's Tail (AtSK)
+            "04017", // Tower of the Sun (AtSK)
+            "05010", // Taena Merryweather (LoCR)
+            "05049", // Littlefinger's Meddling (LoCR)
+            "06004", // All Men Are Fools (AMAF)
+            "06011", // Drowned Disciple (AMAF)
+            "06038", // Great Hall (GtR)
+            "06039", // "The Dornishman's Wife" (GtR)
+            "06040", // The Annals of Castle Black (GtR)
+            "06063", // Oldtown Informer (TRW)
+            "06098", // Flea Bottom (OR)
+            "06100", // Wheels Within Wheels (OR)
+            "06103", // Highgarden Minstrel (TBWB)
+            "08080", // The King in the North (FotOG)"
+            "09001", // Mace Tyrell (HoT)
+            "09017", // The Hightower (HoT)
+            "09023", // "Six Maids in a Pool" (HoT)
+            "09037", // Qotho (HoT)"
+            "09051", // Trade Routes (HoT)
+            "10045", // The Wars To Come (SoD)
+            "10048", // Forced March (SoD)
+            "10050", // Breaking Ties (SoD)
+            "11012", // Nighttime Marauders (TSC)"
+            "11021", // Wyman Manderly (TMoW)
+            "11033", // Hizdahr zo Loraq (TMoW)
+            "11034", // Meereen (TMoW)
+            "11044", // Growing Ambition (SoKL)
+            "11051", // Drowned God Fanatic (SoKL)
+            "11061", // Meera Reed (MoD)
+            "11076", // A Mission in Essos (MoD)
+            "11082", // Skagos (IDP)
+            "11085", // Three-Finger Hobb (IDP)"
+            "11114", // Gifts for the Widow (DitD)"
+            "12002", // Euron Crow's Eye (KotI)
+            "12029", // Desert Raider (KotI)
+            "12045", // Sea of Blood (KotI)
+            "12046", // We Take Westeros! (KotI)
+            "12047", // Return to the Fields (KotI)"
+            "13044", // Unexpected Guile (PoS)
+            "13079", // Kingdom of Shadows (BtRK)"
+            "13085", // Yoren (TB)
+            "13086", // Bound for the Wall (TB)
+            "13103", // The Queen's Retinue (LMHR)
+            "14008", // Selyse Baratheon (FotS)"
+            "15022", // Overwhelming Numbers (DotE)"
+            "15030", // The Red Keep (DotE)"
+            "15033", // Clydas (DotE)"
+            "15045", // Bribery (DotE)"
+        ],
+        melee_restricted_list = [
+            "01001", // A Clash of Kings (Core)
+            "01013", // Heads on Spikes (Core)
+            "01043", // Superior Claim (Core)
+            "01078", // Great Kraken (Core)
+            "01119", // Doran's Game (Core)
+            "01162", // Khal Drogo (Core)
+            "02012", // Rise of the Kraken (TtB)
+            "02024", // Lady Sansa's Rose (TRtW)
+            "02060", // The Lord of the Crossing (TKP)
+            "03003", // Eddard Stark (WotN)
+            "03038", // To the Rose Banner! (WotN)
+            "04003", // Riverrun (AtSK)
+            "04118", // Relentless Assault (TC)
+            "05001", // Cersei Lannister (LoCR)
+            "05010", // Taena Merryweather (LoCR)
+            "05049", // Littlefinger's Meddling (LoCR)
+            "06004", // All Men Are Fools (AMAF)
+            "06011", // Drowned Disciple (AMAF)
+            "06039", // "The Dornishman's Wife" (GtR)
+            "06040", // The Annals of Castle Black (GtR)
+            "06098", // Flea Bottom (OR)
+            "07036", // Plaza of Pride (WotW)
+            "08098", // "The Song of the Seven" (TFM)
+            "08120", // You Win Or You Die (SAT)
+            "09028", // Corpse Lake (HoT)
+            "11054", // Queensguard (SoKL)
+            "11076", // A Mission in Essos (MoD)
+            "13107", // Robert Baratheon (LMHR)
+        ],
+        banned_list = [
+            "16001", // Ser Davos Seaworth (TTWDFL)
+            "16002", // Melisandre's Favor (TTWDFL)
+            "16003", // Wintertime Marauders (TTWDFL)
+            "16004", // Conquer (TTWDFL)
+            "16005", // Spider's Whisperer (TTWDFL)
+            "16006", // Wheels Within Wheels (TTWDFL)
+            "16007", // Prince's Loyalist (TTWDFL)
+            "16008", // You Murdered Her Children (TTWDFL)
+            "16009", // Samwell Tarly (TTWDFL)
+            "16010", // Old Bear Mormont (TTWDFL)
+            "16011", // Catelyn Stark (TTWDFL)
+            "16012", // Snow Castle (TTWDFL)
+            "16013", // Mad King Aerys (TTWDFL)
+            "16014", // The Hatchlings' Feast (TTWDFL)
+            "16015", // The Queen of Thorns (TTWDFL)
+            "16016", // Olenna's Study (TTWDFL)
+            "16017", // Littlefinger (TTWDFL)
+            "16018", // Vale Refugee (TTWDFL)
+            "16019", // High Ground (TTWDFL)
+            "16020", // King's Landing (TTWDFL)
+            "16021", // Harrenhal (TTWDFL)
+            "16022", // Sky Cell (TTWDFL)
+            "16023", // Heads on Pikes (TTWDFL)
+            "16024", // Narrow Escape (TTWDFL)
+            "16025", // Seductive Promise (TTWDFL)
+            "16026", // Westeros Bleeds (TTWDFL)
+            "16027", // Aloof and Apart (TTWDFL)
+            "16028", // Dark Wings, Dark Words (TTWDFL)
+            "16029", // Knights of the Realm (TTWDFL)
+            "16030", // The Long Voyage (TTWDFL)
+            "16031", // Benjen's Cache (TTWDFL)
+            "16032", // Rioting (TTWDFL)
+            "16033", // Rule By Decree (TTWDFL)
+            "16034", // Search and Detain (TTWDFL)
+            "16035", // The Art of Seduction (TTWDFL)
+            "16036", // The Gathering Storm (TTWDFL)
+        ];
 
     var factions = {
         '01198': 'baratheon',
