@@ -232,7 +232,7 @@ class ImportStdCommand extends Command
                     if (array_key_exists('errata', $item) && $item['errata']) {
                         $data['text'] .= "\n<emErrata'd.</em>";
                     }
-                    $data['traits'] = array_key_exists('traits', $item) ? implode('. ', $item['traits']).'.' : '';
+                    $data['traits'] = $item['traits'] ? implode('. ', $item['traits']) . '.' : '';
                     $data['type_code'] = $item['type'];
                     $data['strength'] = null;
                     if (array_key_exists('strength', $item)) {
