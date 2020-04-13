@@ -230,7 +230,7 @@ class ImportStdCommand extends Command
                     $data['text'] = $item['text'];
                     // @todo Replace this stop-gap solution and import errata properly. [ST 2020/04/12]
                     if (array_key_exists('errata', $item) && $item['errata']) {
-                        $data['text'] .= "\n<emErrata'd.</em>";
+                        $data['text'] .= "\n<em>Errata'd.</em>";
                     }
                     $data['traits'] = $item['traits'] ? implode('. ', $item['traits']) . '.' : '';
                     $data['type_code'] = $item['type'];
