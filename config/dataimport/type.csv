@@ -1,0 +1,8 @@
+`id`,`code`,`name`
+1,agenda,Agenda
+2,attachment,Attachment
+3,character,Character
+4,event,Event
+5,location,Location
+6,plot,Plot
+7,title,Title

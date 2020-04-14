@@ -16,17 +16,17 @@ class Pack implements \Serializable
                 'cgdb_id' => $this->cgdbId
         ];
     }
-    
+
     public function unserialize($serialized)
     {
         throw new \Exception("unserialize() method unsupported");
     }
-    
-    public function toString()
+
+    public function __toString()
     {
-        return $this->name;
+        return $this->name ?: '';
     }
-    
+
     /**
      * @var integer
      */
@@ -71,7 +71,7 @@ class Pack implements \Serializable
      * @var integer
      */
     private $cgdbId;
-    
+
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
@@ -288,10 +288,10 @@ class Pack implements \Serializable
     public function setCgdbId($cgdbId)
     {
         $this->cgdbId = $cgdbId;
-    
+
         return $this;
     }
-    
+
     /**
      * Get cgdbId
      *
@@ -301,7 +301,7 @@ class Pack implements \Serializable
     {
         return $this->cgdbId;
     }
-    
+
     /**
      * Add card
      *

@@ -11,17 +11,17 @@ class Type implements \Serializable
                 'name' => $this->name
         ];
     }
-    
+
     public function unserialize($serialized)
     {
         throw new \Exception("unserialize() method unsupported");
     }
 
-    public function toString()
+    public function __toString()
     {
-        return $this->name;
+        return $this->name ?: '';
     }
-    
+
     /**
      * @var integer
      */
@@ -48,6 +48,15 @@ class Type implements \Serializable
     public function __construct()
     {
         $this->cards = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set id
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
