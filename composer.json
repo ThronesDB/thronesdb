@@ -52,7 +52,7 @@
         "symfony/symfony": "3.4.*",
         "symfony/templating": "^3",
         "twig/twig": "^2.7.0",
-        "willdurand/js-translation-bundle": "^2.6"
+        "willdurand/js-translation-bundle": "^3.0"
     },
     "require-dev": {
         "beberlei/assert": "^2.9",
