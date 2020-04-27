@@ -55,7 +55,7 @@
         "willdurand/js-translation-bundle": "^3.0"
     },
     "require-dev": {
-        "beberlei/assert": "^2.9",
+        "beberlei/assert": "^3.2",
         "behat/behat": "^3.4",
         "behat/symfony2-extension": "^2.1",
         "justinrainbow/json-schema": "^5.2",
