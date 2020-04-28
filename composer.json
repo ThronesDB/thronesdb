@@ -1,6 +1,6 @@
 {
-    "name": "cedric/thronesdb3",
-    "license": "proprietary",
+    "name": "thronesdb/thronesdb",
+    "license": "MIT",
     "type": "project",
     "autoload": {
         "psr-4": {
