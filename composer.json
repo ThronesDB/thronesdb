@@ -63,7 +63,7 @@
         "phpunit/phpunit": "^7",
         "squizlabs/php_codesniffer": "@stable",
         "symfony/expression-language": "3.4.*",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^5.0"
     },
     "scripts": {
         "symfony-scripts": [
