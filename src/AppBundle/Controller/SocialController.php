@@ -17,6 +17,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use PDO;
+use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -816,8 +817,7 @@ class SocialController extends Controller
                 'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL),
             );
             foreach ($spool as $email => $view) {
-                $message = \Swift_Message::newInstance()
-                    ->setSubject("[thronesdb] New comment")
+                $message = (new Swift_Message("[thronesdb] New comment"))
                     ->setFrom(array($fromEmail => $user->getUsername()))
                     ->setTo($email)
                     ->setBody($this->renderView($view, $email_data), 'text/html');
