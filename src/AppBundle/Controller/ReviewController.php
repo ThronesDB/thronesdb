@@ -400,8 +400,7 @@ class ReviewController extends Controller
             'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL)
         );
         foreach ($spool as $email => $view) {
-            $message = Swift_Message::newInstance()
-                    ->setSubject("[thronesdb] New review comment")
+            $message = (new Swift_Message("[thronesdb] New review comment"))
                     ->setFrom(array($fromEmail => $user->getUsername()))
                     ->setTo($email)
                     ->setBody($this->renderView($view, $email_data), 'text/html');
