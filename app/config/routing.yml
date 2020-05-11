@@ -2,8 +2,9 @@ app:
     resource: "@AppBundle/Resources/config/routing.yml"
     prefix:   /
 
-nelmio_api_doc_bundle:
-    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+# app/config/routing.yml
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing/swaggerui.xml"
     prefix:   /api/doc
 
 _bazinga_jstranslation:
