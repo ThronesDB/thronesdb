@@ -12,10 +12,10 @@
             complement to playing {{ game_name }}.</p>
         <p>All texts are copyrighted by {{ publisher_name }}.</p>
 
-        <h3>Public and OAuth2</h3>
+        <h3>Public and Protected (OAuth2)</h3>
 
-        <p>There are two kinds of API endpoints: Public and OAuth2. Public API endpoints are available to everyone,
-            while OAuth2 API endpoints are only available to registered clients (applications).
+        <p>There are two kinds of API endpoints: Public and Protected (OAuth2). Public API endpoints are available to everyone,
+            while Protected API endpoints are only available to registered clients (applications).
             If you need such an access, please send me an email describing your project, including the Application Name,
             the Application Website and a Redirect URI (you can read <a
                     href="https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2#application-registration">this
@@ -29,9 +29,9 @@
 
         <h3>Examples</h3>
 
-        <a href="{{ path('api_card',{card_code:'01001'}) }}">{{ path('api_card',{card_code:'01001'}) }}</a> returns data
+        <a href="{{ path('api_card', {card_code:'01001'}) }}">{{ path('api_card', {card_code:'01001'}) }}</a> returns data
         for card 01001<br>
-        <a href="{{ path('api_packs',{jsonp:'parseSets'}) }}">{{ path('api_packs',{jsonp:'parseSets'}) }}</a> returns
+        <a href="{{ path('api_packs', {jsonp:'parseSets'}) }}">{{ path('api_packs', {jsonp:'parseSets'}) }}</a> returns
         data for all packs wrapped in a call to parseSets()<br>
 
         <h3>Encoding</h3>
@@ -43,7 +43,7 @@
 
         <ul>
             <li>Public API responses use both HTTP cache expiration (max-age) and cache validation (last-modified).</li>
-            <li>OAuth2 API responses use HTTP cache validation (last-modified).</li>
+            <li>Protected API responses use HTTP cache validation (last-modified).</li>
         </ul>
         <p><b>Please conform to HTTP Caching best practices when building your queries.</b></p>
 

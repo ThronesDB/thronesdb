@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\Operation;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Swagger\Annotations as SWG;
 use AppBundle\Entity\Deck;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,7 +41,7 @@ class Oauth2Controller extends Controller
      * Get the description of all the Decks of the authenticated user
      *
      * @Operation(
-     *     tags={"Private"},
+     *     tags={"Protected"},
      *     summary="All the Decks",
      *     @SWG\Response(
      *         response="200",
@@ -85,7 +84,7 @@ class Oauth2Controller extends Controller
      * Get the description of one Deck of the authenticated user
      *
      * @Operation(
-     *     tags={"Private"},
+     *     tags={"Protected"},
      *     summary="Load One Deck",
      *     @SWG\Response(
      *         response="200",
@@ -132,7 +131,7 @@ class Oauth2Controller extends Controller
      * If successful, id of Deck is in the msg
      *
      * @Operation(
-     *     tags={"Private"},
+     *     tags={"Protected"},
      *     summary="Save One Deck",
      *     @SWG\Parameter(
      *         name="name",
@@ -279,7 +278,7 @@ class Oauth2Controller extends Controller
      * If publication is successful, update the version of the deck and return the id of the decklist
      *
      * @Operation(
-     *     tags={"Private"},
+     *     tags={"Protected"},
      *     summary="Publish One Deck",
      *     @SWG\Parameter(
      *         name="description_md",
