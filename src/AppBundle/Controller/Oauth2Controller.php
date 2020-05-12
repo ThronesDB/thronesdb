@@ -138,7 +138,7 @@ class Oauth2Controller extends Controller
      *         name="name",
      *         in="body",
      *         description="Name of the Deck",
-     *         required=false,
+     *         required=true,
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Parameter(
