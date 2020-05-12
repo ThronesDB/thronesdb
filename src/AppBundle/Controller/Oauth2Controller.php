@@ -7,7 +7,9 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Swagger\Annotations as SWG;
 use AppBundle\Entity\Deck;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -39,11 +41,15 @@ class Oauth2Controller extends Controller
     /**
      * Get the description of all the Decks of the authenticated user
      *
-     * @ApiDoc(
-     *  section="Deck",
-     *  resource=true,
-     *  description="All the Decks",
+     * @Operation(
+     *     tags={"Private"},
+     *     summary="All the Decks",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
      * )
+     *
      *
      * @param Request $request
      */
@@ -78,19 +84,15 @@ class Oauth2Controller extends Controller
     /**
      * Get the description of one Deck of the authenticated user
      *
-     * @ApiDoc(
-     *  section="Deck",
-     *  resource=true,
-     *  description="Load One Deck",
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="The numeric identifier of the Deck to load"
-     *      },
-     *  },
+     * @Operation(
+     *     tags={"Private"},
+     *     summary="Load One Deck",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
      * )
+     *
      *
      * @param Request $request
      * @param int $id
@@ -129,45 +131,57 @@ class Oauth2Controller extends Controller
      * then send the object as the param of an ajax request.
      * If successful, id of Deck is in the msg
      *
-     * @ApiDoc(
-     *  section="Deck",
-     *  resource=true,
-     *  description="Save One Deck",
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="The numeric identifier of the Deck to load ; 0 to create a new Deck"
-     *      },
-     *  },
-     *  parameters={
-     *      {"name"="name", "dataType"="string", "required"=true, "description"="Name of the Deck"},
-     *      {
-     *          "name"="decklist_id",
-     *          "dataType"="integer",
-     *          "required"=false,
-     *          "description"="Identifier of the Decklist from which the Deck is copied"},
-     *      {
-     *          "name"="description_md",
-     *          "dataType"="string",
-     *          "required"=false,
-     *          "description"="Description of the Decklist in Markdown"},
-     *      {
-     *          "name"="faction_code",
-     *          "dataType"="string",
-     *          "required"=false,
-     *          "description"="Code of the faction of the Deck"
-     *      },
-     *      {"name"="tags", "dataType"="string", "required"=false, "description"="Space-separated list of tags"},
-     *      {
-     *          "name"="slots",
-     *          "dataType"="string",
-     *          "required"=true,
-     *          "description"="Content of the Decklist as a JSON object"
-     *      },
-     *  },
+     * @Operation(
+     *     tags={"Private"},
+     *     summary="Save One Deck",
+     *     @SWG\Parameter(
+     *         name="name",
+     *         in="body",
+     *         description="Name of the Deck",
+     *         required=true,
+     *         @SWG\Schema(type="string")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="decklist_id",
+     *         in="body",
+     *         description="Identifier of the Decklist from which the Deck is copied",
+     *         required=false,
+     *         @SWG\Schema(type="integer")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="description_md",
+     *         in="body",
+     *         description="Description of the Decklist in Markdown",
+     *         required=false,
+     *         @SWG\Schema(type="string")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="faction_code",
+     *         in="body",
+     *         description="Code of the faction of the Deck",
+     *         required=false,
+     *         @SWG\Schema(type="string")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="tags",
+     *         in="body",
+     *         description="Space-separated list of tags",
+     *         required=false,
+     *         @SWG\Schema(type="string")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="slots",
+     *         in="body",
+     *         description="Content of the Decklist as a JSON object",
+     *         required=false,
+     *         @SWG\Schema(type="string")
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
      * )
+     *
      *
      * @param Request $request
      */
@@ -264,39 +278,36 @@ class Oauth2Controller extends Controller
      * Try to publish one Deck of the authenticated user
      * If publication is successful, update the version of the deck and return the id of the decklist
      *
-     * @ApiDoc(
-     *  section="Deck",
-     *  resource=true,
-     *  description="Publish One Deck",
-     *  requirements={
-     *      {
-     *          "name"="id",
-     *          "dataType"="integer",
-     *          "requirement"="\d+",
-     *          "description"="The numeric identifier of the Deck to publish"
-     *      },
-     *  },
-     *  parameters={
-     *      {
-     *          "name"="description_md",
-     *          "dataType"="string",
-     *          "required"=false,
-     *          "description"="Description of the Decklist in Markdown"
-     *      },
-     *      {
-     *          "name"="tournament_id",
-     *          "dataType"="integer",
-     *          "required"=false,
-     *          "description"="Identifier of the Tournament type of the Decklist"
-     *      },
-     *      {
-     *          "name"="precedent_id",
-     *          "dataType"="integer",
-     *          "required"=false,
-     *          "description"="Identifier of the Predecessor of the Decklist"
-     *      },
-     *  },
+     * @Operation(
+     *     tags={"Private"},
+     *     summary="Publish One Deck",
+     *     @SWG\Parameter(
+     *         name="description_md",
+     *         in="body",
+     *         description="Description of the Decklist in Markdown",
+     *         required=false,
+     *         @SWG\Schema(type="string")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="tournament_id",
+     *         in="body",
+     *         description="Identifier of the Tournament type of the Decklist",
+     *         required=false,
+     *         @SWG\Schema(type="integer")
+     *     ),
+     *     @SWG\Parameter(
+     *         name="precedent_id",
+     *         in="body",
+     *         description="Identifier of the Predecessor of the Decklist",
+     *         required=false,
+     *         @SWG\Schema(type="integer")
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
      * )
+     *
      *
      * @param int $id
      * @param Request $request

@@ -38,7 +38,7 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "jms/i18n-routing-bundle": "^2.0.1",
         "leafo/scssphp": "^0.8.4",
-        "nelmio/api-doc-bundle": "^2.0",
+        "nelmio/api-doc-bundle": "^3.6",
         "nelmio/cors-bundle": "^1.5",
         "patchwork/jsqueeze": "^2.0",
         "ramsey/uuid-doctrine": "^1.5",
