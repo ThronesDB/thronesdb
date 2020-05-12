@@ -22,7 +22,7 @@ class ApiController extends Controller
      *
      *
      * @Operation(
-     *     tags={"Pack"},
+     *     tags={"Public"},
      *     summary="All the Packs",
      *     @SWG\Parameter(
      *         name="jsonp",
@@ -106,7 +106,7 @@ class ApiController extends Controller
      * Get the description of a card as a JSON object.
      *
      * @Operation(
-     *     tags={"Card"},
+     *     tags={"Public"},
      *     summary="One Card",
      *     @SWG\Parameter(
      *         name="jsonp",
@@ -175,7 +175,7 @@ class ApiController extends Controller
      * Get the description of all the cards as an array of JSON objects.
      *
      * @Operation(
-     *     tags={"Card"},
+     *     tags={"Public"},
      *     summary="All the Cards",
      *     @SWG\Parameter(
      *         name="jsonp",
@@ -245,7 +245,7 @@ class ApiController extends Controller
      * Get the description of all the card from a pack, as an array of JSON objects.
      *
      * @Operation(
-     *     tags={"Card"},
+     *     tags={"Public"},
      *     summary="All the Cards from One Pack",
      *     @SWG\Parameter(
      *         name="jsonp",
@@ -323,7 +323,7 @@ class ApiController extends Controller
      * Get the description of a decklist as a JSON object.
      *
      * @Operation(
-     *     tags={"Decklist"},
+     *     tags={"Public"},
      *     summary="One Decklist",
      *     @SWG\Parameter(
      *         name="jsonp",
@@ -384,7 +384,7 @@ class ApiController extends Controller
      * Get the description of all the decklists published at a given date, as an array of JSON objects.
      *
      * @Operation(
-     *     tags={"Decklist"},
+     *     tags={"Public"},
      *     summary="All the Decklists from One Day",
      *     @SWG\Parameter(
      *         name="jsonp",

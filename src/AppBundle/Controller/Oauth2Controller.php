@@ -42,7 +42,7 @@ class Oauth2Controller extends Controller
      * Get the description of all the Decks of the authenticated user
      *
      * @Operation(
-     *     tags={"Deck"},
+     *     tags={"Private"},
      *     summary="All the Decks",
      *     @SWG\Response(
      *         response="200",
@@ -85,7 +85,7 @@ class Oauth2Controller extends Controller
      * Get the description of one Deck of the authenticated user
      *
      * @Operation(
-     *     tags={"Deck"},
+     *     tags={"Private"},
      *     summary="Load One Deck",
      *     @SWG\Response(
      *         response="200",
@@ -132,7 +132,7 @@ class Oauth2Controller extends Controller
      * If successful, id of Deck is in the msg
      *
      * @Operation(
-     *     tags={"Deck"},
+     *     tags={"Private"},
      *     summary="Save One Deck",
      *     @SWG\Parameter(
      *         name="name",
@@ -279,7 +279,7 @@ class Oauth2Controller extends Controller
      * If publication is successful, update the version of the deck and return the id of the decklist
      *
      * @Operation(
-     *     tags={"Deck"},
+     *     tags={"Private"},
      *     summary="Publish One Deck",
      *     @SWG\Parameter(
      *         name="description_md",
