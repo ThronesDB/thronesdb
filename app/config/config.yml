@@ -132,7 +132,21 @@ fos_js_routing:
     routes_to_expose: [ '.*' ]
 
 # NelmioApiDocBundle Configuration
-nelmio_api_doc: ~
+nelmio_api_doc:
+    documentation:
+        info:
+            title: ThronesDB API
+            version: 1.0.0
+            description: The public and private APIs of ThronesDB.
+    areas:
+        path_patterns: # an array of regexps
+            - ^/api/oauth2/deck/
+            - ^/api/oauth2/decks/
+            - ^/api/public/card/
+            - ^/api/public/cards/
+            - ^/api/public/decklist/
+            - ^/api/public/decklists/
+            - ^/api/public/packs/
 
 # FOSOAuthServerBundle
 fos_oauth_server:
