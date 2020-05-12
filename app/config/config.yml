@@ -137,7 +137,7 @@ nelmio_api_doc:
         info:
             title: ThronesDB API
             version: 1.0.0
-            description: ThronesDB's public and private APIs endpoints.
+            description: ThronesDB's public and protected APIs endpoints.
     areas:
         path_patterns: # an array of regexps
             - ^/api/oauth2/deck/
