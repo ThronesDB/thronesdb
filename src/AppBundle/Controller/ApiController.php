@@ -437,7 +437,9 @@ class ApiController extends Controller
             return $decklist->getDateUpdate();
         })->toArray();
 
-        $response->setLastModified(max($dateUpdates));
+        if (! empty($dateUpdates)) {
+            $response->setLastModified(max($dateUpdates));
+        }
         if ($response->isNotModified($request)) {
             return $response;
         }
