@@ -1,0 +1,114 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    env(APP_EMAIL_SENDER_ADDRESS): ~ #see https://github.com/symfony/symfony/issues/28618#issuecomment-425039954
+    env(APP_EMAIL_SENDER_NAME): ~
+    cache_expiration: "%env(int:APP_CACHE_EXPIRATION)%"
+    email_sender_address: "%env(string:APP_EMAIL_SENDER_ADDRESS)%"
+    email_sender_name: "%env(string:APP_EMAIL_SENDER_NAME)%"
+    website_name: "%env(string:APP_WEBSITE_NAME)%"
+    website_url: "%env(string:APP_WEBSITE_URL)%"
+    game_name: "%env(string:APP_GAME_NAME)%"
+    publisher_name: "%env(string:APP_PUBLISHER_NAME)%"
+    google_analytics_tracking_code: "%env(string:APP_GOOGLE_ANALYTICS_TRACKING_CODE)%"
+    allow_search_engine_tracking: "%env(bool:APP_ALLOW_SEARCH_ENGINE_TRACKING)%"
+    locale: en
+    locale_names:
+        en: English
+        de: Deutsch
+        fr: Français
+        es: Español
+        it: Italiano
+        pl: Polskie
+        kr: 한국어
+        jp: 日本語
+        zh: 中文
+    supported_locales:
+        - en
+        - es
+#        - de
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: false # Automatically injects dependencies in your services.
+        autoconfigure: false # Automatically registers your services as commands, event subscribers, etc.
+        public:
+            true # Allows optimizing the container by removing unused services; this also means
+            # fetching services directly from the container via $container->get() won't work.
+            # The best practice is to be explicit about your dependencies anyway.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: "../src/Controller"
+        tags: ["controller.service_arguments"]
+
+    # commands
+    App\Command\:
+        resource: '../src/Command/*'
+        public: false
+        autowire: true
+        autoconfigure: true
+
+    App\Services\DataimportFileLocator:
+        public: true
+        arguments: ['%kernel.root_dir%']
+
+    # makes classes in src/DataFixtures available to be used as services
+    App\DataFixtures\:
+        resource: '../src/DataFixtures'
+        tags: ['doctrine.fixture.orm']
+        arguments: [ '@App\Services\DataimportFileLocator']
+
+    # core exception listener
+    core_exception_listener:
+        class: App\Listener\CoreExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
+
+    deck_import_service:
+        public: true
+        class: App\Services\DeckImportService
+        arguments: ["@doctrine.orm.entity_manager"]
+    deck_manager:
+        public: true
+        class: App\Services\DeckManager
+        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
+    reviews:
+        class: App\Services\Reviews
+        arguments: ["@doctrine.orm.entity_manager"]
+    texts:
+        class: App\Services\Texts
+        arguments: ["%kernel.root_dir%"]
+    diff:
+        class: App\Services\Diff
+        arguments: ["@doctrine.orm.entity_manager"]
+    cards_data:
+        public: true
+        class: App\Services\CardsData
+        arguments: ["@doctrine", "@request_stack", "@router", "@translator"]
+    decklist_manager:
+        class: App\Model\DecklistManager
+        shared: false
+        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
+    decklist_factory:
+        public: true
+        class: App\Model\DecklistFactory
+        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@texts"]
+    agenda_helper:
+        class: App\Helper\AgendaHelper
+        arguments: ["@doctrine.orm.entity_manager"]
+    deck_validation_helper:
+        public: true
+        class: App\Helper\DeckValidationHelper
+        arguments: ["@agenda_helper", "@translator"]

@@ -1,0 +1,49 @@
+{% extends 'layout.html.twig' %}
+
+{% block navbar %}{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        {% if app.request.hasPreviousSession %}
+            {% for type, messages in app.session.flashbag.all() %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" style="line-height:2em">ThronesDB Authorization</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            The application <i>{{ client.name }}</i> would like to connect to your account.
+                        </p>
+                        <p>
+                            If you agree, <i>{{ client.name }}</i> will be able to perform the following operations on
+                            your behalf:
+                        </p>
+                        <ul>
+                            <li>Read your decks saved on ThronesDB</li>
+                            <li>Modify a deck or create a new one on ThronesDB</li>
+                        </ul>
+                        </p>
+                        <div class="form">
+                            {% block fos_oauth_server_content %}
+                                {% include "@FOSOAuthServer/Authorize/authorize_content.html.twig" %}
+                            {% endblock fos_oauth_server_content %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

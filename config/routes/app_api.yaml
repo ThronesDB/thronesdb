@@ -1,0 +1,14 @@
+# these routes are available to anybody
+App_api_public:
+    resource: "app_api_public.yaml"
+    prefix:   /public
+
+# these routes are available to users with an OAuth2 access_token
+App_api_oauth2:
+    resource: "app_api_oauth2.yaml"
+    prefix:   /oauth2
+
+api_intro:
+    path: /
+    defaults:
+        _controller: App\Controller\DefaultController:apiIntroAction

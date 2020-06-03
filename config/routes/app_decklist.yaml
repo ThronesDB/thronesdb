@@ -1,0 +1,45 @@
+decklist_download:
+    path: /export/text/{decklist_id}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\SocialController:downloadAction
+    requirements:
+        decklist_id: \d+
+
+decklist_detail:
+    path: /view/{decklist_id}/{decklist_name}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\SocialController:viewAction
+        decklist_name: null
+    requirements:
+        decklist_id: \d+
+
+decklist_create:
+    path: /create
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\SocialController:createAction
+
+decklist_edit:
+    path: /edit/{decklist_id}
+    defaults:
+        _controller: App\Controller\SocialController:editFormAction
+    requirements:
+        decklist_id: \d+
+
+decklist_save:
+    path: /save/{decklist_id}
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\SocialController:saveAction
+    requirements:
+        decklist_id: \d+
+
+decklist_delete:
+    path: /delete/{decklist_id}
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\SocialController:deleteAction
+    requirements:
+        decklist_id: \d+

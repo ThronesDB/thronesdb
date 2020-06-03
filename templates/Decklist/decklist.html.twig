@@ -1,0 +1,112 @@
+{% extends 'layout.html.twig' %}
+{% import "macros.html.twig" as macros %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/ui.decklist.js') }}"></script>
+    <script type="text/javascript">
+      var Commenters = {{ commenters|json_encode|raw }};
+      app.deck.init({{ decklist|json_encode|raw }});
+      app.user.params.decklist_id = {{ decklist.id }};
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        {% include 'alerts.html.twig' %}
+        <div class="row title bg-faction bg-{{ decklist.faction.code }}">
+            <div class="col-xs-12">
+                <h1 class="decklist-name text-center">
+                    <span class="icon icon-{{ decklist.faction.code }}"></span>
+                    {{ decklist.name }}
+                    <span class="dropdown">
+                  <button class="btn dropdown-toggle bg-{{ decklist.faction.code }}" type="button"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" id="dropdownVersions">
+                    {{ decklist.version }}
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownVersions">
+                      <li class="dropdown-header">{{ 'decklist.view.versions' | trans }}</li>
+                      {% for other_decklist in versions %}
+                        <li class="{% if other_decklist.id == decklist.id %}disabled{% endif %}">
+                              <a href="{{ path('decklist_detail', { 'decklist_id': other_decklist.id, 'decklist_name': other_decklist.nameCanonical|e('url') }) }}">
+                                  {{ other_decklist.version }}
+                              </a>
+                          </li>
+                    {% endfor %}
+                  </ul>
+                </span>
+                </h1>
+            </div>
+            <div class="col-xs-12">
+                <div class="social">
+                    <div class="pull-right">
+                        <span class="hidden-xs">{{ 'decklist.view.published' | trans }}: </span>
+                        <time datetime="{{ decklist.dateCreation|date('c') }}">{{ decklist.dateCreation|date('M d, Y') }}</time>
+                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                            <span class="social-icons">
+                                <a id="social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip" data-placement="bottom"
+                                   title="{{ 'decklist.view.social.like' | trans }}">
+                                    <span class="fas fa-heart"></span> <span class="num">{{ decklist.nbVotes }}</span>
+                                </a>
+                                <a id="social-icon-favorite" href="#" class="social-icon-favorite" data-toggle="tooltip" data-placement="bottom"
+                                   title="{{ 'decklist.view.social.favorite' | trans }}">
+                                    <span class="fas fa-star"></span> <span class="num">{{ decklist.nbFavorites }}</span>
+                                </a>
+                                <a id="social-icon-comment" href="#comment-form" class="social-icon-comment" data-toggle="tooltip"
+                                   data-placement="bottom" title="{{ 'decklist.view.social.comment' | trans }}">
+                                    <span class="fas fa-comment"></span> <span class="num">{{ decklist.nbComments }}</span>
+                                </a>
+                                <span class="social-icon-version" data-toggle="tooltip" data-placement="bottom"
+                                      title="{{ 'decklist.view.social.version' | trans }}">
+                                    <span class="fas fa-code-branch"></span> <span class="num">{{ decklist.version }}</span>
+                                </span>
+                            </span>
+                        {% else %}
+                            {{ macros.decklist_social_icons(decklist) }}
+                        {% endif %}
+                    </div>
+                    {% if duplicate %}
+                        {% set duplink %}
+                            <a href="{{ path('decklist_detail', { 'decklist_id': duplicate.id, 'decklist_name': duplicate.nameCanonical|e('url') }) }}">
+                                {{ duplicate.name }} {{ duplicate.version }}
+                            </a>
+                        {% endset %}
+                        <small>{{ 'decklist.view.duplicate' | trans({'%duplicate%': duplink}) | raw }}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main white container">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="deck-content" style="margin-bottom:10px"></div>
+                {% include 'Builder/deck-charts.html.twig' %}
+                {% include 'Builder/draw-simulator.html.twig' %}
+                {% include 'Decklist/table-predecessor.html.twig' %}
+                {% include 'Decklist/table-successor.html.twig' %}
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-right btn-group"
+                             role="group">{% include 'Decklist/toolbar.html.twig' %}</div>
+                    </div>
+                    <div class="col-md-12">
+                        {% include 'Decklist/author-and-description.html.twig' %}
+                    </div>
+                    <div class="col-md-12">
+                        {% include 'Decklist/comments.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'Decklist/export-modal.html.twig' %}
+    {% include 'Decklist/delete-modal.html.twig' %}
+    {% include 'Modale/odds.html.twig' %}
+    {% include 'Decklist/compare-modal.html.twig' %}
+{% endblock %}

@@ -10,10 +10,10 @@
 
     <rule ref="PSR2"/>
 
-    <file>app/</file>
-    <file>features/</file>
+    <file>bin/</file>
+    <file>config/</file>
+    <file>public/</file>
     <file>src/</file>
     <file>tests/</file>
-    <exclude-pattern>app/AppCache.php</exclude-pattern>
-    <exclude-pattern>app/AppKernel.php</exclude-pattern>
+
 </ruleset>

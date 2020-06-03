@@ -1,0 +1,142 @@
+{% extends 'layout.html.twig' %}
+{% import "macros.html.twig" as macros %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/ui.deckview.js') }}"></script>
+    <script type="text/javascript">
+      app.deck && app.deck.init({{ deck|json_encode|raw }});
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="main white container">
+
+        {% include 'alerts.html.twig' %}
+        <div class="row">
+            <div class="col-md-12">
+                <h1 style="border-bottom:1px solid lightgray">{{ deck.name }}</h1>
+                {% if deck.problem %}
+                    <div class="alert alert-danger"
+                         role="alert">{{ deck_validation_helper.problemLabel(deck.problem) }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+
+            <!-- Left-side Column -->
+            <div class="col-md-6" id="deck">
+            </div><!-- /#deck -->
+            <!-- Left-side Column -->
+
+            <!-- Right-side Column -->
+            <div class="col-md-6 hidden-print">
+
+                <div style="margin-bottom:20px" id="btn-group-deck">
+                    <div style="margin-bottom:5px">
+                        {% if is_owner %}
+                            <a href="{{ path('deck_edit', {deck_uuid: deck.uuid}) }}" class="btn btn-primary"><span
+                                        class="fas fa-pencil-alt"></span> {{ 'forms.edit' | trans }}</a>
+                            <a href="{{ path('deck_publish_form', {deck_uuid: deck.uuid}) }}" id="btn-publish"
+                               class="btn btn-success"><span class="fas fa-share"></span> {{ 'forms.publish' | trans }}
+                            </a>
+                            <button type="button" id="btn-delete" class="btn btn-danger"><span
+                                        class="fas fa-trash-alt"></span> {{ 'forms.delete' | trans }}</button>
+                        {% endif %}
+                        <a href="{{ path('deck_clone', {deck_uuid:deck.uuid}) }}" id="btn-clone" class="btn btn-info"><span
+                                    class="fas fa-clone"></span> {{ 'forms.clone' | trans }}</a>
+                        <button type="button" id="btn-print" class="btn btn-default"><span
+                                    class="fas fa-print"></span> {{ 'forms.print' | trans }}</button>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span></span> {{ 'forms.actions' | trans }} <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="dropdown-header"><span
+                                            class="fas fa-file-export"></span> {{ 'forms.export' | trans }}</li>
+                                <li><a id="btn-export-plaintext"
+                                       href="#">{{ 'decks.form.export.plaintext' | trans }}</a></li>
+                                <li><a id="btn-export-markdown" href="#">{{ 'decks.form.export.markdown' | trans }}</a>
+                                <li><a id="btn-export-agotcards" href="#">{{ 'decks.form.export.agotcards' | trans }}</a>
+                                </li>
+                                <li class="dropdown-header"><span
+                                            class="fas fa-file-download"></span> {{ 'forms.download' | trans }}</li>
+                                <li>
+                                    <a href="{{ path('deck_download', {deck_uuid:deck.uuid}) }}?format=text">{{ 'decks.form.download.text' | trans }}</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('deck_download', {deck_uuid:deck.uuid}) }}?format=text_cycle">{{ 'decks.form.download.text_cycle' | trans }}</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('deck_download', {deck_uuid:deck.uuid}) }}?format=octgn">{{ 'decks.form.download.octgn' | trans }}</a>
+                                </li>
+                                <li class="dropdown-header"><span class="fas fa-sort"></span> {{ 'forms.sort' | trans }}
+                                </li>
+                                <li><a href="#" id="btn-sort-default">{{ 'decks.form.sort.by_type' | trans }}</a></li>
+                                <li><a href="#" id="btn-sort-name">{{ 'decks.form.sort.by_name' | trans }}</a></li>
+                                <li><a href="#" id="btn-sort-set">{{ 'decks.form.sort.by_set' | trans }}</a></li>
+                                <li><a href="#" id="btn-sort-setnumber">{{ 'decks.form.sort.by_setnumber' | trans }}</a>
+                                </li>
+                                <li><a href="#" id="btn-sort-faction">{{ 'decks.form.sort.by_faction' | trans }}</a>
+                                </li>
+                                <li><a href="#"
+                                       id="btn-sort-factionnumber">{{ 'decks.form.sort.by_factionnumber' | trans }}</a>
+                                </li>
+                                <li><a href="#"
+                                       id="btn-sort-cardnumber">{{ 'decks.form.sort.by_cardnumber' | trans }}</a></li>
+                                <li><a href="#" id="btn-sort-cost">{{ 'decks.form.sort.by_cost' | trans }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    {{ 'decks.version' | trans({'%version%': deck.version}) }}
+                </p>
+
+                <!-- Description -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ 'decks.description' | trans }}</h3>
+                    </div>
+                    <div class="panel-body" id="description">
+                    </div>
+                </div>
+                {% include 'Builder/deck-charts.html.twig' %}
+                {% include 'Builder/draw-simulator.html.twig' %}
+
+                <!-- Published decklists Table -->
+                <table class="table table-condensed" id="table-predecessor">
+                    <thead>
+                    <tr>
+                        <th colspan="4"><span class="fas fa-share"></span> {{ 'decks.published.title' | trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if deck.children|length %}
+                        {% for decklist in deck.children %}
+                            {{ macros.decklist_table_row(decklist) }}
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td>{{ 'decks.published.none' | trans }}.</td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+                <!-- Published decklists Table -->
+
+            </div>
+
+            <!-- Right-side Column -->
+
+        </div><!-- .row -->
+    </div><!-- .container -->
+
+    {% include 'Modale/odds.html.twig' %}
+    {% include 'Modale/delete.html.twig' %}
+    {% include 'Modale/export.html.twig' %}
+
+{% endblock %}

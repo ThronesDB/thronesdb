@@ -1,0 +1,103 @@
+deck_buildform:
+    path:  /new
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\BuilderController:buildformAction
+
+deck_initbuild:
+    path: /build
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\BuilderController:initbuildAction
+
+deck_save:
+    path: /save
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\BuilderController:saveAction
+
+deck_edit:
+    path: /edit/{deck_uuid}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\BuilderController:editAction
+    requirements:
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+
+deck_view:
+    path: /view/{deck_uuid}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\BuilderController:viewAction
+    requirements:
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+
+deck_clone:
+    path: /clone/{deck_uuid}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\BuilderController:cloneAction
+    requirements:
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+
+deck_delete:
+    path: /delete
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\BuilderController:deleteAction
+
+deck_delete_list:
+    path: /delete_list
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\BuilderController:deleteListAction
+
+deck_import:
+    path: /import
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\BuilderController:importAction
+
+deck_fileimport:
+    path: /fileimport
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\BuilderController:fileimportAction
+
+deck_copy:
+    path: /copy/{decklist_id}
+    defaults:
+        _controller: App\Controller\BuilderController:copyAction
+    requirements:
+        decklist_id: \d+
+
+deck_publish_form:
+    path: /publish/{deck_uuid}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\SocialController:publishFormAction
+    requirements:
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+
+deck_download:
+    path: /export/octgn/{deck_uuid}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\BuilderController:downloadAction
+    requirements:
+        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+
+deck_autosave:
+    path: /autosave
+    methods: [POST]
+    defaults:
+        _controller: App\Controller\BuilderController:autosaveAction
+
+decks_diff:
+    path: /compare/{deck1_uuid}/{deck2_uuid}
+    methods: [GET]
+    defaults:
+        _controller: App\Controller\BuilderController:compareAction
+    requirements:
+        deck1_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'
+        deck2_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'

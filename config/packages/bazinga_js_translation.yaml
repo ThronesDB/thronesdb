@@ -1,0 +1,4 @@
+# JsTranslationBundle Configuration
+bazinga_js_translation:
+  locale_fallback: '%kernel.default_locale%'
+  active_locales: '%supported_locales%'
