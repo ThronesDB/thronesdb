@@ -24,7 +24,7 @@
         ),
         header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
         card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
-        card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
+        card_line_label_tpl = _.template('<abbr class="legality <%= cls %>" title="<%= title %>" data-title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
         layouts = {},
         layout_data = {},
         // Restricted/Banned Lists issued by The Conclave (v1.0)
@@ -82,6 +82,32 @@
             "15030", // The Red Keep (DotE)"
             "15033", // Clydas (DotE)"
             "15045", // Bribery (DotE)"
+        ],
+        // fake pods
+        joust_pods = [
+            {
+                name: "P1",
+                restricted: "10045", // The Wars To Come (SoD)
+                cards: [
+                    "01119", // Doran's Game
+                ],
+            },
+            {
+                name: "P2",
+                restricted: "11051", // Drowned God Fanatic (SoKL)
+                cards: [
+                    "12029", // Desert Raider (KotI)
+                    "08091", // Tarle The Thrice-Drowned (TFM)
+                ],
+            },
+            {
+                "name": "P3",
+                restricted: "06098", // Flea Bottom (OR)
+                cards: [
+                    "12029", // Desert Raider (KotI)
+                    "10016", // Shadow City Bastard (SoD)
+                ]
+            }
         ],
         melee_restricted_list = [
             "01001", // A Clash of Kings (Core)
@@ -163,6 +189,26 @@
         '01205': 'tyrell'
     };
 
+    var get_pods_map = function( pods_list) {
+        var map = {};
+
+        _.each(pods_list, function (pod) {
+            if (! map.hasOwnProperty(pod.restricted)) {
+                map[pod.restricted] = [];
+            }
+            map[pod.restricted].push(pod);
+            _.each(pod.cards, function (card) {
+                if (! map.hasOwnProperty(card)) {
+                    map[card] = [];
+                }
+                map[card].push(pod);
+            });
+        })
+        return map;
+    }
+
+    var joust_pods_map = get_pods_map(joust_pods);
+
     /*
      * Checks a given card's text has the "Shadow" keyword.
      * @param {Object} card
@@ -203,6 +249,7 @@
         var cards = app.deck.get_cards();
         var i, n;
         var counter = 0;
+        var pods_map = get_pods_map();
 
         restricted_list = restricted_list || [];
 
@@ -1196,31 +1243,70 @@
     deck.get_card_labels = function get_card_labels(card)
     {
         var labels = [];
-        var out = '';
-        var i, n;
+        var pods;
+        var restricted;
+        var cards;
+        var formatCardTitle = function (card) {
+            var rhett = '';
+            rhett += '&quot;' + card.name.replace(/"/g, '') + '&quot;';
+            if (card.is_multiple) {
+                rhett += ' (' + card.pack_code +')';
+            }
+            return rhett;
+        }
         if (-1 !== joust_restricted_list.indexOf(card.code)) {
-            labels.push({ name: '[J]', keyword: 'rl-joust', title: Translator.trans('keyword.rl-joust.title') });
+            labels.push({ name: '[J]', class: "rl-joust", title: Translator.trans('keyword.rl-joust.title') });
         }
         if (-1 !== melee_restricted_list.indexOf(card.code)) {
-            labels.push({ name: '[M]', keyword: 'rl-melee', title: Translator.trans('keyword.rl-melee.title') });
+            labels.push({ name: '[M]', class: "rl-melee", title: Translator.trans('keyword.rl-melee.title') });
         }
         if (-1 !== banned_list.indexOf(card.code)) {
-            labels.push({ name: '[B]', keyword: 'banned', title: Translator.trans('keyword.banned.title') });
+            labels.push({ name: '[B]', class: "banned", title: Translator.trans('keyword.banned.title') });
+        }
+
+        if (joust_pods_map.hasOwnProperty(card.code)) {
+            pods = joust_pods_map[card.code];
+            _.each(pods, function (pod) {
+                restricted = app.data.cards.findById(pod.restricted);
+                cards = app.data.cards.find({ code: { $in: pod.cards }});
+
+                if (1 === pod.cards.length) {
+                    labels.push({
+                        name: '[' + pod.name + ']',
+                        class: 'rl-pod',
+                        title: Translator.trans('card.podinfo_single', {
+                            restricted: formatCardTitle(restricted),
+                            card: formatCardTitle(cards[0]),
+                            format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                        })
+                    });
+                } else {
+                    labels.push({
+                        name: '[' + pod.name + ']',
+                        class: 'rl-pod',
+                        title: Translator.trans('card.podinfo_multiple', {
+                            restricted: formatCardTitle(restricted),
+                            cards: _.map(cards, function (card) {
+                                return formatCardTitle(card);
+                            }).join(', '),
+                            format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                        }),
+                    });
+                }
+            });
         }
 
         if (! labels.length) {
-            return out;
+            return '';
         }
-
-        out = out + ' ';
-        for (i = 0, n = labels.length; i < n; i++) {
-            out = out + ' ' + card_line_label_tpl({
-                label: labels[i].name,
-                keyword: labels[i].keyword,
-                title: labels[i].title
+        return _.map(labels, function (label) {
+            return card_line_label_tpl({
+                label: label.name,
+                keyword: label.keyword || '',
+                title: label.title,
+                cls: label.class || ''
             });
-        }
-        return out;
+        }).join(' ');
     }
 
     /**

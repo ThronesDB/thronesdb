@@ -506,6 +506,10 @@ abbr.legality.rl-melee {
     color: #639;
 }
 
+abbr.legality.rl-pod {
+    color: #995932;
+}
+
 abbr.legality.banned {
     color: #f00;
 }

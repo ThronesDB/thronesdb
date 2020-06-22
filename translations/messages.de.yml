@@ -378,6 +378,8 @@ pag:
   cardscount: "{0} Keine Karten | {1} Eine Karte | ]1,Inf] %count% Karten"
 
 card:
+  podinfo_single: "%format% - Falls %restricted% Deine Eingeschränkte Karte ist, dann kannst Du %card% nicht in Dein Deck aufnehmen."
+  podinfo_multiple: '%format% - Falls %restricted% Deine Eingeschränkte Karte ist, dann kannst Du die folgenden Karten nicht in Dein Deck aufnehmen: %cards%.'
   keywords:
     shadow: Schatten
   traits:

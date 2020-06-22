@@ -377,6 +377,8 @@ pag:
   cardscount: "{0} No hay cartas | {1} Una carta | ]1,Inf] %count% cartas"
 
 card:
+  podinfo_single: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir %card% en tu mazo.'
+  podinfo_multiple: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir las siguientes cartas en tu mazo: %cards%.'
   keywords:
     shadow: Sombra
   traits:
