@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Card;
 use App\Entity\Cycle;
 use App\Entity\Deck;
 use App\Entity\Decklist;
