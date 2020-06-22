@@ -1,20 +1,38 @@
-/.web-server-pid
-/app/config/parameters.yml
-/build/
-/phpunit.xml
-/var/*
-!/var/cache
-/var/cache/*
-!var/cache/.gitkeep
-!/var/logs
-/var/logs/*
-!var/logs/.gitkeep
-!/var/sessions
-/var/sessions/*
-!var/sessions/.gitkeep
-!var/SymfonyRequirements.php
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/bundles/
+/var/
 /vendor/
-/web/bundles/
-.phpcs-cache
-web/css
-web/js
+###< symfony/framework-bundle ###
+
+###> behat/symfony2-extension ###
+behat.yml
+###< behat/symfony2-extension ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+# ignore bazinga output files
+/assets/js/translations
+
+# ignore FOS JS routing output
+/public/js/fos_js_routes.js
+
+# ignore node modules
+/node_modules
+
+#ignore files in public/css
+/public/css
+/public/manifest.json
+/public/js

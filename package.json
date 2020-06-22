@@ -1,0 +1,35 @@
+{
+  "name": "thronesdb",
+  "version": "1.0.0",
+  "description": "A Deckbuilder for A Game of Thrones 2nd Edition LCG.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thronesdb/thronesdb.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thronesdb/thronesdb/issues"
+  },
+  "homepage": "https://github.com/thronesdb/thronesdb#readme",
+  "devDependencies": {
+    "del": "^5.1.0",
+    "eslint": "^7.2.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-rev": "^9.0.0",
+    "gulp-sourcemaps": "^2.6.5"
+  }
+}

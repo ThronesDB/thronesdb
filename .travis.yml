@@ -23,21 +23,21 @@ before_install:
   - echo $TRAVIS_PHP_VERSION
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - echo "memory_limit=2048M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - cp ${TRAVIS_BUILD_DIR}/app/config/parameters.yml.travis ${TRAVIS_BUILD_DIR}/app/config/parameters.yml
+  - cp ${TRAVIS_BUILD_DIR}/.env.travis ${TRAVIS_BUILD_DIR}/.env.test.local
 install:
   - composer install --no-interaction --prefer-dist -d ${TRAVIS_BUILD_DIR}
 
 before_script:
-  - bin/console doctrine:database:create --env=dev
-  - bin/console doctrine:migrations:migrate  --env=dev --no-interaction
-  - bin/console doctrine:fixtures:load  --env=prod --no-interaction
+  - bin/console doctrine:database:create --env=test
+  - bin/console doctrine:migrations:migrate  --env=test --no-interaction
+  - bin/console doctrine:fixtures:load  --env=test --no-interaction
   - bin/console cache:clear --env=test --no-interaction
 
 script:
   # this checks that the source code follows the Symfony Code Syntax rules
-  - ./vendor/bin/phpcs --ignore=src/migrations src tests app
+  - ./vendor/bin/phpcs --ignore=src/migrations src tests
   # this checks that the YAML config files contain no syntax errors
-  - ./bin/console lint:yaml app/config
+  - ./bin/console lint:yaml config
   # this checks that the Twig template files contain no syntax errors
   - ./bin/console lint:twig src
   # this checks that the application doesn't use dependencies with known security vulnerabilities

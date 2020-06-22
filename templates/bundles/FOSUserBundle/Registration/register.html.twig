@@ -1,0 +1,17 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block fos_user_content %}
+    <div class="row">
+        <div class="col-md-6 col-md-push-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ 'layout.register'|trans }}
+                </div>
+                <div class="panel-body">
+                    {% include "@FOSUser/Registration/register_content.html.twig" %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock fos_user_content %}

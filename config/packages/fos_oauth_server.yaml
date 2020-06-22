@@ -1,0 +1,9 @@
+# FOSOAuthServerBundle
+fos_oauth_server:
+    db_driver: orm       # Driver availables: orm, mongodb, or propel
+    client_class:        App\Entity\Client
+    access_token_class:  App\Entity\AccessToken
+    refresh_token_class: App\Entity\RefreshToken
+    auth_code_class:     App\Entity\AuthCode
+    service:
+        user_provider: fos_user.user_provider.username

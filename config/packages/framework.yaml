@@ -1,0 +1,25 @@
+framework:
+    assets:
+        json_manifest_path: "%kernel.project_dir%/public/manifest.json"
+    default_locale: '%locale%'
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%env(APP_SECRET)%'
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    #serializer: { enable_annotations: true }
+    http_method_override: true
+    trusted_hosts: ~
+    # Enables session support. Note that the session will ONLY be started if you read or write from it.
+    # Remove or comment this section to explicitly disable session support.
+    session:
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        #cookie_samesite: lax
+    #esi: true
+    fragments: ~
+    php_errors:
+        log: true
+    templating:
+        engines: ['twig']

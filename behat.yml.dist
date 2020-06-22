@@ -2,14 +2,11 @@ default:
     suites:
         default:
             contexts:
-                - AppBundle\Features\Context\ApiContext:
-                    client : '@test.client'
-                - AppBundle\Features\Context\FeatureContext: ~
-                - AppBundle\Features\Context\JsonContext:
-                    jsonInspector: '@json_inspector'
-                    jsonSchemaBaseUrl: 'features/json_schema/'
-                - AppBundle\Features\Context\DoctrineContext:
-                    doctrine: '@doctrine'
+                - FeatureContext:
+                    kernel: '@kernel'
 
     extensions:
-        Behat\Symfony2Extension: ~
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: features/bootstrap/bootstrap.php
+                class: App\Kernel
