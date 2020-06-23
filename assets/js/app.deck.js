@@ -226,10 +226,10 @@
 
     /*
      * Validates the current deck against a list of banned cards.
+     * @param {Array} cards
      * @return {boolean}
      */
-    var validate_against_banned_list = function() {
-        var cards = app.deck.get_cards();
+    var validate_against_banned_list = function(cards) {
         var i, n;
         for (i = 0, n = cards.length; i < n; i++) {
             if (-1 !== banned_list.indexOf(cards[i].code)) {
@@ -241,15 +241,14 @@
 
     /*
      * Validates the current deck against a given list of restricted cards.
+     * @param {Array} cards
      * @param {Array} restricted_list
      * @return {boolean}
      */
-    var validate_deck_against_restricted_list = function(restricted_list) {
+    var validate_deck_against_restricted_list = function(cards, restricted_list) {
         var is_valid = true;
-        var cards = app.deck.get_cards();
         var i, n;
         var counter = 0;
-        var pods_map = get_pods_map();
 
         restricted_list = restricted_list || [];
 
@@ -265,6 +264,33 @@
 
         return is_valid;
     };
+
+    /*
+     * Checks if the current deck complies with the restricted list for joust.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_joust_restricted_list_compliant = function(cards) {
+        return validate_deck_against_restricted_list(cards, joust_restricted_list);
+    };
+
+    /*
+     * Checks if the current deck complies with the restricted list for melee.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_melee_restricted_list_compliant = function(cards) {
+        return validate_deck_against_restricted_list(cards, melee_restricted_list);
+    };
+
+    /*
+     * Checks if the current deck complies with the "banned" list.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_banned_list_compliant = function(cards) {
+        return validate_against_banned_list(cards);
+    }
 
     /**
      * Creates a new line-item for a given card to a given DOM element.
@@ -289,8 +315,6 @@
     layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
     layouts[4] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
     layouts[5] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-12 col-print-12"><%= meta %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
-
-
 
     /**
      * @memberOf deck
@@ -611,7 +635,7 @@
         }
     };
 
-        /**
+    /**
      * @memberOf deck
      * @param {object} container
      * @param {object} options
@@ -631,7 +655,6 @@
 
     deck.get_layout_data = function get_layout_data(options)
     {
-
         var data = {
             images: '',
             meta: '',
@@ -646,6 +669,7 @@
         var problem = deck.get_problem();
         var agendas = deck.get_agendas();
         var warnings = deck.get_warnings();
+        var cards = deck.get_cards();
 
         deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/images/factions/' + deck.get_faction_code() + '.png" class="img-responsive">'));
         agendas.forEach(function (agenda) {
@@ -672,15 +696,15 @@
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
         var legalityContents = '<em>' + Translator.trans('tournamentLegality.title') +':</em> ';
-        var isBannedListCompliant = deck.is_banned_list_compliant();
-        if (isBannedListCompliant && deck.is_joust_restricted_list_compliant()) {
+        var isBannedListCompliant = is_banned_list_compliant(cards);
+        if (isBannedListCompliant && is_joust_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
         legalityContents += Translator.trans('tournamentLegality.joust') + '</span> | ';
 
-        if (isBannedListCompliant && deck.is_melee_restricted_list_compliant()) {
+        if (isBannedListCompliant && is_melee_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
@@ -1362,32 +1386,4 @@
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.kingsguard')) !== -1;
         }
     };
-
-    /**
-     * Checks if the current deck complies with the restricted list for joust.
-     * @return {boolean}
-     */
-    deck.is_joust_restricted_list_compliant = function is_joust_restricted_list_compliant()
-    {
-        return validate_deck_against_restricted_list(joust_restricted_list);
-    };
-
-    /**
-     * Checks if the current deck complies with the restricted list for melee.
-     * @return {boolean}
-     */
-    deck.is_melee_restricted_list_compliant = function is_melee_restricted_list_compliant()
-    {
-        return validate_deck_against_restricted_list(melee_restricted_list);
-    };
-
-    /**
-     * Checks if the current deck complies with the "banned" list.
-     * @return {boolean}
-     */
-    deck.is_banned_list_compliant = function is_banned_list_compliant()
-    {
-        return validate_against_banned_list();
-    }
-
 })(app.deck = {}, jQuery);
