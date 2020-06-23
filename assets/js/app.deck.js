@@ -96,15 +96,15 @@
                 name: "P2",
                 restricted: "11051", // Drowned God Fanatic (SoKL)
                 cards: [
-                    "12029", // Desert Raider (KotI)
+                    "01111", // Dornish Paramour (Core)
                     "08091", // Tarle The Thrice-Drowned (TFM)
                 ],
             },
             {
-                "name": "P3",
+                name: "P3",
                 restricted: "06098", // Flea Bottom (OR)
                 cards: [
-                    "12029", // Desert Raider (KotI)
+                    "01111", // Dornish Paramour (Core)
                     "10016", // Shadow City Bastard (SoD)
                 ]
             }
@@ -266,12 +266,36 @@
     };
 
     /*
+     * Validates a given deck of cards against a given list of validation pods.
+     *
+     * @param {Array} cards
+     * @param {Array} pods
+     * @return {boolean}
+     */
+    var validate_deck_against_pods = function(cards, pods) {
+        var is_valid = true;
+        var i, n;
+        var codes = _.pluck(cards, 'code');
+
+
+        for (i = 0, n = pods.length; i < n; i++) {
+            if (-1 !== codes.indexOf(pods[i].restricted)
+              && _.intersection(pods[i].cards, codes).length) {
+                is_valid = false;
+                break;
+            }
+        }
+        return is_valid;
+    }
+
+    /*
      * Checks if the current deck complies with the restricted list for joust.
      * @param {Array} cards
      * @return {boolean}
      */
     var is_joust_restricted_list_compliant = function(cards) {
-        return validate_deck_against_restricted_list(cards, joust_restricted_list);
+        return validate_deck_against_restricted_list(cards, joust_restricted_list)
+          && validate_deck_against_pods(cards, joust_pods);
     };
 
     /*
