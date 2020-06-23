@@ -520,3 +520,12 @@ abbr.legality.banned {
     padding-left: 9px;
     padding-right: 9px;
 }
+
+/*** FAQ, Rules Reference, Tournament Regulations pages ******/
+#rules ul.rl-pod-list {
+    margin-bottom: 0;
+}
+
+#rules div.example {
+    padding-left: 3em;
+}
