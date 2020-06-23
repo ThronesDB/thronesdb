@@ -106,6 +106,35 @@ class RestrictedListChecker
     ];
 
     /**
+     * @var array
+     */
+    const JOUST_PODS = [
+        [
+            "name" => "P1",
+            "restricted" => "10045", // The Wars To Come (SoD)
+            "cards" => [
+                "01119", // Doran's Game
+            ],
+        ],
+        [
+            "name" => "P2",
+            "restricted" => "11051", // Drowned God Fanatic (SoKL)
+            "cards" => [
+                "01111", // Dornish Paramour (Core)
+                "08091", // Tarle The Thrice-Drowned (TFM)
+            ],
+        ],
+        [
+            "name" => "P3",
+            "restricted" => "06098", // Flea Bottom (OR)
+            "cards" => [
+                "01111", // Dornish Paramour (Core)
+                "10016", // Shadow City Bastard (SoD)
+            ],
+        ],
+    ];
+
+    /**
      * @param array $cardCodes
      * @return bool
      */
@@ -120,7 +149,8 @@ class RestrictedListChecker
      */
     public function isLegalForJoust(array $cardCodes)
     {
-        return $this->isLegal($cardCodes, self::JOUST_RESTRICTED_CARDS);
+        return $this->isLegal($cardCodes, self::JOUST_RESTRICTED_CARDS)
+            && $this->isPodsLegal($cardCodes, self::JOUST_PODS);
     }
 
     /**
@@ -132,5 +162,26 @@ class RestrictedListChecker
     {
         $intersection = array_intersect($cardCodes, $restrictedList);
         return 2 > count($intersection);
+    }
+
+    /**
+     * @param array $cards
+     * @param array $pods
+     * @return bool
+     */
+    protected function isPodsLegal(array $cards, array $pods)
+    {
+        $isLegal = true;
+        foreach ($pods as $pod) {
+            $restricted = $pod['restricted'];
+            if (! in_array($restricted, $cards)) {
+                continue;
+            }
+            if (array_intersect($pod['cards'], $cards)) {
+                $isLegal = false;
+                break;
+            }
+        }
+        return $isLegal;
     }
 }
