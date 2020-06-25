@@ -6,7 +6,6 @@ use App\Entity\Card;
 use App\Entity\Faction;
 use App\Entity\Pack;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Description of DeckImportService
@@ -106,56 +105,6 @@ class DeckImportService
             }
         }
 
-        return $data;
-    }
-
-    /**
-     * @param $octgn
-     * @return array
-     * @deprecated
-     * @todo Remove this (makes sure to shed the dom-crawler dependency while at it). [ST 2020/05/25]
-     */
-    public function parseOctgnImport($octgn)
-    {
-        $data = [
-            'content' => [],
-            'faction' => null,
-            'description' => ''
-        ];
-
-        $crawler = new Crawler();
-        $crawler->addXmlContent($octgn);
-
-        // read octgnId
-        $cardcrawler = $crawler->filter('deck > section > card');
-        $octgnIds = [];
-        foreach ($cardcrawler as $domElement) {
-            $octgnIds[$domElement->getAttribute('id')] = intval($domElement->getAttribute('qty'));
-        }
-
-        // read desc
-        $desccrawler = $crawler->filter('deck > notes');
-        $descriptions = [];
-        foreach ($desccrawler as $domElement) {
-            $descriptions[] = $domElement->nodeValue;
-        }
-        $data['description'] = implode("\n", $descriptions);
-
-        foreach ($octgnIds as $octgnId => $qty) {
-            $card = $this->em->getRepository(Card::class)->findOneBy(array(
-                'octgnId' => $octgnId
-            ));
-            if ($card) {
-                $data['content'][$card->getCode()] = $qty;
-            } else {
-                $faction = $this->em->getRepository(Faction::class)->findOneBy(array(
-                    'octgnId' => $octgnId
-                ));
-                if ($faction) {
-                    $data['faction'] = $faction;
-                }
-            }
-        }
         return $data;
     }
 }
