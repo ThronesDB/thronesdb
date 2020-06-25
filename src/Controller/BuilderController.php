@@ -172,7 +172,6 @@ class BuilderController extends Controller
      */
     public function fileimportAction(Request $request)
     {
-        $filetype = filter_var($request->get('type'), FILTER_SANITIZE_STRING);
         $uploadedFile = $request->files->get('upfile');
         if (!isset($uploadedFile)) {
             throw new BadRequestHttpException("No file");
@@ -196,11 +195,7 @@ class BuilderController extends Controller
         }
 
         $service = $this->get('deck_import_service');
-        if ($filetype == "octgn" || ($filetype == "auto" && $origext == "o8d")) {
-            $data = $service->parseOctgnImport(file_get_contents($filename));
-        } else {
-            $data = $service->parseTextImport(file_get_contents($filename));
-        }
+        $data = $service->parseTextImport(file_get_contents($filename));
 
         if (empty($data['faction'])) {
             return $this->render(
