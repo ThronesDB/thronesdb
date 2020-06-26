@@ -8,6 +8,7 @@
     "ext-fileinfo": "*",
     "ext-iconv": "*",
     "ext-json": "*",
+    "ext-mbstring": "*",
     "ext-pdo": "*",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-fixtures-bundle": "^3.3",
