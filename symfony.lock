@@ -247,6 +247,9 @@
     "phpspec/prophecy": {
         "version": "v1.10.3"
     },
+    "phpstan/phpstan": {
+        "version": "0.12.31"
+    },
     "phpunit/php-code-coverage": {
         "version": "6.1.4"
     },
@@ -399,6 +402,9 @@
     "symfony/asset": {
         "version": "v3.4.40"
     },
+    "symfony/browser-kit": {
+        "version": "v3.4.42"
+    },
     "symfony/cache": {
         "version": "v3.4.40"
     },
@@ -429,6 +435,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v3.4.40"
+    },
+    "symfony/dom-crawler": {
+        "version": "v3.4.42"
     },
     "symfony/dotenv": {
         "version": "v3.4.40"

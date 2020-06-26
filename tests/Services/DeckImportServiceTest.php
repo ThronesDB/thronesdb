@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service;
+namespace App\Tests\Services;
 
 use App\Entity\Card;
 use App\Entity\Pack;

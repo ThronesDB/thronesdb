@@ -8,6 +8,7 @@
     "ext-fileinfo": "*",
     "ext-iconv": "*",
     "ext-json": "*",
+    "ext-mbstring": "*",
     "ext-pdo": "*",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-fixtures-bundle": "^3.3",
@@ -47,8 +48,10 @@
     "behat/symfony2-extension": "^2.1",
     "justinrainbow/json-schema": "^5.2",
     "mockery/mockery": "^1.2",
+    "phpstan/phpstan": "^0.12.31",
     "phpunit/phpunit": "^7",
     "squizlabs/php_codesniffer": "@stable",
+    "symfony/browser-kit": "3.4.*",
     "symfony/expression-language": "3.4.*",
     "symfony/phpunit-bridge": "^5.1"
   },

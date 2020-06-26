@@ -84,9 +84,6 @@ services:
         public: true
         class: App\Services\DeckManager
         arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
-    reviews:
-        class: App\Services\Reviews
-        arguments: ["@doctrine.orm.entity_manager"]
     texts:
         class: App\Services\Texts
         arguments: ["%kernel.root_dir%"]
