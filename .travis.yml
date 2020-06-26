@@ -35,7 +35,7 @@ before_script:
 
 script:
   # this runs the static code analyzer
-  - ./vendor/bin/phpstan src tests
+  - ./vendor/bin/phpstan analyse src tests
   # this checks that the source code follows the Symfony Code Syntax rules
   - ./vendor/bin/phpcs --ignore=src/migrations src tests
   # this checks that the YAML config files contain no syntax errors
