@@ -51,6 +51,7 @@
     "phpstan/phpstan": "^0.12.31",
     "phpunit/phpunit": "^7",
     "squizlabs/php_codesniffer": "@stable",
+    "symfony/browser-kit": "3.4.*",
     "symfony/expression-language": "3.4.*",
     "symfony/phpunit-bridge": "^5.1"
   },
