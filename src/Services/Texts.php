@@ -3,21 +3,46 @@
 
 namespace App\Services;
 
+use HTMLPurifier;
+use HTMLPurifier_Config;
+use Parsedown;
+
+/**
+ * Class Texts
+ * @package App\Services
+ */
 class Texts
 {
+    /**
+     * @var HTMLPurifier
+     */
+    protected $purifier;
+
+    /**
+     * @var Parsedown
+     */
+    protected $parsedown;
+
+    /**
+     * Texts constructor.
+     * @param string $root_dir
+     */
     public function __construct($root_dir)
     {
-        $config = \HTMLPurifier_Config::create(array('Cache.SerializerPath' => $root_dir));
+        $config = HTMLPurifier_Config::create(array('Cache.SerializerPath' => $root_dir));
         $def = $config->getHTMLDefinition(true);
         $def->addAttribute('a', 'data-code', 'Text');
-        $this->purifier_service = new \HTMLPurifier($config);
-
-        $this->markdown_service = new \Parsedown();
+        $this->purifier = new HTMLPurifier($config);
+        $this->parsedown = new Parsedown();
     }
 
     /**
      * Returns a substring of $string that is $max_length length max and doesn't split
      * a word or a html tag
+     *
+     * @param string $string
+     * @param int $max_length
+     * @return string
      */
     public function truncate($string, $max_length)
     {
@@ -50,6 +75,8 @@ class Texts
 
     /**
      * Returns the processed version of a markdown text
+     * @param string $string
+     * @return string
      */
     public function markdown($string)
     {
@@ -58,22 +85,22 @@ class Texts
 
     /**
      * removes any dangerous code from a HTML string
-     * @param unknown $string
+     * @param string $string
      * @return string
      */
     public function purify($string)
     {
-        return $this->purifier_service->purify($string);
+        return $this->purifier->purify($string);
     }
 
     /**
      * turns a Markdown string into a HTML string
-     * @param unknown $string
+     * @param string $string
      * @return string
      */
     public function transform($string)
     {
-        return $this->markdown_service->text($string);
+        return $this->parsedown->text($string);
     }
 
     /**
@@ -96,7 +123,7 @@ class Texts
         $filename = mb_ereg_replace('[^\w\-]', '-', $filename);
         $filename = iconv('utf-8', 'us-ascii//TRANSLIT', $filename);
         $filename = preg_replace('/[^\w\-]/', '', $filename);
-        $filename = preg_replace('/\-+/', '-', $filename);
+        $filename = preg_replace('/-+/', '-', $filename);
         $filename = trim($filename, '-');
         $filename = strtolower($filename);
         return $filename;
