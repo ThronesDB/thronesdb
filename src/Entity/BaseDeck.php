@@ -3,58 +3,16 @@
 namespace App\Entity;
 
 use App\Model\SlotCollectionInterface;
-use DateTime;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Base class for both deck and deck-list entities.
  *
  * @package App\Entity
  *
- * @todo add setters [ST 2020/05/28]
+ * @todo Consider making this a trait. [ST 2020/06/25]
  */
 abstract class BaseDeck implements CommonDeckInterface
 {
-    /**
-     * @inheritdoc
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDateCreation()
-    {
-        return $this->dateCreation;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDescriptionMd()
-    {
-        return $this->descriptionMd;
-    }
-
     /**
      * Transforms the given object into an associative array.
      * @return array

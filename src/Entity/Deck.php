@@ -174,6 +174,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Set name
      *
      * @param string $name
@@ -185,6 +193,14 @@ class Deck extends BaseDeck implements JsonSerializable
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -202,6 +218,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getDateCreation()
+    {
+        return $this->dateCreation;
+    }
+
+    /**
      * Set dateUpdate
      *
      * @param DateTime $dateUpdate
@@ -216,6 +240,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getDateUpdate()
+    {
+        return $this->dateUpdate;
+    }
+
+    /**
      * Set descriptionMd
      *
      * @param string $descriptionMd
@@ -227,6 +259,14 @@ class Deck extends BaseDeck implements JsonSerializable
         $this->descriptionMd = $descriptionMd;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDescriptionMd()
+    {
+        return $this->descriptionMd;
     }
 
     /**
