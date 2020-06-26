@@ -1,20 +1,40 @@
 <?php
 
-
 namespace App\Services;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\PDOConnection;
 use Doctrine\ORM\EntityManager;
+use PDO;
 
+/**
+ * Class Reviews
+ * @package App\Services
+ */
 class Reviews
 {
+    /**
+     * @var EntityManager
+     */
+    protected $doctrine;
+
+    /**
+     * Reviews constructor.
+     * @param EntityManager $doctrine
+     */
     public function __construct(EntityManager $doctrine)
     {
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * @param int $start
+     * @param int $limit
+     * @return array
+     * @throws DBALException
+     */
     public function recent($start = 0, $limit = 30)
     {
-        /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
@@ -38,12 +58,12 @@ class Reviews
                 join card c on r.card_id=c.id
                 join pack p on c.pack_id=p.id
                 where r.date_creation > DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
-        		and p.date_release is not null
+                and p.date_release is not null
                 order by r.date_creation desc
                 limit $start, $limit"
-        )->fetchAll(\PDO::FETCH_ASSOC);
+        )->fetchAll(PDO::FETCH_ASSOC);
 
-        $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
+        $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(PDO::FETCH_NUM)[0];
 
         return array(
                 "count" => $count,
@@ -51,9 +71,15 @@ class Reviews
         );
     }
 
+    /**
+     * @param $user_id
+     * @param int $start
+     * @param int $limit
+     * @return array
+     * @throws DBALException
+     */
     public function byAuthor($user_id, $start = 0, $limit = 30)
     {
-        /* @var $dbh \Doctrine\DBAL\Driver\PDOConnection */
         $dbh = $this->doctrine->getConnection();
 
         $rows = $dbh->executeQuery(
@@ -77,15 +103,15 @@ class Reviews
                 join card c on r.card_id=c.id
                 join pack p on c.pack_id=p.id
                 where r.user_id=?
-        		and p.date_release is not null
-        		order by c.code asc
+                and p.date_release is not null
+                order by c.code asc
                 limit $start, $limit",
             array(
                         $user_id
                 )
-        )->fetchAll(\PDO::FETCH_ASSOC);
+        )->fetchAll(PDO::FETCH_ASSOC);
 
-        $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(\PDO::FETCH_NUM)[0];
+        $count = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(PDO::FETCH_NUM)[0];
 
         return array(
                 "count" => $count,
