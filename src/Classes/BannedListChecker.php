@@ -6,7 +6,7 @@ use App\Entity\Card;
 
 /**
  * Banned List Checker.
- * The currently implemented BL were issued by The Conclave (v1.0), effective April 13th, 2020.
+ * The currently implemented BL were issued by The Conclave (v2.0), effective July 3rd, 2020.
  *
  * Class BannedList
  * @package App\Classes
@@ -14,6 +14,13 @@ use App\Entity\Card;
 class BannedListChecker
 {
     const BANNED_CARDS = [
+        "03038", // To the Rose Banner! (WotN)
+        "04001", // The Dragon's Tail (AtSK)
+        "05010", // Taena Merryweather (LoCR)
+        "05049", // Littlefinger's Meddling (LoCR)
+        "11076", // A Mission in Essos (MoD)
+        "12045", // Sea of Blood (KotI)
+        "13079", // Kingdom of Shadows (BtRK)
         "16001", // Ser Davos Seaworth (TTWDFL)
         "16002", // Melisandre's Favor (TTWDFL)
         "16003", // Wintertime Marauders (TTWDFL)
@@ -40,10 +47,6 @@ class BannedListChecker
         "16024", // Narrow Escape (TTWDFL)
         "16025", // Seductive Promise (TTWDFL)
         "16026", // Westeros Bleeds (TTWDFL)
-        "16027", // Aloof and Apart (TTWDFL)
-        "16028", // Dark Wings, Dark Words (TTWDFL)
-        "16029", // Knights of the Realm (TTWDFL)
-        "16030", // The Long Voyage (TTWDFL)
         "16031", // Benjen's Cache (TTWDFL)
         "16032", // Rioting (TTWDFL)
         "16033", // Rule By Decree (TTWDFL)
