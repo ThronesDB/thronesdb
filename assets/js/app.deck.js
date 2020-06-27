@@ -140,6 +140,13 @@
             "13107", // Robert Baratheon (LMHR)
         ],
         banned_list = [
+            "03038", // To the Rose Banner! (WotN)
+            "04001", // The Dragon's Tail (AtSK)
+            "05010", // Taena Merryweather (LoCR)
+            "05049", // Littlefinger's Meddling (LoCR)
+            "11076", // A Mission in Essos (MoD)
+            "12045", // Sea of Blood (KotI)
+            "13079", // Kingdom of Shadows (BtRK)
             "16001", // Ser Davos Seaworth (TTWDFL)
             "16002", // Melisandre's Favor (TTWDFL)
             "16003", // Wintertime Marauders (TTWDFL)
