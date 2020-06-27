@@ -29,59 +29,44 @@
         layout_data = {},
         // Restricted/Banned Lists issued by The Conclave (v2.0)
         joust_restricted_list = [
-            "01109", // The Red Viper (Core)
+            "02034", // Crown of Gold (TRtW)
+            "02065", // Halder (NMG)
             "02091", // Raider from Pyke (CoW)
             "02092", // Iron Mines (CoW)
             "02102", // Ward (TS)
-            "03038", // To the Rose Banner! (WotN)
-            "04001", // The Dragon's Tail (AtSK)
-            "04017", // Tower of the Sun (AtSK)
-            "05010", // Taena Merryweather (LoCR)
-            "05049", // Littlefinger's Meddling (LoCR)
             "06004", // All Men Are Fools (AMAF)
-            "06011", // Drowned Disciple (AMAF)
             "06038", // Great Hall (GtR)
             "06039", // "The Dornishman's Wife" (GtR)
             "06040", // The Annals of Castle Black (GtR)
-            "06063", // Oldtown Informer (TRW)
             "06098", // Flea Bottom (OR)
-            "06100", // Wheels Within Wheels (OR)
-            "06103", // Highgarden Minstrel (TBWB)
-            "08080", // The King in the North (FotOG)"
+            "08080", // The King in the North (FotOG)
+            "08082", // I Am No One (TFM)
             "09001", // Mace Tyrell (HoT)
-            "09017", // The Hightower (HoT)
-            "09023", // "Six Maids in a Pool" (HoT)
-            "09037", // Qotho (HoT)"
+            "09037", // Qotho (HoT)
             "09051", // Trade Routes (HoT)
             "10045", // The Wars To Come (SoD)
             "10048", // Forced March (SoD)
             "10050", // Breaking Ties (SoD)
-            "11012", // Nighttime Marauders (TSC)"
+            "11012", // Nighttime Marauders (TSC)
             "11021", // Wyman Manderly (TMoW)
             "11033", // Hizdahr zo Loraq (TMoW)
             "11034", // Meereen (TMoW)
-            "11044", // Growing Ambition (SoKL)
             "11051", // Drowned God Fanatic (SoKL)
             "11061", // Meera Reed (MoD)
-            "11076", // A Mission in Essos (MoD)
-            "11082", // Skagos (IDP)
-            "11085", // Three-Finger Hobb (IDP)"
-            "11114", // Gifts for the Widow (DitD)"
+            "11114", // Gifts for the Widow (DitD)
             "12002", // Euron Crow's Eye (KotI)
             "12029", // Desert Raider (KotI)
-            "12045", // Sea of Blood (KotI)
             "12046", // We Take Westeros! (KotI)
-            "12047", // Return to the Fields (KotI)"
+            "12047", // Return to the Fields (KotI)
             "13044", // Unexpected Guile (PoS)
-            "13079", // Kingdom of Shadows (BtRK)"
             "13085", // Yoren (TB)
             "13086", // Bound for the Wall (TB)
             "13103", // The Queen's Retinue (LMHR)
-            "14008", // Selyse Baratheon (FotS)"
-            "15022", // Overwhelming Numbers (DotE)"
-            "15030", // The Red Keep (DotE)"
-            "15033", // Clydas (DotE)"
-            "15045", // Bribery (DotE)"
+            "14008", // Selyse Baratheon (FotS)
+            "15030", // The Red Keep (DotE)
+            "15033", // Clydas (DotE)
+            "15045", // Bribery (DotE)
+            "16027", // Aloof and Apart (TTWDFL)
         ],
         // fake pods
         joust_pods = [
