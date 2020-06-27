@@ -1371,7 +1371,7 @@
         if (! labels.length) {
             return '';
         }
-        return _.map(labels, function (label) {
+        return ' ' + _.map(labels, function (label) {
             return card_line_label_tpl({
                 label: label.name,
                 keyword: label.keyword || '',
