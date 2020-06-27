@@ -27,7 +27,7 @@
         card_line_label_tpl = _.template('<abbr class="legality <%= cls %>" title="<%= title %>" data-title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
         layouts = {},
         layout_data = {},
-        // Restricted/Banned Lists issued by The Conclave (v1.0)
+        // Restricted/Banned Lists issued by The Conclave (v2.0)
         joust_restricted_list = [
             "01109", // The Red Viper (Core)
             "02091", // Raider from Pyke (CoW)
@@ -166,10 +166,6 @@
             "16024", // Narrow Escape (TTWDFL)
             "16025", // Seductive Promise (TTWDFL)
             "16026", // Westeros Bleeds (TTWDFL)
-            "16027", // Aloof and Apart (TTWDFL)
-            "16028", // Dark Wings, Dark Words (TTWDFL)
-            "16029", // Knights of the Realm (TTWDFL)
-            "16030", // The Long Voyage (TTWDFL)
             "16031", // Benjen's Cache (TTWDFL)
             "16032", // Rioting (TTWDFL)
             "16033", // Rule By Decree (TTWDFL)
