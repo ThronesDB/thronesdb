@@ -68,31 +68,67 @@
             "15045", // Bribery (DotE)
             "16027", // Aloof and Apart (TTWDFL)
         ],
-        // fake pods
         joust_pods = [
             {
                 name: "P1",
-                restricted: "10045", // The Wars To Come (SoD)
+                restricted: "13085", // Yoren (TB)
                 cards: [
-                    "01119", // Doran's Game
+                    "04026", // Craven (CtA)
+                    "11085", // Three-Finger Hobb (IDP)
                 ],
             },
             {
                 name: "P2",
                 restricted: "11051", // Drowned God Fanatic (SoKL)
                 cards: [
-                    "01111", // Dornish Paramour (Core)
-                    "08091", // Tarle The Thrice-Drowned (TFM)
+                    "06011", // Drowned Disciple (AMAF)
                 ],
             },
             {
                 name: "P3",
-                restricted: "06098", // Flea Bottom (OR)
+                restricted: "11114", // Gifts for the Widow (DitD)
                 cards: [
-                    "01111", // Dornish Paramour (Core)
-                    "10016", // Shadow City Bastard (SoD)
+                    "15001", // Daenerys Targaryen (DotE)
                 ]
-            }
+            },
+            {
+                name: "P4",
+                restricted: "09037", // Qotho (HoT)
+                cards: [
+                    "15017", // Womb of the World (DotE)
+                ]
+            },
+            {
+                name: "P5",
+                restricted: "09001", // Mace Tyrell (HoT)
+                cards: [
+                    "09017", // The Hightower (HoT)
+                ]
+            },
+            {
+                name: "P6",
+                restricted: "12029", // Desert Raider (KotI)
+                cards: [
+                    "06011", // Drowned Disciple (AMAF)
+                ]
+            },
+            {
+                name: "P7",
+                restricted: "11021", // Wyman Manderly (TMoW)
+                cards: [
+                    "11081", // Bear Island Scout (IDP)
+                    "11082", // Skagos (IDP)
+                ]
+            },
+            {
+                name: "P8",
+                restricted: "06040", // The Annals of Castle Black (GtR)
+                cards: [
+                    "06063", // Oldtown Informer (TRW)
+                    "06100", // Wheels Within Wheels (OR)
+
+                ]
+            },
         ],
         melee_restricted_list = [
             "01001", // A Clash of Kings (Core)
