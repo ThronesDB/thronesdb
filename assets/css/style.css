@@ -506,6 +506,10 @@ abbr.legality.rl-melee {
     color: #639;
 }
 
+abbr.legality.rl-pod {
+    color: #995932;
+}
+
 abbr.legality.banned {
     color: #f00;
 }
@@ -515,4 +519,13 @@ abbr.legality.banned {
 #btn-group-deck:lang(es) .btn {
     padding-left: 9px;
     padding-right: 9px;
+}
+
+/*** FAQ, Rules Reference, Tournament Regulations pages ******/
+#rules ul.rl-pod-list {
+    margin-bottom: 0;
+}
+
+#rules div.example {
+    padding-left: 3em;
 }

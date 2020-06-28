@@ -384,7 +384,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();
         }
-        return $this->bannedListChecker->isLegal($cardCodes)
+        return $this->bannedListChecker->isLegalForMelee($cardCodes)
             && $this->restrictedListChecker->isLegalForMelee($cardCodes);
     }
 
@@ -401,7 +401,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();
         }
-        return $this->bannedListChecker->isLegal($cardCodes)
+        return $this->bannedListChecker->isLegalForJoust($cardCodes)
             && $this->restrictedListChecker->isLegalForJoust($cardCodes);
     }
 

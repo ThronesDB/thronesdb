@@ -202,16 +202,21 @@
             ui.on_data_loaded();
         data_loaded.resolve();
     });
-    $(document).on('start.app', function ()
-    {
-        if(typeof ui.on_all_loaded === 'function')
+    $(document).on('start.app', function () {
+        var title, keyword;
+        if (typeof ui.on_all_loaded === 'function') {
             ui.on_all_loaded();
-        $('abbr').each(function (index, element)
-        {
-            var keyword = $(this).data('keyword');
-            var title = Translator.trans('keyword.' + keyword + '.title');
-            if(title)
+        }
+        $('abbr').each(function (index, element) {
+            if ($(this).data('title')) {
+                title = $(this).data('title');
+            } else if ($(this).data('keyword')) {
+                keyword = $(this).data('keyword');
+                title = Translator.trans('keyword.' + keyword + '.title');
+            }
+            if (title) {
                 $(element).attr('title', title).tooltip();
+            }
         });
     });
     $.when(dom_loaded, data_loaded).done(function ()

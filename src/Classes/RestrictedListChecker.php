@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Collection;
 
 /**
  * Checks if a given list of cards is legal for tournament play in the Joust and Melee formats.
- * The currently implemented RLs were issued by The Conclave (v1.0), effective April 13th, 2020.
+ * The currently implemented RLs were issued by The Conclave (v2.0), effective July 3rd, 2020.
  * @package App\Classes
  */
 class RestrictedListChecker
@@ -16,59 +16,44 @@ class RestrictedListChecker
      * @var array
      */
     const JOUST_RESTRICTED_CARDS = [
-        "01109", // The Red Viper (Core)
+        "02034", // Crown of Gold (TRtW)
+        "02065", // Halder (NMG)
         "02091", // Raider from Pyke (CoW)
         "02092", // Iron Mines (CoW)
         "02102", // Ward (TS)
-        "03038", // To the Rose Banner! (WotN)
-        "04001", // The Dragon's Tail (AtSK)
-        "04017", // Tower of the Sun (AtSK)
-        "05010", // Taena Merryweather (LoCR)
-        "05049", // Littlefinger's Meddling (LoCR)
         "06004", // All Men Are Fools (AMAF)
-        "06011", // Drowned Disciple (AMAF)
         "06038", // Great Hall (GtR)
         "06039", // "The Dornishman's Wife" (GtR)
         "06040", // The Annals of Castle Black (GtR)
-        "06063", // Oldtown Informer (TRW)
         "06098", // Flea Bottom (OR)
-        "06100", // Wheels Within Wheels (OR)
-        "06103", // Highgarden Minstrel (TBWB)
-        "08080", // The King in the North (FotOG)"
+        "08080", // The King in the North (FotOG)
+        "08082", // I Am No One (TFM)
         "09001", // Mace Tyrell (HoT)
-        "09017", // The Hightower (HoT)
-        "09023", // "Six Maids in a Pool" (HoT)
-        "09037", // Qotho (HoT)"
+        "09037", // Qotho (HoT)
         "09051", // Trade Routes (HoT)
         "10045", // The Wars To Come (SoD)
         "10048", // Forced March (SoD)
         "10050", // Breaking Ties (SoD)
-        "11012", // Nighttime Marauders (TSC)"
+        "11012", // Nighttime Marauders (TSC)
         "11021", // Wyman Manderly (TMoW)
         "11033", // Hizdahr zo Loraq (TMoW)
         "11034", // Meereen (TMoW)
-        "11044", // Growing Ambition (SoKL)
         "11051", // Drowned God Fanatic (SoKL)
         "11061", // Meera Reed (MoD)
-        "11076", // A Mission in Essos (MoD)
-        "11082", // Skagos (IDP)
-        "11085", // Three-Finger Hobb (IDP)"
-        "11114", // Gifts for the Widow (DitD)"
+        "11114", // Gifts for the Widow (DitD)
         "12002", // Euron Crow's Eye (KotI)
         "12029", // Desert Raider (KotI)
-        "12045", // Sea of Blood (KotI)
         "12046", // We Take Westeros! (KotI)
-        "12047", // Return to the Fields (KotI)"
+        "12047", // Return to the Fields (KotI)
         "13044", // Unexpected Guile (PoS)
-        "13079", // Kingdom of Shadows (BtRK)"
         "13085", // Yoren (TB)
         "13086", // Bound for the Wall (TB)
         "13103", // The Queen's Retinue (LMHR)
-        "14008", // Selyse Baratheon (FotS)"
-        "15022", // Overwhelming Numbers (DotE)"
-        "15030", // The Red Keep (DotE)"
-        "15033", // Clydas (DotE)"
-        "15045", // Bribery (DotE)"
+        "14008", // Selyse Baratheon (FotS)
+        "15030", // The Red Keep (DotE)
+        "15033", // Clydas (DotE)
+        "15045", // Bribery (DotE)
+        "16027", // Aloof and Apart (TTWDFL)
     ];
 
     /**
@@ -106,6 +91,72 @@ class RestrictedListChecker
     ];
 
     /**
+     * @var array
+     */
+    const JOUST_PODS = [
+        [
+            "name" => "P1",
+            "restricted" => "13085", // Yoren (TB)
+            "cards" => [
+                "04026", // Craven (CtA)
+                "11085", // Three-Finger Hobb (IDP)
+            ],
+        ],
+        [
+            "name" => "P2",
+            "restricted" => "11051", // Drowned God Fanatic (SoKL)
+            "cards" => [
+                "06011", // Drowned Disciple (AMAF)
+            ],
+        ],
+        [
+            "name" => "P3",
+            "restricted" => "11114", // Gifts for the Widow (DitD)
+            "cards" => [
+                "15001", // Daenerys Targaryen (DotE)
+            ]
+        ],
+        [
+            "name" => "P4",
+            "restricted" => "09037", // Qotho (HoT)
+            "cards" => [
+                "15017", // Womb of the World (DotE)
+            ]
+        ],
+        [
+            "name" => "P5",
+            "restricted" => "09001", // Mace Tyrell (HoT)
+            "cards" => [
+                "09017", // The Hightower (HoT)
+            ]
+        ],
+        [
+            "name" => "P6",
+            "restricted" => "12029", // Desert Raider (KotI)
+            "cards" => [
+                "06011", // Drowned Disciple (AMAF)
+            ]
+        ],
+        [
+            "name" => "P7",
+            "restricted" => "11021", // Wyman Manderly (TMoW)
+            "cards" => [
+                "11081", // Bear Island Scout (IDP)
+                "11082", // Skagos (IDP)
+            ]
+        ],
+        [
+            "name" => "P8",
+            "restricted" => "06040", // The Annals of Castle Black (GtR)
+            "cards" => [
+                "06063", // Oldtown Informer (TRW)
+                "06100", // Wheels Within Wheels (OR)
+
+            ]
+        ],
+    ];
+
+    /**
      * @param array $cardCodes
      * @return bool
      */
@@ -120,7 +171,8 @@ class RestrictedListChecker
      */
     public function isLegalForJoust(array $cardCodes)
     {
-        return $this->isLegal($cardCodes, self::JOUST_RESTRICTED_CARDS);
+        return $this->isLegal($cardCodes, self::JOUST_RESTRICTED_CARDS)
+            && $this->isPodsLegal($cardCodes, self::JOUST_PODS);
     }
 
     /**
@@ -132,5 +184,26 @@ class RestrictedListChecker
     {
         $intersection = array_intersect($cardCodes, $restrictedList);
         return 2 > count($intersection);
+    }
+
+    /**
+     * @param array $cards
+     * @param array $pods
+     * @return bool
+     */
+    protected function isPodsLegal(array $cards, array $pods)
+    {
+        $isLegal = true;
+        foreach ($pods as $pod) {
+            $restricted = $pod['restricted'];
+            if (! in_array($restricted, $cards)) {
+                continue;
+            }
+            if (array_intersect($pod['cards'], $cards)) {
+                $isLegal = false;
+                break;
+            }
+        }
+        return $isLegal;
     }
 }

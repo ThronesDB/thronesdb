@@ -15,7 +15,7 @@
 <div style="text-align:justify">
 
     <h1 id="FAQ">Notes, Errata, and Frequently Asked Questions</h1>
-    <h3>The Conclave (Version 1.0), effective 04/13/2020 (<a href="https://agot.cards/wp-content/uploads/2020/04/RL_list_041320-1.pdf" target="_blank">link</a>).</h3>
+    <h3>The Conclave (Version 2.0), effective 07/03/2020 (<a href="https://agot.cards/wp-content/uploads/2020/06/RL_June20_joust.pdf" target="_blank">link</a>).</h3>
 
     <p>This document contains card clarification, errata, rule clarifications, frequently asked questions, and quick
         reference material for <em>A Game of Thrones: The Card Game</em>. The most recent version of this document is
@@ -30,9 +30,9 @@
     </p>
 
     <p>
-        <b>New Content (Conclave v1.0):</b>
+        <b>New Content (Conclave v2.0):</b>
         <a href="#Joust_Restricted_List">Joust Restricted List</a>,
-        <a href="#Banned_List">Banned List</a>
+        <a href="#Joust_Banned_List">Joust Banned List</a>
     </p>
 
     <p class="mplain"><b>Notes</b> and <b>Related</b> cards added by <b>mplain</b>.</p>
@@ -201,7 +201,6 @@
         <li>Clearly display the infinite loop to the opponent (and tournament judge, if the opponent requires it). Thus,
             the player must display, using all cards involved, one full cycle of the infinite loop.
         </li>
-        <br>
         <li>State how many times he or she wishes to execute the loop. For example, the player could say, "I will now
             execute this loop seventeen times." Then, resolve the loop that many times instantly. If the execution of
             this loop causes the player to win the game, the game is over and the executing player wins.
@@ -251,24 +250,19 @@
         <li>A player cannot marshal, put into play, or take/gain control of a unique card if another copy of that card
             is in his or her dead pile.
         </li>
-        <br>
         <li>A player cannot marshal or put into play a copy of an opponent's unique card if another copy of that unique
             card (owned either by the player attempting to bring the card into play, or by the opponent who owns the
             unique card that is attempting to enter play) is already in play or is in its owner's dead pile.
         </li>
-        <br>
         <li>An ability that puts a unique card into play from a player's dead pile functions only if there would be no
             other copies of that card in that dead pile upon resolution of the ability.
         </li>
-        <br>
         <li>If a player controls a unique card that he or she does not own, that player and that card's owner cannot
             marshal or put into play additional copies of that card, regardless of ownership.
         </li>
-        <br>
         <li>If a player controls a unique card (regardless of ownership) that player cannot take/gain control of other
             copies of that card.
         </li>
-        <br>
         <li>If a player owns and controls a unique card, each other copy of that card that he or she owns and controls
             that would enter play does so as a duplicate.
         </li>
@@ -289,7 +283,6 @@
     <ul>
 
         <li>A player's power total is determined by counting the total number of power on cards he or she controls.</li>
-        <br>
         <li>Unless otherwise specified by an ability, a player may only use tokens that are in game areas or on cards he
             or she controls to pay costs.
         </li>
@@ -547,98 +540,241 @@
         restricted cards in the same deck. A player may run as many copies of his or her chosen restricted card in a
         deck as the regular game rules (or card text) allow.</p>
 
-    <p><b><u>Neutral</u>:</b><br>
+    <p class="new">Some restricted cards are so powerful that their inclusion in a deck comes with additional
+        deckbuilding restrictions.<br>
+        If a player selects one of these cards as their restricted card, they may not include any of the cards
+        listed with <span class="fas fa-long-arrow-alt-right"></span> immediately below them.</p>
+    <p class="new">
+        <em>For example:</em><br>
+        <strong><a href="{{ path('cards_zoom', { card_code: "09017" }) }}" target="_blank" class="new">The Hightower</a>
+            <em>(House of Thorns, 17)</em></strong> is not restricted normally, but if
+        <strong><a href="{{ path('cards_zoom', { card_code: "09001" }) }}" target="_blank" class="new">Mace Tyrell</a>
+            <em>(House of Thorns, 1)</em></strong> is your chosen restricted card, you cannot include
+        <strong><a href="{{ path('cards_zoom', { card_code: "09017" }) }}" target="_blank" class="new">The Hightower</a>
+            <em>(House of Thorns, 17)</em></strong> in your deck.</p>
+    <p class="new">This restriction would be displayed as following:</p>
+    <div class="example new">
+        <a href="{{ path('cards_zoom', { card_code: "09001" }) }}" target="_blank" class="new">Mace Tyrell</a> <em>(House of Thorns, 1)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "09017" }) }}" target="_blank" class="new">The Hightower</a> <em>(House of Thorns, 17)</em>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <div><b><u>Neutral</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "06040" }) }}" target="_blank">The Annals of Castle Black</a> <em>(Guarding the
             Realm, 40)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "06100" }) }}" target="_blank">Wheels Within Wheels</a> <em>(Oberyn's Revenge,
-            100)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "06039" }) }}" target="_blank">"The Dornishman's Wife"</a> <em>(Guarding the Realm,
-            39)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "05049" }) }}" target="_blank">Littlefinger's Meddling</a> <em>(Lions of Casterly
-            Rock, 49)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "04001" }) }}" target="_blank">The Dragon's Tail</a> <em>(Across the Seven Kingdoms,
-            1)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "06100" }) }}" target="_blank" class="new">Wheels Within Wheels</a> <em>(Oberyn's Revenge, 100)</em>
+            </li>
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "06063" }) }}" target="_blank" class="new">Oldtown Informer</a> <em>(The Red Wedding, 63)</em>
+            </li>
+        </ul>
+        <a href="{{ path('cards_zoom', { card_code: "06039" }) }}" target="_blank">"The Dornishman's Wife"</a> <em>(Guarding the Realm, 39)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "06098" }) }}" target="_blank">Flea Bottom</a> <em>(Oberyn's Revenge, 98)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "10045" }) }}" target="_blank">The Wars to Come</a> <em>(Sands of Dorne, 45)</em>
-        <br>
+        <a href="{{ path('cards_zoom', { card_code: "10045" }) }}" target="_blank">The Wars To Come</a> <em>(Sand of Dorne, 45)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "10050" }) }}" target="_blank">Breaking Ties</a> <em>(Sands of Dorne, 50)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "09051" }) }}" target="_blank">Trade Routes</a> <em>(House of Thorns, 51)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "12045" }) }}" target="_blank">Sea of Blood</a> <em>(Kings of the Isles, 45)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "06038" }) }}" target="_blank">Great Hall</a> <em>(Guarding the Realm, 38)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "10048" }) }}" target="_blank">Forced March</a> <em>(Sands of Dorne, 48)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "08080" }) }}" target="_blank">The King in the North</a> <em>(Favor of the Old Gods, 80)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "12047" }) }}" target="_blank"> Return to the Fields</a> <em>(Kings of the Isles, 47)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "13079" }) }}" target="_blank">Kingdom of Shadows</a> <em>(Beneath the Red Keep, 79)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "15045" }) }}" target="_blank">Bribery</a> <em>(Dragons of the East, 45)</em><br>
-    </p>
-    <p class="new">
+        <a href="{{ path('cards_zoom', { card_code: "15045" }) }}" target="_blank" class="new">Bribery</a> <em>(Dragons of the East, 45)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "12047" }) }}" target="_blank"> Return to the Fields</a> <em>(Kings of the Isles, 47)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "08080" }) }}" target="_blank">The King in the North</a> <em>(Favor of the Old Gods, 80)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16027" }) }}" target="_blank" class="new">Aloof and Apart</a> <em>(The Things We Do For Love, 27)</em>
+    </div>
+    <br>
+    <div>
         <b><u>Baratheon</u>:</b><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "14008" }) }}" target="_blank">Selyse Baratheon</a> <em>(Fury of the Storm, 8)</em>
-    </p>
-    <p>
+        <a href="{{ path('cards_zoom', { card_code: "14008" }) }}" target="_blank">Selyse Baratheon</a> <em>(Fury of the Storm, 8)</em>
+    </div>
+    <br>
+    <div>
         <b><u>Greyjoy</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "02091" }) }}" target="_blank">Raider from Pyke</a> <em>(Calm Over Westeros, 91)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "02092" }) }}" target="_blank">Iron Mines</a> <em>(Calm Over Westeros, 92)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "11051" }) }}" target="_blank">Drowned God Fanatic</a> <em>(Streets of King's Landing, 51)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "06011" }) }}" target="_blank">Drowned Disciple</a> <em>(All Men Are Fools, 11)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "06011" }) }}" target="_blank" class="new">Drowned Disciple</a> <em>(All Men Are Fools, 11)</em>
+            </li>
+        </ul>
         <a href="{{ path('cards_zoom', { card_code: "12002" }) }}" target="_blank">Euron Crow’s Eye</a> <em>(Kings of the Isles, 2)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "12046" }) }}" target="_blank">We Take Westeros!</a> <em>(Kings of the Isles, 46)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "11012" }) }}" target="_blank">Nighttime Marauders</a> <em>(The Shadow City, 12)</em><br>
-    </p>
-
-    <p>
+        <a href="{{ path('cards_zoom', { card_code: "11012" }) }}" target="_blank">Nighttime Marauders</a> <em>(The Shadow City, 12)</em>
+    </div>
+    <br>
+    <div>
         <b><u>Lannister</u>:</b><br>
-        <a href="{{ path('cards_zoom', { card_code: "05010" }) }}" target="_blank">Taena Merryweather</a> <em>(Lions of Casterly Rock, 10)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "15030" }) }}" target="_blank">The Red Keep</a> <em>(Dragons of the East, 30)</em><br>
-    </p>
-
-    <p>
+        <a href="{{ path('cards_zoom', { card_code: "15030" }) }}" target="_blank">The Red Keep</a> <em>(Dragons of the East, 30)</em>
+    </div>
+    <br>
+    <div>
         <b><u>Martell</u>:</b><br>
-        <a href="{{ path('cards_zoom', { card_code: "01109" }) }}" target="_blank">The Red Viper</a> <em>(Core, 109)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "04017" }) }}" target="_blank">Tower of the Sun</a> <em>(Across the Seven Kingdoms, 17)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "11076" }) }}" target="_blank">A Mission in Essos</a> <em>(Music of Dragons, 76)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "12029" }) }}" target="_blank">Desert Raider</a> <em>(Kings of the Isles, 29)</em>
-    </p>
-
-    <p>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "06011" }) }}" target="_blank" class="new">Drowned Disciple</a> <em>(All Men Are Fools, 11)</em>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <div>
         <b><u>Night's Watch</u></b><br>
         <a href="{{ path('cards_zoom', { card_code: "13085" }) }}" target="_blank">Yoren</a> <em>(The Blackwater, 85)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "11085" }) }}" target="_blank" class="new">Three-Finger Hobb</a> <em>(In Daznak's Pit, 85)</em>
+            </li>
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "04026" }) }}" target="_blank" class="new">Craven</a> <em>(Called to Arms, 26)</em>
+            </li>
+        </ul>
         <a href="{{ path('cards_zoom', { card_code: "13086" }) }}" target="_blank">Bound for the Wall</a> <em>(The Blackwater, 86)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "11085" }) }}" target="_blank">Three-Finger Hobb</a> <em>(In Daznak's Pit, 85)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "15033" }) }}" target="_blank">Clydas</a> <em>(Dragons of the East, 33)</em>
-    </p>
-    <p>
+        <a href="{{ path('cards_zoom', { card_code: "15033" }) }}" target="_blank">Clydas</a> <em>(Dragons of the East, 33)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "02065" }) }}" target="_blank" class="new">Halder</a> <em>(No Middle Ground, 65)</em>
+    </div>
+    <br>
+    <div>
         <b><u>Stark</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "11021" }) }}" target="_blank">Wyman Manderly</a> <em>(The March on Winterfell, 21)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "11081" }) }}" target="_blank" class="new">Bear Island Scout</a> <em>(In Daznak's Pit, 81)</em>
+            </li>
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "11082" }) }}" target="_blank" class="new">Skagos</a> <em>(In Daznak's Pit, 82)</em>
+            </li>
+        </ul>
         <a href="{{ path('cards_zoom', { card_code: "02102" }) }}" target="_blank">Ward</a> <em>(True Steel, 102)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "11082" }) }}" target="_blank">Skagos</a> <em>(In Daznak’s Pit, 82)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "11061" }) }}" target="_blank">Meera Reed</a> <em>(Music of Dragons, 61)</em>
-    </p>
-    <p>
+        <a href="{{ path('cards_zoom', { card_code: "11061" }) }}" target="_blank">Meera Reed</a> <em>(Music of Dragons, 61)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "08082" }) }}" target="_blank" class="new">I Am No One</a> <em>(The Faith Militant, 82)</em><br>
+    </div>
+    <br>
+    <div>
         <b><u>Tyrell</u>:</b><br>
-        <a href="{{ path('cards_zoom', { card_code: "06103" }) }}" target="_blank">Highgarden Minstrel</a> <em>(The Brotherhood Without
-            Banners, 103)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "06004" }) }}" target="_blank">All Men Are Fools</a> <em>(All Men Are Fools, 4)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "09023" }) }}" target="_blank">"Six Maids in a Pool"</a> <em>(House of Thorns,
-            23)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "03038" }) }}" target="_blank">To the Rose Banner!</a> <em>(Wolves of the North,
-            38)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "09001" }) }}" target="_blank">Mace Tyrell</a> <em>(House of Thorns, 1)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "09017" }) }}" target="_blank">The Hightower</a> <em>(House of Thorns, 17)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "11044" }) }}" target="_blank">Growing Ambition</a> <em>(Streets of King’s Landing, 44)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "09017" }) }}" target="_blank" class="new">The Hightower</a> <em>(House of Thorns, 17)</em>
+            </li>
+        </ul>
         <a href="{{ path('cards_zoom', { card_code: "13103" }) }}" target="_blank">The Queen's Retinue</a> <em>(Long May He Reign, 103)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "13044" }) }}" target="_blank">Unexpected Guile</a> <em>(Pit of Snakes, 44)</em><br>
-        <a href="{{ path('cards_zoom', { card_code: "06063" }) }}" target="_blank">Oldtown Informer</a> <em>(The Red Wedding, 63)</em>
-    </p>
-
-    <p>
+        <a href="{{ path('cards_zoom', { card_code: "13044" }) }}" target="_blank">Unexpected Guile</a> <em>(Pit of Snakes, 44)</em>
+    </div>
+    <br>
+    <div>
         <b><u>Targaryen</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "11033" }) }}" target="_blank">Hizdahr zo Loraq</a> <em>(The March on Winterfell, 33)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "11034" }) }}" target="_blank">Meereen</a> <em>(The March on Winterfell, 34)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "09037" }) }}" target="_blank">Qotho</a> <em>(House of Thorns, 37)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "11114" }) }}" target="_blank">Gifts for the Widow</a> <em>(Dragons of the East, 14)</em><br>
-        <a class="new" href="{{ path('cards_zoom', { card_code: "15022" }) }}" target="_blank">Overwhelming Numbers</a> <em>(Dragons of the East, 22)</em>
-    </p>
+        <a href="{{ path('cards_zoom', { card_code: "11114" }) }}" target="_blank">Gifts for the Widow</a> <em>(Dragons of the East, 14)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "15001" }) }}" target="_blank" class="new">Daenerys Targaryen</a> <em>(Dragons of the East, 1)</em>
+            </li>
+        </ul>
+        <a href="{{ path('cards_zoom', { card_code: "09037" }) }}" target="_blank">Qotho</a> <em>(House of Thorns, 37)</em><br>
+        <ul class="fa-ul rl-pod-list">
+            <li>
+                <span class="fa-li new"><i class="fas fa-long-arrow-alt-right"></i></span>
+                <a href="{{ path('cards_zoom', { card_code: "15017" }) }}" target="_blank" class="new">Womb of the World</a> <em>(Dragons of the East, 17)</em>
+            </li>
+        </ul>
+        <a href="{{ path('cards_zoom', { card_code: "02034" }) }}" target="_blank" class="new">Crown of Gold</a> <em>(The Road to Winterfell, 34)</em>
+    </div>
+
+    <h2 id="Joust_Banned_List">Joust Banned List</h2>
+
+    <p>The following cards are not legal for competitive play in Joust.</p>
+
+    <div>
+        <b><u>Neutral</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "04001" }) }}" target="_blank" class="new">The Dragon's Tail</a> <em>(Across the Seven Kingdoms, 1)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "05049" }) }}" target="_blank" class="new">Littlefinger's Meddling</a> <em>(Lions of Casterly Rock, 49)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "12045" }) }}" target="_blank" class="new">Sea of Blood</a> <em>(Kings of the Isles, 45)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "13079" }) }}" target="_blank" class="new">Kingdom of Shadows</a> <em>(Beneath the Red Keep, 79)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16017" }) }}" target="_blank">Littlefinger</a> <em>(The Things We Do For Love, 17)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16018" }) }}" target="_blank">Vale Refugee</a> <em>(The Things We Do For Love, 18)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16019" }) }}" target="_blank">High Ground</a> <em>(The Things We Do For Love, 19)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16020" }) }}" target="_blank">King's Landing</a> <em>(The Things We Do For Love, 20)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16021" }) }}" target="_blank">Harrenhal</a> <em>(The Things We Do For Love, 21)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16022" }) }}" target="_blank">Sky Cell</a> <em>(The Things We Do For Love, 22)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16023" }) }}" target="_blank">Heads on Pikes</a> <em>(The Things We Do For Love, 23)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16024" }) }}" target="_blank">Narrow Escape</a> <em>(The Things We Do For Love, 24)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16025" }) }}" target="_blank">Seductive Promise</a> <em>(The Things We Do For Love, 25)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16026" }) }}" target="_blank">Westeros Bleeds</a> <em>(The Things We Do For Love, 26)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16031" }) }}" target="_blank">Benjen's Cache</a> <em>(The Things We Do For Love, 31)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16032" }) }}" target="_blank">Rioting</a> <em>(The Things We Do For Love, 32)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16033" }) }}" target="_blank">Rule By Decree</a> <em>(The Things We Do For Love, 33)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16034" }) }}" target="_blank">Search and Detain</a> <em>(The Things We Do For Love, 34)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16035" }) }}" target="_blank">The Art of Seduction</a> <em>(The Things We Do For Love, 35)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16036" }) }}" target="_blank">The Gathering Storm</a> <em>(The Things We Do For Love, 36)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Baratheon</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "16001" }) }}" target="_blank">Ser Davos Seaworth</a> <em>(The Things We Do For Love, 1)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16002" }) }}" target="_blank">Melisandre's Favor</a> <em>(The Things We Do For Love, 2)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Greyjoy</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "16003" }) }}" target="_blank">Wintertime Marauders</a> <em>(The Things We Do For Love, 3)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16004" }) }}" target="_blank">Conquer</a> <em>(The Things We Do For Love, 4)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Lannister</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "05010" }) }}" target="_blank" class="new">Taena Merryweather</a> <em>(Lions of Casterly Rock, 10)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16005" }) }}" target="_blank">Spider's Whisperer</a> <em>(The Things We Do For Love, 5)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16006" }) }}" target="_blank">Wheels Within Wheels</a> <em>(The Things We Do For Love, 6)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Martell</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "11076" }) }}" target="_blank" class="new">A Mission in Essos</a> <em>(Music of Dragons, 76)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16007" }) }}" target="_blank">Prince's Loyalist</a> <em>(The Things We Do For Love, 7)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16008" }) }}" target="_blank">You Murdered Her Children</a> <em>(The Things We Do For Love, 8)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Night's Watch</u></b><br>
+        <a href="{{ path('cards_zoom', { card_code: "16009" }) }}" target="_blank">Samwell Tarly</a> <em>(The Things We Do For Love, 9)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16010" }) }}" target="_blank">Old Bear Mormont</a> <em>(The Things We Do For Love, 10)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Stark</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "16011" }) }}" target="_blank">Catelyn Stark</a> <em>(The Things We Do For Love, 11)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16012" }) }}" target="_blank">Snow Castle</a> <em>(The Things We Do For Love, 12)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Tyrell</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "03038" }) }}" target="_blank" class="new">To the Rose Banner!</a> <em>(Wolves of the North, 38)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16015" }) }}" target="_blank">The Queen of Thorns</a> <em>(The Things We Do For Love, 15)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16016" }) }}" target="_blank">Olenna's Study</a> <em>(The Things We Do For Love, 16)</em><br>
+    </div>
+    <br>
+    <div>
+        <b><u>Targaryen</u>:</b><br>
+        <a href="{{ path('cards_zoom', { card_code: "16013" }) }}" target="_blank">Mad King Aerys</a> <em>(The Things We Do For Love, 13)</em><br>
+        <a href="{{ path('cards_zoom', { card_code: "16014" }) }}" target="_blank">The Hatchlings' Feast</a> <em>(The Things We Do For Love, 14)</em><br>
+    </div>
 
     <h2 id="Melee_Restricted_List">Melee Restricted List</h2>
 
@@ -646,7 +782,7 @@
         restricted cards in the same deck. A player may run as many copies of his or her chosen restricted card in a
         deck as the regular game rules (or card text) allow.</p>
 
-    <p><b><u>Neutral</u>:</b><br>
+    <div><b><u>Neutral</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "01001" }) }}" target="_blank">A Clash of Kings</a> <em>(Core, 1)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "01013" }) }}" target="_blank">Heads on Spikes</a> <em>(Core, 13)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "01043" }) }}" target="_blank">Superior Claim</a> <em>(Core, 43)</em><br>
@@ -664,60 +800,58 @@
         <a href="{{ path('cards_zoom', { card_code: "06040" }) }}" target="_blank">The Annals of Castle Black</a> <em>(Guarding the Realm, 40)</em>
         <br>
         <a href="{{ path('cards_zoom', { card_code: "08120" }) }}" target="_blank">You Win or You Die</a> <em>(Someone Always Tells, 120)</em>
-    </p>
-
-    <p><b><u>Baratheon</u>:</b><br>
+    </div>
+    <br>
+    <div><b><u>Baratheon</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "13107" }) }}" target="_blank">Robert Baratheon</a> <em>(Long May He Reign, 107)</em>
-
-    </p>
-
-    <p><b><u>Greyjoy</u>:</b><br>
+    </div>
+    <br>
+    <div><b><u>Greyjoy</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "01078" }) }}" target="_blank">Great Kraken</a> <em>(Core, 78)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "02012" }) }}" target="_blank">Rise of the Kraken</a> <em>(Taking the Black,
             12)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "09028" }) }}" target="_blank">Corpse Lake</a> <em>(House of Thorns, 28)</em>
         <br>
         <a href="{{ path('cards_zoom', { card_code: "06011" }) }}" target="_blank">Drowned Disciple</a> <em>(All Men Are Fools, 11)</em>
-
-    </p>
-
-    <p><b><u>Lannister</u>:</b><br>
+    </div>
+    <br>
+    <div><b><u>Lannister</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "05001" }) }}" target="_blank">Cersei Lannister</a> <em>(Lions of Casterly Rock,
             1)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "05010" }) }}" target="_blank">Taena Merryweather</a> <em>(Lions of Casterly Rock,
             10)</em>
-    </p>
-
-    <p><b><u>Martell</u>:</b><br>
+    </div>
+    <br>
+    <div><b><u>Martell</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "01119" }) }}" target="_blank">Doran's Game</a> <em>(Core, 119)</em>
         <br>
         <a href="{{ path('cards_zoom', { card_code: "11076" }) }}" target="_blank">A Mission in Essos</a> <em>(Music of Dragons, 76)</em>
-    </p>
-
-    <p><b><u>Stark</u>:</b><br>
+    </div>
+    <br>
+    <div><b><u>Stark</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "03003" }) }}" target="_blank">Eddard Stark</a> <em>(Wolves of the North,
             3)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "04003" }) }}" target="_blank">Riverrun</a> <em>(Across the Seven Kingdoms, 3)</em>
-    </p>
-
-    <p><b><u>Targaryen</u>:</b><br>
+    </div>
+    <br>
+    <div><b><u>Targaryen</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "07036" }) }}" target="_blank">Plaza of Pride</a> <em>(Watchers on the Wall,
             36)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "01162" }) }}" target="_blank">Khal Drogo</a> <em>(Core, 162)</em>
         <br>
         <a href="{{ path('cards_zoom', { card_code: "11054" }) }}" target="_blank">Queensguard</a> <em>(Streets of King’s Landing, 54)</em>
-    </p>
-
-    <p><b><u>Tyrell</u>:</b><br>
+    </div>
+    <br>
+    <div><b><u>Tyrell</u>:</b><br>
         <a href="{{ path('cards_zoom', { card_code: "02024" }) }}" target="_blank">Lady Sansa's Rose</a> <em>(The Road to Winterfell,
             24)</em><br>
         <a href="{{ path('cards_zoom', { card_code: "06004" }) }}" target="_blank">All Men Are Fools</a> <em>(All Men Are Fools, 4)</em>
         <br>
         <a href="{{ path('cards_zoom', { card_code: "03038" }) }}" target="_blank">To the Rose Banner!</a> <em>(Wolves of the North, 38)</em>
-    </p>
+    </div>
 
-    <h1 id="Banned_List">Banned Cards</h1>
-    <p>The complete set of <a href="{{ path('cards_list', { pack_code: "TTWDFL" }) }}" target="_blank">The Things We Do For Love</a> is not legal for competitive play.</p>
+    <h2 id="Melee_Banned_List">Melee Banned List</h2>
+    <p>The complete set of <a href="{{ path('cards_list', { pack_code: "TTWDFL" }) }}" target="_blank">The Things We Do For Love</a> is not legal for competitive play in Melee.</p>
 
     <h1 id="Frequently_Asked_Questions">Frequently Asked Questions</h1>
 
@@ -1110,14 +1244,11 @@
 
     <ol>
         <li>Interrupts to the end of phase may be used.</li>
-        <br>
         <li>"<i>Until the end of the phase</i>" lasting abilities (and "<i>during the X phase</i>" abilities) expire.
             This step is the precise moment at which the phase ends, and anything that occurs as a result of the next
             two steps occurs outside of the phase.
         </li>
-        <br>
         <li>"<i>At the end of the phase</i>" delayed effects resolve.</li>
-        <br>
         <li>Reactions to the end of the phase may be used.</li>
 
     </ol>

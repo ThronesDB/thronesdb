@@ -24,64 +24,152 @@
         ),
         header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
         card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
-        card_line_label_tpl = _.template('<abbr class="legality <%= keyword %>" title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
+        card_line_label_tpl = _.template('<abbr class="legality <%= cls %>" title="<%= title %>" data-title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
         layouts = {},
         layout_data = {},
-        // Restricted/Banned Lists issued by The Conclave (v1.0)
+        // Restricted/Banned Lists issued by The Conclave (v2.0)
         joust_restricted_list = [
-            "01109", // The Red Viper (Core)
+            "02034", // Crown of Gold (TRtW)
+            "02065", // Halder (NMG)
             "02091", // Raider from Pyke (CoW)
             "02092", // Iron Mines (CoW)
             "02102", // Ward (TS)
-            "03038", // To the Rose Banner! (WotN)
-            "04001", // The Dragon's Tail (AtSK)
-            "04017", // Tower of the Sun (AtSK)
-            "05010", // Taena Merryweather (LoCR)
-            "05049", // Littlefinger's Meddling (LoCR)
             "06004", // All Men Are Fools (AMAF)
-            "06011", // Drowned Disciple (AMAF)
             "06038", // Great Hall (GtR)
             "06039", // "The Dornishman's Wife" (GtR)
             "06040", // The Annals of Castle Black (GtR)
-            "06063", // Oldtown Informer (TRW)
             "06098", // Flea Bottom (OR)
-            "06100", // Wheels Within Wheels (OR)
-            "06103", // Highgarden Minstrel (TBWB)
-            "08080", // The King in the North (FotOG)"
+            "08080", // The King in the North (FotOG)
+            "08082", // I Am No One (TFM)
             "09001", // Mace Tyrell (HoT)
-            "09017", // The Hightower (HoT)
-            "09023", // "Six Maids in a Pool" (HoT)
-            "09037", // Qotho (HoT)"
+            "09037", // Qotho (HoT)
             "09051", // Trade Routes (HoT)
             "10045", // The Wars To Come (SoD)
             "10048", // Forced March (SoD)
             "10050", // Breaking Ties (SoD)
-            "11012", // Nighttime Marauders (TSC)"
+            "11012", // Nighttime Marauders (TSC)
             "11021", // Wyman Manderly (TMoW)
             "11033", // Hizdahr zo Loraq (TMoW)
             "11034", // Meereen (TMoW)
-            "11044", // Growing Ambition (SoKL)
             "11051", // Drowned God Fanatic (SoKL)
             "11061", // Meera Reed (MoD)
-            "11076", // A Mission in Essos (MoD)
-            "11082", // Skagos (IDP)
-            "11085", // Three-Finger Hobb (IDP)"
-            "11114", // Gifts for the Widow (DitD)"
+            "11114", // Gifts for the Widow (DitD)
             "12002", // Euron Crow's Eye (KotI)
             "12029", // Desert Raider (KotI)
-            "12045", // Sea of Blood (KotI)
             "12046", // We Take Westeros! (KotI)
-            "12047", // Return to the Fields (KotI)"
+            "12047", // Return to the Fields (KotI)
             "13044", // Unexpected Guile (PoS)
-            "13079", // Kingdom of Shadows (BtRK)"
             "13085", // Yoren (TB)
             "13086", // Bound for the Wall (TB)
             "13103", // The Queen's Retinue (LMHR)
-            "14008", // Selyse Baratheon (FotS)"
-            "15022", // Overwhelming Numbers (DotE)"
-            "15030", // The Red Keep (DotE)"
-            "15033", // Clydas (DotE)"
-            "15045", // Bribery (DotE)"
+            "14008", // Selyse Baratheon (FotS)
+            "15030", // The Red Keep (DotE)
+            "15033", // Clydas (DotE)
+            "15045", // Bribery (DotE)
+            "16027", // Aloof and Apart (TTWDFL)
+        ],
+        joust_pods = [
+            {
+                name: "P1",
+                restricted: "13085", // Yoren (TB)
+                cards: [
+                    "04026", // Craven (CtA)
+                    "11085", // Three-Finger Hobb (IDP)
+                ],
+            },
+            {
+                name: "P2",
+                restricted: "11051", // Drowned God Fanatic (SoKL)
+                cards: [
+                    "06011", // Drowned Disciple (AMAF)
+                ],
+            },
+            {
+                name: "P3",
+                restricted: "11114", // Gifts for the Widow (DitD)
+                cards: [
+                    "15001", // Daenerys Targaryen (DotE)
+                ]
+            },
+            {
+                name: "P4",
+                restricted: "09037", // Qotho (HoT)
+                cards: [
+                    "15017", // Womb of the World (DotE)
+                ]
+            },
+            {
+                name: "P5",
+                restricted: "09001", // Mace Tyrell (HoT)
+                cards: [
+                    "09017", // The Hightower (HoT)
+                ]
+            },
+            {
+                name: "P6",
+                restricted: "12029", // Desert Raider (KotI)
+                cards: [
+                    "06011", // Drowned Disciple (AMAF)
+                ]
+            },
+            {
+                name: "P7",
+                restricted: "11021", // Wyman Manderly (TMoW)
+                cards: [
+                    "11081", // Bear Island Scout (IDP)
+                    "11082", // Skagos (IDP)
+                ]
+            },
+            {
+                name: "P8",
+                restricted: "06040", // The Annals of Castle Black (GtR)
+                cards: [
+                    "06063", // Oldtown Informer (TRW)
+                    "06100", // Wheels Within Wheels (OR)
+
+                ]
+            },
+        ],
+        joust_banned_list = [
+            "03038", // To the Rose Banner! (WotN)
+            "04001", // The Dragon's Tail (AtSK)
+            "05010", // Taena Merryweather (LoCR)
+            "05049", // Littlefinger's Meddling (LoCR)
+            "11076", // A Mission in Essos (MoD)
+            "12045", // Sea of Blood (KotI)
+            "13079", // Kingdom of Shadows (BtRK)
+            "16001", // Ser Davos Seaworth (TTWDFL)
+            "16002", // Melisandre's Favor (TTWDFL)
+            "16003", // Wintertime Marauders (TTWDFL)
+            "16004", // Conquer (TTWDFL)
+            "16005", // Spider's Whisperer (TTWDFL)
+            "16006", // Wheels Within Wheels (TTWDFL)
+            "16007", // Prince's Loyalist (TTWDFL)
+            "16008", // You Murdered Her Children (TTWDFL)
+            "16009", // Samwell Tarly (TTWDFL)
+            "16010", // Old Bear Mormont (TTWDFL)
+            "16011", // Catelyn Stark (TTWDFL)
+            "16012", // Snow Castle (TTWDFL)
+            "16013", // Mad King Aerys (TTWDFL)
+            "16014", // The Hatchlings' Feast (TTWDFL)
+            "16015", // The Queen of Thorns (TTWDFL)
+            "16016", // Olenna's Study (TTWDFL)
+            "16017", // Littlefinger (TTWDFL)
+            "16018", // Vale Refugee (TTWDFL)
+            "16019", // High Ground (TTWDFL)
+            "16020", // King's Landing (TTWDFL)
+            "16021", // Harrenhal (TTWDFL)
+            "16022", // Sky Cell (TTWDFL)
+            "16023", // Heads on Pikes (TTWDFL)
+            "16024", // Narrow Escape (TTWDFL)
+            "16025", // Seductive Promise (TTWDFL)
+            "16026", // Westeros Bleeds (TTWDFL)
+            "16031", // Benjen's Cache (TTWDFL)
+            "16032", // Rioting (TTWDFL)
+            "16033", // Rule By Decree (TTWDFL)
+            "16034", // Search and Detain (TTWDFL)
+            "16035", // The Art of Seduction (TTWDFL)
+            "16036", // The Gathering Storm (TTWDFL)
         ],
         melee_restricted_list = [
             "01001", // A Clash of Kings (Core)
@@ -113,7 +201,7 @@
             "11076", // A Mission in Essos (MoD)
             "13107", // Robert Baratheon (LMHR)
         ],
-        banned_list = [
+        melee_banned_list = [
             "16001", // Ser Davos Seaworth (TTWDFL)
             "16002", // Melisandre's Favor (TTWDFL)
             "16003", // Wintertime Marauders (TTWDFL)
@@ -163,6 +251,26 @@
         '01205': 'tyrell'
     };
 
+    var get_pods_map = function( pods_list) {
+        var map = {};
+
+        _.each(pods_list, function (pod) {
+            if (! map.hasOwnProperty(pod.restricted)) {
+                map[pod.restricted] = [];
+            }
+            map[pod.restricted].push(pod);
+            _.each(pod.cards, function (card) {
+                if (! map.hasOwnProperty(card)) {
+                    map[card] = [];
+                }
+                map[card].push(pod);
+            });
+        })
+        return map;
+    }
+
+    var joust_pods_map = get_pods_map(joust_pods);
+
     /*
      * Checks a given card's text has the "Shadow" keyword.
      * @param {Object} card
@@ -180,13 +288,14 @@
 
     /*
      * Validates the current deck against a list of banned cards.
+     * @param {Array} cards
+     * @param {Array} bannedList
      * @return {boolean}
      */
-    var validate_against_banned_list = function() {
-        var cards = app.deck.get_cards();
+    var validate_against_banned_list = function(cards, bannedList) {
         var i, n;
         for (i = 0, n = cards.length; i < n; i++) {
-            if (-1 !== banned_list.indexOf(cards[i].code)) {
+            if (-1 !== bannedList.indexOf(cards[i].code)) {
                 return false;
             }
         }
@@ -195,12 +304,12 @@
 
     /*
      * Validates the current deck against a given list of restricted cards.
+     * @param {Array} cards
      * @param {Array} restricted_list
      * @return {boolean}
      */
-    var validate_deck_against_restricted_list = function(restricted_list) {
+    var validate_deck_against_restricted_list = function(cards, restricted_list) {
         var is_valid = true;
-        var cards = app.deck.get_cards();
         var i, n;
         var counter = 0;
 
@@ -218,6 +327,66 @@
 
         return is_valid;
     };
+
+    /*
+     * Validates a given deck of cards against a given list of validation pods.
+     *
+     * @param {Array} cards
+     * @param {Array} pods
+     * @return {boolean}
+     */
+    var validate_deck_against_pods = function(cards, pods) {
+        var is_valid = true;
+        var i, n;
+        var codes = _.pluck(cards, 'code');
+
+
+        for (i = 0, n = pods.length; i < n; i++) {
+            if (-1 !== codes.indexOf(pods[i].restricted)
+              && _.intersection(pods[i].cards, codes).length) {
+                is_valid = false;
+                break;
+            }
+        }
+        return is_valid;
+    }
+
+    /*
+     * Checks if the current deck complies with the restricted list for joust.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_joust_restricted_list_compliant = function(cards) {
+        return validate_deck_against_restricted_list(cards, joust_restricted_list)
+          && validate_deck_against_pods(cards, joust_pods);
+    };
+
+    /*
+     * Checks if the current deck complies with the restricted list for melee.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_melee_restricted_list_compliant = function(cards) {
+        return validate_deck_against_restricted_list(cards, melee_restricted_list);
+    };
+
+    /*
+     * Checks if the current deck complies with a given joust banned list.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_joust_banned_list_compliant = function(cards) {
+        return validate_against_banned_list(cards, joust_banned_list);
+    }
+
+    /*
+     * Checks if the current deck complies with a given melee banned list.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_melee_banned_list_compliant = function(cards) {
+        return validate_against_banned_list(cards, melee_banned_list);
+    }
 
     /**
      * Creates a new line-item for a given card to a given DOM element.
@@ -242,8 +411,6 @@
     layouts[3] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-4"><%= meta %><%= plots %></div><div class="col-sm-4"><%= characters %></div><div class="col-sm-4"><%= attachments %><%= locations %><%= events %></div></div></div>');
     layouts[4] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-6 col-print-6"><%= meta %></div><div class="col-sm-6 col-print-6"><%= plots %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
     layouts[5] = _.template('<div class="deck-content"><div class="row"><div class="col-sm-12 col-print-12"><%= meta %></div></div><div class="row"><div class="col-sm-12 col-print-12"><%= cards %></div></div></div>');
-
-
 
     /**
      * @memberOf deck
@@ -564,7 +731,7 @@
         }
     };
 
-        /**
+    /**
      * @memberOf deck
      * @param {object} container
      * @param {object} options
@@ -584,7 +751,6 @@
 
     deck.get_layout_data = function get_layout_data(options)
     {
-
         var data = {
             images: '',
             meta: '',
@@ -599,6 +765,7 @@
         var problem = deck.get_problem();
         var agendas = deck.get_agendas();
         var warnings = deck.get_warnings();
+        var cards = deck.get_cards();
 
         deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/images/factions/' + deck.get_faction_code() + '.png" class="img-responsive">'));
         agendas.forEach(function (agenda) {
@@ -625,15 +792,14 @@
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
         var legalityContents = '<em>' + Translator.trans('tournamentLegality.title') +':</em> ';
-        var isBannedListCompliant = deck.is_banned_list_compliant();
-        if (isBannedListCompliant && deck.is_joust_restricted_list_compliant()) {
+        if (is_joust_banned_list_compliant(cards) && is_joust_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
         legalityContents += Translator.trans('tournamentLegality.joust') + '</span> | ';
 
-        if (isBannedListCompliant && deck.is_melee_restricted_list_compliant()) {
+        if (is_melee_banned_list_compliant(cards) && is_melee_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
@@ -1196,31 +1362,76 @@
     deck.get_card_labels = function get_card_labels(card)
     {
         var labels = [];
-        var out = '';
-        var i, n;
+        var pods;
+        var restricted;
+        var cards;
+        var formatCardTitle = function (card) {
+            var rhett = '';
+            rhett += '&quot;' + card.name.replace(/"/g, '') + '&quot;';
+            if (card.is_multiple) {
+                rhett += ' (' + card.pack_code +')';
+            }
+            return rhett;
+        }
+        var isBannedInJoust = (-1 !== joust_banned_list.indexOf(card.code));
+        var isBannedInMelee = (-1 !== melee_banned_list.indexOf(card.code));
         if (-1 !== joust_restricted_list.indexOf(card.code)) {
-            labels.push({ name: '[J]', keyword: 'rl-joust', title: Translator.trans('keyword.rl-joust.title') });
+            labels.push({ name: '[J]', class: "rl-joust", title: Translator.trans('card.rl-joust.title') });
         }
         if (-1 !== melee_restricted_list.indexOf(card.code)) {
-            labels.push({ name: '[M]', keyword: 'rl-melee', title: Translator.trans('keyword.rl-melee.title') });
+            labels.push({ name: '[M]', class: "rl-melee", title: Translator.trans('card.rl-melee.title') });
         }
-        if (-1 !== banned_list.indexOf(card.code)) {
-            labels.push({ name: '[B]', keyword: 'banned', title: Translator.trans('keyword.banned.title') });
+        if (isBannedInJoust && isBannedInMelee) {
+            labels.push({ name: '[B]', class: "banned", title: Translator.trans('card.bl.title') });
+        } else if (isBannedInJoust) {
+            labels.push({ name: '[B-J]', class: "banned", title: Translator.trans('card.bl-joust.title') });
+        } else if (isBannedInMelee) {
+            labels.push({ name: '[B-M]', class: "banned", title: Translator.trans('card.bl-melee.title') });
+        }
+
+        if (joust_pods_map.hasOwnProperty(card.code)) {
+            pods = joust_pods_map[card.code];
+            _.each(pods, function (pod) {
+                restricted = app.data.cards.findById(pod.restricted);
+                cards = app.data.cards.find({ code: { $in: pod.cards }});
+
+                if (1 === pod.cards.length) {
+                    labels.push({
+                        name: '[' + pod.name + ']',
+                        class: 'rl-pod',
+                        title: Translator.trans('card.podinfo_single', {
+                            restricted: formatCardTitle(restricted),
+                            card: formatCardTitle(cards[0]),
+                            format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                        })
+                    });
+                } else {
+                    labels.push({
+                        name: '[' + pod.name + ']',
+                        class: 'rl-pod',
+                        title: Translator.trans('card.podinfo_multiple', {
+                            restricted: formatCardTitle(restricted),
+                            cards: _.map(cards, function (card) {
+                                return formatCardTitle(card);
+                            }).join(', '),
+                            format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                        }),
+                    });
+                }
+            });
         }
 
         if (! labels.length) {
-            return out;
+            return '';
         }
-
-        out = out + ' ';
-        for (i = 0, n = labels.length; i < n; i++) {
-            out = out + ' ' + card_line_label_tpl({
-                label: labels[i].name,
-                keyword: labels[i].keyword,
-                title: labels[i].title
+        return ' ' + _.map(labels, function (label) {
+            return card_line_label_tpl({
+                label: label.name,
+                keyword: label.keyword || '',
+                title: label.title,
+                cls: label.class || ''
             });
-        }
-        return out;
+        }).join(' ');
     }
 
     /**
@@ -1276,32 +1487,4 @@
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.kingsguard')) !== -1;
         }
     };
-
-    /**
-     * Checks if the current deck complies with the restricted list for joust.
-     * @return {boolean}
-     */
-    deck.is_joust_restricted_list_compliant = function is_joust_restricted_list_compliant()
-    {
-        return validate_deck_against_restricted_list(joust_restricted_list);
-    };
-
-    /**
-     * Checks if the current deck complies with the restricted list for melee.
-     * @return {boolean}
-     */
-    deck.is_melee_restricted_list_compliant = function is_melee_restricted_list_compliant()
-    {
-        return validate_deck_against_restricted_list(melee_restricted_list);
-    };
-
-    /**
-     * Checks if the current deck complies with the "banned" list.
-     * @return {boolean}
-     */
-    deck.is_banned_list_compliant = function is_banned_list_compliant()
-    {
-        return validate_against_banned_list();
-    }
-
 })(app.deck = {}, jQuery);
