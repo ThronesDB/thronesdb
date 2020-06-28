@@ -379,6 +379,16 @@ pag:
 card:
   podinfo_single: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir %card% en tu mazo.'
   podinfo_multiple: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir las siguientes cartas en tu mazo: %cards%.'
+  rl-joust:
+    title: "Su carta está en la la Lista Restringida Justa."
+  rl-melee:
+    title: "Su carta está en la Lista Restringida Contienda."
+  bl:
+    title: "Esta carta no es legal para torneos."
+  bl-joust:
+    title: "Esta carta no es legal para torneos de Justa."
+  bl-melee:
+    title: "Esta carta no es legal para torneos de Contienda."
   keywords:
     shadow: Sombra
   traits:
@@ -491,12 +501,6 @@ keyword:
   shadow:
     name: Sombra
     title: "A card with shadow (X) can be marshaled facedown into its controller’s shadows area for 2 gold. That card can later be played (if it is an event) or brought into play faceup (if it is a character, location, or attachment) by paying X gold."
-  rl-joust:
-    title: "This card is on the Joust Restricted List."
-  rl-melee:
-    title: "This card is on the Melee Restricted List."
-  banned:
-    title: "This card is not tournament legal."
 tournamentLegality:
   title: Tournament Legality
   joust: Justa

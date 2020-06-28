@@ -130,37 +130,7 @@
                 ]
             },
         ],
-        melee_restricted_list = [
-            "01001", // A Clash of Kings (Core)
-            "01013", // Heads on Spikes (Core)
-            "01043", // Superior Claim (Core)
-            "01078", // Great Kraken (Core)
-            "01119", // Doran's Game (Core)
-            "01162", // Khal Drogo (Core)
-            "02012", // Rise of the Kraken (TtB)
-            "02024", // Lady Sansa's Rose (TRtW)
-            "02060", // The Lord of the Crossing (TKP)
-            "03003", // Eddard Stark (WotN)
-            "03038", // To the Rose Banner! (WotN)
-            "04003", // Riverrun (AtSK)
-            "04118", // Relentless Assault (TC)
-            "05001", // Cersei Lannister (LoCR)
-            "05010", // Taena Merryweather (LoCR)
-            "05049", // Littlefinger's Meddling (LoCR)
-            "06004", // All Men Are Fools (AMAF)
-            "06011", // Drowned Disciple (AMAF)
-            "06039", // "The Dornishman's Wife" (GtR)
-            "06040", // The Annals of Castle Black (GtR)
-            "06098", // Flea Bottom (OR)
-            "07036", // Plaza of Pride (WotW)
-            "08098", // "The Song of the Seven" (TFM)
-            "08120", // You Win Or You Die (SAT)
-            "09028", // Corpse Lake (HoT)
-            "11054", // Queensguard (SoKL)
-            "11076", // A Mission in Essos (MoD)
-            "13107", // Robert Baratheon (LMHR)
-        ],
-        banned_list = [
+        joust_banned_list = [
             "03038", // To the Rose Banner! (WotN)
             "04001", // The Dragon's Tail (AtSK)
             "05010", // Taena Merryweather (LoCR)
@@ -194,6 +164,74 @@
             "16024", // Narrow Escape (TTWDFL)
             "16025", // Seductive Promise (TTWDFL)
             "16026", // Westeros Bleeds (TTWDFL)
+            "16031", // Benjen's Cache (TTWDFL)
+            "16032", // Rioting (TTWDFL)
+            "16033", // Rule By Decree (TTWDFL)
+            "16034", // Search and Detain (TTWDFL)
+            "16035", // The Art of Seduction (TTWDFL)
+            "16036", // The Gathering Storm (TTWDFL)
+        ],
+        melee_restricted_list = [
+            "01001", // A Clash of Kings (Core)
+            "01013", // Heads on Spikes (Core)
+            "01043", // Superior Claim (Core)
+            "01078", // Great Kraken (Core)
+            "01119", // Doran's Game (Core)
+            "01162", // Khal Drogo (Core)
+            "02012", // Rise of the Kraken (TtB)
+            "02024", // Lady Sansa's Rose (TRtW)
+            "02060", // The Lord of the Crossing (TKP)
+            "03003", // Eddard Stark (WotN)
+            "03038", // To the Rose Banner! (WotN)
+            "04003", // Riverrun (AtSK)
+            "04118", // Relentless Assault (TC)
+            "05001", // Cersei Lannister (LoCR)
+            "05010", // Taena Merryweather (LoCR)
+            "05049", // Littlefinger's Meddling (LoCR)
+            "06004", // All Men Are Fools (AMAF)
+            "06011", // Drowned Disciple (AMAF)
+            "06039", // "The Dornishman's Wife" (GtR)
+            "06040", // The Annals of Castle Black (GtR)
+            "06098", // Flea Bottom (OR)
+            "07036", // Plaza of Pride (WotW)
+            "08098", // "The Song of the Seven" (TFM)
+            "08120", // You Win Or You Die (SAT)
+            "09028", // Corpse Lake (HoT)
+            "11054", // Queensguard (SoKL)
+            "11076", // A Mission in Essos (MoD)
+            "13107", // Robert Baratheon (LMHR)
+        ],
+        melee_banned_list = [
+            "16001", // Ser Davos Seaworth (TTWDFL)
+            "16002", // Melisandre's Favor (TTWDFL)
+            "16003", // Wintertime Marauders (TTWDFL)
+            "16004", // Conquer (TTWDFL)
+            "16005", // Spider's Whisperer (TTWDFL)
+            "16006", // Wheels Within Wheels (TTWDFL)
+            "16007", // Prince's Loyalist (TTWDFL)
+            "16008", // You Murdered Her Children (TTWDFL)
+            "16009", // Samwell Tarly (TTWDFL)
+            "16010", // Old Bear Mormont (TTWDFL)
+            "16011", // Catelyn Stark (TTWDFL)
+            "16012", // Snow Castle (TTWDFL)
+            "16013", // Mad King Aerys (TTWDFL)
+            "16014", // The Hatchlings' Feast (TTWDFL)
+            "16015", // The Queen of Thorns (TTWDFL)
+            "16016", // Olenna's Study (TTWDFL)
+            "16017", // Littlefinger (TTWDFL)
+            "16018", // Vale Refugee (TTWDFL)
+            "16019", // High Ground (TTWDFL)
+            "16020", // King's Landing (TTWDFL)
+            "16021", // Harrenhal (TTWDFL)
+            "16022", // Sky Cell (TTWDFL)
+            "16023", // Heads on Pikes (TTWDFL)
+            "16024", // Narrow Escape (TTWDFL)
+            "16025", // Seductive Promise (TTWDFL)
+            "16026", // Westeros Bleeds (TTWDFL)
+            "16027", // Aloof and Apart (TTWDFL)
+            "16028", // Dark Wings, Dark Words (TTWDFL)
+            "16029", // Knights of the Realm (TTWDFL)
+            "16030", // The Long Voyage (TTWDFL)
             "16031", // Benjen's Cache (TTWDFL)
             "16032", // Rioting (TTWDFL)
             "16033", // Rule By Decree (TTWDFL)
@@ -251,12 +289,13 @@
     /*
      * Validates the current deck against a list of banned cards.
      * @param {Array} cards
+     * @param {Array} bannedList
      * @return {boolean}
      */
-    var validate_against_banned_list = function(cards) {
+    var validate_against_banned_list = function(cards, bannedList) {
         var i, n;
         for (i = 0, n = cards.length; i < n; i++) {
-            if (-1 !== banned_list.indexOf(cards[i].code)) {
+            if (-1 !== bannedList.indexOf(cards[i].code)) {
                 return false;
             }
         }
@@ -332,12 +371,21 @@
     };
 
     /*
-     * Checks if the current deck complies with the "banned" list.
+     * Checks if the current deck complies with a given joust banned list.
      * @param {Array} cards
      * @return {boolean}
      */
-    var is_banned_list_compliant = function(cards) {
-        return validate_against_banned_list(cards);
+    var is_joust_banned_list_compliant = function(cards) {
+        return validate_against_banned_list(cards, joust_banned_list);
+    }
+
+    /*
+     * Checks if the current deck complies with a given melee banned list.
+     * @param {Array} cards
+     * @return {boolean}
+     */
+    var is_melee_banned_list_compliant = function(cards) {
+        return validate_against_banned_list(cards, melee_banned_list);
     }
 
     /**
@@ -744,15 +792,14 @@
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
         var legalityContents = '<em>' + Translator.trans('tournamentLegality.title') +':</em> ';
-        var isBannedListCompliant = is_banned_list_compliant(cards);
-        if (isBannedListCompliant && is_joust_restricted_list_compliant(cards)) {
+        if (is_joust_banned_list_compliant(cards) && is_joust_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
         legalityContents += Translator.trans('tournamentLegality.joust') + '</span> | ';
 
-        if (isBannedListCompliant && is_melee_restricted_list_compliant(cards)) {
+        if (is_melee_banned_list_compliant(cards) && is_melee_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
@@ -1326,14 +1373,20 @@
             }
             return rhett;
         }
+        var isBannedInJoust = (-1 !== joust_banned_list.indexOf(card.code));
+        var isBannedInMelee = (-1 !== melee_banned_list.indexOf(card.code));
         if (-1 !== joust_restricted_list.indexOf(card.code)) {
-            labels.push({ name: '[J]', class: "rl-joust", title: Translator.trans('keyword.rl-joust.title') });
+            labels.push({ name: '[J]', class: "rl-joust", title: Translator.trans('card.rl-joust.title') });
         }
         if (-1 !== melee_restricted_list.indexOf(card.code)) {
-            labels.push({ name: '[M]', class: "rl-melee", title: Translator.trans('keyword.rl-melee.title') });
+            labels.push({ name: '[M]', class: "rl-melee", title: Translator.trans('card.rl-melee.title') });
         }
-        if (-1 !== banned_list.indexOf(card.code)) {
-            labels.push({ name: '[B]', class: "banned", title: Translator.trans('keyword.banned.title') });
+        if (isBannedInJoust && isBannedInMelee) {
+            labels.push({ name: '[B]', class: "banned", title: Translator.trans('card.bl.title') });
+        } else if (isBannedInJoust) {
+            labels.push({ name: '[B-J]', class: "banned", title: Translator.trans('card.bl-joust.title') });
+        } else if (isBannedInMelee) {
+            labels.push({ name: '[B-M]', class: "banned", title: Translator.trans('card.bl-melee.title') });
         }
 
         if (joust_pods_map.hasOwnProperty(card.code)) {
