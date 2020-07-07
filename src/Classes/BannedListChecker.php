@@ -56,6 +56,10 @@ class BannedListChecker
     ];
 
     const MELEE_BANNED_LIST = [
+        "03038", // To the Rose Banner! (WotN)
+        "05010", // Taena Merryweather (LoCR)
+        "05049", // Littlefinger's Meddling (LoCR)
+        "11076", // A Mission in Essos (MoD)
         "16001", // Ser Davos Seaworth (TTWDFL)
         "16002", // Melisandre's Favor (TTWDFL)
         "16003", // Wintertime Marauders (TTWDFL)
@@ -82,10 +86,6 @@ class BannedListChecker
         "16024", // Narrow Escape (TTWDFL)
         "16025", // Seductive Promise (TTWDFL)
         "16026", // Westeros Bleeds (TTWDFL)
-        "16027", // Aloof and Apart (TTWDFL)
-        "16028", // Dark Wings, Dark Words (TTWDFL)
-        "16029", // Knights of the Realm (TTWDFL)
-        "16030", // The Long Voyage (TTWDFL)
         "16031", // Benjen's Cache (TTWDFL)
         "16032", // Rioting (TTWDFL)
         "16033", // Rule By Decree (TTWDFL)
