@@ -427,6 +427,9 @@
             "config/bootstrap.php"
         ]
     },
+    "symfony/contracts": {
+        "version": "v1.1.0"
+    },
     "symfony/debug": {
         "version": "v3.4.40"
     },
@@ -444,6 +447,9 @@
     },
     "symfony/event-dispatcher": {
         "version": "v3.4.40"
+    },
+    "symfony/event-dispatcher-contracts": {
+        "version": "v1.1.7"
     },
     "symfony/expression-language": {
         "version": "v3.4.40"
