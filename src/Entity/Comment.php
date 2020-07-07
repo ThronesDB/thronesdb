@@ -64,10 +64,15 @@ class Comment
      */
     protected $decklist;
 
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -76,22 +81,14 @@ class Comment
     }
 
     /**
-     * Set text
-     *
      * @param string $text
-     *
-     * @return Comment
      */
     public function setText($text)
     {
         $this->text = $text;
-
-        return $this;
     }
 
     /**
-     * Get text
-     *
      * @return string
      */
     public function getText()
@@ -100,22 +97,14 @@ class Comment
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Comment
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -124,22 +113,14 @@ class Comment
     }
 
     /**
-     * Set isHidden
-     *
      * @param bool $isHidden
-     *
-     * @return Comment
      */
     public function setIsHidden($isHidden)
     {
         $this->isHidden = $isHidden;
-
-        return $this;
     }
 
     /**
-     * Get isHidden
-     *
      * @return bool
      */
     public function getIsHidden()
@@ -148,22 +129,14 @@ class Comment
     }
 
     /**
-     * Set user
-     *
      * @param User $user
-     *
-     * @return Comment
      */
     public function setUser(User $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
-     * Get user
-     *
      * @return User
      */
     public function getUser()
@@ -172,22 +145,14 @@ class Comment
     }
 
     /**
-     * Set decklist
-     *
      * @param Decklist $decklist
-     *
-     * @return Comment
      */
     public function setDecklist(Decklist $decklist = null)
     {
         $this->decklist = $decklist;
-
-        return $this;
     }
 
     /**
-     * Get decklist
-     *
      * @return Decklist
      */
     public function getDecklist()
