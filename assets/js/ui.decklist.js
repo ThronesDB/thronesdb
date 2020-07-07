@@ -113,7 +113,6 @@
             that.attr('title', that.data('original-tooltip'));
             $(that).removeClass('processing');
         });
-        ui.send_like.call($('.social .social-icon-like'), event);
     };
 
     ui.setup_comment_form = function setup_comment_form()
@@ -163,26 +162,26 @@
 
     ui.setup_social_icons = function setup_social_icons()
     {
-
-        if(!app.user.data || app.user.data.is_author || app.user.data.is_liked) {
-            var element = $('.social .social-icon-like');
-            element.replaceWith($('<span class="social-icon-like"></span').html(element.html()));
+        var element;
+        if(!app.user.data || app.user.data.is_author) {
+            element = $('.social .social-icon-like');
+            element.replaceWith($('<span class="social-icon-like"></span>').html(element.html()));
         }
 
         if(!app.user.data) {
-            var element = $('.social .social-icon-favorite');
-            element.replaceWith($('<span class="social-icon-favorite"></span').html(element.html()));
+            element = $('.social .social-icon-favorite');
+            element.replaceWith($('<span class="social-icon-favorite"></span>').html(element.html()));
         } else if(app.user.data.is_favorite) {
-            var element = $('.social .social-icon-favorite');
+            element = $('.social .social-icon-favorite');
             element.attr('title', "Remove from favorites");
         } else {
-            var element = $('.social .social-icon-favorite');
+            element = $('.social .social-icon-favorite');
             element.attr('title', "Add to favorites");
         }
 
         if(!app.user.data) {
-            var element = $('.social .social-icon-comment');
-            element.replaceWith($('<span class="social-icon-comment"></span').html(element.html()));
+            element = $('.social .social-icon-comment');
+            element.replaceWith($('<span class="social-icon-comment"></span>').html(element.html()));
         }
 
     };

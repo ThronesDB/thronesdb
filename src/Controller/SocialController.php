@@ -913,6 +913,13 @@ class SocialController extends Controller
                 $decklist->setDateUpdate(new DateTime());
                 $decklist->setNbVotes($decklist->getNbVotes() + 1);
                 $this->getDoctrine()->getManager()->flush();
+            } else {
+                $user->removeVote($decklist);
+                $author = $decklist->getUser();
+                $author->setReputation($author->getReputation() - 1);
+                $decklist->setDateUpdate(new DateTime());
+                $decklist->setNbVotes($decklist->getNbVotes() - 1);
+                $this->getDoctrine()->getManager()->flush();
             }
         }
 
