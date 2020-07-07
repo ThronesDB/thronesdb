@@ -269,8 +269,6 @@ class Card implements Serializable
     }
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -279,22 +277,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set position
-     *
      * @param int $position
-     *
-     * @return Card
      */
     public function setPosition($position)
     {
         $this->position = $position;
-
-        return $this;
     }
 
     /**
-     * Get position
-     *
      * @return int
      */
     public function getPosition()
@@ -303,22 +293,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set code
-     *
      * @param string $code
-     *
-     * @return Card
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
      * @return string
      */
     public function getCode()
@@ -327,22 +309,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set name
-     *
      * @param string $name
-     *
-     * @return Card
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
     public function getName()
@@ -351,22 +325,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set cost
-     *
      * @param string $cost
-     *
-     * @return Card
      */
     public function setCost($cost)
     {
         $this->cost = $cost;
-
-        return $this;
     }
 
     /**
-     * Get cost
-     *
      * @return string
      */
     public function getCost()
@@ -375,22 +341,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set text
-     *
      * @param string $text
-     *
-     * @return Card
      */
     public function setText($text)
     {
         $this->text = $text;
-
-        return $this;
     }
 
     /**
-     * Get text
-     *
      * @return string
      */
     public function getText()
@@ -399,22 +357,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Card
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -423,22 +373,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return Card
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
      * @return DateTime
      */
     public function getDateUpdate()
@@ -447,22 +389,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set quantity
-     *
      * @param int $quantity
-     *
-     * @return Card
      */
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
-
-        return $this;
     }
 
     /**
-     * Get quantity
-     *
      * @return int
      */
     public function getQuantity()
@@ -471,22 +405,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set income
-     *
      * @param int $income
-     *
-     * @return Card
      */
     public function setIncome($income)
     {
         $this->income = $income;
-
-        return $this;
     }
 
     /**
-     * Get income
-     *
      * @return int
      */
     public function getIncome()
@@ -495,22 +421,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set initiative
-     *
      * @param int $initiative
-     *
-     * @return Card
      */
     public function setInitiative($initiative)
     {
         $this->initiative = $initiative;
-
-        return $this;
     }
 
     /**
-     * Get initiative
-     *
      * @return int
      */
     public function getInitiative()
@@ -519,22 +437,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set claim
-     *
      * @param int $claim
-     *
-     * @return Card
      */
     public function setClaim($claim)
     {
         $this->claim = $claim;
-
-        return $this;
     }
 
     /**
-     * Get claim
-     *
      * @return int
      */
     public function getClaim()
@@ -543,22 +453,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set reserve
-     *
      * @param int $reserve
-     *
-     * @return Card
      */
     public function setReserve($reserve)
     {
         $this->reserve = $reserve;
-
-        return $this;
     }
 
     /**
-     * Get reserve
-     *
      * @return int
      */
     public function getReserve()
@@ -567,22 +469,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set deckLimit
-     *
      * @param int $deckLimit
-     *
-     * @return Card
      */
     public function setDeckLimit($deckLimit)
     {
         $this->deckLimit = $deckLimit;
-
-        return $this;
     }
 
     /**
-     * Get deckLimit
-     *
      * @return int
      */
     public function getDeckLimit()
@@ -591,22 +485,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set strength
-     *
      * @param int $strength
-     *
-     * @return Card
      */
     public function setStrength($strength)
     {
         $this->strength = $strength;
-
-        return $this;
     }
 
     /**
-     * Get strength
-     *
      * @return int
      */
     public function getStrength()
@@ -615,22 +501,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set traits
-     *
      * @param string $traits
-     *
-     * @return Card
      */
     public function setTraits($traits)
     {
         $this->traits = $traits;
-
-        return $this;
     }
 
     /**
-     * Get traits
-     *
      * @return string
      */
     public function getTraits()
@@ -639,22 +517,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set flavor
-     *
      * @param string $flavor
-     *
-     * @return Card
      */
     public function setFlavor($flavor)
     {
         $this->flavor = $flavor;
-
-        return $this;
     }
 
     /**
-     * Get flavor
-     *
      * @return string
      */
     public function getFlavor()
@@ -663,22 +533,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set illustrator
-     *
      * @param string $illustrator
-     *
-     * @return Card
      */
     public function setIllustrator($illustrator)
     {
         $this->illustrator = $illustrator;
-
-        return $this;
     }
 
     /**
-     * Get illustrator
-     *
      * @return string
      */
     public function getIllustrator()
@@ -687,22 +549,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set isUnique
-     *
      * @param bool $isUnique
-     *
-     * @return Card
      */
     public function setIsUnique($isUnique)
     {
         $this->isUnique = $isUnique;
-
-        return $this;
     }
 
     /**
-     * Get isUnique
-     *
      * @return bool
      */
     public function getIsUnique()
@@ -711,22 +565,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set isLoyal
-     *
      * @param bool $isLoyal
-     *
-     * @return Card
      */
     public function setIsLoyal($isLoyal)
     {
         $this->isLoyal = $isLoyal;
-
-        return $this;
     }
 
     /**
-     * Get isLoyal
-     *
      * @return bool
      */
     public function getIsLoyal()
@@ -735,22 +581,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set isMilitary
-     *
      * @param bool $isMilitary
-     *
-     * @return Card
      */
     public function setIsMilitary($isMilitary)
     {
         $this->isMilitary = $isMilitary;
-
-        return $this;
     }
 
     /**
-     * Get isMilitary
-     *
      * @return bool
      */
     public function getIsMilitary()
@@ -759,22 +597,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set isIntrigue
-     *
      * @param bool $isIntrigue
-     *
-     * @return Card
      */
     public function setIsIntrigue($isIntrigue)
     {
         $this->isIntrigue = $isIntrigue;
-
-        return $this;
     }
 
     /**
-     * Get isIntrigue
-     *
      * @return bool
      */
     public function getIsIntrigue()
@@ -783,22 +613,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set isPower
-     *
      * @param bool $isPower
-     *
-     * @return Card
      */
     public function setIsPower($isPower)
     {
         $this->isPower = $isPower;
-
-        return $this;
     }
 
     /**
-     * Get isPower
-     *
      * @return bool
      */
     public function getIsPower()
@@ -807,22 +629,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set octgnId
-     *
      * @param bool $octgnId
-     *
-     * @return Card
      */
     public function setOctgnId($octgnId)
     {
         $this->octgnId = $octgnId;
-
-        return $this;
     }
 
     /**
-     * Get octgnId
-     *
      * @return bool
      */
     public function getOctgnId()
@@ -831,22 +645,14 @@ class Card implements Serializable
     }
 
     /**
-     * Add review
-     *
      * @param Review $review
-     *
-     * @return Card
      */
     public function addReview(Review $review)
     {
-        $this->reviews[] = $review;
-
-        return $this;
+        $this->reviews->add($review);
     }
 
     /**
-     * Remove review
-     *
      * @param Review $review
      */
     public function removeReview(Review $review)
@@ -855,8 +661,6 @@ class Card implements Serializable
     }
 
     /**
-     * Get reviews
-     *
      * @return Collection
      */
     public function getReviews()
@@ -865,22 +669,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set pack
-     *
      * @param Pack $pack
-     *
-     * @return Card
      */
     public function setPack(Pack $pack = null)
     {
         $this->pack = $pack;
-
-        return $this;
     }
 
     /**
-     * Get pack
-     *
      * @return Pack
      */
     public function getPack()
@@ -889,22 +685,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set type
-     *
      * @param Type $type
-     *
-     * @return Card
      */
     public function setType(Type $type = null)
     {
         $this->type = $type;
-
-        return $this;
     }
 
     /**
-     * Get type
-     *
      * @return Type
      */
     public function getType()
@@ -913,22 +701,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set faction
-     *
      * @param Faction $faction
-     *
-     * @return Card
      */
     public function setFaction(Faction $faction = null)
     {
         $this->faction = $faction;
-
-        return $this;
     }
 
     /**
-     * Get faction
-     *
      * @return Faction
      */
     public function getFaction()
@@ -967,22 +747,14 @@ class Card implements Serializable
     }
 
     /**
-     * Set designer
-     *
      * @param string $designer
-     *
-     * @return Card
      */
     public function setDesigner($designer)
     {
         $this->designer = $designer;
-
-        return $this;
     }
 
     /**
-     * Get designer
-     *
      * @return string
      */
     public function getDesigner()
@@ -1000,14 +772,10 @@ class Card implements Serializable
 
     /**
      * @param bool $isMultiple
-     *
-     * @return self
      */
-    public function setIsMultiple(bool $isMultiple): self
+    public function setIsMultiple(bool $isMultiple)
     {
         $this->isMultiple = $isMultiple;
-
-        return $this;
     }
 
     /**
@@ -1020,14 +788,10 @@ class Card implements Serializable
 
     /**
      * @param string $imageUrl
-     *
-     * @return self
      */
-    public function setImageUrl(string $imageUrl): self
+    public function setImageUrl(string $imageUrl)
     {
         $this->imageUrl = $imageUrl;
-
-        return $this;
     }
 
     /**
@@ -1046,7 +810,7 @@ class Card implements Serializable
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function serialize()
     {
@@ -1129,7 +893,7 @@ class Card implements Serializable
     }
 
     /**
-     * @param string $serialized
+     * @inheritdoc
      * @throws Exception
      */
     public function unserialize($serialized)
@@ -1145,6 +909,11 @@ class Card implements Serializable
         return $this->name ?: '';
     }
 
+    /**
+     * Converts a given snake_cased text to CamelCase.
+     * @param string $snake
+     * @return string
+     */
     protected function snakeToCamel($snake)
     {
         $parts = explode('_', $snake);
