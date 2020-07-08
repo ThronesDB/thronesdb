@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e9bdcbde4dd93680be60eff333b7477",
+    "content-hash": "e237ba58601203474ec60438c903258a",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -7217,20 +7217,20 @@
         },
         {
             "name": "symfony/templating",
-            "version": "v3.4.42",
+            "version": "v4.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/templating.git",
-                "reference": "46eb3f66e3f7bd65b06ee43303a60c5b78902bba"
+                "reference": "c28d2d167b7e8487b1f14f2da358ce19e703d14b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/templating/zipball/46eb3f66e3f7bd65b06ee43303a60c5b78902bba",
-                "reference": "46eb3f66e3f7bd65b06ee43303a60c5b78902bba",
+                "url": "https://api.github.com/repos/symfony/templating/zipball/c28d2d167b7e8487b1f14f2da358ce19e703d14b",
+                "reference": "c28d2d167b7e8487b1f14f2da358ce19e703d14b",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9|>=7.0.8",
+                "php": ">=7.1.3",
                 "symfony/polyfill-ctype": "~1.8"
             },
             "require-dev": {
@@ -7242,7 +7242,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.4-dev"
+                    "dev-master": "4.4-dev"
                 }
             },
             "autoload": {
@@ -7283,7 +7283,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-03-15T09:38:08+00:00"
+            "time": "2020-05-26T09:42:42+00:00"
         },
         {
             "name": "symfony/translation",
