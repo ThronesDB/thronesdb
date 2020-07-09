@@ -114,8 +114,14 @@ class Review
     }
 
     /**
-     * Get id
-     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -124,22 +130,14 @@ class Review
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Review
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -148,22 +146,14 @@ class Review
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return Review
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
      * @return DateTime
      */
     public function getDateUpdate()
@@ -172,22 +162,14 @@ class Review
     }
 
     /**
-     * Set textMd
-     *
      * @param string $textMd
-     *
-     * @return Review
      */
     public function setTextMd($textMd)
     {
         $this->textMd = $textMd;
-
-        return $this;
     }
 
     /**
-     * Get textMd
-     *
      * @return string
      */
     public function getTextMd()
@@ -196,22 +178,14 @@ class Review
     }
 
     /**
-     * Set textHtml
-     *
      * @param string $textHtml
-     *
-     * @return Review
      */
     public function setTextHtml($textHtml)
     {
         $this->textHtml = $textHtml;
-
-        return $this;
     }
 
     /**
-     * Get textHtml
-     *
      * @return string
      */
     public function getTextHtml()
@@ -220,22 +194,14 @@ class Review
     }
 
     /**
-     * Set nbVotes
-     *
      * @param int $nbVotes
-     *
-     * @return Review
      */
     public function setNbVotes($nbVotes)
     {
         $this->nbVotes = $nbVotes;
-
-        return $this;
     }
 
     /**
-     * Get nbVotes
-     *
      * @return int
      */
     public function getNbVotes()
@@ -244,32 +210,22 @@ class Review
     }
 
     /**
-     * Add comment
-     *
-     * @param \App\Entity\Reviewcomment $comment
-     *
-     * @return Review
+     * @param Reviewcomment $comment
      */
-    public function addComment(\App\Entity\Reviewcomment $comment)
+    public function addComment(Reviewcomment $comment)
     {
-        $this->comments[] = $comment;
-
-        return $this;
+        $this->comments->add($comment);
     }
 
     /**
-     * Remove comment
-     *
-     * @param \App\Entity\Reviewcomment $comment
+     * @param Reviewcomment $comment
      */
-    public function removeComment(\App\Entity\Reviewcomment $comment)
+    public function removeComment(Reviewcomment $comment)
     {
         $this->comments->removeElement($comment);
     }
 
     /**
-     * Get comments
-     *
      * @return Collection
      */
     public function getComments()
@@ -278,22 +234,14 @@ class Review
     }
 
     /**
-     * Set card
-     *
      * @param Card $card
-     *
-     * @return Review
      */
     public function setCard(Card $card = null)
     {
         $this->card = $card;
-
-        return $this;
     }
 
     /**
-     * Get card
-     *
      * @return Card
      */
     public function getCard()
@@ -302,22 +250,14 @@ class Review
     }
 
     /**
-     * Set user
-     *
      * @param User $user
-     *
-     * @return Review
      */
     public function setUser(User $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
-     * Get user
-     *
      * @return User
      */
     public function getUser()
@@ -326,22 +266,14 @@ class Review
     }
 
     /**
-     * Add vote
-     *
      * @param User $vote
-     *
-     * @return Review
      */
     public function addVote(User $vote)
     {
-        $this->votes[] = $vote;
-
-        return $this;
+        $this->votes->add($vote);
     }
 
     /**
-     * Remove vote
-     *
      * @param User $vote
      */
     public function removeVote(User $vote)
@@ -350,8 +282,6 @@ class Review
     }
 
     /**
-     * Get votes
-     *
      * @return Collection
      */
     public function getVotes()

@@ -200,22 +200,22 @@ class User extends BaseUser
     }
 
     /**
-     * Set dateCreation
-     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @param DateTime $dateCreation
-     *
-     * @return User
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -224,22 +224,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return User
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
      * @return DateTime
      */
     public function getDateUpdate()
@@ -248,22 +240,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set reputation
-     *
      * @param int $reputation
-     *
-     * @return User
      */
     public function setReputation($reputation)
     {
         $this->reputation = $reputation;
-
-        return $this;
     }
 
     /**
-     * Get reputation
-     *
      * @return int
      */
     public function getReputation()
@@ -272,22 +256,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set resume
-     *
      * @param string $resume
-     *
-     * @return User
      */
     public function setResume($resume)
     {
         $this->resume = $resume;
-
-        return $this;
     }
 
     /**
-     * Get resume
-     *
      * @return string
      */
     public function getResume()
@@ -296,22 +272,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set color
-     *
      * @param string $color
-     *
-     * @return User
      */
     public function setColor($color)
     {
         $this->color = $color;
-
-        return $this;
     }
 
     /**
-     * Get color
-     *
      * @return string
      */
     public function getColor()
@@ -320,22 +288,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set donation
-     *
      * @param int $donation
-     *
-     * @return User
      */
     public function setDonation($donation)
     {
         $this->donation = $donation;
-
-        return $this;
     }
 
     /**
-     * Get donation
-     *
      * @return int
      */
     public function getDonation()
@@ -344,22 +304,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifAuthor
-     *
      * @param bool $isNotifAuthor
-     *
-     * @return User
      */
     public function setIsNotifAuthor($isNotifAuthor)
     {
         $this->isNotifAuthor = $isNotifAuthor;
-
-        return $this;
     }
 
     /**
-     * Get isNotifAuthor
-     *
      * @return bool
      */
     public function getIsNotifAuthor()
@@ -368,22 +320,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifCommenter
-     *
      * @param bool $isNotifCommenter
-     *
-     * @return User
      */
     public function setIsNotifCommenter($isNotifCommenter)
     {
         $this->isNotifCommenter = $isNotifCommenter;
-
-        return $this;
     }
 
     /**
-     * Get isNotifCommenter
-     *
      * @return bool
      */
     public function getIsNotifCommenter()
@@ -392,22 +336,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifMention
-     *
      * @param bool $isNotifMention
-     *
-     * @return User
      */
     public function setIsNotifMention($isNotifMention)
     {
         $this->isNotifMention = $isNotifMention;
-
-        return $this;
     }
 
     /**
-     * Get isNotifMention
-     *
      * @return bool
      */
     public function getIsNotifMention()
@@ -416,22 +352,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifFollow
-     *
      * @param bool $isNotifFollow
-     *
-     * @return User
      */
     public function setIsNotifFollow($isNotifFollow)
     {
         $this->isNotifFollow = $isNotifFollow;
-
-        return $this;
     }
 
     /**
-     * Get isNotifFollow
-     *
      * @return bool
      */
     public function getIsNotifFollow()
@@ -440,22 +368,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifSuccessor
-     *
      * @param bool $isNotifSuccessor
-     *
-     * @return User
      */
     public function setIsNotifSuccessor($isNotifSuccessor)
     {
         $this->isNotifSuccessor = $isNotifSuccessor;
-
-        return $this;
     }
 
     /**
-     * Get isNotifSuccessor
-     *
      * @return bool
      */
     public function getIsNotifSuccessor()
@@ -464,22 +384,14 @@ class User extends BaseUser
     }
 
     /**
-     * Set isShareDecks
-     *
      * @param bool $isShareDecks
-     *
-     * @return User
      */
     public function setIsShareDecks($isShareDecks)
     {
         $this->isShareDecks = $isShareDecks;
-
-        return $this;
     }
 
     /**
-     * Get isShareDecks
-     *
      * @return bool
      */
     public function getIsShareDecks()
@@ -488,22 +400,14 @@ class User extends BaseUser
     }
 
     /**
-     * Add deck
-     *
      * @param Deck $deck
-     *
-     * @return User
      */
     public function addDeck(Deck $deck)
     {
-        $this->decks[] = $deck;
-
-        return $this;
+        $this->decks->add($deck);
     }
 
     /**
-     * Remove deck
-     *
      * @param Deck $deck
      */
     public function removeDeck(Deck $deck)
@@ -512,8 +416,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get decks
-     *
      * @return Collection
      */
     public function getDecks()
@@ -522,22 +424,14 @@ class User extends BaseUser
     }
 
     /**
-     * Add decklist
-     *
      * @param Decklist $decklist
-     *
-     * @return User
      */
     public function addDecklist(Decklist $decklist)
     {
-        $this->decklists[] = $decklist;
-
-        return $this;
+        $this->decklists->add($decklist);
     }
 
     /**
-     * Remove decklist
-     *
      * @param Decklist $decklist
      */
     public function removeDecklist(Decklist $decklist)
@@ -546,8 +440,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get decklists
-     *
      * @return Collection
      */
     public function getDecklists()
@@ -556,22 +448,14 @@ class User extends BaseUser
     }
 
     /**
-     * Add comment
-     *
      * @param Comment $comment
-     *
-     * @return User
      */
     public function addComment(Comment $comment)
     {
-        $this->comments[] = $comment;
-
-        return $this;
+        $this->comments->add($comment);
     }
 
     /**
-     * Remove comment
-     *
      * @param Comment $comment
      */
     public function removeComment(Comment $comment)
@@ -580,8 +464,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get comments
-     *
      * @return Collection
      */
     public function getComments()
@@ -590,22 +472,14 @@ class User extends BaseUser
     }
 
     /**
-     * Add review
-     *
      * @param Review $review
-     *
-     * @return User
      */
     public function addReview(Review $review)
     {
-        $this->reviews[] = $review;
-
-        return $this;
+        $this->reviews->add($review);
     }
 
     /**
-     * Remove review
-     *
      * @param Review $review
      */
     public function removeReview(Review $review)
@@ -614,8 +488,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get reviews
-     *
      * @return Collection
      */
     public function getReviews()
@@ -624,23 +496,15 @@ class User extends BaseUser
     }
 
     /**
-     * Add favorite
-     *
      * @param Decklist $favorite
-     *
-     * @return User
      */
     public function addFavorite(Decklist $favorite)
     {
         $favorite->addFavorite($this);
-        $this->favorites[] = $favorite;
-
-        return $this;
+        $this->favorites->add($favorite);
     }
 
     /**
-     * Remove favorite
-     *
      * @param Decklist $favorite
      */
     public function removeFavorite(Decklist $favorite)
@@ -650,8 +514,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get favorites
-     *
      * @return Collection
      */
     public function getFavorites()
@@ -660,23 +522,15 @@ class User extends BaseUser
     }
 
     /**
-     * Add vote
-     *
      * @param Decklist $vote
-     *
-     * @return User
      */
     public function addVote(Decklist $vote)
     {
         $vote->addVote($this);
-        $this->votes[] = $vote;
-
-        return $this;
+        $this->votes->add($vote);
     }
 
     /**
-     * Remove vote
-     *
      * @param Decklist $vote
      */
     public function removeVote(Decklist $vote)
@@ -686,8 +540,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get votes
-     *
      * @return Collection
      */
     public function getVotes()
@@ -696,22 +548,14 @@ class User extends BaseUser
     }
 
     /**
-     * Add reviewvote
-     *
      * @param Review $reviewvote
-     *
-     * @return User
      */
     public function addReviewvote(Review $reviewvote)
     {
-        $this->reviewvotes[] = $reviewvote;
-
-        return $this;
+        $this->reviewvotes->add($reviewvote);
     }
 
     /**
-     * Remove reviewvote
-     *
      * @param Review $reviewvote
      */
     public function removeReviewvote(Review $reviewvote)
@@ -720,8 +564,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get reviewvotes
-     *
      * @return Collection
      */
     public function getReviewvotes()
@@ -730,22 +572,14 @@ class User extends BaseUser
     }
 
     /**
-     * Add following
-     *
      * @param User $following
-     *
-     * @return User
      */
     public function addFollowing(User $following)
     {
-        $this->following[] = $following;
-
-        return $this;
+        $this->following->add($following);
     }
 
     /**
-     * Remove following
-     *
      * @param User $following
      */
     public function removeFollowing(User $following)
@@ -754,8 +588,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get following
-     *
      * @return Collection
      */
     public function getFollowing()
@@ -764,22 +596,14 @@ class User extends BaseUser
     }
 
     /**
-     * Add follower
-     *
      * @param User $follower
-     *
-     * @return User
      */
     public function addFollower(User $follower)
     {
-        $this->followers[] = $follower;
-
-        return $this;
+        $this->followers->add($follower);
     }
 
     /**
-     * Remove follower
-     *
      * @param User $follower
      */
     public function removeFollower(User $follower)
@@ -788,8 +612,6 @@ class User extends BaseUser
     }
 
     /**
-     * Get followers
-     *
      * @return Collection
      */
     public function getFollowers()

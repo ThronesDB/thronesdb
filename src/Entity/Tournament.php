@@ -61,8 +61,6 @@ class Tournament
     }
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -71,11 +69,7 @@ class Tournament
     }
 
     /**
-     * Set description
-     *
      * @param string $description
-     *
-     * @return Tournament
      */
     public function setDescription($description)
     {
@@ -85,8 +79,6 @@ class Tournament
     }
 
     /**
-     * Get description
-     *
      * @return string
      */
     public function getDescription()
@@ -111,22 +103,14 @@ class Tournament
     }
 
     /**
-     * Add decklist
-     *
      * @param Decklist $decklist
-     *
-     * @return Tournament
      */
     public function addDecklist(Decklist $decklist)
     {
-        $this->decklists[] = $decklist;
-
-        return $this;
+        $this->decklists->add($decklist);
     }
 
     /**
-     * Remove decklist
-     *
      * @param Decklist $decklist
      */
     public function removeDecklist(Decklist $decklist)
@@ -135,8 +119,6 @@ class Tournament
     }
 
     /**
-     * Get decklists
-     *
      * @return Collection
      */
     public function getDecklists()

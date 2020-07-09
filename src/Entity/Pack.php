@@ -114,17 +114,13 @@ class Pack implements Serializable
 
     /**
      * @param int $id
-     * @return Pack
      */
     public function setId($id)
     {
         $this->id = $id;
-        return $this;
     }
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -133,22 +129,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set code
-     *
      * @param string $code
-     *
-     * @return Pack
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
      * @return string
      */
     public function getCode()
@@ -157,22 +145,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set name
-     *
      * @param string $name
-     *
-     * @return Pack
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
     public function getName()
@@ -181,22 +161,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set position
-     *
      * @param int $position
-     *
-     * @return Pack
      */
     public function setPosition($position)
     {
         $this->position = $position;
-
-        return $this;
     }
 
     /**
-     * Get position
-     *
      * @return int
      */
     public function getPosition()
@@ -205,22 +177,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set size
-     *
      * @param int $size
-     *
-     * @return Pack
      */
     public function setSize($size)
     {
         $this->size = $size;
-
-        return $this;
     }
 
     /**
-     * Get size
-     *
      * @return int
      */
     public function getSize()
@@ -229,22 +193,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Pack
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -253,22 +209,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return Pack
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
      * @return DateTime
      */
     public function getDateUpdate()
@@ -277,22 +225,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set dateRelease
-     *
      * @param DateTime $dateRelease
-     *
-     * @return Pack
      */
     public function setDateRelease($dateRelease)
     {
         $this->dateRelease = $dateRelease;
-
-        return $this;
     }
 
     /**
-     * Get dateRelease
-     *
      * @return DateTime
      */
     public function getDateRelease()
@@ -301,22 +241,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set cgdbId
-     *
      * @param int $cgdbId
-     *
-     * @return Pack
      */
     public function setCgdbId($cgdbId)
     {
         $this->cgdbId = $cgdbId;
-
-        return $this;
     }
 
     /**
-     * Get cgdbId
-     *
      * @return int
      */
     public function getCgdbId()
@@ -325,32 +257,22 @@ class Pack implements Serializable
     }
 
     /**
-     * Add card
-     *
-     * @param \App\Entity\Card $card
-     *
-     * @return Pack
+     * @param Card $card
      */
-    public function addCard(\App\Entity\Card $card)
+    public function addCard(Card $card)
     {
-        $this->cards[] = $card;
-
-        return $this;
+        $this->cards->add($card);
     }
 
     /**
-     * Remove card
-     *
-     * @param \App\Entity\Card $card
+     * @param Card $card
      */
-    public function removeCard(\App\Entity\Card $card)
+    public function removeCard(Card $card)
     {
         $this->cards->removeElement($card);
     }
 
     /**
-     * Get cards
-     *
      * @return Collection
      */
     public function getCards()
@@ -359,22 +281,14 @@ class Pack implements Serializable
     }
 
     /**
-     * Set cycle
-     *
      * @param Cycle $cycle
-     *
-     * @return Pack
      */
     public function setCycle(Cycle $cycle = null)
     {
         $this->cycle = $cycle;
-
-        return $this;
     }
 
     /**
-     * Get cycle
-     *
      * @return Cycle
      */
     public function getCycle()
@@ -382,6 +296,9 @@ class Pack implements Serializable
         return $this->cycle;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return [
@@ -396,7 +313,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param string $serialized
+     * @inheritdoc
      * @throws Exception
      */
     public function unserialize($serialized)
@@ -404,6 +321,9 @@ class Pack implements Serializable
         throw new Exception("unserialize() method unsupported");
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->name ?: '';

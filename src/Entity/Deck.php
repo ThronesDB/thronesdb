@@ -174,6 +174,13 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
+     * @param $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    /**
      * @inheritdoc
      */
     public function getId()
@@ -182,17 +189,11 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set name
-     *
      * @param string $name
-     *
-     * @return Deck
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -204,17 +205,11 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Deck
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
@@ -226,17 +221,11 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return Deck
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
@@ -248,17 +237,11 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set descriptionMd
-     *
      * @param string $descriptionMd
-     *
-     * @return Deck
      */
     public function setDescriptionMd($descriptionMd)
     {
         $this->descriptionMd = $descriptionMd;
-
-        return $this;
     }
 
     /**
@@ -270,22 +253,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set problem
-     *
      * @param string $problem
-     *
-     * @return Deck
      */
     public function setProblem($problem)
     {
         $this->problem = $problem;
-
-        return $this;
     }
 
     /**
-     * Get problem
-     *
      * @return string
      */
     public function getProblem()
@@ -294,22 +269,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set tags
-     *
      * @param string $tags
-     *
-     * @return Deck
      */
     public function setTags($tags)
     {
         $this->tags = $tags;
-
-        return $this;
     }
 
     /**
-     * Get tags
-     *
      * @return string
      */
     public function getTags()
@@ -326,22 +293,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add slot
-     *
      * @param Deckslot $slot
-     *
-     * @return Deck
      */
     public function addSlot(Deckslot $slot)
     {
-        $this->slots[] = $slot;
-
-        return $this;
+        $this->slots->add($slot);
     }
 
     /**
-     * Remove slot
-     *
      * @param Deckslot $slot
      */
     public function removeSlot(Deckslot $slot)
@@ -350,22 +309,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add child
-     *
      * @param Decklist $child
-     *
-     * @return Deck
      */
     public function addChild(Decklist $child)
     {
-        $this->children[] = $child;
-
-        return $this;
+        $this->children->add($child);
     }
 
     /**
-     * Remove child
-     *
      * @param Decklist $child
      */
     public function removeChild(Decklist $child)
@@ -374,8 +325,6 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Get children
-     *
      * @return Collection
      */
     public function getChildren()
@@ -384,22 +333,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add change
-     *
      * @param Deckchange $change
-     *
-     * @return Deck
      */
     public function addChange(Deckchange $change)
     {
-        $this->changes[] = $change;
-
-        return $this;
+        $this->changes->add($change);
     }
 
     /**
-     * Remove change
-     *
      * @param Deckchange $change
      */
     public function removeChange(Deckchange $change)
@@ -408,8 +349,6 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Get changes
-     *
      * @return Collection
      */
     public function getChanges()
@@ -426,17 +365,11 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set user
-     *
      * @param User $user
-     *
-     * @return Deck
      */
     public function setUser(User $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
@@ -448,36 +381,22 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set faction
-     *
      * @param Faction $faction
-     *
-     * @return Deck
      */
     public function setFaction(Faction $faction = null)
     {
         $this->faction = $faction;
-
-        return $this;
     }
 
     /**
-     * Set lastPack
-     *
      * @param Pack $lastPack
-     *
-     * @return Deck
      */
     public function setLastPack(Pack $lastPack = null)
     {
         $this->lastPack = $lastPack;
-
-        return $this;
     }
 
     /**
-     * Get lastPack
-     *
      * @return Pack
      */
     public function getLastPack()
@@ -486,22 +405,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set parent
-     *
      * @param Decklist $parent
-     *
-     * @return Deck
      */
     public function setParent(Decklist $parent = null)
     {
         $this->parent = $parent;
-
-        return $this;
     }
 
     /**
-     * Get parent
-     *
      * @return Decklist
      */
     public function getParent()
@@ -510,22 +421,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set majorVersion
-     *
      * @param int $majorVersion
-     *
-     * @return Deck
      */
     public function setMajorVersion($majorVersion)
     {
         $this->majorVersion = $majorVersion;
-
-        return $this;
     }
 
     /**
-     * Get majorVersion
-     *
      * @return int
      */
     public function getMajorVersion()
@@ -534,22 +437,14 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set minorVersion
-     *
      * @param int $minorVersion
-     *
-     * @return Deck
      */
     public function setMinorVersion($minorVersion)
     {
         $this->minorVersion = $minorVersion;
-
-        return $this;
     }
 
     /**
-     * Get minorVersion
-     *
      * @return int
      */
     public function getMinorVersion()
@@ -709,12 +604,17 @@ class Deck extends BaseDeck implements JsonSerializable
         return false;
     }
 
+    /**
+     * @param UuidInterface $uuid
+     */
     public function setUuid($uuid)
     {
         $this->uuid = $uuid;
-        return $this;
     }
 
+    /**
+     * @return UuidInterface|null
+     */
     public function getUuid()
     {
         return $this->uuid;

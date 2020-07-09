@@ -67,8 +67,14 @@ class Reviewcomment
     protected $review;
 
     /**
-     * Get id
-     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -77,22 +83,14 @@ class Reviewcomment
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Reviewcomment
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -101,22 +99,14 @@ class Reviewcomment
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return Reviewcomment
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
      * @return DateTime
      */
     public function getDateUpdate()
@@ -125,22 +115,14 @@ class Reviewcomment
     }
 
     /**
-     * Set text
-     *
      * @param string $text
-     *
-     * @return Reviewcomment
      */
     public function setText($text)
     {
         $this->text = $text;
-
-        return $this;
     }
 
     /**
-     * Get text
-     *
      * @return string
      */
     public function getText()
@@ -149,22 +131,14 @@ class Reviewcomment
     }
 
     /**
-     * Set user
-     *
      * @param User $user
-     *
-     * @return Reviewcomment
      */
     public function setUser(User $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
-     * Get user
-     *
      * @return User
      */
     public function getUser()
@@ -173,22 +147,14 @@ class Reviewcomment
     }
 
     /**
-     * Set review
-     *
      * @param Review $review
-     *
-     * @return Reviewcomment
      */
     public function setReview(Review $review = null)
     {
         $this->review = $review;
-
-        return $this;
     }
 
     /**
-     * Get review
-     *
      * @return Review
      */
     public function getReview()

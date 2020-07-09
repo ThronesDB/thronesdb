@@ -6,7 +6,9 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Serializable;
 
 /**
  * Cycle
@@ -15,7 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="App\Repository\CycleRepository")
  */
 
-class Cycle implements \Serializable
+class Cycle implements Serializable
 {
     /**
      * @var int
@@ -81,7 +83,7 @@ class Cycle implements \Serializable
     protected $packs;
 
     /**
-     * Constructor
+     * Cycle constructor.
      */
     public function __construct()
     {
@@ -89,8 +91,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Get id
-     *
+     * @param $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -99,22 +107,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set code
-     *
      * @param string $code
-     *
-     * @return Cycle
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
      * @return string
      */
     public function getCode()
@@ -123,22 +123,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set name
-     *
      * @param string $name
-     *
-     * @return Cycle
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
     public function getName()
@@ -147,22 +139,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set position
-     *
      * @param int $position
-     *
-     * @return Cycle
      */
     public function setPosition($position)
     {
         $this->position = $position;
-
-        return $this;
     }
 
     /**
-     * Get position
-     *
      * @return int
      */
     public function getPosition()
@@ -171,22 +155,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set size
-     *
      * @param int $size
-     *
-     * @return Cycle
      */
     public function setSize($size)
     {
         $this->size = $size;
-
-        return $this;
     }
 
     /**
-     * Get size
-     *
      * @return int
      */
     public function getSize()
@@ -195,22 +171,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Cycle
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -219,22 +187,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return Cycle
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
      * @return DateTime
      */
     public function getDateUpdate()
@@ -243,22 +203,14 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Add pack
-     *
      * @param Pack $pack
-     *
-     * @return Cycle
      */
     public function addPack(Pack $pack)
     {
-        $this->packs[] = $pack;
-
-        return $this;
+        $this->packs->add($pack);
     }
 
     /**
-     * Remove pack
-     *
      * @param Pack $pack
      */
     public function removePack(Pack $pack)
@@ -267,8 +219,6 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Get packs
-     *
      * @return Collection
      */
     public function getPacks()
@@ -276,6 +226,9 @@ class Cycle implements \Serializable
         return $this->packs;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return [
@@ -286,11 +239,18 @@ class Cycle implements \Serializable
         ];
     }
 
+    /**
+     * @inheritdoc
+     * @throws Exception
+     */
     public function unserialize($serialized)
     {
-        throw new \Exception("unserialize() method unsupported");
+        throw new Exception("unserialize() method unsupported");
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->name ?: '';

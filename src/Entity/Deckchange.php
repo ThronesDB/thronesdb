@@ -63,8 +63,14 @@ class Deckchange
     protected $deck;
 
     /**
-     * Get id
-     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -73,22 +79,14 @@ class Deckchange
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Deckchange
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
      * @return DateTime
      */
     public function getDateCreation()
@@ -97,22 +95,14 @@ class Deckchange
     }
 
     /**
-     * Set variation
-     *
      * @param string $variation
-     *
-     * @return Deckchange
      */
     public function setVariation($variation)
     {
         $this->variation = $variation;
-
-        return $this;
     }
 
     /**
-     * Get variation
-     *
      * @return string
      */
     public function getVariation()
@@ -121,22 +111,14 @@ class Deckchange
     }
 
     /**
-     * Set isSaved
-     *
      * @param bool $isSaved
-     *
-     * @return Deckchange
      */
     public function setIsSaved($isSaved)
     {
         $this->isSaved = $isSaved;
-
-        return $this;
     }
 
     /**
-     * Get isSaved
-     *
      * @return bool
      */
     public function getIsSaved()
@@ -145,22 +127,14 @@ class Deckchange
     }
 
     /**
-     * Set deck
-     *
      * @param Deck $deck
-     *
-     * @return Deckchange
      */
     public function setDeck(Deck $deck = null)
     {
         $this->deck = $deck;
-
-        return $this;
     }
 
     /**
-     * Get deck
-     *
      * @return Deck
      */
     public function getDeck()
@@ -169,22 +143,14 @@ class Deckchange
     }
 
     /**
-     * Set version
-     *
      * @param string $version
-     *
-     * @return Deckchange
      */
     public function setVersion($version)
     {
         $this->version = $version;
-
-        return $this;
     }
 
     /**
-     * Get version
-     *
      * @return string
      */
     public function getVersion()

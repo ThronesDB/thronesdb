@@ -51,8 +51,14 @@ class Decklistslot implements SlotInterface
     protected $card;
 
     /**
-     * Get id
-     *
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -61,22 +67,14 @@ class Decklistslot implements SlotInterface
     }
 
     /**
-     * Set quantity
-     *
      * @param int $quantity
-     *
-     * @return Decklistslot
      */
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
-
-        return $this;
     }
 
     /**
-     * Get quantity
-     *
      * @return int
      */
     public function getQuantity()
@@ -85,22 +83,14 @@ class Decklistslot implements SlotInterface
     }
 
     /**
-     * Set decklist
-     *
      * @param Decklist $decklist
-     *
-     * @return Decklistslot
      */
     public function setDecklist(Decklist $decklist = null)
     {
         $this->decklist = $decklist;
-
-        return $this;
     }
 
     /**
-     * Get decklist
-     *
      * @return Decklist
      */
     public function getDecklist()
@@ -109,22 +99,14 @@ class Decklistslot implements SlotInterface
     }
 
     /**
-     * Set card
-     *
      * @param Card $card
-     *
-     * @return Decklistslot
      */
     public function setCard(Card $card = null)
     {
         $this->card = $card;
-
-        return $this;
     }
 
     /**
-     * Get card
-     *
      * @return Card
      */
     public function getCard()

@@ -245,6 +245,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
      * @inheritdoc
      */
     public function getId()
@@ -253,17 +261,11 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set name
-     *
      * @param string $name
-     *
-     * @return Decklist
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
@@ -275,22 +277,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set nameCanonical
-     *
      * @param string $nameCanonical
-     *
-     * @return Decklist
      */
     public function setNameCanonical($nameCanonical)
     {
         $this->nameCanonical = $nameCanonical;
-
-        return $this;
     }
 
     /**
-     * Get nameCanonical
-     *
      * @return string
      */
     public function getNameCanonical()
@@ -299,17 +293,11 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set dateCreation
-     *
      * @param DateTime $dateCreation
-     *
-     * @return Decklist
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
@@ -321,17 +309,11 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set dateUpdate
-     *
      * @param DateTime $dateUpdate
-     *
-     * @return Decklist
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
@@ -343,17 +325,11 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set descriptionMd
-     *
      * @param string $descriptionMd
-     *
-     * @return Decklist
      */
     public function setDescriptionMd($descriptionMd)
     {
         $this->descriptionMd = $descriptionMd;
-
-        return $this;
     }
 
     /**
@@ -365,22 +341,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set descriptionHtml
-     *
      * @param string $descriptionHtml
-     *
-     * @return Decklist
      */
     public function setDescriptionHtml($descriptionHtml)
     {
         $this->descriptionHtml = $descriptionHtml;
-
-        return $this;
     }
 
     /**
-     * Get descriptionHtml
-     *
      * @return string
      */
     public function getDescriptionHtml()
@@ -389,22 +357,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set signature
-     *
      * @param string $signature
-     *
-     * @return Decklist
      */
     public function setSignature($signature)
     {
         $this->signature = $signature;
-
-        return $this;
     }
 
     /**
-     * Get signature
-     *
      * @return string
      */
     public function getSignature()
@@ -413,22 +373,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set nbVotes
-     *
      * @param int $nbVotes
-     *
-     * @return Decklist
      */
     public function setNbVotes($nbVotes)
     {
         $this->nbVotes = $nbVotes;
-
-        return $this;
     }
 
     /**
-     * Get nbVotes
-     *
      * @return int
      */
     public function getnbVotes()
@@ -437,22 +389,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set nbFavorites
-     *
      * @param int $nbFavorites
-     *
-     * @return Decklist
      */
     public function setNbFavorites($nbFavorites)
     {
         $this->nbFavorites = $nbFavorites;
-
-        return $this;
     }
 
     /**
-     * Get nbFavorites
-     *
      * @return int
      */
     public function getNbFavorites()
@@ -461,22 +405,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set nbComments
-     *
      * @param int $nbComments
-     *
-     * @return Decklist
      */
     public function setNbComments($nbComments)
     {
         $this->nbComments = $nbComments;
-
-        return $this;
     }
 
     /**
-     * Get nbComments
-     *
      * @return int
      */
     public function getNbComments()
@@ -493,22 +429,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add slot
-     *
      * @param Decklistslot $slot
-     *
-     * @return Decklist
      */
     public function addSlot(Decklistslot $slot)
     {
-        $this->slots[] = $slot;
-
-        return $this;
+        $this->slots->add($slot);
     }
 
     /**
-     * Remove slot
-     *
      * @param Decklistslot $slot
      */
     public function removeSlot(Decklistslot $slot)
@@ -517,22 +445,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add comment
-     *
      * @param Comment $comment
-     *
-     * @return Decklist
      */
     public function addComment(Comment $comment)
     {
-        $this->comments[] = $comment;
-
-        return $this;
+        $this->comments->add($comment);
     }
 
     /**
-     * Remove comment
-     *
      * @param Comment $comment
      */
     public function removeComment(Comment $comment)
@@ -541,8 +461,6 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Get comments
-     *
      * @return Collection
      */
     public function getComments()
@@ -551,22 +469,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add successor
-     *
      * @param Decklist $successor
-     *
-     * @return Decklist
      */
     public function addSuccessor(Decklist $successor)
     {
-        $this->successors[] = $successor;
-
-        return $this;
+        $this->successors->add($successor);
     }
 
     /**
-     * Remove successor
-     *
      * @param Decklist $successor
      */
     public function removeSuccessor(Decklist $successor)
@@ -575,8 +485,6 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Get successors
-     *
      * @return Collection
      */
     public function getSuccessors()
@@ -585,22 +493,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add child
-     *
      * @param Deck $child
-     *
-     * @return Decklist
      */
     public function addChild(Deck $child)
     {
-        $this->children[] = $child;
-
-        return $this;
+        $this->children->add($child);
     }
 
     /**
-     * Remove child
-     *
      * @param Deck $child
      */
     public function removeChild(Deck $child)
@@ -609,8 +509,6 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Get children
-     *
      * @return Collection
      */
     public function getChildren()
@@ -627,17 +525,11 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set user
-     *
      * @param User $user
-     *
-     * @return Decklist
      */
     public function setUser(User $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
@@ -649,36 +541,22 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set faction
-     *
      * @param Faction $faction
-     *
-     * @return Decklist
      */
     public function setFaction(Faction $faction = null)
     {
         $this->faction = $faction;
-
-        return $this;
     }
 
     /**
-     * Set lastPack
-     *
      * @param Pack $lastPack
-     *
-     * @return Decklist
      */
     public function setLastPack(Pack $lastPack = null)
     {
         $this->lastPack = $lastPack;
-
-        return $this;
     }
 
     /**
-     * Get lastPack
-     *
      * @return Pack
      */
     public function getLastPack()
@@ -687,22 +565,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set parent
-     *
      * @param Deck $parent
-     *
-     * @return Decklist
      */
     public function setParent(Deck $parent = null)
     {
         $this->parent = $parent;
-
-        return $this;
     }
 
     /**
-     * Get parent
-     *
      * @return Deck
      */
     public function getParent()
@@ -711,22 +581,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set precedent
-     *
      * @param Decklist $precedent
-     *
-     * @return Decklist
      */
     public function setPrecedent(Decklist $precedent = null)
     {
         $this->precedent = $precedent;
-
-        return $this;
     }
 
     /**
-     * Get precedent
-     *
      * @return Decklist
      */
     public function getPrecedent()
@@ -735,22 +597,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set tournament
-     *
      * @param Tournament $tournament
-     *
-     * @return Decklist
      */
     public function setTournament(Tournament $tournament = null)
     {
         $this->tournament = $tournament;
-
-        return $this;
     }
 
     /**
-     * Get tournament
-     *
      * @return Tournament
      */
     public function getTournament()
@@ -759,22 +613,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add favorite
-     *
      * @param User $favorite
-     *
-     * @return Decklist
      */
     public function addFavorite(User $favorite)
     {
-        $this->favorites[] = $favorite;
-
-        return $this;
+        $this->favorites->add($favorite);
     }
 
     /**
-     * Remove favorite
-     *
      * @param User $favorite
      */
     public function removeFavorite(User $favorite)
@@ -783,8 +629,6 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Get favorites
-     *
      * @return Collection
      */
     public function getFavorites()
@@ -793,22 +637,14 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Add vote
-     *
      * @param User $vote
-     *
-     * @return Decklist
      */
     public function addVote(User $vote)
     {
-        $this->votes[] = $vote;
-
-        return $this;
+        $this->votes->add($vote);
     }
 
     /**
-     * Remove vote
-     *
      * @param User $vote
      */
     public function removeVote(User $vote)
@@ -817,8 +653,6 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Get votes
-     *
      * @return Collection
      */
     public function getVotes()
@@ -827,17 +661,11 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * Set version
-     *
      * @param string $version
-     *
-     * @return Decklist
      */
     public function setVersion($version)
     {
         $this->version = $version;
-
-        return $this;
     }
 
     /**

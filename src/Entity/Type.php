@@ -58,7 +58,6 @@ class Type implements Serializable
     }
 
     /**
-     * Set id
      * @param int $id
      */
     public function setId($id)
@@ -67,8 +66,6 @@ class Type implements Serializable
     }
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -77,22 +74,14 @@ class Type implements Serializable
     }
 
     /**
-     * Set code
-     *
      * @param string $code
-     *
-     * @return Type
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
      * @return string
      */
     public function getCode()
@@ -101,22 +90,14 @@ class Type implements Serializable
     }
 
     /**
-     * Set name
-     *
      * @param string $name
-     *
-     * @return Type
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
     public function getName()
@@ -125,22 +106,14 @@ class Type implements Serializable
     }
 
     /**
-     * Add card
-     *
      * @param Card $card
-     *
-     * @return Type
      */
     public function addCard(Card $card)
     {
-        $this->cards[] = $card;
-
-        return $this;
+        $this->cards->add($card);
     }
 
     /**
-     * Remove card
-     *
      * @param Card $card
      */
     public function removeCard(Card $card)
@@ -149,8 +122,6 @@ class Type implements Serializable
     }
 
     /**
-     * Get cards
-     *
      * @return Collection
      */
     public function getCards()
@@ -158,6 +129,9 @@ class Type implements Serializable
         return $this->cards;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return [
@@ -166,11 +140,18 @@ class Type implements Serializable
         ];
     }
 
+    /**
+     * @inheritdoc
+     * @throws Exception
+     */
     public function unserialize($serialized)
     {
         throw new Exception("unserialize() method unsupported");
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->name ?: '';
