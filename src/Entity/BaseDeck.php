@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use App\Model\SlotCollectionInterface;
-
 /**
  * Base class for both deck and deck-list entities.
 
