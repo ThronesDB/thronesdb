@@ -12,8 +12,7 @@ use App\Model\SlotCollectionInterface;
 abstract class BaseDeck implements CommonDeckInterface
 {
     /**
-     * Transforms the given object into an associative array.
-     * @return array
+     * @inheritdoc
      */
     public function getArrayExport()
     {
@@ -46,7 +45,7 @@ abstract class BaseDeck implements CommonDeckInterface
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getTextExport()
     {
@@ -64,7 +63,7 @@ abstract class BaseDeck implements CommonDeckInterface
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getCycleOrderExport()
     {
@@ -82,8 +81,7 @@ abstract class BaseDeck implements CommonDeckInterface
     }
 
     /**
-     * @return bool
-     * @see SlotCollectionInterface::isLegalForMelee()
+     * @inheritdoc
      */
     public function isLegalForMelee()
     {
@@ -91,8 +89,7 @@ abstract class BaseDeck implements CommonDeckInterface
     }
 
     /**
-     * @return bool
-     * @see SlotCollectionInterface::isLegalForJoust()
+     * @inheritdoc
      */
     public function isLegalForJoust()
     {

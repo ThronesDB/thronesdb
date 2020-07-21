@@ -90,4 +90,32 @@ interface CommonDeckInterface
      * @param User|null $user
      */
     public function setUser(User $user = null);
+
+    /**
+     * Transforms the given object into an associative array.
+     * @return array
+     */
+    public function getArrayExport();
+
+    /**
+     * @return array
+     */
+    public function getTextExport();
+
+    /**
+     * @return array
+     */
+    public function getCycleOrderExport();
+
+    /**
+     * @return bool
+     * @see SlotCollectionInterface::isLegalForMelee()
+     */
+    public function isLegalForMelee();
+
+    /**
+     * @return bool
+     * @see SlotCollectionInterface::isLegalForJoust()
+     */
+    public function isLegalForJoust();
 }
