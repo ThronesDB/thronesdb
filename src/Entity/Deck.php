@@ -174,7 +174,7 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -189,7 +189,7 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param string $name
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -205,7 +205,7 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -221,7 +221,7 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param DateTime $dateUpdate
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
@@ -237,7 +237,7 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param string $descriptionMd
+     * @inheritdoc
      */
     public function setDescriptionMd($descriptionMd)
     {
@@ -365,7 +365,7 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param User $user
+     * @inheritdoc
      */
     public function setUser(User $user = null)
     {
@@ -381,7 +381,7 @@ class Deck extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param Faction $faction
+     * @inheritdoc
      */
     public function setFaction(Faction $faction = null)
     {

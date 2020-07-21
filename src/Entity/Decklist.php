@@ -245,7 +245,7 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -261,7 +261,7 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param string $name
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -525,7 +525,7 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param User $user
+     * @inheritdoc
      */
     public function setUser(User $user = null)
     {
@@ -533,7 +533,7 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @return Faction
+     * @inheritdoc
      */
     public function getFaction()
     {
@@ -541,7 +541,7 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param Faction $faction
+     * @inheritdoc
      */
     public function setFaction(Faction $faction = null)
     {

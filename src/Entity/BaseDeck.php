@@ -6,10 +6,8 @@ use App\Model\SlotCollectionInterface;
 
 /**
  * Base class for both deck and deck-list entities.
- *
+
  * @package App\Entity
- *
- * @todo Consider making this a trait. [ST 2020/06/25]
  */
 abstract class BaseDeck implements CommonDeckInterface
 {

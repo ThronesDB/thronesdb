@@ -17,13 +17,17 @@ interface CommonDeckInterface
     public function getId();
 
     /**
+     * @param int $id
+     */
+    public function setId($id);
+
+    /**
      * @return string
      */
     public function getName();
 
     /**
      * @param string $name
-     * @return mixed
      */
     public function setName($name);
 
@@ -34,7 +38,6 @@ interface CommonDeckInterface
 
     /**
      * @param DateTime $dateCreation
-     * @return mixed
      */
     public function setDateCreation($dateCreation);
 
@@ -45,7 +48,6 @@ interface CommonDeckInterface
 
     /**
      * @param DateTime $dateUpdate
-     * @return mixed
      */
     public function setDateUpdate($dateUpdate);
 
@@ -56,12 +58,11 @@ interface CommonDeckInterface
 
     /**
      * @param $descriptionMd
-     * @return mixed
      */
     public function setDescriptionMd($descriptionMd);
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getVersion();
 
@@ -72,7 +73,6 @@ interface CommonDeckInterface
 
     /**
      * @param Faction|null $faction
-     * @return mixed
      */
     public function setFaction(Faction $faction = null);
 
@@ -88,7 +88,6 @@ interface CommonDeckInterface
 
     /**
      * @param User|null $user
-     * @return mixed
      */
     public function setUser(User $user = null);
 }
