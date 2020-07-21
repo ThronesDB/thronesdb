@@ -41,7 +41,6 @@ class Diff
         // list of all the codes found in every slots
         $cardCodes = [];
 
-        /* @var $slots SlotCollectionInterface */
         foreach ($list_slots as $slots) {
             /* @var $slot SlotInterface */
             foreach ($slots as $slot) {

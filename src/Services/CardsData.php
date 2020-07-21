@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Controller\SearchController;
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Cycle;
 use App\Entity\Faction;
 use App\Entity\Pack;
@@ -525,12 +526,12 @@ class CardsData
     }
 
     /**
-     * @param Card        $card
-     * @param bool        $api
+     * @param CardInterface $card
+     * @param bool $api
      * @param string|null $version
      * @return array
      */
-    public function getCardInfo(Card $card, bool $api, string $version = null)
+    public function getCardInfo(CardInterface $card, bool $api, string $version = null)
     {
         $cardinfo = [];
 

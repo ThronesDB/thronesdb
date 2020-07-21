@@ -152,17 +152,17 @@ class Faction implements Serializable
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      */
-    public function addCard(Card $card)
+    public function addCard(CardInterface $card)
     {
         $this->cards->add($card);
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      */
-    public function removeCard(Card $card)
+    public function removeCard(CardInterface $card)
     {
         $this->cards->removeElement($card);
     }

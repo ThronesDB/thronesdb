@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\CommonDeckInterface;
 use App\Model\SlotCollectionInterface;
 use App\Model\SlotInterface;
@@ -128,10 +129,10 @@ class DeckValidationHelper
 
     /**
      * @param CommonDeckInterface $deck
-     * @param Card $card
+     * @param CardInterface $card
      * @return bool
      */
-    public function canIncludeCard(CommonDeckInterface $deck, Card $card): bool
+    public function canIncludeCard(CommonDeckInterface $deck, CardInterface $card): bool
     {
         if ($card->getFaction()->getCode() === 'neutral') {
             return true;
@@ -168,11 +169,11 @@ class DeckValidationHelper
     }
 
     /**
-     * @param Card $agenda
-     * @param Card $card
+     * @param CardInterface $agenda
+     * @param CardInterface $card
      * @return bool
      */
-    protected function isCardAllowedByAgenda(Card $agenda, Card $card): bool
+    protected function isCardAllowedByAgenda(CardInterface $agenda, CardInterface $card): bool
     {
         switch ($agenda->getCode()) {
             case '01198':
@@ -205,10 +206,10 @@ class DeckValidationHelper
 
     /**
      * @param SlotCollectionInterface $slots
-     * @param Card $agenda
+     * @param CardInterface $agenda
      * @return bool
      */
-    protected function validateAgenda(SlotCollectionInterface $slots, Card $agenda): bool
+    protected function validateAgenda(SlotCollectionInterface $slots, CardInterface $agenda): bool
     {
         switch ($agenda->getCode()) {
             case '01198':
@@ -248,10 +249,10 @@ class DeckValidationHelper
 
     /**
      * @param SlotCollectionInterface $slots
-     * @param Card $agenda
+     * @param CardInterface $agenda
      * @return bool
      */
-    protected function validateBanner(SlotCollectionInterface $slots, Card $agenda): bool
+    protected function validateBanner(SlotCollectionInterface $slots, CardInterface $agenda): bool
     {
         $minorFactionCode = $this->agenda_helper->getMinorFactionCode($agenda);
         $matchingFactionPlots = $slots->getDrawDeck()->filterByFaction($minorFactionCode)->countCards();
@@ -284,10 +285,10 @@ class DeckValidationHelper
 
     /**
      * @param SlotCollectionInterface $slots
-     * @param Card $agenda
+     * @param CardInterface $agenda
      * @return bool
      */
-    protected function validateKings(SlotCollectionInterface $slots, Card $agenda): bool
+    protected function validateKings(SlotCollectionInterface $slots, CardInterface $agenda): bool
     {
         $trait = $this->translator->trans('card.traits.'.($agenda->getCode() === '04037' ? 'winter' : 'summer'));
         $matchingTraitPlots = $slots->getPlotDeck()->filterByTrait($trait)->countCards();
@@ -337,8 +338,8 @@ class DeckValidationHelper
      */
     protected function validateBrotherhood(SlotCollectionInterface $slots): bool
     {
+        /* @var SlotInterface $slot */
         foreach ($slots->getDrawDeck()->getSlots() as $slot) {
-            /* @var Card $card */
             $card = $slot->getCard();
             if ($card->getIsLoyal() && $card->getType()->getCode() === 'character') {
                 return false;
@@ -386,7 +387,7 @@ class DeckValidationHelper
     protected function validateFreeFolk(SlotCollectionInterface $slots): bool
     {
         foreach ($slots->getPlotDeck()->getSlots() as $slot) {
-            /* @var Card $card */
+            /* @var CardInterface $card */
             $card = $slot->getCard();
             if ($card->getFaction()->getCode() !== 'neutral') {
                 return false;
@@ -394,7 +395,7 @@ class DeckValidationHelper
         }
 
         foreach ($slots->getDrawDeck()->getSlots() as $slot) {
-            /* @var Card $card */
+            /* @var CardInterface $card */
             $card = $slot->getCard();
             if ($card->getFaction()->getCode() !== 'neutral') {
                 return false;

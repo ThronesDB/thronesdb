@@ -10,7 +10,6 @@ use App\Entity\Deckslot;
 use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\Tournament;
-use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;

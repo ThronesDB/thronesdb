@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,10 +25,10 @@ class ImportImagesCommand extends ContainerAwareCommand
             'http_errors' => false,
         ]);
 
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine')->getManager();
 
-        /** @var Card[] $cards */
+        /** @var CardInterface[] $cards */
         $cards = $em->getRepository(Card::class)->findBy(['imageUrl' => null]);
 
         foreach ($cards as $card) {

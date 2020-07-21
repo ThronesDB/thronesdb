@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Decklist;
 use App\Entity\Faction;
 use App\Entity\Review;
@@ -164,7 +165,7 @@ class UserController extends Controller
             if (isset($card_id)) {
                 /* @var $em EntityManager */
                 $em = $this->getDoctrine()->getManager();
-                /* @var $card Card */
+                /* @var CardInterface $card */
                 $card = $em->getRepository(Card::class)->find($card_id);
 
                 if ($card) {

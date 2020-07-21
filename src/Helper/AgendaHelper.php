@@ -2,8 +2,8 @@
 
 namespace App\Helper;
 
+use App\Entity\CardInterface;
 use Doctrine\ORM\EntityManager;
-use App\Entity\Card;
 use App\Entity\Faction;
 
 class AgendaHelper
@@ -20,10 +20,10 @@ class AgendaHelper
 
     /**
      * Get the minor faction code
-     * @param Card $agenda
+     * @param CardInterface $agenda
      * @return string
      */
-    public function getMinorFactionCode(Card $agenda)
+    public function getMinorFactionCode(CardInterface $agenda)
     {
         if (empty($agenda)) {
             return null;
@@ -48,10 +48,10 @@ class AgendaHelper
 
     /**
      * Get the minor faction
-     * @param Card $agenda
+     * @param CardInterface $agenda
      * @return Faction
      */
-    public function getMinorFaction(Card $agenda)
+    public function getMinorFaction(CardInterface $agenda)
     {
         $code = $this->getMinorFactionCode($agenda);
         if ($code) {

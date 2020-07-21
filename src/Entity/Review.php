@@ -70,7 +70,7 @@ class Review
     protected $comments;
 
     /**
-     * @var Card
+     * @var CardInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Card", inversedBy="reviews")
      * @ORM\JoinColumns({
@@ -234,15 +234,15 @@ class Review
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      */
-    public function setCard(Card $card = null)
+    public function setCard(CardInterface $card = null)
     {
         $this->card = $card;
     }
 
     /**
-     * @return Card
+     * @return CardInterface
      */
     public function getCard()
     {

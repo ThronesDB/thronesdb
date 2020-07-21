@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Review;
 use App\Entity\Reviewcomment;
 use App\Entity\User;
@@ -46,7 +47,7 @@ class ReviewController extends Controller
         }
 
         $card_id = filter_var($request->get('card_id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $card Card */
+        /* @var CardInterface $card */
         $card = $em->getRepository(Card::class)->find($card_id);
         if (!$card) {
             throw new Exception("This card does not exist.");

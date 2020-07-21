@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Pack;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,7 +20,6 @@ class ApiController extends Controller
 
     /**
      * Get the description of all the packs as an array of JSON objects.
-     *
      *
      * @Operation(
      *     tags={"Public"},
@@ -139,14 +139,14 @@ class ApiController extends Controller
         $jsonp = $request->query->get('jsonp');
 
         $card = $this->getDoctrine()->getRepository(Card::class)->findOneBy(array("code" => $card_code));
-        if (!$card instanceof Card) {
+        if (!$card instanceof CardInterface) {
             return $this->createNotFoundException();
         }
 
         // check the last-modified-since header
 
         $lastModified = null;
-        /* @var $card Card */
+        /* @var CardInterface $card */
         if (!$lastModified || $lastModified < $card->getDateUpdate()) {
             $lastModified = $card->getDateUpdate();
         }
@@ -157,7 +157,7 @@ class ApiController extends Controller
 
         // build the response
 
-        /* @var $card Card */
+        /* @var CardInterface $card */
         $card = $this->get('cards_data')->getCardInfo($card, true, $version);
 
         $content = json_encode($card);
@@ -211,7 +211,7 @@ class ApiController extends Controller
         // check the last-modified-since header
 
         $lastModified = null;
-        /* @var $card Card */
+        /* @var CardInterface $card */
         foreach ($list_cards as $card) {
             if (!$lastModified || $lastModified < $card->getDateUpdate()) {
                 $lastModified = $card->getDateUpdate();
@@ -225,7 +225,7 @@ class ApiController extends Controller
         // build the response
 
         $cards = array();
-        /* @var $card Card */
+        /* @var CardInterface $card */
         foreach ($list_cards as $card) {
             $cards[] = $this->get('cards_data')->getCardInfo($card, true, $version);
         }

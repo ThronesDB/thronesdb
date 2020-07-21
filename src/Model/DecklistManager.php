@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Decklist;
 use App\Entity\Decklistslot;
 use App\Entity\Faction;
@@ -256,7 +257,7 @@ class DecklistManager
         if (!empty($cards_code) || !empty($packs)) {
             if (!empty($cards_code)) {
                 foreach ($cards_code as $i => $card_code) {
-                    /* @var $card Card */
+                    /* @var CardInterface $card */
                     $card = $this->doctrine->getRepository(Card::class)->findOneBy(array('code' => $card_code));
                     if (!$card) {
                         continue;

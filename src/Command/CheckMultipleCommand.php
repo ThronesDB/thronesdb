@@ -1,21 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cedric
- * Date: 08/02/18
- * Time: 14:10
- */
 
 namespace App\Command;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
+ * Class CheckMultipleCommand
+ * @package App\Command
  */
 class CheckMultipleCommand extends ContainerAwareCommand
 {
@@ -32,8 +28,7 @@ class CheckMultipleCommand extends ContainerAwareCommand
     {
         $this
             ->setName('app:check:multiple')
-            ->setDescription('Check card is_multiple field')
-        ;
+            ->setDescription('Check card is_multiple field');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -41,6 +36,7 @@ class CheckMultipleCommand extends ContainerAwareCommand
         $cards = $this->entityManager->getRepository(Card::class)->findAll();
 
         $count = [];
+        /* @var CardInterface $card */
         foreach ($cards as $card) {
             $count[$card->getName()] = ($count[$card->getName()] ?? 0) + 1;
         }
