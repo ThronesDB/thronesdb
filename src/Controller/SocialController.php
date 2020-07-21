@@ -10,6 +10,7 @@ use App\Entity\Comment;
 use App\Entity\Faction;
 use App\Entity\Tournament;
 use App\Entity\User;
+use App\Entity\UserInterface;
 use App\Model\DecklistManager;
 use DateTime;
 use Doctrine\DBAL\Connection;
@@ -55,7 +56,7 @@ class SocialController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException($translator->trans('login_required'));
@@ -159,7 +160,7 @@ class SocialController extends Controller
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
 
         $yesterday = (new DateTime())->modify('-24 hours');
@@ -258,7 +259,7 @@ class SocialController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("Anonymous access denied");
@@ -555,6 +556,7 @@ class SocialController extends Controller
                 break;
             case 'favorites':
                 $response->setPrivate();
+                /* @var UserInterface $user */
                 $user = $this->getUser();
                 if ($user) {
                     $paginator = $decklist_manager->findDecklistsByFavorite($user);
@@ -564,6 +566,7 @@ class SocialController extends Controller
                 break;
             case 'mine':
                 $response->setPrivate();
+                /* @var UserInterface $user */
                 $user = $this->getUser();
                 if ($user) {
                     $paginator = $decklist_manager->findDecklistsByAuthor($user);
@@ -726,7 +729,7 @@ class SocialController extends Controller
      */
     public function commentAction(Request $request)
     {
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException('You must be logged in to comment.');
@@ -749,10 +752,10 @@ class SocialController extends Controller
                 $comment_text
             );
 
-            $mentionned_usernames = [];
+            $mentioned_usernames = [];
             $matches = [];
             if (preg_match_all('/`@([\w_]+)`/', $comment_text, $matches, PREG_PATTERN_ORDER)) {
-                $mentionned_usernames = array_unique($matches[1]);
+                $mentioned_usernames = array_unique($matches[1]);
             }
 
             $comment_html = $this->get('texts')->markdown($comment_text);
@@ -792,14 +795,14 @@ class SocialController extends Controller
                     }
                 }
             }
-            foreach ($mentionned_usernames as $mentionned_username) {
-                /* @var $mentionned_user User */
-                $mentionned_user = $this->getDoctrine()
+            foreach ($mentioned_usernames as $mentioned_username) {
+                /* @var UserInterface $mentioned_user */
+                $mentioned_user = $this->getDoctrine()
                     ->getRepository(User::class)
-                    ->findOneBy(array('username' => $mentionned_username));
-                if ($mentionned_user && $mentionned_user->getIsNotifMention()) {
-                    if (!isset($spool[$mentionned_user->getEmail()])) {
-                        $spool[$mentionned_user->getEmail()] = 'Emails/newcomment_mentionned.html.twig';
+                    ->findOneBy(array('username' => $mentioned_username));
+                if ($mentioned_user && $mentioned_user->getIsNotifMention()) {
+                    if (!isset($spool[$mentioned_user->getEmail()])) {
+                        $spool[$mentioned_user->getEmail()] = 'Emails/newcomment_mentionned.html.twig';
                     }
                 }
             }
@@ -850,7 +853,7 @@ class SocialController extends Controller
      */
     public function hidecommentAction($comment_id, $hidden)
     {
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException('You must be logged in to comment.');
@@ -883,9 +886,10 @@ class SocialController extends Controller
      */
     public function voteAction(Request $request)
     {
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException('You must be logged in to comment.');
@@ -1111,7 +1115,7 @@ class SocialController extends Controller
         $response = new Response();
         $response->setPrivate();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
 
         $limit = 100;

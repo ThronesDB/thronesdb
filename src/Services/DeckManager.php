@@ -9,10 +9,9 @@ use App\Entity\Decklist;
 use App\Entity\Deckslot;
 use App\Entity\Faction;
 use App\Entity\Pack;
-use App\Entity\User;
+use App\Entity\UserInterface;
 use App\Helper\AgendaHelper;
 use App\Helper\DeckValidationHelper;
-use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
@@ -57,17 +56,17 @@ class DeckManager
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @return Collection
-     * @see User::getDecks()
+     * @see UserInterface::getDecks()
      */
-    public function getByUser(User $user)
+    public function getByUser(UserInterface $user)
     {
         return $user->getDecks();
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @param Deck $deck
      * @param int $decklist_id
      * @param string $name

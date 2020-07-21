@@ -47,7 +47,7 @@ class Reviewcomment
     protected $text;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumns({
@@ -131,15 +131,15 @@ class Reviewcomment
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
     public function getUser()
     {

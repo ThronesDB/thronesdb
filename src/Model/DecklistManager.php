@@ -6,7 +6,7 @@ use App\Entity\Card;
 use App\Entity\Decklist;
 use App\Entity\Decklistslot;
 use App\Entity\Faction;
-use App\Entity\User;
+use App\Entity\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
@@ -131,6 +131,10 @@ class DecklistManager
         return $this->getPaginator($qb->getQuery());
     }
 
+    /**
+     * @param bool $ignoreEmptyDescriptions
+     * @return Paginator
+     */
     public function findDecklistsByAge($ignoreEmptyDescriptions = false)
     {
         $qb = $this->getQueryBuilder();
@@ -138,7 +142,11 @@ class DecklistManager
         return $this->getPaginator($qb->getQuery());
     }
 
-    public function findDecklistsByFavorite(User $user)
+    /**
+     * @param UserInterface $user
+     * @return Paginator
+     */
+    public function findDecklistsByFavorite(UserInterface $user)
     {
         $qb = $this->getQueryBuilder();
         $qb->leftJoin('d.favorites', 'u');
@@ -148,7 +156,11 @@ class DecklistManager
         return $this->getPaginator($qb->getQuery());
     }
 
-    public function findDecklistsByAuthor(User $user)
+    /**
+     * @param UserInterface $user
+     * @return Paginator
+     */
+    public function findDecklistsByAuthor(UserInterface $user)
     {
         $qb = $this->getQueryBuilder();
         $qb->andWhere('d.user = :user');
@@ -165,6 +177,9 @@ class DecklistManager
         return $this->getPaginator($qb->getQuery());
     }
 
+    /**
+     * @return Paginator
+     */
     public function findDecklistsInHotTopic()
     {
         $qb = $this->getQueryBuilder();
@@ -177,6 +192,9 @@ class DecklistManager
         return $this->getPaginator($qb->getQuery());
     }
 
+    /**
+     * @return Paginator
+     */
     public function findDecklistsInTournaments()
     {
         $qb = $this->getQueryBuilder();
@@ -185,6 +203,9 @@ class DecklistManager
         return $this->getPaginator($qb->getQuery());
     }
 
+    /**
+     * @return Paginator
+     */
     public function findDecklistsWithComplexSearch()
     {
         $request = $this->request_stack->getCurrentRequest();

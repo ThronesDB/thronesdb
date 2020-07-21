@@ -6,8 +6,10 @@ use App\Entity\Card;
 use App\Entity\Review;
 use App\Entity\Reviewcomment;
 use App\Entity\User;
-use DateTime;
+use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Swift_Message;
@@ -21,12 +23,18 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ReviewController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function postAction(Request $request)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
@@ -92,7 +100,7 @@ class ReviewController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException("You are not logged in.");
@@ -138,6 +146,7 @@ class ReviewController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
@@ -182,6 +191,7 @@ class ReviewController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             throw $this->createAccessDeniedException('No user or not admin');
@@ -353,7 +363,7 @@ class ReviewController extends Controller
 
         $fromEmail = $this->getParameter('email_sender_address');
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");

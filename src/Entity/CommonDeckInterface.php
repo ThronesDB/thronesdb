@@ -82,14 +82,14 @@ interface CommonDeckInterface
     public function getSlots();
 
     /**
-     * @return User|null
+     * @return UserInterface|null
      */
     public function getUser();
 
     /**
-     * @param User|null $user
+     * @param UserInterface|null $user
      */
-    public function setUser(User $user = null);
+    public function setUser(UserInterface $user = null);
 
     /**
      * Transforms the given object into an associative array.

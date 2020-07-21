@@ -80,7 +80,7 @@ class Review
     protected $card;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reviews")
      * @ORM\JoinColumns({
@@ -250,15 +250,15 @@ class Review
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
     public function getUser()
     {
@@ -266,17 +266,17 @@ class Review
     }
 
     /**
-     * @param User $vote
+     * @param UserInterface $vote
      */
-    public function addVote(User $vote)
+    public function addVote(UserInterface $vote)
     {
         $this->votes->add($vote);
     }
 
     /**
-     * @param User $vote
+     * @param UserInterface $vote
      */
-    public function removeVote(User $vote)
+    public function removeVote(UserInterface $vote)
     {
         $this->votes->removeElement($vote);
     }

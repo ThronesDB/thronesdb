@@ -11,7 +11,7 @@ use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\Tournament;
 use App\Entity\User;
-use DateTime;
+use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -118,6 +118,9 @@ class BuilderController extends Controller
         }
 
 
+        /** @var UserInterface $user */
+        $user = $this->getUser();
+
         $deck = new Deck();
         $deck->setDescriptionMd("");
         $deck->setFaction($faction);
@@ -125,7 +128,7 @@ class BuilderController extends Controller
         $deck->setName($name);
         $deck->setProblem('too_few_cards');
         $deck->setTags(join(' ', array_unique($tags)));
-        $deck->setUser($this->getUser());
+        $deck->setUser($user);
         $deck->setUuid(Uuid::uuid4());
         if ($agenda) {
             $slot = new Deckslot();
@@ -599,8 +602,6 @@ class BuilderController extends Controller
      */
     public function compareAction($deck1_uuid, $deck2_uuid)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-
         $repo = $this->getDoctrine()->getManager()->getRepository(Deck::class);
 
         /* @var Deck $deck1 */
@@ -669,7 +670,7 @@ class BuilderController extends Controller
 
     public function listAction()
     {
-        /* @var User $user */
+        /* @var UserInterface $user */
         $user = $this->getUser();
 
         $decks = $this->get('deck_manager')->getByUser($user);

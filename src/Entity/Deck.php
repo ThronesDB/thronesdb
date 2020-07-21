@@ -122,7 +122,7 @@ class Deck extends BaseDeck implements JsonSerializable
     protected $changes;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="decks")
      * @ORM\JoinColumns({
@@ -367,7 +367,7 @@ class Deck extends BaseDeck implements JsonSerializable
     /**
      * @inheritdoc
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
     }

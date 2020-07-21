@@ -33,7 +33,7 @@ class AuthCode extends BaseAuthCode
     protected $client;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumns({

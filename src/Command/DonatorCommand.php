@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,7 +38,7 @@ class DonatorCommand extends ContainerAwareCommand
         /* @var $em EntityManager */
         $em = $this->getContainer()->get('doctrine')->getManager();
         $repo = $em->getRepository(User::class);
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $repo->findOneBy(array('email' => $email));
         if (!$user) {
             $user = $repo->findOneBy(array('username' => $email));

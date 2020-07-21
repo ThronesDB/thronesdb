@@ -14,7 +14,7 @@ class TagController extends Controller
         $list_id = $request->get('ids');
         $list_tag = $request->get('tags');
 
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         $response = array("success" => true);
@@ -42,7 +42,7 @@ class TagController extends Controller
         $list_id = $request->get('ids');
         $list_tag = $request->get('tags');
 
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         $response = array("success" => true);
@@ -69,7 +69,7 @@ class TagController extends Controller
     {
         $list_id = $request->get('ids');
 
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         $response = array("success" => true);

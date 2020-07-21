@@ -142,7 +142,7 @@ class Decklist extends BaseDeck implements JsonSerializable
     protected $children;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="decklists")
      * @ORM\JoinColumns({
@@ -527,7 +527,7 @@ class Decklist extends BaseDeck implements JsonSerializable
     /**
      * @inheritdoc
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
     }
@@ -613,17 +613,17 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param User $favorite
+     * @param UserInterface $favorite
      */
-    public function addFavorite(User $favorite)
+    public function addFavorite(UserInterface $favorite)
     {
         $this->favorites->add($favorite);
     }
 
     /**
-     * @param User $favorite
+     * @param UserInterface $favorite
      */
-    public function removeFavorite(User $favorite)
+    public function removeFavorite(UserInterface $favorite)
     {
         $this->favorites->removeElement($favorite);
     }
@@ -637,17 +637,17 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param User $vote
+     * @param UserInterface $vote
      */
-    public function addVote(User $vote)
+    public function addVote(UserInterface $vote)
     {
         $this->votes->add($vote);
     }
 
     /**
-     * @param User $vote
+     * @param UserInterface $vote
      */
-    public function removeVote(User $vote)
+    public function removeVote(UserInterface $vote)
     {
         $this->votes->removeElement($vote);
     }

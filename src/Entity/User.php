@@ -9,12 +9,10 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * User
- *
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User extends BaseUser
+class User extends BaseUser implements UserInterface
 {
     /**
      * @var int
@@ -191,6 +189,9 @@ class User extends BaseUser
      */
     protected $followers;
 
+    /**
+     * @inheritdoc
+     */
     public function __construct()
     {
         parent::__construct();
@@ -200,7 +201,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -208,7 +209,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -216,7 +217,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -224,7 +225,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param DateTime $dateUpdate
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
@@ -232,7 +233,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -240,7 +241,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param int $reputation
+     * @inheritdoc
      */
     public function setReputation($reputation)
     {
@@ -248,7 +249,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getReputation()
     {
@@ -256,7 +257,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param string $resume
+     * @inheritdoc
      */
     public function setResume($resume)
     {
@@ -264,7 +265,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getResume()
     {
@@ -272,7 +273,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param string $color
+     * @inheritdoc
      */
     public function setColor($color)
     {
@@ -280,7 +281,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getColor()
     {
@@ -288,7 +289,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param int $donation
+     * @inheritdoc
      */
     public function setDonation($donation)
     {
@@ -296,7 +297,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getDonation()
     {
@@ -304,7 +305,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param bool $isNotifAuthor
+     * @inheritdoc
      */
     public function setIsNotifAuthor($isNotifAuthor)
     {
@@ -312,7 +313,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifAuthor()
     {
@@ -320,7 +321,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param bool $isNotifCommenter
+     * @inheritdoc
      */
     public function setIsNotifCommenter($isNotifCommenter)
     {
@@ -328,7 +329,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifCommenter()
     {
@@ -336,7 +337,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param bool $isNotifMention
+     * @inheritdoc
      */
     public function setIsNotifMention($isNotifMention)
     {
@@ -344,7 +345,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifMention()
     {
@@ -352,7 +353,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param bool $isNotifFollow
+     * @inheritdoc
      */
     public function setIsNotifFollow($isNotifFollow)
     {
@@ -360,7 +361,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifFollow()
     {
@@ -368,7 +369,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param bool $isNotifSuccessor
+     * @inheritdoc
      */
     public function setIsNotifSuccessor($isNotifSuccessor)
     {
@@ -376,7 +377,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifSuccessor()
     {
@@ -384,7 +385,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param bool $isShareDecks
+     * @inheritdoc
      */
     public function setIsShareDecks($isShareDecks)
     {
@@ -392,7 +393,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsShareDecks()
     {
@@ -400,7 +401,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Deck $deck
+     * @inheritdoc
      */
     public function addDeck(Deck $deck)
     {
@@ -408,7 +409,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Deck $deck
+     * @inheritdoc
      */
     public function removeDeck(Deck $deck)
     {
@@ -416,7 +417,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getDecks()
     {
@@ -424,7 +425,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Decklist $decklist
+     * @inheritdoc
      */
     public function addDecklist(Decklist $decklist)
     {
@@ -432,7 +433,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Decklist $decklist
+     * @inheritdoc
      */
     public function removeDecklist(Decklist $decklist)
     {
@@ -440,7 +441,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getDecklists()
     {
@@ -448,7 +449,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Comment $comment
+     * @inheritdoc
      */
     public function addComment(Comment $comment)
     {
@@ -456,7 +457,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Comment $comment
+     * @inheritdoc
      */
     public function removeComment(Comment $comment)
     {
@@ -464,7 +465,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getComments()
     {
@@ -472,7 +473,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Review $review
+     * @inheritdoc
      */
     public function addReview(Review $review)
     {
@@ -480,7 +481,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Review $review
+     * @inheritdoc
      */
     public function removeReview(Review $review)
     {
@@ -488,7 +489,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getReviews()
     {
@@ -496,7 +497,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Decklist $favorite
+     * @inheritdoc
      */
     public function addFavorite(Decklist $favorite)
     {
@@ -505,7 +506,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Decklist $favorite
+     * @inheritdoc
      */
     public function removeFavorite(Decklist $favorite)
     {
@@ -514,7 +515,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getFavorites()
     {
@@ -522,7 +523,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Decklist $vote
+     * @inheritdoc
      */
     public function addVote(Decklist $vote)
     {
@@ -531,7 +532,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Decklist $vote
+     * @inheritdoc
      */
     public function removeVote(Decklist $vote)
     {
@@ -540,7 +541,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getVotes()
     {
@@ -548,7 +549,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Review $reviewvote
+     * @inheritdoc
      */
     public function addReviewvote(Review $reviewvote)
     {
@@ -556,7 +557,7 @@ class User extends BaseUser
     }
 
     /**
-     * @param Review $reviewvote
+     * @inheritdoc
      */
     public function removeReviewvote(Review $reviewvote)
     {
@@ -564,7 +565,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getReviewvotes()
     {
@@ -572,23 +573,23 @@ class User extends BaseUser
     }
 
     /**
-     * @param User $following
+     * @inheritdoc
      */
-    public function addFollowing(User $following)
+    public function addFollowing(UserInterface $following)
     {
         $this->following->add($following);
     }
 
     /**
-     * @param User $following
+     * @inheritdoc
      */
-    public function removeFollowing(User $following)
+    public function removeFollowing(UserInterface $following)
     {
         $this->following->removeElement($following);
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getFollowing()
     {
@@ -596,23 +597,23 @@ class User extends BaseUser
     }
 
     /**
-     * @param User $follower
+     * @inheritdoc
      */
-    public function addFollower(User $follower)
+    public function addFollower(UserInterface $follower)
     {
         $this->followers->add($follower);
     }
 
     /**
-     * @param User $follower
+     * @inheritdoc
      */
-    public function removeFollower(User $follower)
+    public function removeFollower(UserInterface $follower)
     {
         $this->followers->removeElement($follower);
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getFollowers()
     {
@@ -620,10 +621,10 @@ class User extends BaseUser
     }
 
     /**
-     * @return float|int
+     * @inheritdoc
      */
     public function getMaxNbDecks()
     {
-        return 2*(100+floor($this->reputation/ 10));
+        return 2 * (100 + floor($this->reputation / 10));
     }
 }

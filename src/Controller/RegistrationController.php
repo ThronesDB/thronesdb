@@ -10,6 +10,7 @@ class RegistrationController extends BaseController
 {
     /**
      * Receive the confirmation token from user email provider, login the user
+     * @inheritdoc
      */
     public function confirmAction(Request $request, $token)
     {

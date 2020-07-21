@@ -5,8 +5,7 @@ namespace App\Controller;
 use App\Entity\Decklist;
 use App\Entity\Faction;
 use App\Entity\Tournament;
-use App\Entity\User;
-use DateTime;
+use App\Entity\UserInterface;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,12 +18,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Oauth2Controller extends Controller
 {
-    public function userAction(Request $request)
+    public function userAction()
     {
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = $this->getUser();
         $data = [
             'id'         => $user->getId(),
