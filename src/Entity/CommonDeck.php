@@ -7,7 +7,7 @@ namespace App\Entity;
 
  * @package App\Entity
  */
-abstract class BaseDeck implements CommonDeckInterface
+abstract class CommonDeck implements CommonDeckInterface
 {
     /**
      * @inheritdoc
@@ -22,7 +22,7 @@ abstract class BaseDeck implements CommonDeckInterface
             $agendas_code[] = $agenda->getCard()->getCode();
             $agendas_urls[] = $agenda->getCard()->getImageUrl();
         }
-        $array = [
+        return [
             'id' => $this->getId(),
             'name' => $this->getName(),
             'date_creation' => $this->getDateCreation()->format('c'),
@@ -38,8 +38,6 @@ abstract class BaseDeck implements CommonDeckInterface
             'isLegalForJoust' => $this->isLegalForJoust(),
             'isLegalForMelee' => $this->isLegalForMelee(),
         ];
-
-        return $array;
     }
 
     /**

@@ -14,7 +14,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\Table(name="deck")
  * @ORM\Entity
  */
-class Deck extends BaseDeck implements DeckInterface
+class Deck extends CommonDeck implements DeckInterface
 {
     /**
      * @var int
