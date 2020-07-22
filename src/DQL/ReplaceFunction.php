@@ -3,22 +3,29 @@
 namespace App\DQL;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * "REPLACE" "(" StringPrimary "," StringSecondary "," StringThird ")"
- *
- *
- * @link    www.prohoney.com
- * @since   2.0
- * @author  Igor Aleksejev
+ * @package App\DQL
  */
 class ReplaceFunction extends FunctionNode
 {
+    /**
+     * @var Node $stringPrimary
+     */
     public $stringPrimary;
+
+    /**
+     * @var Node $stringSecondary
+     */
     public $stringSecondary;
+
+    /**
+     * @var Node $stringThird
+     */
     public $stringThird;
 
     /**
@@ -31,9 +38,6 @@ class ReplaceFunction extends FunctionNode
                     $this->stringSecondary->dispatch($sqlWalker) . ', ' .
                     $this->stringThird->dispatch($sqlWalker) .
                 ')';
-        /*        return $sqlWalker->getConnection()->getDatabasePlatform()->getReplaceExpression(
-                                $this->stringPrimary, $this->stringSecondary, $this->stringThird
-                );*/
     }
 
     /**
