@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Deckchange
- *
  * @ORM\Table(name="deckchange")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Deckchange
+class Deckchange implements DeckchangeInterface
 {
     /**
      * @var int
@@ -63,7 +62,7 @@ class Deckchange
     protected $deck;
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -71,7 +70,7 @@ class Deckchange
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -79,7 +78,7 @@ class Deckchange
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -87,7 +86,7 @@ class Deckchange
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -95,7 +94,7 @@ class Deckchange
     }
 
     /**
-     * @param string $variation
+     * @inheritdoc
      */
     public function setVariation($variation)
     {
@@ -103,7 +102,7 @@ class Deckchange
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getVariation()
     {
@@ -111,7 +110,7 @@ class Deckchange
     }
 
     /**
-     * @param bool $isSaved
+     * @inheritdoc
      */
     public function setIsSaved($isSaved)
     {
@@ -119,7 +118,7 @@ class Deckchange
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsSaved()
     {
@@ -127,7 +126,7 @@ class Deckchange
     }
 
     /**
-     * @param DeckInterface $deck
+     * @inheritdoc
      */
     public function setDeck(DeckInterface $deck = null)
     {
@@ -135,7 +134,7 @@ class Deckchange
     }
 
     /**
-     * @return DeckInterface
+     * @inheritdoc
      */
     public function getDeck()
     {
@@ -143,7 +142,7 @@ class Deckchange
     }
 
     /**
-     * @param string $version
+     * @inheritdoc
      */
     public function setVersion($version)
     {
@@ -151,7 +150,7 @@ class Deckchange
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getVersion()
     {

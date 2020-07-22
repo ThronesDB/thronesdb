@@ -332,7 +332,7 @@ class Deck extends BaseDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function addChange(Deckchange $change)
+    public function addChange(DeckchangeInterface $change)
     {
         $this->changes->add($change);
     }
@@ -340,7 +340,7 @@ class Deck extends BaseDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function removeChange(Deckchange $change)
+    public function removeChange(DeckchangeInterface $change)
     {
         $this->changes->removeElement($change);
     }
@@ -467,20 +467,20 @@ class Deck extends BaseDeck implements DeckInterface
 
         $snapshots = [];
 
-        /**
+        /*
          * All changes, with the newest at position 0
          */
         $changes = $this->getChanges();
 
-        /**
+        /*
          * Saved changes, with the newest at position 0
-         * @var $savedChanges Deckchange[]
+         * @var DeckchangeInterface[] $savedChanges
          */
         $savedChanges = [];
 
-        /**
+        /*
          * Unsaved changes, with the oldest at position 0
-         * @var $unsavedChanges Deckchange[]
+         * @var DeckchangeInterface[] $unsavedChanges
          */
         $unsavedChanges = [];
 
