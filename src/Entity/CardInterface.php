@@ -344,14 +344,4 @@ interface CardInterface extends Serializable
      * @return bool
      */
     public function hasShadowKeyword($shadow): bool;
-
-    /**
-     * @inheritdoc
-     */
-    public function serialize();
-
-    /**
-     * @inheritdoc
-     */
-    public function unserialize($serialized);
 }
