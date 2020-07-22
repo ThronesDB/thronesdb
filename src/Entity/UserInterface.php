@@ -168,14 +168,14 @@ interface UserInterface extends SymfonyUserInterface
     public function getDecklists();
 
     /**
-     * @param Comment $comment
+     * @param CommentInterface $comment
      */
-    public function addComment(Comment $comment);
+    public function addComment(CommentInterface $comment);
 
     /**
-     * @param Comment $comment
+     * @param CommentInterface $comment
      */
-    public function removeComment(Comment $comment);
+    public function removeComment(CommentInterface $comment);
 
     /**
      * @return Collection

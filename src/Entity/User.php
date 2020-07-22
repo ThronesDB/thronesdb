@@ -451,7 +451,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function addComment(Comment $comment)
+    public function addComment(CommentInterface $comment)
     {
         $this->comments->add($comment);
     }
@@ -459,7 +459,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function removeComment(Comment $comment)
+    public function removeComment(CommentInterface $comment)
     {
         $this->comments->removeElement($comment);
     }

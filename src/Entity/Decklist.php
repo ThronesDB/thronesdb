@@ -445,17 +445,17 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param Comment $comment
+     * @param CommentInterface $comment
      */
-    public function addComment(Comment $comment)
+    public function addComment(CommentInterface $comment)
     {
         $this->comments->add($comment);
     }
 
     /**
-     * @param Comment $comment
+     * @param CommentInterface $comment
      */
-    public function removeComment(Comment $comment)
+    public function removeComment(CommentInterface $comment)
     {
         $this->comments->removeElement($comment);
     }

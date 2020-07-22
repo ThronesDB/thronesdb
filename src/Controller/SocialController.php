@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CommentInterface;
 use App\Entity\Cycle;
 use App\Entity\Deck;
 use App\Entity\Decklist;
@@ -638,7 +639,7 @@ class SocialController extends Controller
         }
 
         $commenters = array_map(
-            function (Comment $comment) {
+            function (CommentInterface $comment) {
                 return $comment->getUser()->getUsername();
             },
             $decklist->getComments()->getValues()
@@ -787,7 +788,7 @@ class SocialController extends Controller
                 }
             }
             foreach ($decklist->getComments() as $comment) {
-                /* @var $comment Comment */
+                /* @var CommentInterface $comment */
                 $commenter = $comment->getUser();
                 if ($commenter && $commenter->getIsNotifCommenter()) {
                     if (!isset($spool[$commenter->getEmail()])) {

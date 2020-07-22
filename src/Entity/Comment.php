@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Comment
- *
  * @ORM\Table(name="comment")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Comment
+class Comment implements CommentInterface
 {
     /**
      * @var int
@@ -65,7 +64,7 @@ class Comment
     protected $decklist;
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -73,7 +72,7 @@ class Comment
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -81,7 +80,7 @@ class Comment
     }
 
     /**
-     * @param string $text
+     * @inheritdoc
      */
     public function setText($text)
     {
@@ -89,7 +88,7 @@ class Comment
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getText()
     {
@@ -97,7 +96,7 @@ class Comment
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -105,7 +104,7 @@ class Comment
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -113,7 +112,7 @@ class Comment
     }
 
     /**
-     * @param bool $isHidden
+     * @inheritdoc
      */
     public function setIsHidden($isHidden)
     {
@@ -121,7 +120,7 @@ class Comment
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsHidden()
     {
@@ -129,7 +128,7 @@ class Comment
     }
 
     /**
-     * @param UserInterface $user
+     * @inheritdoc
      */
     public function setUser(UserInterface $user = null)
     {
@@ -137,7 +136,7 @@ class Comment
     }
 
     /**
-     * @return UserInterface
+     * @inheritdoc
      */
     public function getUser()
     {
@@ -145,7 +144,7 @@ class Comment
     }
 
     /**
-     * @param Decklist $decklist
+     * @inheritdoc
      */
     public function setDecklist(Decklist $decklist = null)
     {
@@ -153,7 +152,7 @@ class Comment
     }
 
     /**
-     * @return Decklist
+     * @inheritdoc
      */
     public function getDecklist()
     {
