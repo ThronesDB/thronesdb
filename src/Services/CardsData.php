@@ -6,6 +6,7 @@ use App\Controller\SearchController;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Cycle;
+use App\Entity\CycleInterface;
 use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\Review;
@@ -133,7 +134,7 @@ class CardsData
 
     public function allsetsdata()
     {
-        /** @var Cycle[] $list_cycles */
+        /** @var CycleInterface[] $list_cycles */
         $list_cycles = $this->doctrine->getRepository(Cycle::class)->findAll();
         $lines = [];
 
@@ -163,13 +164,13 @@ class CardsData
 
     public function allsetsdatathreaded()
     {
+        /* @var CycleInterface[] $list_cycles */
         $list_cycles = $this->doctrine->getRepository(Cycle::class)->findBy(
             [],
             array("position" => "ASC")
         );
         $cycles = [];
 
-        /* @var $cycle Cycle */
         foreach ($list_cycles as $cycle) {
             $list_packs = $cycle->getPacks();
             $packs = [];

@@ -8,16 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Serializable;
 
 /**
- * Cycle
- *
  * @ORM\Table(name="cycle", uniqueConstraints={@ORM\UniqueConstraint(name="cycle_code_idx", columns={"code"})})
  * @ORM\Entity(repositoryClass="App\Repository\CycleRepository")
  */
 
-class Cycle implements Serializable
+class Cycle implements CycleInterface
 {
     /**
      * @var int
@@ -82,16 +79,13 @@ class Cycle implements Serializable
      */
     protected $packs;
 
-    /**
-     * Cycle constructor.
-     */
     public function __construct()
     {
         $this->packs = new ArrayCollection();
     }
 
     /**
-     * @param $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -99,7 +93,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -107,7 +101,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param string $code
+     * @inheritdoc
      */
     public function setCode($code)
     {
@@ -115,7 +109,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -123,7 +117,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param string $name
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -131,7 +125,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -139,7 +133,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param int $position
+     * @inheritdoc
      */
     public function setPosition($position)
     {
@@ -147,7 +141,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getPosition()
     {
@@ -155,7 +149,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param int $size
+     * @inheritdoc
      */
     public function setSize($size)
     {
@@ -163,7 +157,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getSize()
     {
@@ -171,7 +165,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -179,7 +173,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -187,7 +181,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param DateTime $dateUpdate
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
@@ -195,7 +189,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -203,7 +197,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param Pack $pack
+     * @inheritdoc
      */
     public function addPack(Pack $pack)
     {
@@ -211,7 +205,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @param Pack $pack
+     * @inheritdoc
      */
     public function removePack(Pack $pack)
     {
@@ -219,7 +213,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getPacks()
     {
@@ -249,7 +243,7 @@ class Cycle implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function __toString()
     {

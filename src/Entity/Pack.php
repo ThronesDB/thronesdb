@@ -96,7 +96,7 @@ class Pack implements Serializable
     protected $cards;
 
     /**
-     * @var Cycle
+     * @var CycleInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Cycle", inversedBy="packs")
      * @ORM\JoinColumns({
@@ -281,15 +281,15 @@ class Pack implements Serializable
     }
 
     /**
-     * @param Cycle $cycle
+     * @param CycleInterface $cycle
      */
-    public function setCycle(Cycle $cycle = null)
+    public function setCycle(CycleInterface $cycle = null)
     {
         $this->cycle = $cycle;
     }
 
     /**
-     * @return Cycle
+     * @return CycleInterface
      */
     public function getCycle()
     {
