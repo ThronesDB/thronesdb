@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Type;
+use App\Entity\TypeInterface;
 use App\Services\DataimportFileLocator;
 
 /**
@@ -17,7 +18,7 @@ class LoadTypeData extends AbstractFixture
     }
 
     /**
-     * @return Type
+     * @return TypeInterface
      */
     protected function createEntity()
     {
@@ -25,9 +26,9 @@ class LoadTypeData extends AbstractFixture
     }
 
     /**
-     * @param Type $entity
+     * @param TypeInterface $entity
      * @param array $data
-     * @return Type
+     * @return TypeInterface
      */
     protected function populateEntity($entity, array $data)
     {

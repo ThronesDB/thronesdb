@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Faction;
 use App\Entity\Type;
+use App\Entity\TypeInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +28,7 @@ class DefaultController extends Controller
         $decklist_manager->setLimit(1);
 
         $typeNames = [];
-        /* @var Type $type */
+        /* @var TypeInterface $type */
         foreach ($this->getDoctrine()->getRepository(Type::class)->findAll() as $type) {
             $typeNames[$type->getCode()] = $type->getName();
         }

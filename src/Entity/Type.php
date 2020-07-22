@@ -6,15 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Serializable;
 
 /**
- * Type
- *
  * @ORM\Table(name="type", uniqueConstraints={@ORM\UniqueConstraint(name="type_code_idx", columns={"code"})})
  * @ORM\Entity(repositoryClass="App\Repository\TypeRepository")
+ * @package App\Entity
  */
-class Type implements Serializable
+class Type implements TypeInterface
 {
     /**
      * @var int
@@ -58,7 +56,7 @@ class Type implements Serializable
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -66,7 +64,7 @@ class Type implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -74,7 +72,7 @@ class Type implements Serializable
     }
 
     /**
-     * @param string $code
+     * @inheritdoc
      */
     public function setCode($code)
     {
@@ -82,7 +80,7 @@ class Type implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -90,7 +88,7 @@ class Type implements Serializable
     }
 
     /**
-     * @param string $name
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -98,7 +96,7 @@ class Type implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -106,7 +104,7 @@ class Type implements Serializable
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function addCard(CardInterface $card)
     {
@@ -114,7 +112,7 @@ class Type implements Serializable
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function removeCard(CardInterface $card)
     {
@@ -122,7 +120,7 @@ class Type implements Serializable
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getCards()
     {

@@ -279,12 +279,12 @@ interface CardInterface extends Serializable
     public function getPack();
 
     /**
-     * @param Type $type
+     * @param TypeInterface $type
      */
-    public function setType(Type $type = null);
+    public function setType(TypeInterface $type = null);
 
     /**
-     * @return Type
+     * @return TypeInterface
      */
     public function getType();
 

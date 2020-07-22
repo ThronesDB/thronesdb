@@ -694,7 +694,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setType(Type $type = null)
+    public function setType(TypeInterface $type = null)
     {
         $this->type = $type;
     }
