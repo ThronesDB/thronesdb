@@ -2,8 +2,6 @@
 
 namespace App\Classes;
 
-use App\Entity\Card;
-
 /**
  * Banned List Checker.
  * The currently implemented BL were issued by The Conclave (v2.0), effective July 3rd, 2020.

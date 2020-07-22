@@ -2,9 +2,6 @@
 
 namespace App\Classes;
 
-use App\Entity\Decklistslot;
-use Doctrine\Common\Collections\Collection;
-
 /**
  * Checks if a given list of cards is legal for tournament play in the Joust and Melee formats.
  * The currently implemented RLs were issued by The Conclave (v2.0), effective July 3rd, 2020.
