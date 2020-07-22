@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Entity\Card;
-use App\Entity\Deck;
 use App\Entity\Deckchange;
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Deckslot;
 use App\Entity\Faction;
@@ -67,14 +67,14 @@ class DeckManager
 
     /**
      * @param UserInterface $user
-     * @param Deck $deck
+     * @param DeckInterface $deck
      * @param int $decklist_id
      * @param string $name
      * @param Faction $faction
      * @param string $description
      * @param string|array $tags
      * @param array $content
-     * @param Deck $source_deck
+     * @param DeckInterface $source_deck
      * @return int
      * @throws ORMException
      * @throws OptimisticLockException

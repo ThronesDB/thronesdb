@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Faction;
 use App\Entity\Tournament;
@@ -61,11 +62,11 @@ class Oauth2Controller extends Controller
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
-        /* @var $decks Deck[] */
+        /* @var $decks DeckInterface[] */
         $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['user' => $this->getUser()]);
 
         if (! empty($decks)) {
-            $dateUpdates = array_map(function (Deck $deck) {
+            $dateUpdates = array_map(function (DeckInterface $deck) {
                 return $deck->getDateUpdate();
             }, $decks);
 
@@ -106,7 +107,7 @@ class Oauth2Controller extends Controller
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
 
         if ($deck->getUser()->getId() !== $this->getUser()->getId()) {
@@ -190,8 +191,6 @@ class Oauth2Controller extends Controller
      */
     public function saveDeckAction($id, Request $request)
     {
-        /* @var $deck Deck */
-
         if (!$id) {
             $deck = new Deck();
             $deck->setUuid(Uuid::uuid4());
@@ -319,7 +318,7 @@ class Oauth2Controller extends Controller
      */
     public function publishDeckAction($id, Request $request)
     {
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
         if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied to this object.");

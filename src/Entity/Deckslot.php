@@ -6,8 +6,6 @@ use App\Model\SlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Deckslot
- *
  * @ORM\Table(name="deckslot")
  * @ORM\Entity
  */
@@ -30,7 +28,7 @@ class Deckslot implements SlotInterface
     protected $quantity;
 
     /**
-     * @var Deck
+     * @var DeckInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="slots")
      * @ORM\JoinColumns({
@@ -82,15 +80,15 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @param Deck $deck
+     * @param DeckInterface $deck
      */
-    public function setDeck(Deck $deck = null)
+    public function setDeck(DeckInterface $deck = null)
     {
         $this->deck = $deck;
     }
 
     /**
-     * @return Deck
+     * @return DeckInterface
      */
     public function getDeck()
     {

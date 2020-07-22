@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Card;
 use App\Entity\Deck;
 use App\Entity\Deckchange;
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Deckslot;
 use App\Entity\Faction;
@@ -230,10 +231,7 @@ class BuilderController extends Controller
 
     public function downloadAction(Request $request, $deck_uuid)
     {
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
@@ -263,7 +261,11 @@ class BuilderController extends Controller
         }
     }
 
-    protected function downloadInOctgnFormat(Deck $deck)
+    /**
+     * @param DeckInterface $deck
+     * @return Response
+     */
+    protected function downloadInOctgnFormat(DeckInterface $deck)
     {
         $content = $this->renderView(
             'Export/octgn.xml.twig',
@@ -287,7 +289,11 @@ class BuilderController extends Controller
         return $response;
     }
 
-    protected function downloadInDefaultTextFormat(Deck $deck)
+    /**
+     * @param DeckInterface $deck
+     * @return Response
+     */
+    protected function downloadInDefaultTextFormat(DeckInterface $deck)
     {
         $content = $this->renderView(
             'Export/default.txt.twig',
@@ -312,7 +318,11 @@ class BuilderController extends Controller
         return $response;
     }
 
-    protected function downloadInTextFormatSortedByCycle(Deck $deck)
+    /**
+     * @param DeckInterface $deck
+     * @return Response
+     */
+    protected function downloadInTextFormatSortedByCycle(DeckInterface $deck)
     {
         $content = $this->renderView(
             'Export/sortedbycycle.txt.twig',
@@ -339,10 +349,7 @@ class BuilderController extends Controller
 
     public function cloneAction($deck_uuid)
     {
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
@@ -382,7 +389,7 @@ class BuilderController extends Controller
     public function saveAction(Request $request)
     {
 
-        /* @var $em EntityManager */
+        /* @var EntityManager $em*/
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
@@ -393,7 +400,6 @@ class BuilderController extends Controller
         }
 
         $id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        /** @var Deck $deck */
         $deck = null;
         $source_deck = null;
         if ($id) {
@@ -466,7 +472,7 @@ class BuilderController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $deck_id = filter_var($request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
-        /** @var Deck $deck */
+        /** @var DeckInterface $deck */
         $deck = $em->getRepository(Deck::class)->find($deck_id);
         if (!$deck) {
             return $this->redirect($this->generateUrl('decks_list'));
@@ -503,7 +509,7 @@ class BuilderController extends Controller
         $list_id = explode('-', $request->get('ids'));
 
         foreach ($list_id as $id) {
-            /* @var $deck Deck */
+            /* @var DeckInterface $deck */
             $deck = $em->getRepository(Deck::class)->find($id);
             if (!$deck) {
                 continue;
@@ -528,7 +534,7 @@ class BuilderController extends Controller
 
     public function editAction($deck_uuid)
     {
-        /** @var Deck $deck */
+        /** @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         if ($this->getUser()->getId() != $deck->getUser()->getId()) {
@@ -556,7 +562,7 @@ class BuilderController extends Controller
      */
     public function viewAction($deck_uuid)
     {
-        /** @var Deck $deck */
+        /** @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         if (!$deck) {
@@ -603,9 +609,9 @@ class BuilderController extends Controller
     {
         $repo = $this->getDoctrine()->getManager()->getRepository(Deck::class);
 
-        /* @var Deck $deck1 */
+        /* @var DeckInterface $deck1 */
         $deck1 = $repo->findOneBy(['uuid' => $deck1_uuid]);
-        /* @var Deck $deck2 */
+        /* @var DeckInterface $deck2 */
         $deck2 = $repo->findOneBy(['uuid' => $deck2_uuid]);
 
         if (!$deck1 || !$deck2) {
@@ -682,7 +688,7 @@ class BuilderController extends Controller
         if (count($decks)) {
             $tags = [];
             foreach ($decks as $deck) {
-                /** @var Deck $deck */
+                /* @var DeckInterface $deck */
                 $tags[] = $deck->getTags();
             }
             $tags = array_unique($tags);
@@ -752,7 +758,7 @@ class BuilderController extends Controller
 
         $deck_id = $request->get('deck_id');
 
-        /** @var Deck $deck */
+        /* @var DeckInterface $deck */
         $deck = $em->getRepository(Deck::class)->find($deck_id);
         if (!$deck) {
             throw new BadRequestHttpException("Cannot find deck ".$deck_id);

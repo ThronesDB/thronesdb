@@ -53,7 +53,7 @@ class Deckchange
     protected $version;
 
     /**
-     * @var Deck
+     * @var DeckInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="changes")
      * @ORM\JoinColumns({
@@ -127,15 +127,15 @@ class Deckchange
     }
 
     /**
-     * @param Deck $deck
+     * @param DeckInterface $deck
      */
-    public function setDeck(Deck $deck = null)
+    public function setDeck(DeckInterface $deck = null)
     {
         $this->deck = $deck;
     }
 
     /**
-     * @return Deck
+     * @return DeckInterface
      */
     public function getDeck()
     {

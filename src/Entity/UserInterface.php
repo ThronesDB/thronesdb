@@ -138,14 +138,14 @@ interface UserInterface extends SymfonyUserInterface
     public function getIsShareDecks();
 
     /**
-     * @param Deck $deck
+     * @param DeckInterface $deck
      */
-    public function addDeck(Deck $deck);
+    public function addDeck(DeckInterface $deck);
 
     /**
-     * @param Deck $deck
+     * @param DeckInterface $deck
      */
-    public function removeDeck(Deck $deck);
+    public function removeDeck(DeckInterface $deck);
 
     /**
      * @return Collection

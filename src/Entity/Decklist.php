@@ -12,8 +12,6 @@ use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Decklist
- *
  * @ORM\Table(name="decklist")
  * @ORM\Entity(repositoryClass="App\Repository\DecklistRepository")
  */
@@ -493,17 +491,17 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param Deck $child
+     * @param DeckInterface $child
      */
-    public function addChild(Deck $child)
+    public function addChild(DeckInterface $child)
     {
         $this->children->add($child);
     }
 
     /**
-     * @param Deck $child
+     * @param DeckInterface $child
      */
-    public function removeChild(Deck $child)
+    public function removeChild(DeckInterface $child)
     {
         $this->children->removeElement($child);
     }
@@ -565,15 +563,15 @@ class Decklist extends BaseDeck implements JsonSerializable
     }
 
     /**
-     * @param Deck $parent
+     * @param DeckInterface $parent
      */
-    public function setParent(Deck $parent = null)
+    public function setParent(DeckInterface $parent = null)
     {
         $this->parent = $parent;
     }
 
     /**
-     * @return Deck
+     * @return DeckInterface
      */
     public function getParent()
     {

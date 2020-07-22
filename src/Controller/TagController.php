@@ -1,10 +1,11 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Deck;
+use App\Entity\DeckInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\Deck;
 use Symfony\Component\HttpFoundation\Response;
 
 class TagController extends Controller
@@ -20,7 +21,7 @@ class TagController extends Controller
         $response = array("success" => true);
 
         foreach ($list_id as $id) {
-            /* @var $deck Deck */
+            /* @var DeckInterface $deck */
             $deck = $em->getRepository(Deck::class)->find($id);
             if (!$deck) {
                 continue;
@@ -48,7 +49,7 @@ class TagController extends Controller
         $response = array("success" => true);
 
         foreach ($list_id as $id) {
-            /* @var $deck Deck */
+            /* @var DeckInterface $deck */
             $deck = $em->getRepository(Deck::class)->find($id);
             if (!$deck) {
                 continue;
@@ -75,7 +76,7 @@ class TagController extends Controller
         $response = array("success" => true);
 
         foreach ($list_id as $id) {
-            /* @var $deck Deck */
+            /* @var DeckInterface $deck */
             $deck = $em->getRepository(Deck::class)->find($id);
             if (!$deck) {
                 continue;

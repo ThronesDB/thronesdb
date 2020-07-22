@@ -403,7 +403,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function addDeck(Deck $deck)
+    public function addDeck(DeckInterface $deck)
     {
         $this->decks->add($deck);
     }
@@ -411,7 +411,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function removeDeck(Deck $deck)
+    public function removeDeck(DeckInterface $deck)
     {
         $this->decks->removeElement($deck);
     }

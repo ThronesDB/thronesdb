@@ -2,7 +2,6 @@
 
 namespace App\Helper;
 
-use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\CommonDeckInterface;
 use App\Model\SlotCollectionInterface;
@@ -79,7 +78,7 @@ class DeckValidationHelper
         if ($plotDeckSize < $expectedPlotDeckSize) {
             return 'too_few_plots';
         }
-        /* @var integer $expectedPlotDeckSpread Expected number of different plots */
+        // Expected number of different plots
         $expectedPlotDeckSpread = $expectedPlotDeckSize - $expectedMaxDoublePlot;
         if (count($plotDeck) < $expectedPlotDeckSpread) {
             return 'too_many_different_plots';
@@ -376,7 +375,7 @@ class DeckValidationHelper
         $names = [];
         foreach ($slots as $slot) {
             $names[] = $slot->getCard()->getName();
-        };
+        }
         return count(array_unique($names)) >= 7;
     }
 

@@ -132,7 +132,7 @@ class UserController extends Controller
             if (isset($decklist_id)) {
                 /* @var $em EntityManager */
                 $em = $this->getDoctrine()->getManager();
-                /* @var $decklist Decklist */
+                /* @var Decklist $decklist */
                 $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
 
                 if ($decklist) {

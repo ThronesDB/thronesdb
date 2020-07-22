@@ -4,15 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Card;
 use App\Entity\CardInterface;
-use App\Entity\Pack;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Decklist;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Pack;
+use DateInterval;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Exception;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Swagger\Annotations as SWG;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ApiController extends Controller
@@ -37,8 +41,8 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
      * @param Request $request
+     * @return Response
      */
     public function listPacksAction(Request $request)
     {
@@ -121,8 +125,9 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
+     * @param $card_code
      * @param Request $request
+     * @return Response|NotFoundHttpException
      */
     public function getCardAction($card_code, Request $request)
     {
@@ -190,8 +195,8 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
      * @param Request $request
+     * @return Response
      */
     public function listCardsAction(Request $request)
     {
@@ -260,8 +265,10 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
+     * @param $pack_code
      * @param Request $request
+     * @return Response|NotFoundHttpException
+     * @throws Exception
      */
     public function listCardsByPackAction($pack_code, Request $request)
     {
@@ -338,7 +345,9 @@ class ApiController extends Controller
      *     )
      * )
      *
+     * @param $decklist_id
      * @param Request $request
+     * @return Response|NotFoundHttpException
      */
     public function getDecklistAction($decklist_id, Request $request)
     {
@@ -355,7 +364,7 @@ class ApiController extends Controller
             return $response;
         }
 
-        /* @var $decklist Decklist */
+        /* @var Decklist $decklist */
         $decklist = $this->getDoctrine()->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist instanceof Decklist) {
             return $this->createNotFoundException();
@@ -398,8 +407,9 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
+     * @param string $date
      * @param Request $request
+     * @return Response
      */
     public function listDecklistsByDateAction($date, Request $request)
     {
@@ -416,10 +426,10 @@ class ApiController extends Controller
             return $response;
         }
 
-        $start = \DateTime::createFromFormat('Y-m-d', $date);
+        $start = DateTime::createFromFormat('Y-m-d', $date);
         $start->setTime(0, 0, 0);
         $end = clone $start;
-        $end->add(new \DateInterval("P1D"));
+        $end->add(new DateInterval("P1D"));
 
         $expr = Criteria::expr();
         $criteria = Criteria::create();

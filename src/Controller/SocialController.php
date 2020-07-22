@@ -6,6 +6,7 @@ use App\Entity\Card;
 use App\Entity\CommentInterface;
 use App\Entity\Cycle;
 use App\Entity\Deck;
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Comment;
 use App\Entity\Faction;
@@ -63,7 +64,7 @@ class SocialController extends Controller
             throw $this->createAccessDeniedException($translator->trans('login_required'));
         }
 
-        /* @var Deck $deck */
+        /* @var DeckInterface $deck */
         $deck = $em->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
         if (!$deck || $deck->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException($translator->trans('decklist.publish.errors.unauthorized'));
@@ -113,7 +114,7 @@ class SocialController extends Controller
         $new_signature = md5($new_content);
         $old_decklists = $em->getRepository(Decklist::class)->findBy(['signature' => $new_signature]);
 
-        /* @var $decklist Decklist */
+        /* @var Decklist $decklist */
         foreach ($old_decklists as $decklist) {
             if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
                 $url = $this->generateUrl(
@@ -194,7 +195,7 @@ class SocialController extends Controller
 
         $deck_id = intval(filter_var($request->request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT));
 
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getRepository(Deck::class)->find($deck_id);
         if ($user->getId() !== $deck->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied to this object.");
@@ -400,7 +401,6 @@ class SocialController extends Controller
         $precedent = $decklist->getPrecedent();
 
         $children_decks = $decklist->getChildren();
-        /* @var $children_deck Deck */
         foreach ($children_decks as $children_deck) {
             $children_deck->setParent($precedent);
         }
@@ -679,7 +679,7 @@ class SocialController extends Controller
 
         $decklist_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
 
-        /* @var $decklist Decklist */
+        /* @var Decklist $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist) {
             throw new NotFoundHttpException('Wrong id');
