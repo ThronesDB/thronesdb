@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Exception;
