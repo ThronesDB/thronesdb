@@ -9,6 +9,7 @@ use App\Entity\Cycle;
 use App\Entity\CycleInterface;
 use App\Entity\Faction;
 use App\Entity\Pack;
+use App\Entity\PackInterface;
 use App\Entity\Review;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -175,7 +176,7 @@ class CardsData
             $list_packs = $cycle->getPacks();
             $packs = [];
 
-            /* @var $pack Pack */
+            /* @var PackInterface $pack */
             foreach ($list_packs as $pack) {
                 $label = $pack->getName();
 

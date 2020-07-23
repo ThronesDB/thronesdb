@@ -8,7 +8,7 @@ use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Deckslot;
 use App\Entity\Faction;
-use App\Entity\Pack;
+use App\Entity\PackInterface;
 use App\Entity\UserInterface;
 use App\Helper\AgendaHelper;
 use App\Helper\DeckValidationHelper;
@@ -97,7 +97,7 @@ class DeckManager
         $deck->setUser($user);
         $deck->setMinorVersion($deck->getMinorVersion() + 1);
         $cards = [];
-        /* @var $latestPack Pack */
+        /* @var PackInterface $latestPack */
         $latestPack = null;
         foreach ($content as $card_code => $qty) {
             $card = $this->doctrine->getRepository(Card::class)->findOneBy(array(

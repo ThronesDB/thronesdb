@@ -6,6 +6,7 @@ use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Decklist;
 use App\Entity\Pack;
+use App\Entity\PackInterface;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -61,7 +62,7 @@ class ApiController extends Controller
         // check the last-modified-since header
 
         $lastModified = null;
-        /* @var $pack Pack */
+        /* @var PackInterface $pack */
         foreach ($list_packs as $pack) {
             if (!$lastModified || $lastModified < $pack->getDateUpdate()) {
                 $lastModified = $pack->getDateUpdate();
@@ -75,7 +76,7 @@ class ApiController extends Controller
         // build the response
 
         $packs = array();
-        /* @var $pack Pack */
+        /* @var PackInterface $pack */
         foreach ($list_packs as $pack) {
             $real = count($pack->getCards());
             $max = $pack->getSize();
@@ -288,7 +289,7 @@ class ApiController extends Controller
         }
 
         $pack = $this->getDoctrine()->getRepository(Pack::class)->findOneBy(array('code' => $pack_code));
-        if (!$pack instanceof Pack) {
+        if (!$pack instanceof PackInterface) {
             return $this->createNotFoundException();
         }
 

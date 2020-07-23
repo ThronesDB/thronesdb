@@ -69,12 +69,12 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     public function getChanges();
 
     /**
-     * @param Pack $lastPack
+     * @param PackInterface $lastPack
      */
-    public function setLastPack(Pack $lastPack = null);
+    public function setLastPack(PackInterface $lastPack = null);
 
     /**
-     * @return Pack
+     * @return PackInterface
      */
     public function getLastPack();
 

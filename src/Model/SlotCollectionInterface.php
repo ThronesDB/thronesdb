@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\Pack;
+use App\Entity\PackInterface;
 use ArrayAccess;
 use Countable;
 use Doctrine\Common\Collections\Collection;
@@ -32,7 +32,7 @@ interface SlotCollectionInterface extends Countable, IteratorAggregate, ArrayAcc
 
     /**
      * Get included packs
-     * @return Pack[]
+     * @return PackInterface[]
      */
     public function getIncludedPacks();
 

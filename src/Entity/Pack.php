@@ -8,15 +8,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Serializable;
 
 /**
- * Pack
- *
  * @ORM\Table(name="pack", uniqueConstraints={@ORM\UniqueConstraint(name="pack_code_idx", columns={"code"})})
  * @ORM\Entity(repositoryClass="App\Repository\PackRepository")
+ * @package App\Entity
  */
-class Pack implements Serializable
+class Pack implements PackInterface
 {
     /**
      * @var int
@@ -104,6 +102,7 @@ class Pack implements Serializable
      * })
      */
     protected $cycle;
+
     /**
      * Constructor
      */
@@ -113,7 +112,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -121,7 +120,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -129,7 +128,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param string $code
+     * @inheritdoc
      */
     public function setCode($code)
     {
@@ -137,7 +136,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -145,7 +144,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param string $name
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -153,7 +152,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -161,7 +160,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param int $position
+     * @inheritdoc
      */
     public function setPosition($position)
     {
@@ -169,7 +168,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getPosition()
     {
@@ -177,7 +176,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param int $size
+     * @inheritdoc
      */
     public function setSize($size)
     {
@@ -185,7 +184,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getSize()
     {
@@ -193,7 +192,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -201,7 +200,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -209,7 +208,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param DateTime $dateUpdate
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
@@ -217,7 +216,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -225,7 +224,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param DateTime $dateRelease
+     * @inheritdoc
      */
     public function setDateRelease($dateRelease)
     {
@@ -233,7 +232,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateRelease()
     {
@@ -241,7 +240,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param int $cgdbId
+     * @inheritdoc
      */
     public function setCgdbId($cgdbId)
     {
@@ -249,7 +248,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getCgdbId()
     {
@@ -257,7 +256,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function addCard(CardInterface $card)
     {
@@ -265,7 +264,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function removeCard(CardInterface $card)
     {
@@ -273,7 +272,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getCards()
     {
@@ -281,7 +280,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @param CycleInterface $cycle
+     * @inheritdoc
      */
     public function setCycle(CycleInterface $cycle = null)
     {
@@ -289,7 +288,7 @@ class Pack implements Serializable
     }
 
     /**
-     * @return CycleInterface
+     * @inheritdoc
      */
     public function getCycle()
     {

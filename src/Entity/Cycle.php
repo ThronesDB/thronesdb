@@ -199,7 +199,7 @@ class Cycle implements CycleInterface
     /**
      * @inheritdoc
      */
-    public function addPack(Pack $pack)
+    public function addPack(PackInterface $pack)
     {
         $this->packs->add($pack);
     }
@@ -207,7 +207,7 @@ class Cycle implements CycleInterface
     /**
      * @inheritdoc
      */
-    public function removePack(Pack $pack)
+    public function removePack(PackInterface $pack)
     {
         $this->packs->removeElement($pack);
     }

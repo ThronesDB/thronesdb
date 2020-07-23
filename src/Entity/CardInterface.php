@@ -268,12 +268,12 @@ interface CardInterface extends Serializable
     public function getReviews();
 
     /**
-     * @param Pack $pack
+     * @param PackInterface $pack
      */
-    public function setPack(Pack $pack = null);
+    public function setPack(PackInterface $pack = null);
 
     /**
-     * @return Pack
+     * @return PackInterface
      */
     public function getPack();
 

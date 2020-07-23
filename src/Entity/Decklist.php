@@ -160,7 +160,7 @@ class Decklist extends CommonDeck implements JsonSerializable
     protected $faction;
 
     /**
-     * @var Pack
+     * @var PackInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Pack")
      * @ORM\JoinColumns({
@@ -170,7 +170,7 @@ class Decklist extends CommonDeck implements JsonSerializable
     protected $lastPack;
 
     /**
-     * @var Deck
+     * @var DeckInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="children")
      * @ORM\JoinColumns({
@@ -547,15 +547,15 @@ class Decklist extends CommonDeck implements JsonSerializable
     }
 
     /**
-     * @param Pack $lastPack
+     * @param PackInterface $lastPack
      */
-    public function setLastPack(Pack $lastPack = null)
+    public function setLastPack(PackInterface $lastPack = null)
     {
         $this->lastPack = $lastPack;
     }
 
     /**
-     * @return Pack
+     * @return PackInterface
      */
     public function getLastPack()
     {

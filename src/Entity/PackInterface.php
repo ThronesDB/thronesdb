@@ -7,12 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Serializable;
 
 /**
-  * @package App\Entity
+ * @package App\Entity
  */
-interface CycleInterface extends Serializable
+interface PackInterface extends Serializable
 {
     /**
-     * @param $id
+     * @param int $id
      */
     public function setId($id);
 
@@ -82,17 +82,47 @@ interface CycleInterface extends Serializable
     public function getDateUpdate();
 
     /**
-     * @param PackInterface $pack
+     * @param DateTime $dateRelease
      */
-    public function addPack(PackInterface $pack);
+    public function setDateRelease($dateRelease);
 
     /**
-     * @param PackInterface $pack
+     * @return DateTime
      */
-    public function removePack(PackInterface $pack);
+    public function getDateRelease();
+
+    /**
+     * @param int $cgdbId
+     */
+    public function setCgdbId($cgdbId);
+
+    /**
+     * @return int
+     */
+    public function getCgdbId();
+
+    /**
+     * @param CardInterface $card
+     */
+    public function addCard(CardInterface $card);
+
+    /**
+     * @param CardInterface $card
+     */
+    public function removeCard(CardInterface $card);
 
     /**
      * @return Collection
      */
-    public function getPacks();
+    public function getCards();
+
+    /**
+     * @param CycleInterface $cycle
+     */
+    public function setCycle(CycleInterface $cycle = null);
+
+    /**
+     * @return CycleInterface
+     */
+    public function getCycle();
 }

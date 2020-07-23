@@ -139,7 +139,7 @@ class Deck extends CommonDeck implements DeckInterface
     protected $faction;
 
     /**
-     * @var Pack
+     * @var PackInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Pack")
      * @ORM\JoinColumns({
@@ -388,7 +388,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setLastPack(Pack $lastPack = null)
+    public function setLastPack(PackInterface $lastPack = null)
     {
         $this->lastPack = $lastPack;
     }

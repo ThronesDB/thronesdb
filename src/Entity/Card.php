@@ -678,7 +678,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setPack(Pack $pack = null)
+    public function setPack(PackInterface $pack = null)
     {
         $this->pack = $pack;
     }
@@ -899,6 +899,7 @@ class Card implements CardInterface
 
     /**
      * @inheritdoc
+     * @throws Exception
      */
     public function unserialize($serialized)
     {

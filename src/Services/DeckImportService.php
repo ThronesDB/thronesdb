@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\Card;
 use App\Entity\Faction;
 use App\Entity\Pack;
+use App\Entity\PackInterface;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -41,10 +42,10 @@ class DeckImportService
 
         // load all packs upfront and map them by their names and codes for easy lookup below
         $packs = $this->em->getRepository(Pack::class)->findAll();
-        $packsByName = array_combine(array_map(function (Pack $pack) {
+        $packsByName = array_combine(array_map(function (PackInterface $pack) {
             return $pack->getName();
         }, $packs), $packs);
-        $packsByCode = array_combine(array_map(function (Pack $pack) {
+        $packsByCode = array_combine(array_map(function (PackInterface $pack) {
             return $pack->getCode();
         }, $packs), $packs);
 
@@ -74,7 +75,7 @@ class DeckImportService
             }
 
             if ($packNameOrCode) {
-                /* @var Pack $pack */
+                /* @var PackInterface $pack */
                 $pack = null;
                 if (array_key_exists($packNameOrCode, $packsByName)) {
                     $pack = $packsByName[$packNameOrCode];
