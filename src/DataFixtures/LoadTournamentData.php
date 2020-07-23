@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Tournament;
+use App\Entity\TournamentInterface;
 use App\Services\DataimportFileLocator;
 
 /**
@@ -17,7 +18,7 @@ class LoadTournamentData extends AbstractFixture
     }
 
     /**
-     * @return Tournament
+     * @return TournamentInterface
      */
     protected function createEntity()
     {
@@ -25,9 +26,9 @@ class LoadTournamentData extends AbstractFixture
     }
 
     /**
-     * @param Tournament $entity
+     * @param TournamentInterface $entity
      * @param array $data
-     * @return Tournament
+     * @return TournamentInterface
      *
      */
     protected function populateEntity($entity, array $data)

@@ -6,6 +6,7 @@ use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Faction;
 use App\Entity\Tournament;
+use App\Entity\TournamentInterface;
 use App\Entity\UserInterface;
 use Exception;
 use Ramsey\Uuid\Uuid;
@@ -334,7 +335,7 @@ class Oauth2Controller extends Controller
         $tournament_id = intval(
             filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT)
         );
-        /* @var Tournament $tournament */
+        /* @var TournamentInterface $tournament */
         $tournament = $this->getDoctrine()->getManager()->getRepository(Tournament::class)->find($tournament_id);
 
         $precedent_id = trim($request->request->get('precedent'));

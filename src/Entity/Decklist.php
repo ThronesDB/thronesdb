@@ -190,7 +190,7 @@ class Decklist extends CommonDeck implements JsonSerializable
     protected $precedent;
 
     /**
-     * @var Tournament
+     * @var TournamentInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Tournament", inversedBy="decklists")
      * @ORM\JoinColumns({
@@ -595,15 +595,15 @@ class Decklist extends CommonDeck implements JsonSerializable
     }
 
     /**
-     * @param Tournament $tournament
+     * @param TournamentInterface $tournament
      */
-    public function setTournament(Tournament $tournament = null)
+    public function setTournament(TournamentInterface $tournament = null)
     {
         $this->tournament = $tournament;
     }
 
     /**
-     * @return Tournament
+     * @return TournamentInterface
      */
     public function getTournament()
     {

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="tournament")
  * @ORM\Entity
  */
-class Tournament
+class Tournament implements TournamentInterface
 {
     /**
      * @var int
@@ -53,7 +53,7 @@ class Tournament
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -61,7 +61,7 @@ class Tournament
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -69,17 +69,15 @@ class Tournament
     }
 
     /**
-     * @param string $description
+     * @inheritdoc
      */
     public function setDescription($description)
     {
         $this->description = $description;
-
-        return $this;
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDescription()
     {
@@ -87,7 +85,7 @@ class Tournament
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function isActive() : bool
     {
@@ -95,7 +93,7 @@ class Tournament
     }
 
     /**
-     * @param bool $active
+     * @inheritdoc
      */
     public function setActive(bool $active) : void
     {
@@ -103,7 +101,7 @@ class Tournament
     }
 
     /**
-     * @param Decklist $decklist
+     * @inheritdoc
      */
     public function addDecklist(Decklist $decklist)
     {
@@ -111,7 +109,7 @@ class Tournament
     }
 
     /**
-     * @param Decklist $decklist
+     * @inheritdoc
      */
     public function removeDecklist(Decklist $decklist)
     {
@@ -119,7 +117,7 @@ class Tournament
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getDecklists()
     {
