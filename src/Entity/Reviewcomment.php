@@ -56,7 +56,7 @@ class Reviewcomment implements ReviewcommentInterface
     protected $user;
 
     /**
-     * @var Review
+     * @var ReviewInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Review", inversedBy="comments")
      * @ORM\JoinColumns({
@@ -148,7 +148,7 @@ class Reviewcomment implements ReviewcommentInterface
     /**
      * @inheritdoc
      */
-    public function setReview(Review $review = null)
+    public function setReview(ReviewInterface $review = null)
     {
         $this->review = $review;
     }

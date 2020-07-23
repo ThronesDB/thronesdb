@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\Collection;
-use Exception;
 use Serializable;
 
 /**
@@ -254,14 +253,14 @@ interface CardInterface extends Serializable
     public function getOctgnId();
 
     /**
-     * @param Review $review
+     * @param ReviewInterface $review
      */
-    public function addReview(Review $review);
+    public function addReview(ReviewInterface $review);
 
     /**
-     * @param Review $review
+     * @param ReviewInterface $review
      */
-    public function removeReview(Review $review);
+    public function removeReview(ReviewInterface $review);
 
     /**
      * @return Collection

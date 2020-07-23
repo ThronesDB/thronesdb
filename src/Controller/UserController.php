@@ -6,7 +6,7 @@ use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Decklist;
 use App\Entity\Faction;
-use App\Entity\Review;
+use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
@@ -170,7 +170,7 @@ class UserController extends Controller
 
                 if ($card) {
                     $reviews = $card->getReviews();
-                    /* @var Review $review */
+                    /* @var ReviewInterface $review */
                     foreach ($reviews as $review) {
                         if ($review->getUser()->getId() === $user->getId()) {
                             $content['review_id'] = $review->getId();

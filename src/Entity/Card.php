@@ -654,7 +654,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function addReview(Review $review)
+    public function addReview(ReviewInterface $review)
     {
         $this->reviews->add($review);
     }
@@ -662,7 +662,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function removeReview(Review $review)
+    public function removeReview(ReviewInterface $review)
     {
         $this->reviews->removeElement($review);
     }

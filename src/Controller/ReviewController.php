@@ -6,6 +6,7 @@ use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Review;
 use App\Entity\Reviewcomment;
+use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
@@ -108,7 +109,7 @@ class ReviewController extends Controller
         }
 
         $review_id = filter_var($request->get('review_id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new BadRequestHttpException("Unable to find review.");
@@ -154,7 +155,7 @@ class ReviewController extends Controller
         }
 
         $review_id = filter_var($request->request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new Exception("Unable to find review.");
@@ -199,7 +200,7 @@ class ReviewController extends Controller
         }
 
         $review_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new Exception("Unable to find review.");
@@ -371,7 +372,7 @@ class ReviewController extends Controller
         }
 
         $review_id = filter_var($request->get('comment_review_id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new Exception("Unable to find review.");

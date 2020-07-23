@@ -60,12 +60,12 @@ interface ReviewcommentInterface
     public function getUser();
 
     /**
-     * @param Review $review
+     * @param ReviewInterface $review
      */
-    public function setReview(Review $review = null);
+    public function setReview(ReviewInterface $review = null);
 
     /**
-     * @return Review
+     * @return ReviewInterface
      */
     public function getReview();
 }

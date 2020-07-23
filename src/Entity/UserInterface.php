@@ -183,14 +183,14 @@ interface UserInterface extends SymfonyUserInterface
     public function getComments();
 
     /**
-     * @param Review $review
+     * @param ReviewInterface $review
      */
-    public function addReview(Review $review);
+    public function addReview(ReviewInterface $review);
 
     /**
-     * @param Review $review
+     * @param ReviewInterface $review
      */
-    public function removeReview(Review $review);
+    public function removeReview(ReviewInterface $review);
 
     /**
      * @return Collection
@@ -228,14 +228,14 @@ interface UserInterface extends SymfonyUserInterface
     public function getVotes();
 
     /**
-     * @param Review $reviewvote
+     * @param ReviewInterface $reviewvote
      */
-    public function addReviewvote(Review $reviewvote);
+    public function addReviewvote(ReviewInterface $reviewvote);
 
     /**
-     * @param Review $reviewvote
+     * @param ReviewInterface $reviewvote
      */
-    public function removeReviewvote(Review $reviewvote);
+    public function removeReviewvote(ReviewInterface $reviewvote);
 
     /**
      * @return Collection

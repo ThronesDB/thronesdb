@@ -475,7 +475,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function addReview(Review $review)
+    public function addReview(ReviewInterface $review)
     {
         $this->reviews->add($review);
     }
@@ -483,7 +483,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function removeReview(Review $review)
+    public function removeReview(ReviewInterface $review)
     {
         $this->reviews->removeElement($review);
     }
@@ -551,7 +551,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function addReviewvote(Review $reviewvote)
+    public function addReviewvote(ReviewInterface $reviewvote)
     {
         $this->reviewvotes->add($reviewvote);
     }
@@ -559,7 +559,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function removeReviewvote(Review $reviewvote)
+    public function removeReviewvote(ReviewInterface $reviewvote)
     {
         $this->reviewvotes->removeElement($reviewvote);
     }

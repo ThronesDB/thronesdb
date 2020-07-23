@@ -9,12 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Review
- *
  * @ORM\Table(name="review")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Review
+class Review implements ReviewInterface
 {
     /**
      * @var int
@@ -114,7 +113,7 @@ class Review
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -122,7 +121,7 @@ class Review
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -130,7 +129,7 @@ class Review
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -138,7 +137,7 @@ class Review
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -146,7 +145,7 @@ class Review
     }
 
     /**
-     * @param DateTime $dateUpdate
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
@@ -154,7 +153,7 @@ class Review
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -162,7 +161,7 @@ class Review
     }
 
     /**
-     * @param string $textMd
+     * @inheritdoc
      */
     public function setTextMd($textMd)
     {
@@ -170,7 +169,7 @@ class Review
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getTextMd()
     {
@@ -178,7 +177,7 @@ class Review
     }
 
     /**
-     * @param string $textHtml
+     * @inheritdoc
      */
     public function setTextHtml($textHtml)
     {
@@ -186,7 +185,7 @@ class Review
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getTextHtml()
     {
@@ -194,7 +193,7 @@ class Review
     }
 
     /**
-     * @param int $nbVotes
+     * @inheritdoc
      */
     public function setNbVotes($nbVotes)
     {
@@ -202,7 +201,7 @@ class Review
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getNbVotes()
     {
@@ -210,7 +209,7 @@ class Review
     }
 
     /**
-     * @param ReviewcommentInterface $comment
+     * @inheritdoc
      */
     public function addComment(ReviewcommentInterface $comment)
     {
@@ -218,7 +217,7 @@ class Review
     }
 
     /**
-     * @param ReviewcommentInterface $comment
+     * @inheritdoc
      */
     public function removeComment(ReviewcommentInterface $comment)
     {
@@ -226,7 +225,7 @@ class Review
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getComments()
     {
@@ -234,7 +233,7 @@ class Review
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function setCard(CardInterface $card = null)
     {
@@ -242,7 +241,7 @@ class Review
     }
 
     /**
-     * @return CardInterface
+     * @inheritdoc
      */
     public function getCard()
     {
@@ -250,7 +249,7 @@ class Review
     }
 
     /**
-     * @param UserInterface $user
+     * @inheritdoc
      */
     public function setUser(UserInterface $user = null)
     {
@@ -258,7 +257,7 @@ class Review
     }
 
     /**
-     * @return UserInterface
+     * @inheritdoc
      */
     public function getUser()
     {
@@ -266,7 +265,7 @@ class Review
     }
 
     /**
-     * @param UserInterface $vote
+     * @inheritdoc
      */
     public function addVote(UserInterface $vote)
     {
@@ -274,7 +273,7 @@ class Review
     }
 
     /**
-     * @param UserInterface $vote
+     * @inheritdoc
      */
     public function removeVote(UserInterface $vote)
     {
@@ -282,7 +281,7 @@ class Review
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getVotes()
     {
