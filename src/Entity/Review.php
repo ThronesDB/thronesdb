@@ -210,17 +210,17 @@ class Review
     }
 
     /**
-     * @param Reviewcomment $comment
+     * @param ReviewcommentInterface $comment
      */
-    public function addComment(Reviewcomment $comment)
+    public function addComment(ReviewcommentInterface $comment)
     {
         $this->comments->add($comment);
     }
 
     /**
-     * @param Reviewcomment $comment
+     * @param ReviewcommentInterface $comment
      */
-    public function removeComment(Reviewcomment $comment)
+    public function removeComment(ReviewcommentInterface $comment)
     {
         $this->comments->removeElement($comment);
     }

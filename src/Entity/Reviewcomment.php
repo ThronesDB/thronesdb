@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Reviewcomment
- *
  * @ORM\Table(name="reviewcomment")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Reviewcomment
+class Reviewcomment implements ReviewcommentInterface
 {
     /**
      * @var int
@@ -67,7 +66,7 @@ class Reviewcomment
     protected $review;
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -75,7 +74,7 @@ class Reviewcomment
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -83,7 +82,7 @@ class Reviewcomment
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -91,7 +90,7 @@ class Reviewcomment
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -99,7 +98,7 @@ class Reviewcomment
     }
 
     /**
-     * @param DateTime $dateUpdate
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
@@ -107,7 +106,7 @@ class Reviewcomment
     }
 
     /**
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -115,7 +114,7 @@ class Reviewcomment
     }
 
     /**
-     * @param string $text
+     * @inheritdoc
      */
     public function setText($text)
     {
@@ -123,7 +122,7 @@ class Reviewcomment
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getText()
     {
@@ -131,7 +130,7 @@ class Reviewcomment
     }
 
     /**
-     * @param UserInterface $user
+     * @inheritdoc
      */
     public function setUser(UserInterface $user = null)
     {
@@ -139,7 +138,7 @@ class Reviewcomment
     }
 
     /**
-     * @return UserInterface
+     * @inheritdoc
      */
     public function getUser()
     {
@@ -147,7 +146,7 @@ class Reviewcomment
     }
 
     /**
-     * @param Review $review
+     * @inheritdoc
      */
     public function setReview(Review $review = null)
     {
@@ -155,7 +154,7 @@ class Reviewcomment
     }
 
     /**
-     * @return Review
+     * @inheritdoc
      */
     public function getReview()
     {
