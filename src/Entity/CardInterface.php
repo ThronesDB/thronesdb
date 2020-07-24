@@ -288,12 +288,12 @@ interface CardInterface extends Serializable
     public function getType();
 
     /**
-     * @param Faction $faction
+     * @param FactionInterface $faction
      */
-    public function setFaction(Faction $faction = null);
+    public function setFaction(FactionInterface $faction = null);
 
     /**
-     * @return Faction
+     * @return FactionInterface
      */
     public function getFaction();
 

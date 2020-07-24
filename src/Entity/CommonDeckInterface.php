@@ -67,14 +67,14 @@ interface CommonDeckInterface
     public function getVersion();
 
     /**
-     * @return Faction
+     * @return FactionInterface
      */
     public function getFaction();
 
     /**
-     * @param Faction|null $faction
+     * @param FactionInterface|null $faction
      */
-    public function setFaction(Faction $faction = null);
+    public function setFaction(FactionInterface $faction = null);
 
     /**
      * @return SlotCollectionInterface

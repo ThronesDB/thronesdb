@@ -7,6 +7,7 @@ use App\Entity\CardInterface;
 use App\Entity\Decklist;
 use App\Entity\Decklistslot;
 use App\Entity\Faction;
+use App\Entity\FactionInterface;
 use App\Entity\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -66,7 +67,7 @@ class DecklistManager
         $this->logger = $logger;
     }
 
-    public function setFaction(Faction $faction = null)
+    public function setFaction(FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }

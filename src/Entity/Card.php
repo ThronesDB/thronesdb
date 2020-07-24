@@ -245,7 +245,7 @@ class Card implements CardInterface
     protected $type;
 
     /**
-     * @var Faction
+     * @var FactionInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Faction", inversedBy="cards")
      * @ORM\JoinColumns({
@@ -710,7 +710,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setFaction(Faction $faction = null)
+    public function setFaction(FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }

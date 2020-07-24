@@ -129,7 +129,7 @@ class Deck extends CommonDeck implements DeckInterface
     protected $user;
 
     /**
-     * @var Faction
+     * @var FactionInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Faction")
      * @ORM\JoinColumns({
@@ -380,7 +380,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setFaction(Faction $faction = null)
+    public function setFaction(FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }

@@ -9,6 +9,7 @@ use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Deckslot;
 use App\Entity\Faction;
+use App\Entity\FactionInterface;
 use App\Entity\Pack;
 use App\Entity\Tournament;
 use App\Entity\UserInterface;
@@ -157,7 +158,7 @@ class BuilderController extends Controller
             array(
                 'pagetitle' => "Import a deck",
                 'factions' => array_map(
-                    function (Faction $faction) {
+                    function (FactionInterface $faction) {
                         return ['code' => $faction->getCode(), 'name' => $faction->getName()];
                     },
                     $factions

@@ -9,12 +9,11 @@ use Serializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Faction
- *
  * @ORM\Table(name="faction", uniqueConstraints={@ORM\UniqueConstraint(name="faction_code_idx", columns={"code"})})
  * @ORM\Entity(repositoryClass="App\Repository\FactionRepository")
+ * @package App\Entity
  */
-class Faction implements Serializable
+class Faction implements FactionInterface
 {
     /**
      * @var int
@@ -63,16 +62,14 @@ class Faction implements Serializable
      */
     protected $cards;
 
-    /**
-     * Constructor
-     */
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -80,7 +77,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -88,7 +85,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param string $code
+     * @inheritdoc
      */
     public function setCode($code)
     {
@@ -96,7 +93,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -104,7 +101,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param string $name
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -112,7 +109,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -120,7 +117,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param bool $isPrimary
+     * @inheritdoc
      */
     public function setIsPrimary($isPrimary)
     {
@@ -128,7 +125,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsPrimary()
     {
@@ -136,7 +133,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param string $octgnId
+     * @inheritdoc
      */
     public function setOctgnId($octgnId)
     {
@@ -144,7 +141,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getOctgnId()
     {
@@ -152,7 +149,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function addCard(CardInterface $card)
     {
@@ -160,7 +157,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function removeCard(CardInterface $card)
     {
@@ -168,13 +165,16 @@ class Faction implements Serializable
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getCards()
     {
         return $this->cards;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return [
@@ -186,7 +186,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param string $serialized
+     * @inheritdoc
      * @throws Exception
      */
     public function unserialize($serialized)

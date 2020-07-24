@@ -150,7 +150,7 @@ class Decklist extends CommonDeck implements JsonSerializable
     protected $user;
 
     /**
-     * @var Faction
+     * @var FactionInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Faction")
      * @ORM\JoinColumns({
@@ -541,7 +541,7 @@ class Decklist extends CommonDeck implements JsonSerializable
     /**
      * @inheritdoc
      */
-    public function setFaction(Faction $faction = null)
+    public function setFaction(FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }

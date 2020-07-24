@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Faction;
+use App\Entity\FactionInterface;
 use App\Services\DataimportFileLocator;
 
 /**
@@ -17,7 +18,7 @@ class LoadFactionData extends AbstractFixture
     }
 
     /**
-     * @return Faction
+     * @return FactionInterface
      */
     protected function createEntity()
     {
@@ -25,9 +26,9 @@ class LoadFactionData extends AbstractFixture
     }
 
     /**
-     * @param Faction $entity
+     * @param FactionInterface $entity
      * @param array $data
-     * @return Faction
+     * @return FactionInterface
      */
     protected function populateEntity($entity, array $data)
     {

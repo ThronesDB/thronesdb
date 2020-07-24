@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Faction;
+use App\Entity\FactionInterface;
 use App\Entity\Tournament;
 use App\Entity\TournamentInterface;
 use App\Entity\UserInterface;
@@ -214,7 +215,7 @@ class Oauth2Controller extends Controller
                 'msg'     => "Faction code missing",
             ]);
         }
-        /* @var Faction $faction */
+        /* @var FactionInterface $faction */
         $faction = $this->getDoctrine()
             ->getManager()
             ->getRepository(Faction::class)

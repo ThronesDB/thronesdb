@@ -7,7 +7,7 @@ use App\Entity\Deckchange;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Deckslot;
-use App\Entity\Faction;
+use App\Entity\FactionInterface;
 use App\Entity\PackInterface;
 use App\Entity\UserInterface;
 use App\Helper\AgendaHelper;
@@ -70,7 +70,7 @@ class DeckManager
      * @param DeckInterface $deck
      * @param int $decklist_id
      * @param string $name
-     * @param Faction $faction
+     * @param FactionInterface $faction
      * @param string $description
      * @param string|array $tags
      * @param array $content
