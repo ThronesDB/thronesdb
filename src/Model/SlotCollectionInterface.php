@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Entity\PackInterface;
+use App\Entity\SlotInterface;
 use ArrayAccess;
 use Countable;
 use Doctrine\Common\Collections\Collection;

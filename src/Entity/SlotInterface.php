@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Model;
-
-use App\Entity\CardInterface;
+namespace App\Entity;
 
 /**
  * Interface for an entity with a Card and a Quantity

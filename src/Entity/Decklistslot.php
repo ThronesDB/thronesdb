@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Model\SlotInterface;
+use App\Entity\SlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

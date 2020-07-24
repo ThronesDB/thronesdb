@@ -5,7 +5,7 @@ namespace App\Services;
 
 use Doctrine\ORM\EntityManager;
 use App\Model\SlotCollectionInterface;
-use App\Model\SlotInterface;
+use App\Entity\SlotInterface;
 use App\Model\SlotCollectionDecorator;
 use App\Entity\Deckslot;
 use Doctrine\Common\Collections\ArrayCollection;

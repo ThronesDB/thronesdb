@@ -5,7 +5,7 @@ namespace App\Helper;
 use App\Entity\CardInterface;
 use App\Entity\CommonDeckInterface;
 use App\Model\SlotCollectionInterface;
-use App\Model\SlotInterface;
+use App\Entity\SlotInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

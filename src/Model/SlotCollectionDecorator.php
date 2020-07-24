@@ -6,6 +6,7 @@ use App\Classes\BannedListChecker;
 use App\Classes\RestrictedListChecker;
 use App\Entity\Decklistslot;
 use App\Entity\PackInterface;
+use App\Entity\SlotInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
