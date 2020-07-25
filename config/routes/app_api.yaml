@@ -7,8 +7,3 @@ App_api_public:
 App_api_oauth2:
     resource: "app_api_oauth2.yaml"
     prefix:   /oauth2
-
-api_intro:
-    path: /
-    defaults:
-        _controller: App\Controller\DefaultController:apiIntroAction

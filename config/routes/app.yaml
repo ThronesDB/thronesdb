@@ -28,12 +28,6 @@ app_user:
   resource: "app_user.yaml"
   prefix: /user
 
-index:
-  path: /
-  methods: [GET]
-  defaults:
-    _controller: App\Controller\DefaultController:indexAction
-
 donators:
   path: /donators
   methods: [GET]
@@ -70,22 +64,3 @@ card_reviews_list:
   requirements:
     page: \d+
 
-about:
-  path: /about
-  defaults:
-    _controller: App\Controller\DefaultController:aboutAction
-
-rulesreference:
-  path: /rulesreference
-  defaults:
-    _controller: App\Controller\DefaultController:rulesreferenceAction
-
-faq:
-  path: /faq
-  defaults:
-    _controller: App\Controller\DefaultController:faqAction
-
-tournamentregulations:
-  path: /tournamentregulations
-  defaults:
-    _controller: App\Controller\DefaultController:tournamentregulationsAction
