@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Deck;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +40,7 @@ class DeleteDecklistCommand extends ContainerAwareCommand
                 'precedent' => $decklist
         ));
         foreach ($successors as $successor) {
-            /* @var $successor Decklist */
+            /* @var DecklistInterface $successor */
             $successor->setPrecedent(null);
         }
 

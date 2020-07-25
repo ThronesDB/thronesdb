@@ -40,14 +40,14 @@ interface TournamentInterface
     public function setActive(bool $active): void;
 
     /**
-     * @param Decklist $decklist
+     * @param DecklistInterface $decklist
      */
-    public function addDecklist(Decklist $decklist);
+    public function addDecklist(DecklistInterface $decklist);
 
     /**
-     * @param Decklist $decklist
+     * @param DecklistInterface $decklist
      */
-    public function removeDecklist(Decklist $decklist);
+    public function removeDecklist(DecklistInterface $decklist);
 
     /**
      * @return Collection

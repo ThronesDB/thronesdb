@@ -5,14 +5,15 @@ namespace App\Controller;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
 use DateInterval;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 use Nelmio\ApiDocBundle\Annotation\Operation;
+use Ramsey\Collection\CollectionInterface;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -365,7 +366,7 @@ class ApiController extends Controller
             return $response;
         }
 
-        /* @var Decklist $decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $this->getDoctrine()->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist instanceof Decklist) {
             return $this->createNotFoundException();
@@ -437,7 +438,7 @@ class ApiController extends Controller
         $criteria->where($expr->gte('dateCreation', $start));
         $criteria->andWhere($expr->lt('dateCreation', $end));
 
-        /* @var $decklists ArrayCollection */
+        /* @var CollectionInterface $decklists */
         $decklists = $this->getDoctrine()->getRepository(Decklist::class)->matching($criteria);
         if (!$decklists) {
             die();

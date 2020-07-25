@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\Type;
 use App\Entity\TypeInterface;
+use App\Model\DecklistManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Model\DecklistManager;
-use App\Entity\Decklist;
 
 class DefaultController extends Controller
 {
@@ -22,7 +22,7 @@ class DefaultController extends Controller
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
         /**
-         * @var $decklist_manager DecklistManager
+         * @var DecklistManager $decklist_manager
          */
         $decklist_manager = $this->get('decklist_manager');
         $decklist_manager->setLimit(1);
@@ -44,9 +44,7 @@ class DefaultController extends Controller
 
             $decklist_manager->setFaction($faction);
             $paginator = $decklist_manager->findDecklistsByPopularity();
-            /**
-             * @var $decklist Decklist
-             */
+            /* @var DecklistInterface $decklist */
             $decklist = $paginator->getIterator()->current();
 
             if ($decklist) {

@@ -103,7 +103,7 @@ class Tournament implements TournamentInterface
     /**
      * @inheritdoc
      */
-    public function addDecklist(Decklist $decklist)
+    public function addDecklist(DecklistInterface $decklist)
     {
         $this->decklists->add($decklist);
     }
@@ -111,7 +111,7 @@ class Tournament implements TournamentInterface
     /**
      * @inheritdoc
      */
-    public function removeDecklist(Decklist $decklist)
+    public function removeDecklist(DecklistInterface $decklist)
     {
         $this->decklists->removeElement($decklist);
     }

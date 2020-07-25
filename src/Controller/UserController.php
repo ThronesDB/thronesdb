@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\ReviewInterface;
 use App\Entity\User;
@@ -129,9 +130,9 @@ class UserController extends Controller
             );
 
             if (isset($decklist_id)) {
-                /* @var $em EntityManager */
+                /* @var EntityManager $em */
                 $em = $this->getDoctrine()->getManager();
-                /* @var Decklist $decklist */
+                /* @var DecklistInterface $decklist */
                 $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
 
                 if ($decklist) {

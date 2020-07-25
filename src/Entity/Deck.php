@@ -149,7 +149,7 @@ class Deck extends CommonDeck implements DeckInterface
     protected $lastPack;
 
     /**
-     * @var Decklist
+     * @var DecklistInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Decklist", inversedBy="children")
      * @ORM\JoinColumns({
@@ -308,7 +308,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function addChild(Decklist $child)
+    public function addChild(DecklistInterface $child)
     {
         $this->children->add($child);
     }
@@ -316,7 +316,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function removeChild(Decklist $child)
+    public function removeChild(DecklistInterface $child)
     {
         $this->children->removeElement($child);
     }
@@ -404,7 +404,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setParent(Decklist $parent = null)
+    public function setParent(DecklistInterface $parent = null)
     {
         $this->parent = $parent;
     }

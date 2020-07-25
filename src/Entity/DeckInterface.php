@@ -39,14 +39,14 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     public function removeSlot(DeckslotInterface $slot);
 
     /**
-     * @param Decklist $child
+     * @param DecklistInterface $child
      */
-    public function addChild(Decklist $child);
+    public function addChild(DecklistInterface $child);
 
     /**
-     * @param Decklist $child
+     * @param DecklistInterface $child
      */
-    public function removeChild(Decklist $child);
+    public function removeChild(DecklistInterface $child);
 
     /**
      * @return Collection
@@ -79,12 +79,12 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     public function getLastPack();
 
     /**
-     * @param Decklist $parent
+     * @param DecklistInterface $parent
      */
-    public function setParent(Decklist $parent = null);
+    public function setParent(DecklistInterface $parent = null);
 
     /**
-     * @return Decklist
+     * @return DecklistInterface
      */
     public function getParent();
 

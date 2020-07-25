@@ -6,6 +6,7 @@ use App\Entity\Card;
 use App\Entity\Deckchange;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\Deckslot;
 use App\Entity\FactionInterface;
 use App\Entity\PackInterface;
@@ -84,7 +85,7 @@ class DeckManager
         $deck_content = [];
 
         if ($decklist_id) {
-            /* @var Decklist $decklist */
+            /* @var DecklistInterface $decklist */
             $decklist = $this->doctrine->getRepository(Decklist::class)->find($decklist_id);
             if ($decklist) {
                 $deck->setParent($decklist);

@@ -146,7 +146,7 @@ class Comment implements CommentInterface
     /**
      * @inheritdoc
      */
-    public function setDecklist(Decklist $decklist = null)
+    public function setDecklist(DecklistInterface $decklist = null)
     {
         $this->decklist = $decklist;
     }

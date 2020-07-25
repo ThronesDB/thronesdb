@@ -427,7 +427,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function addDecklist(Decklist $decklist)
+    public function addDecklist(DecklistInterface $decklist)
     {
         $this->decklists->add($decklist);
     }
@@ -435,7 +435,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function removeDecklist(Decklist $decklist)
+    public function removeDecklist(DecklistInterface $decklist)
     {
         $this->decklists->removeElement($decklist);
     }
@@ -499,7 +499,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function addFavorite(Decklist $favorite)
+    public function addFavorite(DecklistInterface $favorite)
     {
         $favorite->addFavorite($this);
         $this->favorites->add($favorite);
@@ -508,7 +508,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function removeFavorite(Decklist $favorite)
+    public function removeFavorite(DecklistInterface $favorite)
     {
         $favorite->removeFavorite($this);
         $this->favorites->removeElement($favorite);
@@ -525,7 +525,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function addVote(Decklist $vote)
+    public function addVote(DecklistInterface $vote)
     {
         $vote->addVote($this);
         $this->votes->add($vote);
@@ -534,7 +534,7 @@ class User extends BaseUser implements UserInterface
     /**
      * @inheritdoc
      */
-    public function removeVote(Decklist $vote)
+    public function removeVote(DecklistInterface $vote)
     {
         $vote->removeVote($this);
         $this->votes->removeElement($vote);

@@ -7,6 +7,7 @@ use App\Entity\Deck;
 use App\Entity\Deckchange;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\Deckslot;
 use App\Entity\Faction;
 use App\Entity\FactionInterface;
@@ -483,7 +484,7 @@ class BuilderController extends Controller
         }
 
         foreach ($deck->getChildren() as $decklist) {
-            /** @var Decklist $decklist */
+            /** @var DecklistInterface $decklist */
             $decklist->setParent(null);
         }
         $em->remove($deck);
@@ -722,10 +723,10 @@ class BuilderController extends Controller
 
     public function copyAction($decklist_id)
     {
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $decklist Decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
 
         $content = [];

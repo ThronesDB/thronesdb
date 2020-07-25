@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\Comment;
 use App\Entity\CommentInterface;
 use App\Entity\Cycle;
 use App\Entity\Deck;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
-use App\Entity\Comment;
+use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\Tournament;
 use App\Entity\User;
@@ -19,19 +20,19 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use PDO;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -114,7 +115,7 @@ class SocialController extends Controller
         $new_signature = md5($new_content);
         $old_decklists = $em->getRepository(Decklist::class)->findBy(['signature' => $new_signature]);
 
-        /* @var Decklist $decklist */
+        /* @var DecklistInterface $decklist */
         foreach ($old_decklists as $decklist) {
             if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
                 $url = $this->generateUrl(
@@ -388,7 +389,7 @@ class SocialController extends Controller
             throw new UnauthorizedHttpException("You must be logged in for this operation.");
         }
 
-        /* @var Decklist $decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist || $decklist->getUser()->getId() != $user->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this decklist.");
@@ -406,7 +407,7 @@ class SocialController extends Controller
         }
 
         $successor_decklists = $decklist->getSuccessors();
-        /* @var $successor_decklist Decklist */
+        /* @var DecklistInterface $successor_decklist */
         foreach ($successor_decklists as $successor_decklist) {
             $successor_decklist->setPrecedent($precedent);
         }
@@ -541,9 +542,7 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        /**
-         * @var $decklist_manager DecklistManager
-         */
+        /* @var DecklistManager $decklist_manager */
         $decklist_manager = $this->get('decklist_manager');
         $decklist_manager->setLimit(30);
         $decklist_manager->setPage($page);
@@ -679,7 +678,7 @@ class SocialController extends Controller
 
         $decklist_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
 
-        /* @var Decklist $decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist) {
             throw new NotFoundHttpException('Wrong id');
@@ -1001,10 +1000,10 @@ class SocialController extends Controller
 
     public function downloadAction(Request $request, $decklist_id)
     {
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $decklist Decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist) {
             throw new NotFoundHttpException("Unable to find decklist.");
@@ -1025,7 +1024,7 @@ class SocialController extends Controller
         }
     }
 
-    protected function downloadInOctgnFormat(Decklist $decklist)
+    protected function downloadInOctgnFormat(DecklistInterface $decklist)
     {
         $content = $this->renderView(
             'Export/octgn.xml.twig',
@@ -1051,7 +1050,7 @@ class SocialController extends Controller
         return $response;
     }
 
-    protected function downloadInDefaultTextFormat(Decklist $decklist)
+    protected function downloadInDefaultTextFormat(DecklistInterface $decklist)
     {
         $content = $this->renderView(
             'Export/default.txt.twig',
@@ -1078,7 +1077,7 @@ class SocialController extends Controller
         return $response;
     }
 
-    protected function downloadInTextFormatSortedByCycle(Decklist $decklist)
+    protected function downloadInTextFormatSortedByCycle(DecklistInterface $decklist)
     {
         $content = $this->renderView(
             'Export/sortedbycycle.txt.twig',

@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Deck;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\User;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -72,7 +73,7 @@ class RemoveUserCommand extends ContainerAwareCommand
                 'precedent' => $decklist
             ));
             foreach ($successors as $successor) {
-                /* @var Decklist $successor */
+                /* @var DecklistInterface $successor */
                 $successor->setPrecedent(null);
             }
 

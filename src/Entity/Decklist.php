@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="decklist")
  * @ORM\Entity(repositoryClass="App\Repository\DecklistRepository")
  */
-class Decklist extends CommonDeck implements JsonSerializable
+class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
 {
     /**
      * @var int
