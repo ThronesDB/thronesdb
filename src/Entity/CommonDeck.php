@@ -2,20 +2,15 @@
 
 namespace App\Entity;
 
-use App\Model\SlotCollectionInterface;
-
 /**
  * Base class for both deck and deck-list entities.
- *
+
  * @package App\Entity
- *
- * @todo Consider making this a trait. [ST 2020/06/25]
  */
-abstract class BaseDeck implements CommonDeckInterface
+abstract class CommonDeck implements CommonDeckInterface
 {
     /**
-     * Transforms the given object into an associative array.
-     * @return array
+     * @inheritdoc
      */
     public function getArrayExport()
     {
@@ -27,7 +22,7 @@ abstract class BaseDeck implements CommonDeckInterface
             $agendas_code[] = $agenda->getCard()->getCode();
             $agendas_urls[] = $agenda->getCard()->getImageUrl();
         }
-        $array = [
+        return [
             'id' => $this->getId(),
             'name' => $this->getName(),
             'date_creation' => $this->getDateCreation()->format('c'),
@@ -43,12 +38,10 @@ abstract class BaseDeck implements CommonDeckInterface
             'isLegalForJoust' => $this->isLegalForJoust(),
             'isLegalForMelee' => $this->isLegalForMelee(),
         ];
-
-        return $array;
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getTextExport()
     {
@@ -66,7 +59,7 @@ abstract class BaseDeck implements CommonDeckInterface
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getCycleOrderExport()
     {
@@ -84,8 +77,7 @@ abstract class BaseDeck implements CommonDeckInterface
     }
 
     /**
-     * @return bool
-     * @see SlotCollectionInterface::isLegalForMelee()
+     * @inheritdoc
      */
     public function isLegalForMelee()
     {
@@ -93,8 +85,7 @@ abstract class BaseDeck implements CommonDeckInterface
     }
 
     /**
-     * @return bool
-     * @see SlotCollectionInterface::isLegalForJoust()
+     * @inheritdoc
      */
     public function isLegalForJoust()
     {

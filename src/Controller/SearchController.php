@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Cycle;
 use App\Entity\Faction;
 use App\Entity\Pack;
+use App\Entity\PackInterface;
 use App\Entity\Type;
+use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -111,6 +114,7 @@ class SearchController extends Controller
 
     public function zoomAction($card_code, Request $request)
     {
+        /* @var CardInterface $card */
         $card = $this->getDoctrine()->getRepository(Card::class)->findByCode($card_code);
         if (!$card) {
             throw $this->createNotFoundException('Sorry, this card is not in the database (yet?)');
@@ -144,6 +148,7 @@ class SearchController extends Controller
 
     public function listAction($pack_code, $view, $sort, $page, Request $request)
     {
+        /* @var PackInterface $pack */
         $pack = $this->getDoctrine()->getRepository(Pack::class)->findByCode($pack_code);
         if (!$pack) {
             throw $this->createNotFoundException('This pack does not exist');
@@ -390,7 +395,7 @@ class SearchController extends Controller
                 $cardinfo = $this->get('cards_data')->getCardInfo($card, false, null);
                 if (empty($availability[$pack->getCode()])) {
                     $availability[$pack->getCode()] = false;
-                    if ($pack->getDateRelease() && $pack->getDateRelease() <= new \DateTime()) {
+                    if ($pack->getDateRelease() && $pack->getDateRelease() <= new DateTime()) {
                         $availability[$pack->getCode()] = true;
                     }
                 }

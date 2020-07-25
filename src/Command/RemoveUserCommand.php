@@ -3,13 +3,18 @@
 namespace App\Command;
 
 use App\Entity\Deck;
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\User;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
+/**
+ * @package App\Command
+ */
 class RemoveUserCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -68,7 +73,7 @@ class RemoveUserCommand extends ContainerAwareCommand
                 'precedent' => $decklist
             ));
             foreach ($successors as $successor) {
-                /* @var $successor Decklist */
+                /* @var DecklistInterface $successor */
                 $successor->setPrecedent(null);
             }
 
@@ -76,7 +81,7 @@ class RemoveUserCommand extends ContainerAwareCommand
                 'parent' => $decklist
             ));
             foreach ($children as $child) {
-                /* @var $child Deck */
+                /* @var DeckInterface $child */
                 $child->setParent(null);
             }
 

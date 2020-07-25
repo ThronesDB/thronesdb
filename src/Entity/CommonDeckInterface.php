@@ -17,13 +17,17 @@ interface CommonDeckInterface
     public function getId();
 
     /**
+     * @param int $id
+     */
+    public function setId($id);
+
+    /**
      * @return string
      */
     public function getName();
 
     /**
      * @param string $name
-     * @return mixed
      */
     public function setName($name);
 
@@ -34,7 +38,6 @@ interface CommonDeckInterface
 
     /**
      * @param DateTime $dateCreation
-     * @return mixed
      */
     public function setDateCreation($dateCreation);
 
@@ -45,7 +48,6 @@ interface CommonDeckInterface
 
     /**
      * @param DateTime $dateUpdate
-     * @return mixed
      */
     public function setDateUpdate($dateUpdate);
 
@@ -56,25 +58,23 @@ interface CommonDeckInterface
 
     /**
      * @param $descriptionMd
-     * @return mixed
      */
     public function setDescriptionMd($descriptionMd);
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getVersion();
 
     /**
-     * @return Faction
+     * @return FactionInterface
      */
     public function getFaction();
 
     /**
-     * @param Faction|null $faction
-     * @return mixed
+     * @param FactionInterface|null $faction
      */
-    public function setFaction(Faction $faction = null);
+    public function setFaction(FactionInterface $faction = null);
 
     /**
      * @return SlotCollectionInterface
@@ -82,13 +82,40 @@ interface CommonDeckInterface
     public function getSlots();
 
     /**
-     * @return User|null
+     * @return UserInterface|null
      */
     public function getUser();
 
     /**
-     * @param User|null $user
-     * @return mixed
+     * @param UserInterface|null $user
      */
-    public function setUser(User $user = null);
+    public function setUser(UserInterface $user = null);
+
+    /**
+     * Transforms the given object into an associative array.
+     * @return array
+     */
+    public function getArrayExport();
+
+    /**
+     * @return array
+     */
+    public function getTextExport();
+
+    /**
+     * @return array
+     */
+    public function getCycleOrderExport();
+
+    /**
+     * @return bool
+     * @see SlotCollectionInterface::isLegalForMelee()
+     */
+    public function isLegalForMelee();
+
+    /**
+     * @return bool
+     * @see SlotCollectionInterface::isLegalForJoust()
+     */
+    public function isLegalForJoust();
 }

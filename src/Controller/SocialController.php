@@ -3,32 +3,36 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\Comment;
+use App\Entity\CommentInterface;
 use App\Entity\Cycle;
 use App\Entity\Deck;
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
-use App\Entity\Comment;
+use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\Tournament;
 use App\Entity\User;
+use App\Entity\UserInterface;
 use App\Model\DecklistManager;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use PDO;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -55,13 +59,13 @@ class SocialController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException($translator->trans('login_required'));
         }
 
-        /* @var Deck $deck */
+        /* @var DeckInterface $deck */
         $deck = $em->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
         if (!$deck || $deck->getUser()->getId() != $user->getId()) {
             throw $this->createAccessDeniedException($translator->trans('decklist.publish.errors.unauthorized'));
@@ -111,7 +115,7 @@ class SocialController extends Controller
         $new_signature = md5($new_content);
         $old_decklists = $em->getRepository(Decklist::class)->findBy(['signature' => $new_signature]);
 
-        /* @var $decklist Decklist */
+        /* @var DecklistInterface $decklist */
         foreach ($old_decklists as $decklist) {
             if (json_encode($decklist->getSlots()->getContent()) == $new_content) {
                 $url = $this->generateUrl(
@@ -159,7 +163,7 @@ class SocialController extends Controller
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
 
         $yesterday = (new DateTime())->modify('-24 hours');
@@ -192,7 +196,7 @@ class SocialController extends Controller
 
         $deck_id = intval(filter_var($request->request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT));
 
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getRepository(Deck::class)->find($deck_id);
         if ($user->getId() !== $deck->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied to this object.");
@@ -258,7 +262,7 @@ class SocialController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("Anonymous access denied");
@@ -385,7 +389,7 @@ class SocialController extends Controller
             throw new UnauthorizedHttpException("You must be logged in for this operation.");
         }
 
-        /* @var Decklist $decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist || $decklist->getUser()->getId() != $user->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this decklist.");
@@ -398,13 +402,12 @@ class SocialController extends Controller
         $precedent = $decklist->getPrecedent();
 
         $children_decks = $decklist->getChildren();
-        /* @var $children_deck Deck */
         foreach ($children_decks as $children_deck) {
             $children_deck->setParent($precedent);
         }
 
         $successor_decklists = $decklist->getSuccessors();
-        /* @var $successor_decklist Decklist */
+        /* @var DecklistInterface $successor_decklist */
         foreach ($successor_decklists as $successor_decklist) {
             $successor_decklist->setPrecedent($precedent);
         }
@@ -539,9 +542,7 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        /**
-         * @var $decklist_manager DecklistManager
-         */
+        /* @var DecklistManager $decklist_manager */
         $decklist_manager = $this->get('decklist_manager');
         $decklist_manager->setLimit(30);
         $decklist_manager->setPage($page);
@@ -555,6 +556,7 @@ class SocialController extends Controller
                 break;
             case 'favorites':
                 $response->setPrivate();
+                /* @var UserInterface $user */
                 $user = $this->getUser();
                 if ($user) {
                     $paginator = $decklist_manager->findDecklistsByFavorite($user);
@@ -564,6 +566,7 @@ class SocialController extends Controller
                 break;
             case 'mine':
                 $response->setPrivate();
+                /* @var UserInterface $user */
                 $user = $this->getUser();
                 if ($user) {
                     $paginator = $decklist_manager->findDecklistsByAuthor($user);
@@ -635,7 +638,7 @@ class SocialController extends Controller
         }
 
         $commenters = array_map(
-            function (Comment $comment) {
+            function (CommentInterface $comment) {
                 return $comment->getUser()->getUsername();
             },
             $decklist->getComments()->getValues()
@@ -675,7 +678,7 @@ class SocialController extends Controller
 
         $decklist_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
 
-        /* @var $decklist Decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist) {
             throw new NotFoundHttpException('Wrong id');
@@ -726,7 +729,7 @@ class SocialController extends Controller
      */
     public function commentAction(Request $request)
     {
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException('You must be logged in to comment.');
@@ -749,10 +752,10 @@ class SocialController extends Controller
                 $comment_text
             );
 
-            $mentionned_usernames = [];
+            $mentioned_usernames = [];
             $matches = [];
             if (preg_match_all('/`@([\w_]+)`/', $comment_text, $matches, PREG_PATTERN_ORDER)) {
-                $mentionned_usernames = array_unique($matches[1]);
+                $mentioned_usernames = array_unique($matches[1]);
             }
 
             $comment_html = $this->get('texts')->markdown($comment_text);
@@ -784,7 +787,7 @@ class SocialController extends Controller
                 }
             }
             foreach ($decklist->getComments() as $comment) {
-                /* @var $comment Comment */
+                /* @var CommentInterface $comment */
                 $commenter = $comment->getUser();
                 if ($commenter && $commenter->getIsNotifCommenter()) {
                     if (!isset($spool[$commenter->getEmail()])) {
@@ -792,14 +795,14 @@ class SocialController extends Controller
                     }
                 }
             }
-            foreach ($mentionned_usernames as $mentionned_username) {
-                /* @var $mentionned_user User */
-                $mentionned_user = $this->getDoctrine()
+            foreach ($mentioned_usernames as $mentioned_username) {
+                /* @var UserInterface $mentioned_user */
+                $mentioned_user = $this->getDoctrine()
                     ->getRepository(User::class)
-                    ->findOneBy(array('username' => $mentionned_username));
-                if ($mentionned_user && $mentionned_user->getIsNotifMention()) {
-                    if (!isset($spool[$mentionned_user->getEmail()])) {
-                        $spool[$mentionned_user->getEmail()] = 'Emails/newcomment_mentionned.html.twig';
+                    ->findOneBy(array('username' => $mentioned_username));
+                if ($mentioned_user && $mentioned_user->getIsNotifMention()) {
+                    if (!isset($spool[$mentioned_user->getEmail()])) {
+                        $spool[$mentioned_user->getEmail()] = 'Emails/newcomment_mentionned.html.twig';
                     }
                 }
             }
@@ -850,7 +853,7 @@ class SocialController extends Controller
      */
     public function hidecommentAction($comment_id, $hidden)
     {
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException('You must be logged in to comment.');
@@ -883,9 +886,10 @@ class SocialController extends Controller
      */
     public function voteAction(Request $request)
     {
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException('You must be logged in to comment.');
@@ -996,10 +1000,10 @@ class SocialController extends Controller
 
     public function downloadAction(Request $request, $decklist_id)
     {
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $decklist Decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist) {
             throw new NotFoundHttpException("Unable to find decklist.");
@@ -1020,7 +1024,7 @@ class SocialController extends Controller
         }
     }
 
-    protected function downloadInOctgnFormat(Decklist $decklist)
+    protected function downloadInOctgnFormat(DecklistInterface $decklist)
     {
         $content = $this->renderView(
             'Export/octgn.xml.twig',
@@ -1046,7 +1050,7 @@ class SocialController extends Controller
         return $response;
     }
 
-    protected function downloadInDefaultTextFormat(Decklist $decklist)
+    protected function downloadInDefaultTextFormat(DecklistInterface $decklist)
     {
         $content = $this->renderView(
             'Export/default.txt.twig',
@@ -1073,7 +1077,7 @@ class SocialController extends Controller
         return $response;
     }
 
-    protected function downloadInTextFormatSortedByCycle(Decklist $decklist)
+    protected function downloadInTextFormatSortedByCycle(DecklistInterface $decklist)
     {
         $content = $this->renderView(
             'Export/sortedbycycle.txt.twig',
@@ -1111,7 +1115,7 @@ class SocialController extends Controller
         $response = new Response();
         $response->setPrivate();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
 
         $limit = 100;

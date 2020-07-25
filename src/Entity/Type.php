@@ -6,15 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Serializable;
 
 /**
- * Type
- *
  * @ORM\Table(name="type", uniqueConstraints={@ORM\UniqueConstraint(name="type_code_idx", columns={"code"})})
  * @ORM\Entity(repositoryClass="App\Repository\TypeRepository")
+ * @package App\Entity
  */
-class Type implements Serializable
+class Type implements TypeInterface
 {
     /**
      * @var int
@@ -58,8 +56,7 @@ class Type implements Serializable
     }
 
     /**
-     * Set id
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -67,9 +64,7 @@ class Type implements Serializable
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -77,23 +72,15 @@ class Type implements Serializable
     }
 
     /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Type
+     * @inheritdoc
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -101,23 +88,15 @@ class Type implements Serializable
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Type
+     * @inheritdoc
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -125,39 +104,32 @@ class Type implements Serializable
     }
 
     /**
-     * Add card
-     *
-     * @param Card $card
-     *
-     * @return Type
+     * @inheritdoc
      */
-    public function addCard(Card $card)
+    public function addCard(CardInterface $card)
     {
-        $this->cards[] = $card;
-
-        return $this;
+        $this->cards->add($card);
     }
 
     /**
-     * Remove card
-     *
-     * @param Card $card
+     * @inheritdoc
      */
-    public function removeCard(Card $card)
+    public function removeCard(CardInterface $card)
     {
         $this->cards->removeElement($card);
     }
 
     /**
-     * Get cards
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getCards()
     {
         return $this->cards;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return [
@@ -166,11 +138,18 @@ class Type implements Serializable
         ];
     }
 
+    /**
+     * @inheritdoc
+     * @throws Exception
+     */
     public function unserialize($serialized)
     {
         throw new Exception("unserialize() method unsupported");
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->name ?: '';

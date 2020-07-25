@@ -9,12 +9,10 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * User
- *
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User extends BaseUser
+class User extends BaseUser implements UserInterface
 {
     /**
      * @var int
@@ -191,6 +189,9 @@ class User extends BaseUser
      */
     protected $followers;
 
+    /**
+     * @inheritdoc
+     */
     public function __construct()
     {
         parent::__construct();
@@ -200,23 +201,23 @@ class User extends BaseUser
     }
 
     /**
-     * Set dateCreation
-     *
-     * @param DateTime $dateCreation
-     *
-     * @return User
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -224,23 +225,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set dateUpdate
-     *
-     * @param DateTime $dateUpdate
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -248,23 +241,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set reputation
-     *
-     * @param int $reputation
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setReputation($reputation)
     {
         $this->reputation = $reputation;
-
-        return $this;
     }
 
     /**
-     * Get reputation
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getReputation()
     {
@@ -272,23 +257,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set resume
-     *
-     * @param string $resume
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setResume($resume)
     {
         $this->resume = $resume;
-
-        return $this;
     }
 
     /**
-     * Get resume
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getResume()
     {
@@ -296,23 +273,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set color
-     *
-     * @param string $color
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setColor($color)
     {
         $this->color = $color;
-
-        return $this;
     }
 
     /**
-     * Get color
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getColor()
     {
@@ -320,23 +289,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set donation
-     *
-     * @param int $donation
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setDonation($donation)
     {
         $this->donation = $donation;
-
-        return $this;
     }
 
     /**
-     * Get donation
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getDonation()
     {
@@ -344,23 +305,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifAuthor
-     *
-     * @param bool $isNotifAuthor
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setIsNotifAuthor($isNotifAuthor)
     {
         $this->isNotifAuthor = $isNotifAuthor;
-
-        return $this;
     }
 
     /**
-     * Get isNotifAuthor
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifAuthor()
     {
@@ -368,23 +321,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifCommenter
-     *
-     * @param bool $isNotifCommenter
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setIsNotifCommenter($isNotifCommenter)
     {
         $this->isNotifCommenter = $isNotifCommenter;
-
-        return $this;
     }
 
     /**
-     * Get isNotifCommenter
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifCommenter()
     {
@@ -392,23 +337,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifMention
-     *
-     * @param bool $isNotifMention
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setIsNotifMention($isNotifMention)
     {
         $this->isNotifMention = $isNotifMention;
-
-        return $this;
     }
 
     /**
-     * Get isNotifMention
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifMention()
     {
@@ -416,23 +353,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifFollow
-     *
-     * @param bool $isNotifFollow
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setIsNotifFollow($isNotifFollow)
     {
         $this->isNotifFollow = $isNotifFollow;
-
-        return $this;
     }
 
     /**
-     * Get isNotifFollow
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifFollow()
     {
@@ -440,23 +369,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set isNotifSuccessor
-     *
-     * @param bool $isNotifSuccessor
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setIsNotifSuccessor($isNotifSuccessor)
     {
         $this->isNotifSuccessor = $isNotifSuccessor;
-
-        return $this;
     }
 
     /**
-     * Get isNotifSuccessor
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsNotifSuccessor()
     {
@@ -464,23 +385,15 @@ class User extends BaseUser
     }
 
     /**
-     * Set isShareDecks
-     *
-     * @param bool $isShareDecks
-     *
-     * @return User
+     * @inheritdoc
      */
     public function setIsShareDecks($isShareDecks)
     {
         $this->isShareDecks = $isShareDecks;
-
-        return $this;
     }
 
     /**
-     * Get isShareDecks
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsShareDecks()
     {
@@ -488,33 +401,23 @@ class User extends BaseUser
     }
 
     /**
-     * Add deck
-     *
-     * @param Deck $deck
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addDeck(Deck $deck)
+    public function addDeck(DeckInterface $deck)
     {
-        $this->decks[] = $deck;
-
-        return $this;
+        $this->decks->add($deck);
     }
 
     /**
-     * Remove deck
-     *
-     * @param Deck $deck
+     * @inheritdoc
      */
-    public function removeDeck(Deck $deck)
+    public function removeDeck(DeckInterface $deck)
     {
         $this->decks->removeElement($deck);
     }
 
     /**
-     * Get decks
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getDecks()
     {
@@ -522,33 +425,23 @@ class User extends BaseUser
     }
 
     /**
-     * Add decklist
-     *
-     * @param Decklist $decklist
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addDecklist(Decklist $decklist)
+    public function addDecklist(DecklistInterface $decklist)
     {
-        $this->decklists[] = $decklist;
-
-        return $this;
+        $this->decklists->add($decklist);
     }
 
     /**
-     * Remove decklist
-     *
-     * @param Decklist $decklist
+     * @inheritdoc
      */
-    public function removeDecklist(Decklist $decklist)
+    public function removeDecklist(DecklistInterface $decklist)
     {
         $this->decklists->removeElement($decklist);
     }
 
     /**
-     * Get decklists
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getDecklists()
     {
@@ -556,33 +449,23 @@ class User extends BaseUser
     }
 
     /**
-     * Add comment
-     *
-     * @param Comment $comment
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addComment(Comment $comment)
+    public function addComment(CommentInterface $comment)
     {
-        $this->comments[] = $comment;
-
-        return $this;
+        $this->comments->add($comment);
     }
 
     /**
-     * Remove comment
-     *
-     * @param Comment $comment
+     * @inheritdoc
      */
-    public function removeComment(Comment $comment)
+    public function removeComment(CommentInterface $comment)
     {
         $this->comments->removeElement($comment);
     }
 
     /**
-     * Get comments
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getComments()
     {
@@ -590,33 +473,23 @@ class User extends BaseUser
     }
 
     /**
-     * Add review
-     *
-     * @param Review $review
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addReview(Review $review)
+    public function addReview(ReviewInterface $review)
     {
-        $this->reviews[] = $review;
-
-        return $this;
+        $this->reviews->add($review);
     }
 
     /**
-     * Remove review
-     *
-     * @param Review $review
+     * @inheritdoc
      */
-    public function removeReview(Review $review)
+    public function removeReview(ReviewInterface $review)
     {
         $this->reviews->removeElement($review);
     }
 
     /**
-     * Get reviews
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getReviews()
     {
@@ -624,35 +497,25 @@ class User extends BaseUser
     }
 
     /**
-     * Add favorite
-     *
-     * @param Decklist $favorite
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addFavorite(Decklist $favorite)
+    public function addFavorite(DecklistInterface $favorite)
     {
         $favorite->addFavorite($this);
-        $this->favorites[] = $favorite;
-
-        return $this;
+        $this->favorites->add($favorite);
     }
 
     /**
-     * Remove favorite
-     *
-     * @param Decklist $favorite
+     * @inheritdoc
      */
-    public function removeFavorite(Decklist $favorite)
+    public function removeFavorite(DecklistInterface $favorite)
     {
         $favorite->removeFavorite($this);
         $this->favorites->removeElement($favorite);
     }
 
     /**
-     * Get favorites
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getFavorites()
     {
@@ -660,35 +523,25 @@ class User extends BaseUser
     }
 
     /**
-     * Add vote
-     *
-     * @param Decklist $vote
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addVote(Decklist $vote)
+    public function addVote(DecklistInterface $vote)
     {
         $vote->addVote($this);
-        $this->votes[] = $vote;
-
-        return $this;
+        $this->votes->add($vote);
     }
 
     /**
-     * Remove vote
-     *
-     * @param Decklist $vote
+     * @inheritdoc
      */
-    public function removeVote(Decklist $vote)
+    public function removeVote(DecklistInterface $vote)
     {
         $vote->removeVote($this);
         $this->votes->removeElement($vote);
     }
 
     /**
-     * Get votes
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getVotes()
     {
@@ -696,33 +549,23 @@ class User extends BaseUser
     }
 
     /**
-     * Add reviewvote
-     *
-     * @param Review $reviewvote
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addReviewvote(Review $reviewvote)
+    public function addReviewvote(ReviewInterface $reviewvote)
     {
-        $this->reviewvotes[] = $reviewvote;
-
-        return $this;
+        $this->reviewvotes->add($reviewvote);
     }
 
     /**
-     * Remove reviewvote
-     *
-     * @param Review $reviewvote
+     * @inheritdoc
      */
-    public function removeReviewvote(Review $reviewvote)
+    public function removeReviewvote(ReviewInterface $reviewvote)
     {
         $this->reviewvotes->removeElement($reviewvote);
     }
 
     /**
-     * Get reviewvotes
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getReviewvotes()
     {
@@ -730,33 +573,23 @@ class User extends BaseUser
     }
 
     /**
-     * Add following
-     *
-     * @param User $following
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addFollowing(User $following)
+    public function addFollowing(UserInterface $following)
     {
-        $this->following[] = $following;
-
-        return $this;
+        $this->following->add($following);
     }
 
     /**
-     * Remove following
-     *
-     * @param User $following
+     * @inheritdoc
      */
-    public function removeFollowing(User $following)
+    public function removeFollowing(UserInterface $following)
     {
         $this->following->removeElement($following);
     }
 
     /**
-     * Get following
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getFollowing()
     {
@@ -764,33 +597,23 @@ class User extends BaseUser
     }
 
     /**
-     * Add follower
-     *
-     * @param User $follower
-     *
-     * @return User
+     * @inheritdoc
      */
-    public function addFollower(User $follower)
+    public function addFollower(UserInterface $follower)
     {
-        $this->followers[] = $follower;
-
-        return $this;
+        $this->followers->add($follower);
     }
 
     /**
-     * Remove follower
-     *
-     * @param User $follower
+     * @inheritdoc
      */
-    public function removeFollower(User $follower)
+    public function removeFollower(UserInterface $follower)
     {
         $this->followers->removeElement($follower);
     }
 
     /**
-     * Get followers
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getFollowers()
     {
@@ -798,10 +621,10 @@ class User extends BaseUser
     }
 
     /**
-     * @return float|int
+     * @inheritdoc
      */
     public function getMaxNbDecks()
     {
-        return 2*(100+floor($this->reputation/ 10));
+        return 2 * (100 + floor($this->reputation / 10));
     }
 }

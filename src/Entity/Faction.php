@@ -9,12 +9,11 @@ use Serializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Faction
- *
  * @ORM\Table(name="faction", uniqueConstraints={@ORM\UniqueConstraint(name="faction_code_idx", columns={"code"})})
  * @ORM\Entity(repositoryClass="App\Repository\FactionRepository")
+ * @package App\Entity
  */
-class Faction implements Serializable
+class Faction implements FactionInterface
 {
     /**
      * @var int
@@ -63,17 +62,14 @@ class Faction implements Serializable
      */
     protected $cards;
 
-    /**
-     * Constructor
-     */
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
     }
 
     /**
-     * Set id
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -81,9 +77,7 @@ class Faction implements Serializable
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -91,23 +85,15 @@ class Faction implements Serializable
     }
 
     /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Faction
+     * @inheritdoc
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -115,23 +101,15 @@ class Faction implements Serializable
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Faction
+     * @inheritdoc
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -139,23 +117,15 @@ class Faction implements Serializable
     }
 
     /**
-     * Set isPrimary
-     *
-     * @param bool $isPrimary
-     *
-     * @return Faction
+     * @inheritdoc
      */
     public function setIsPrimary($isPrimary)
     {
         $this->isPrimary = $isPrimary;
-
-        return $this;
     }
 
     /**
-     * Get isPrimary
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsPrimary()
     {
@@ -163,23 +133,15 @@ class Faction implements Serializable
     }
 
     /**
-     * Set octgnId
-     *
-     * @param string $octgnId
-     *
-     * @return Faction
+     * @inheritdoc
      */
     public function setOctgnId($octgnId)
     {
         $this->octgnId = $octgnId;
-
-        return $this;
     }
 
     /**
-     * Get octgnId
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getOctgnId()
     {
@@ -187,39 +149,32 @@ class Faction implements Serializable
     }
 
     /**
-     * Add card
-     *
-     * @param Card $card
-     *
-     * @return Faction
+     * @inheritdoc
      */
-    public function addCard(Card $card)
+    public function addCard(CardInterface $card)
     {
-        $this->cards[] = $card;
-
-        return $this;
+        $this->cards->add($card);
     }
 
     /**
-     * Remove card
-     *
-     * @param Card $card
+     * @inheritdoc
      */
-    public function removeCard(Card $card)
+    public function removeCard(CardInterface $card)
     {
         $this->cards->removeElement($card);
     }
 
     /**
-     * Get cards
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getCards()
     {
         return $this->cards;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return [
@@ -231,7 +186,7 @@ class Faction implements Serializable
     }
 
     /**
-     * @param string $serialized
+     * @inheritdoc
      * @throws Exception
      */
     public function unserialize($serialized)
@@ -239,6 +194,9 @@ class Faction implements Serializable
         throw new Exception("unserialize() method unsupported");
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->name ?: '';

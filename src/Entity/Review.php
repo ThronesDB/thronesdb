@@ -9,12 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Review
- *
  * @ORM\Table(name="review")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Review
+class Review implements ReviewInterface
 {
     /**
      * @var int
@@ -70,7 +69,7 @@ class Review
     protected $comments;
 
     /**
-     * @var Card
+     * @var CardInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Card", inversedBy="reviews")
      * @ORM\JoinColumns({
@@ -80,7 +79,7 @@ class Review
     protected $card;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reviews")
      * @ORM\JoinColumns({
@@ -114,9 +113,15 @@ class Review
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getId()
     {
@@ -124,23 +129,15 @@ class Review
     }
 
     /**
-     * Set dateCreation
-     *
-     * @param DateTime $dateCreation
-     *
-     * @return Review
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -148,23 +145,15 @@ class Review
     }
 
     /**
-     * Set dateUpdate
-     *
-     * @param DateTime $dateUpdate
-     *
-     * @return Review
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -172,23 +161,15 @@ class Review
     }
 
     /**
-     * Set textMd
-     *
-     * @param string $textMd
-     *
-     * @return Review
+     * @inheritdoc
      */
     public function setTextMd($textMd)
     {
         $this->textMd = $textMd;
-
-        return $this;
     }
 
     /**
-     * Get textMd
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getTextMd()
     {
@@ -196,23 +177,15 @@ class Review
     }
 
     /**
-     * Set textHtml
-     *
-     * @param string $textHtml
-     *
-     * @return Review
+     * @inheritdoc
      */
     public function setTextHtml($textHtml)
     {
         $this->textHtml = $textHtml;
-
-        return $this;
     }
 
     /**
-     * Get textHtml
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getTextHtml()
     {
@@ -220,23 +193,15 @@ class Review
     }
 
     /**
-     * Set nbVotes
-     *
-     * @param int $nbVotes
-     *
-     * @return Review
+     * @inheritdoc
      */
     public function setNbVotes($nbVotes)
     {
         $this->nbVotes = $nbVotes;
-
-        return $this;
     }
 
     /**
-     * Get nbVotes
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getNbVotes()
     {
@@ -244,33 +209,23 @@ class Review
     }
 
     /**
-     * Add comment
-     *
-     * @param \App\Entity\Reviewcomment $comment
-     *
-     * @return Review
+     * @inheritdoc
      */
-    public function addComment(\App\Entity\Reviewcomment $comment)
+    public function addComment(ReviewcommentInterface $comment)
     {
-        $this->comments[] = $comment;
-
-        return $this;
+        $this->comments->add($comment);
     }
 
     /**
-     * Remove comment
-     *
-     * @param \App\Entity\Reviewcomment $comment
+     * @inheritdoc
      */
-    public function removeComment(\App\Entity\Reviewcomment $comment)
+    public function removeComment(ReviewcommentInterface $comment)
     {
         $this->comments->removeElement($comment);
     }
 
     /**
-     * Get comments
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getComments()
     {
@@ -278,23 +233,15 @@ class Review
     }
 
     /**
-     * Set card
-     *
-     * @param Card $card
-     *
-     * @return Review
+     * @inheritdoc
      */
-    public function setCard(Card $card = null)
+    public function setCard(CardInterface $card = null)
     {
         $this->card = $card;
-
-        return $this;
     }
 
     /**
-     * Get card
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function getCard()
     {
@@ -302,23 +249,15 @@ class Review
     }
 
     /**
-     * Set user
-     *
-     * @param User $user
-     *
-     * @return Review
+     * @inheritdoc
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
-     * Get user
-     *
-     * @return User
+     * @inheritdoc
      */
     public function getUser()
     {
@@ -326,33 +265,23 @@ class Review
     }
 
     /**
-     * Add vote
-     *
-     * @param User $vote
-     *
-     * @return Review
+     * @inheritdoc
      */
-    public function addVote(User $vote)
+    public function addVote(UserInterface $vote)
     {
-        $this->votes[] = $vote;
-
-        return $this;
+        $this->votes->add($vote);
     }
 
     /**
-     * Remove vote
-     *
-     * @param User $vote
+     * @inheritdoc
      */
-    public function removeVote(User $vote)
+    public function removeVote(UserInterface $vote)
     {
         $this->votes->removeElement($vote);
     }
 
     /**
-     * Get votes
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getVotes()
     {

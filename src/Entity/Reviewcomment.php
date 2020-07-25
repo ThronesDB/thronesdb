@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Reviewcomment
- *
  * @ORM\Table(name="reviewcomment")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Reviewcomment
+class Reviewcomment implements ReviewcommentInterface
 {
     /**
      * @var int
@@ -47,7 +46,7 @@ class Reviewcomment
     protected $text;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumns({
@@ -57,7 +56,7 @@ class Reviewcomment
     protected $user;
 
     /**
-     * @var Review
+     * @var ReviewInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Review", inversedBy="comments")
      * @ORM\JoinColumns({
@@ -67,9 +66,15 @@ class Reviewcomment
     protected $review;
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getId()
     {
@@ -77,23 +82,15 @@ class Reviewcomment
     }
 
     /**
-     * Set dateCreation
-     *
-     * @param DateTime $dateCreation
-     *
-     * @return Reviewcomment
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -101,23 +98,15 @@ class Reviewcomment
     }
 
     /**
-     * Set dateUpdate
-     *
-     * @param DateTime $dateUpdate
-     *
-     * @return Reviewcomment
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -125,23 +114,15 @@ class Reviewcomment
     }
 
     /**
-     * Set text
-     *
-     * @param string $text
-     *
-     * @return Reviewcomment
+     * @inheritdoc
      */
     public function setText($text)
     {
         $this->text = $text;
-
-        return $this;
     }
 
     /**
-     * Get text
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getText()
     {
@@ -149,23 +130,15 @@ class Reviewcomment
     }
 
     /**
-     * Set user
-     *
-     * @param User $user
-     *
-     * @return Reviewcomment
+     * @inheritdoc
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
-     * Get user
-     *
-     * @return User
+     * @inheritdoc
      */
     public function getUser()
     {
@@ -173,23 +146,15 @@ class Reviewcomment
     }
 
     /**
-     * Set review
-     *
-     * @param Review $review
-     *
-     * @return Reviewcomment
+     * @inheritdoc
      */
-    public function setReview(Review $review = null)
+    public function setReview(ReviewInterface $review = null)
     {
         $this->review = $review;
-
-        return $this;
     }
 
     /**
-     * Get review
-     *
-     * @return Review
+     * @inheritdoc
      */
     public function getReview()
     {

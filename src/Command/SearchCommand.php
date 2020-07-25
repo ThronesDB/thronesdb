@@ -2,11 +2,17 @@
 
 namespace App\Command;
 
-use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
+/**
+ * Class SearchCommand
+ * @package App\Command
+ */
 class SearchCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -16,13 +22,13 @@ class SearchCommand extends ContainerAwareCommand
         ->setDescription('Search cards')
         ->addArgument(
             'query',
-            \Symfony\Component\Console\Input\InputArgument::REQUIRED,
+            InputArgument::REQUIRED,
             "Search query, eg e:core"
         )
         ->addOption(
             'output',
             'o',
-            \Symfony\Component\Console\Input\InputOption::VALUE_REQUIRED,
+            InputOption::VALUE_REQUIRED,
             "Properties of each card to output (comma-separated list)",
             'name'
         )
@@ -53,7 +59,7 @@ class SearchCommand extends ContainerAwareCommand
             $result[] = $filtered;
         }
 
-        $table = new \Symfony\Component\Console\Helper\Table($output);
+        $table = new Table($output);
         $table->setRows($result);
         $table->render();
 

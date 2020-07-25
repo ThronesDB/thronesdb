@@ -6,16 +6,15 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Cycle
- *
  * @ORM\Table(name="cycle", uniqueConstraints={@ORM\UniqueConstraint(name="cycle_code_idx", columns={"code"})})
  * @ORM\Entity(repositoryClass="App\Repository\CycleRepository")
  */
 
-class Cycle implements \Serializable
+class Cycle implements CycleInterface
 {
     /**
      * @var int
@@ -80,18 +79,21 @@ class Cycle implements \Serializable
      */
     protected $packs;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->packs = new ArrayCollection();
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getId()
     {
@@ -99,23 +101,15 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Cycle
+     * @inheritdoc
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -123,23 +117,15 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Cycle
+     * @inheritdoc
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -147,23 +133,15 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set position
-     *
-     * @param int $position
-     *
-     * @return Cycle
+     * @inheritdoc
      */
     public function setPosition($position)
     {
         $this->position = $position;
-
-        return $this;
     }
 
     /**
-     * Get position
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getPosition()
     {
@@ -171,23 +149,15 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set size
-     *
-     * @param int $size
-     *
-     * @return Cycle
+     * @inheritdoc
      */
     public function setSize($size)
     {
         $this->size = $size;
-
-        return $this;
     }
 
     /**
-     * Get size
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getSize()
     {
@@ -195,23 +165,15 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set dateCreation
-     *
-     * @param DateTime $dateCreation
-     *
-     * @return Cycle
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -219,23 +181,15 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Set dateUpdate
-     *
-     * @param DateTime $dateUpdate
-     *
-     * @return Cycle
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -243,39 +197,32 @@ class Cycle implements \Serializable
     }
 
     /**
-     * Add pack
-     *
-     * @param Pack $pack
-     *
-     * @return Cycle
+     * @inheritdoc
      */
-    public function addPack(Pack $pack)
+    public function addPack(PackInterface $pack)
     {
-        $this->packs[] = $pack;
-
-        return $this;
+        $this->packs->add($pack);
     }
 
     /**
-     * Remove pack
-     *
-     * @param Pack $pack
+     * @inheritdoc
      */
-    public function removePack(Pack $pack)
+    public function removePack(PackInterface $pack)
     {
         $this->packs->removeElement($pack);
     }
 
     /**
-     * Get packs
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getPacks()
     {
         return $this->packs;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return [
@@ -286,11 +233,18 @@ class Cycle implements \Serializable
         ];
     }
 
+    /**
+     * @inheritdoc
+     * @throws Exception
+     */
     public function unserialize($serialized)
     {
-        throw new \Exception("unserialize() method unsupported");
+        throw new Exception("unserialize() method unsupported");
     }
 
+    /**
+     * @inheritdoc
+     */
     public function __toString()
     {
         return $this->name ?: '';

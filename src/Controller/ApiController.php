@@ -3,15 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
+use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\Pack;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\PackInterface;
+use DateInterval;
+use DateTime;
+use Doctrine\Common\Collections\Criteria;
+use Exception;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Ramsey\Collection\CollectionInterface;
+use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use App\Entity\Decklist;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\Common\Collections\Criteria;
-use Nelmio\ApiDocBundle\Annotation\Operation;
-use Swagger\Annotations as SWG;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ApiController extends Controller
@@ -19,7 +26,6 @@ class ApiController extends Controller
 
     /**
      * Get the description of all the packs as an array of JSON objects.
-     *
      *
      * @Operation(
      *     tags={"Public"},
@@ -37,8 +43,8 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
      * @param Request $request
+     * @return Response
      */
     public function listPacksAction(Request $request)
     {
@@ -57,7 +63,7 @@ class ApiController extends Controller
         // check the last-modified-since header
 
         $lastModified = null;
-        /* @var $pack Pack */
+        /* @var PackInterface $pack */
         foreach ($list_packs as $pack) {
             if (!$lastModified || $lastModified < $pack->getDateUpdate()) {
                 $lastModified = $pack->getDateUpdate();
@@ -71,7 +77,7 @@ class ApiController extends Controller
         // build the response
 
         $packs = array();
-        /* @var $pack Pack */
+        /* @var PackInterface $pack */
         foreach ($list_packs as $pack) {
             $real = count($pack->getCards());
             $max = $pack->getSize();
@@ -121,8 +127,9 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
+     * @param $card_code
      * @param Request $request
+     * @return Response|NotFoundHttpException
      */
     public function getCardAction($card_code, Request $request)
     {
@@ -139,14 +146,14 @@ class ApiController extends Controller
         $jsonp = $request->query->get('jsonp');
 
         $card = $this->getDoctrine()->getRepository(Card::class)->findOneBy(array("code" => $card_code));
-        if (!$card instanceof Card) {
+        if (!$card instanceof CardInterface) {
             return $this->createNotFoundException();
         }
 
         // check the last-modified-since header
 
         $lastModified = null;
-        /* @var $card Card */
+        /* @var CardInterface $card */
         if (!$lastModified || $lastModified < $card->getDateUpdate()) {
             $lastModified = $card->getDateUpdate();
         }
@@ -157,7 +164,7 @@ class ApiController extends Controller
 
         // build the response
 
-        /* @var $card Card */
+        /* @var CardInterface $card */
         $card = $this->get('cards_data')->getCardInfo($card, true, $version);
 
         $content = json_encode($card);
@@ -190,8 +197,8 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
      * @param Request $request
+     * @return Response
      */
     public function listCardsAction(Request $request)
     {
@@ -211,7 +218,7 @@ class ApiController extends Controller
         // check the last-modified-since header
 
         $lastModified = null;
-        /* @var $card Card */
+        /* @var CardInterface $card */
         foreach ($list_cards as $card) {
             if (!$lastModified || $lastModified < $card->getDateUpdate()) {
                 $lastModified = $card->getDateUpdate();
@@ -225,7 +232,7 @@ class ApiController extends Controller
         // build the response
 
         $cards = array();
-        /* @var $card Card */
+        /* @var CardInterface $card */
         foreach ($list_cards as $card) {
             $cards[] = $this->get('cards_data')->getCardInfo($card, true, $version);
         }
@@ -260,8 +267,10 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
+     * @param $pack_code
      * @param Request $request
+     * @return Response|NotFoundHttpException
+     * @throws Exception
      */
     public function listCardsByPackAction($pack_code, Request $request)
     {
@@ -281,7 +290,7 @@ class ApiController extends Controller
         }
 
         $pack = $this->getDoctrine()->getRepository(Pack::class)->findOneBy(array('code' => $pack_code));
-        if (!$pack instanceof Pack) {
+        if (!$pack instanceof PackInterface) {
             return $this->createNotFoundException();
         }
 
@@ -338,7 +347,9 @@ class ApiController extends Controller
      *     )
      * )
      *
+     * @param $decklist_id
      * @param Request $request
+     * @return Response|NotFoundHttpException
      */
     public function getDecklistAction($decklist_id, Request $request)
     {
@@ -355,7 +366,7 @@ class ApiController extends Controller
             return $response;
         }
 
-        /* @var $decklist Decklist */
+        /* @var DecklistInterface $decklist */
         $decklist = $this->getDoctrine()->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist instanceof Decklist) {
             return $this->createNotFoundException();
@@ -398,8 +409,9 @@ class ApiController extends Controller
      *     )
      * )
      *
-     *
+     * @param string $date
      * @param Request $request
+     * @return Response
      */
     public function listDecklistsByDateAction($date, Request $request)
     {
@@ -416,17 +428,17 @@ class ApiController extends Controller
             return $response;
         }
 
-        $start = \DateTime::createFromFormat('Y-m-d', $date);
+        $start = DateTime::createFromFormat('Y-m-d', $date);
         $start->setTime(0, 0, 0);
         $end = clone $start;
-        $end->add(new \DateInterval("P1D"));
+        $end->add(new DateInterval("P1D"));
 
         $expr = Criteria::expr();
         $criteria = Criteria::create();
         $criteria->where($expr->gte('dateCreation', $start));
         $criteria->andWhere($expr->lt('dateCreation', $end));
 
-        /* @var $decklists ArrayCollection */
+        /* @var CollectionInterface $decklists */
         $decklists = $this->getDoctrine()->getRepository(Decklist::class)->matching($criteria);
         if (!$decklists) {
             die();

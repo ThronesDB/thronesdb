@@ -4,8 +4,9 @@ namespace App\Model;
 
 use App\Classes\BannedListChecker;
 use App\Classes\RestrictedListChecker;
-use App\Entity\Decklistslot;
-use App\Entity\Pack;
+use App\Entity\DecklistslotInterface;
+use App\Entity\PackInterface;
+use App\Entity\SlotInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -141,9 +142,9 @@ class SlotCollectionDecorator implements SlotCollectionInterface
 
         $packs =  array_values($packs);
         usort($packs, function ($arr1, $arr2) {
-            /** @var Pack $pack1 */
+            /** @var PackInterface $pack1 */
             $pack1 = $arr1['pack'];
-            /** @var Pack $pack2 */
+            /** @var PackInterface $pack2 */
             $pack2 = $arr2['pack'];
             $cycle1 = $pack1->getCycle();
             $cycle2 = $pack2->getCycle();
@@ -379,7 +380,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         $slots = $this->getSlots()->getValues();
         $cardCodes = [];
         /**
-         * @var Decklistslot $slot;
+         * @var DecklistslotInterface $slot;
          */
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();
@@ -396,7 +397,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         $slots = $this->getSlots()->getValues();
         $cardCodes = [];
         /**
-         * @var Decklistslot $slot;
+         * @var DecklistslotInterface $slot;
          */
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();

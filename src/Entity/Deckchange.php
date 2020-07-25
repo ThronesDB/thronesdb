@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Deckchange
- *
  * @ORM\Table(name="deckchange")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Deckchange
+class Deckchange implements DeckchangeInterface
 {
     /**
      * @var int
@@ -53,7 +52,7 @@ class Deckchange
     protected $version;
 
     /**
-     * @var Deck
+     * @var DeckInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="changes")
      * @ORM\JoinColumns({
@@ -63,9 +62,15 @@ class Deckchange
     protected $deck;
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getId()
     {
@@ -73,23 +78,15 @@ class Deckchange
     }
 
     /**
-     * Set dateCreation
-     *
-     * @param DateTime $dateCreation
-     *
-     * @return Deckchange
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -97,23 +94,15 @@ class Deckchange
     }
 
     /**
-     * Set variation
-     *
-     * @param string $variation
-     *
-     * @return Deckchange
+     * @inheritdoc
      */
     public function setVariation($variation)
     {
         $this->variation = $variation;
-
-        return $this;
     }
 
     /**
-     * Get variation
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getVariation()
     {
@@ -121,23 +110,15 @@ class Deckchange
     }
 
     /**
-     * Set isSaved
-     *
-     * @param bool $isSaved
-     *
-     * @return Deckchange
+     * @inheritdoc
      */
     public function setIsSaved($isSaved)
     {
         $this->isSaved = $isSaved;
-
-        return $this;
     }
 
     /**
-     * Get isSaved
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsSaved()
     {
@@ -145,23 +126,15 @@ class Deckchange
     }
 
     /**
-     * Set deck
-     *
-     * @param Deck $deck
-     *
-     * @return Deckchange
+     * @inheritdoc
      */
-    public function setDeck(Deck $deck = null)
+    public function setDeck(DeckInterface $deck = null)
     {
         $this->deck = $deck;
-
-        return $this;
     }
 
     /**
-     * Get deck
-     *
-     * @return Deck
+     * @inheritdoc
      */
     public function getDeck()
     {
@@ -169,23 +142,15 @@ class Deckchange
     }
 
     /**
-     * Set version
-     *
-     * @param string $version
-     *
-     * @return Deckchange
+     * @inheritdoc
      */
     public function setVersion($version)
     {
         $this->version = $version;
-
-        return $this;
     }
 
     /**
-     * Get version
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getVersion()
     {

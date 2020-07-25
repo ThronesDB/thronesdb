@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Review;
 use App\Entity\Reviewcomment;
+use App\Entity\ReviewInterface;
 use App\Entity\User;
-use DateTime;
+use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Swift_Message;
@@ -21,12 +25,18 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ReviewController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function postAction(Request $request)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
@@ -38,7 +48,7 @@ class ReviewController extends Controller
         }
 
         $card_id = filter_var($request->get('card_id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $card Card */
+        /* @var CardInterface $card */
         $card = $em->getRepository(Card::class)->find($card_id);
         if (!$card) {
             throw new Exception("This card does not exist.");
@@ -92,14 +102,14 @@ class ReviewController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw new UnauthorizedHttpException("You are not logged in.");
         }
 
         $review_id = filter_var($request->get('review_id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new BadRequestHttpException("Unable to find review.");
@@ -138,13 +148,14 @@ class ReviewController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
+        /** @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         $review_id = filter_var($request->request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new Exception("Unable to find review.");
@@ -182,13 +193,14 @@ class ReviewController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
             throw $this->createAccessDeniedException('No user or not admin');
         }
 
         $review_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new Exception("Unable to find review.");
@@ -353,14 +365,14 @@ class ReviewController extends Controller
 
         $fromEmail = $this->getParameter('email_sender_address');
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         $review_id = filter_var($request->get('comment_review_id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var $review Review */
+        /* @var ReviewInterface $review */
         $review = $em->getRepository(Review::class)->find($review_id);
         if (!$review) {
             throw new Exception("Unable to find review.");

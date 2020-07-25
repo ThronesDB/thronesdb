@@ -2,16 +2,14 @@
 
 namespace App\Entity;
 
-use App\Model\SlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Deckslot
- *
  * @ORM\Table(name="deckslot")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Deckslot implements SlotInterface
+class Deckslot implements DeckslotInterface
 {
     /**
      * @var int
@@ -30,7 +28,7 @@ class Deckslot implements SlotInterface
     protected $quantity;
 
     /**
-     * @var Deck
+     * @var DeckInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="slots")
      * @ORM\JoinColumns({
@@ -40,7 +38,7 @@ class Deckslot implements SlotInterface
     protected $deck;
 
     /**
-     * @var Card
+     * @var CardInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Card")
      * @ORM\JoinColumns({
@@ -50,9 +48,15 @@ class Deckslot implements SlotInterface
     protected $card;
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getId()
     {
@@ -60,23 +64,15 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * Set quantity
-     *
-     * @param int $quantity
-     *
-     * @return Deckslot
+     * @inheritdoc
      */
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
-
-        return $this;
     }
 
     /**
-     * Get quantity
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getQuantity()
     {
@@ -84,23 +80,15 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * Set deck
-     *
-     * @param Deck $deck
-     *
-     * @return Deckslot
+     * @inheritdoc
      */
-    public function setDeck(Deck $deck = null)
+    public function setDeck(DeckInterface $deck = null)
     {
         $this->deck = $deck;
-
-        return $this;
     }
 
     /**
-     * Get deck
-     *
-     * @return Deck
+     * @inheritdoc
      */
     public function getDeck()
     {
@@ -108,23 +96,15 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * Set card
-     *
-     * @param Card $card
-     *
-     * @return Deckslot
+     * @inheritdoc
      */
-    public function setCard(Card $card = null)
+    public function setCard(CardInterface $card = null)
     {
         $this->card = $card;
-
-        return $this;
     }
 
     /**
-     * Get card
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function getCard()
     {

@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Cycle;
 use App\Entity\Faction;
 use App\Entity\Pack;
@@ -366,7 +367,7 @@ class ImportStdCommand extends Command
 
         if (!key_exists($key, $data)) {
             if ($isMandatory) {
-                throw new Exception("Missing key [$key] in ".json_encode($data));
+                throw new Exception("Missing key [$key] in " . json_encode($data));
             } else {
                 $data[$key] = null;
             }
@@ -456,12 +457,12 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      * @param $data
      * @param OutputInterface $output
      * @throws Exception
      */
-    protected function importAgendaData(Card $card, $data, OutputInterface $output)
+    protected function importAgendaData(CardInterface $card, $data, OutputInterface $output)
     {
         $mandatoryKeys = [
         ];
@@ -472,12 +473,12 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      * @param $data
      * @param OutputInterface $output
      * @throws Exception
      */
-    protected function importAttachmentData(Card $card, $data, OutputInterface $output)
+    protected function importAttachmentData(CardInterface $card, $data, OutputInterface $output)
     {
         $mandatoryKeys = [
             'cost'
@@ -489,12 +490,12 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      * @param $data
      * @param OutputInterface $output
      * @throws Exception
      */
-    protected function importCharacterData(Card $card, $data, OutputInterface $output)
+    protected function importCharacterData(CardInterface $card, $data, OutputInterface $output)
     {
         $mandatoryKeys = [
             'cost',
@@ -510,12 +511,12 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      * @param $data
      * @param OutputInterface $output
      * @throws Exception
      */
-    protected function importEventData(Card $card, $data, OutputInterface $output)
+    protected function importEventData(CardInterface $card, $data, OutputInterface $output)
     {
         $mandatoryKeys = [
             'cost'
@@ -527,12 +528,12 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      * @param $data
      * @param OutputInterface $output
      * @throws Exception
      */
-    protected function importLocationData(Card $card, $data, OutputInterface $output)
+    protected function importLocationData(CardInterface $card, $data, OutputInterface $output)
     {
         $mandatoryKeys = [
             'cost'
@@ -544,12 +545,12 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      * @param $data
      * @param OutputInterface $output
      * @throws Exception
      */
-    protected function importPlotData(Card $card, $data, OutputInterface $output)
+    protected function importPlotData(CardInterface $card, $data, OutputInterface $output)
     {
         $mandatoryKeys = [
             'claim',
@@ -564,12 +565,12 @@ class ImportStdCommand extends Command
     }
 
     /**
-     * @param Card $card
+     * @param CardInterface $card
      * @param $data
      * @param OutputInterface $output
      * @throws Exception
      */
-    protected function importTitleData(Card $card, $data, OutputInterface $output)
+    protected function importTitleData(CardInterface $card, $data, OutputInterface $output)
     {
         $mandatoryKeys = [];
 

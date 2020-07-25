@@ -7,12 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Comment
- *
  * @ORM\Table(name="comment")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Comment
+class Comment implements CommentInterface
 {
     /**
      * @var int
@@ -45,7 +44,7 @@ class Comment
     protected $isHidden;
 
     /**
-     * @var User
+     * @var UserInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumns({
@@ -64,11 +63,16 @@ class Comment
      */
     protected $decklist;
 
+    /**
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -76,23 +80,15 @@ class Comment
     }
 
     /**
-     * Set text
-     *
-     * @param string $text
-     *
-     * @return Comment
+     * @inheritdoc
      */
     public function setText($text)
     {
         $this->text = $text;
-
-        return $this;
     }
 
     /**
-     * Get text
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getText()
     {
@@ -100,23 +96,15 @@ class Comment
     }
 
     /**
-     * Set dateCreation
-     *
-     * @param DateTime $dateCreation
-     *
-     * @return Comment
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -124,23 +112,15 @@ class Comment
     }
 
     /**
-     * Set isHidden
-     *
-     * @param bool $isHidden
-     *
-     * @return Comment
+     * @inheritdoc
      */
     public function setIsHidden($isHidden)
     {
         $this->isHidden = $isHidden;
-
-        return $this;
     }
 
     /**
-     * Get isHidden
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsHidden()
     {
@@ -148,23 +128,15 @@ class Comment
     }
 
     /**
-     * Set user
-     *
-     * @param User $user
-     *
-     * @return Comment
+     * @inheritdoc
      */
-    public function setUser(User $user = null)
+    public function setUser(UserInterface $user = null)
     {
         $this->user = $user;
-
-        return $this;
     }
 
     /**
-     * Get user
-     *
-     * @return User
+     * @inheritdoc
      */
     public function getUser()
     {
@@ -172,23 +144,15 @@ class Comment
     }
 
     /**
-     * Set decklist
-     *
-     * @param Decklist $decklist
-     *
-     * @return Comment
+     * @inheritdoc
      */
-    public function setDecklist(Decklist $decklist = null)
+    public function setDecklist(DecklistInterface $decklist = null)
     {
         $this->decklist = $decklist;
-
-        return $this;
     }
 
     /**
-     * Get decklist
-     *
-     * @return Decklist
+     * @inheritdoc
      */
     public function getDecklist()
     {

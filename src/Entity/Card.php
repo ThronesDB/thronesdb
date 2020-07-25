@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Exception;
-use Serializable;
 
 /**
  * Class Card
@@ -20,7 +19,7 @@ use Serializable;
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CardRepository")
  */
-class Card implements Serializable
+class Card implements CardInterface
 {
     /**
      * @var int
@@ -246,7 +245,7 @@ class Card implements Serializable
     protected $type;
 
     /**
-     * @var Faction
+     * @var FactionInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Faction", inversedBy="cards")
      * @ORM\JoinColumns({
@@ -269,9 +268,15 @@ class Card implements Serializable
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getId()
     {
@@ -279,23 +284,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set position
-     *
-     * @param int $position
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setPosition($position)
     {
         $this->position = $position;
-
-        return $this;
     }
 
     /**
-     * Get position
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getPosition()
     {
@@ -303,23 +300,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setCode($code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
-     * Get code
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getCode()
     {
@@ -327,23 +316,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
     }
 
     /**
-     * Get name
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -351,23 +332,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set cost
-     *
-     * @param string $cost
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setCost($cost)
     {
         $this->cost = $cost;
-
-        return $this;
     }
 
     /**
-     * Get cost
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getCost()
     {
@@ -375,23 +348,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set text
-     *
-     * @param string $text
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setText($text)
     {
         $this->text = $text;
-
-        return $this;
     }
 
     /**
-     * Get text
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getText()
     {
@@ -399,23 +364,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set dateCreation
-     *
-     * @param DateTime $dateCreation
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
         $this->dateCreation = $dateCreation;
-
-        return $this;
     }
 
     /**
-     * Get dateCreation
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateCreation()
     {
@@ -423,23 +380,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set dateUpdate
-     *
-     * @param DateTime $dateUpdate
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
         $this->dateUpdate = $dateUpdate;
-
-        return $this;
     }
 
     /**
-     * Get dateUpdate
-     *
-     * @return DateTime
+     * @inheritdoc
      */
     public function getDateUpdate()
     {
@@ -447,23 +396,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set quantity
-     *
-     * @param int $quantity
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
-
-        return $this;
     }
 
     /**
-     * Get quantity
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getQuantity()
     {
@@ -471,23 +412,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set income
-     *
-     * @param int $income
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setIncome($income)
     {
         $this->income = $income;
-
-        return $this;
     }
 
     /**
-     * Get income
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getIncome()
     {
@@ -495,23 +428,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set initiative
-     *
-     * @param int $initiative
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setInitiative($initiative)
     {
         $this->initiative = $initiative;
-
-        return $this;
     }
 
     /**
-     * Get initiative
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getInitiative()
     {
@@ -519,23 +444,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set claim
-     *
-     * @param int $claim
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setClaim($claim)
     {
         $this->claim = $claim;
-
-        return $this;
     }
 
     /**
-     * Get claim
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getClaim()
     {
@@ -543,23 +460,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set reserve
-     *
-     * @param int $reserve
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setReserve($reserve)
     {
         $this->reserve = $reserve;
-
-        return $this;
     }
 
     /**
-     * Get reserve
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getReserve()
     {
@@ -567,23 +476,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set deckLimit
-     *
-     * @param int $deckLimit
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setDeckLimit($deckLimit)
     {
         $this->deckLimit = $deckLimit;
-
-        return $this;
     }
 
     /**
-     * Get deckLimit
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getDeckLimit()
     {
@@ -591,23 +492,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set strength
-     *
-     * @param int $strength
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setStrength($strength)
     {
         $this->strength = $strength;
-
-        return $this;
     }
 
     /**
-     * Get strength
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getStrength()
     {
@@ -615,23 +508,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set traits
-     *
-     * @param string $traits
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setTraits($traits)
     {
         $this->traits = $traits;
-
-        return $this;
     }
 
     /**
-     * Get traits
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getTraits()
     {
@@ -639,23 +524,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set flavor
-     *
-     * @param string $flavor
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setFlavor($flavor)
     {
         $this->flavor = $flavor;
-
-        return $this;
     }
 
     /**
-     * Get flavor
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getFlavor()
     {
@@ -663,23 +540,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set illustrator
-     *
-     * @param string $illustrator
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setIllustrator($illustrator)
     {
         $this->illustrator = $illustrator;
-
-        return $this;
     }
 
     /**
-     * Get illustrator
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getIllustrator()
     {
@@ -687,23 +556,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set isUnique
-     *
-     * @param bool $isUnique
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setIsUnique($isUnique)
     {
         $this->isUnique = $isUnique;
-
-        return $this;
     }
 
     /**
-     * Get isUnique
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsUnique()
     {
@@ -711,23 +572,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set isLoyal
-     *
-     * @param bool $isLoyal
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setIsLoyal($isLoyal)
     {
         $this->isLoyal = $isLoyal;
-
-        return $this;
     }
 
     /**
-     * Get isLoyal
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsLoyal()
     {
@@ -735,23 +588,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set isMilitary
-     *
-     * @param bool $isMilitary
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setIsMilitary($isMilitary)
     {
         $this->isMilitary = $isMilitary;
-
-        return $this;
     }
 
     /**
-     * Get isMilitary
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsMilitary()
     {
@@ -759,23 +604,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set isIntrigue
-     *
-     * @param bool $isIntrigue
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setIsIntrigue($isIntrigue)
     {
         $this->isIntrigue = $isIntrigue;
-
-        return $this;
     }
 
     /**
-     * Get isIntrigue
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsIntrigue()
     {
@@ -783,23 +620,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set isPower
-     *
-     * @param bool $isPower
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setIsPower($isPower)
     {
         $this->isPower = $isPower;
-
-        return $this;
     }
 
     /**
-     * Get isPower
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getIsPower()
     {
@@ -807,23 +636,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set octgnId
-     *
-     * @param bool $octgnId
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setOctgnId($octgnId)
     {
         $this->octgnId = $octgnId;
-
-        return $this;
     }
 
     /**
-     * Get octgnId
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function getOctgnId()
     {
@@ -831,33 +652,23 @@ class Card implements Serializable
     }
 
     /**
-     * Add review
-     *
-     * @param Review $review
-     *
-     * @return Card
+     * @inheritdoc
      */
-    public function addReview(Review $review)
+    public function addReview(ReviewInterface $review)
     {
-        $this->reviews[] = $review;
-
-        return $this;
+        $this->reviews->add($review);
     }
 
     /**
-     * Remove review
-     *
-     * @param Review $review
+     * @inheritdoc
      */
-    public function removeReview(Review $review)
+    public function removeReview(ReviewInterface $review)
     {
         $this->reviews->removeElement($review);
     }
 
     /**
-     * Get reviews
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getReviews()
     {
@@ -865,23 +676,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set pack
-     *
-     * @param Pack $pack
-     *
-     * @return Card
+     * @inheritdoc
      */
-    public function setPack(Pack $pack = null)
+    public function setPack(PackInterface $pack = null)
     {
         $this->pack = $pack;
-
-        return $this;
     }
 
     /**
-     * Get pack
-     *
-     * @return Pack
+     * @inheritdoc
      */
     public function getPack()
     {
@@ -889,23 +692,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set type
-     *
-     * @param Type $type
-     *
-     * @return Card
+     * @inheritdoc
      */
-    public function setType(Type $type = null)
+    public function setType(TypeInterface $type = null)
     {
         $this->type = $type;
-
-        return $this;
     }
 
     /**
-     * Get type
-     *
-     * @return Type
+     * @inheritdoc
      */
     public function getType()
     {
@@ -913,23 +708,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set faction
-     *
-     * @param Faction $faction
-     *
-     * @return Card
+     * @inheritdoc
      */
-    public function setFaction(Faction $faction = null)
+    public function setFaction(FactionInterface $faction = null)
     {
         $this->faction = $faction;
-
-        return $this;
     }
 
     /**
-     * Get faction
-     *
-     * @return Faction
+     * @inheritdoc
      */
     public function getFaction()
     {
@@ -937,7 +724,7 @@ class Card implements Serializable
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getCostIncome()
     {
@@ -952,7 +739,7 @@ class Card implements Serializable
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getStrengthInitiative()
     {
@@ -967,23 +754,15 @@ class Card implements Serializable
     }
 
     /**
-     * Set designer
-     *
-     * @param string $designer
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function setDesigner($designer)
     {
         $this->designer = $designer;
-
-        return $this;
     }
 
     /**
-     * Get designer
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getDesigner()
     {
@@ -991,7 +770,7 @@ class Card implements Serializable
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function getIsMultiple(): bool
     {
@@ -999,19 +778,15 @@ class Card implements Serializable
     }
 
     /**
-     * @param bool $isMultiple
-     *
-     * @return self
+     * @inheritdoc
      */
-    public function setIsMultiple(bool $isMultiple): self
+    public function setIsMultiple(bool $isMultiple)
     {
         $this->isMultiple = $isMultiple;
-
-        return $this;
     }
 
     /**
-     * @return string|null
+     * @inheritdoc
      */
     public function getImageUrl()
     {
@@ -1019,21 +794,15 @@ class Card implements Serializable
     }
 
     /**
-     * @param string $imageUrl
-     *
-     * @return self
+     * @inheritdoc
      */
-    public function setImageUrl(string $imageUrl): self
+    public function setImageUrl(string $imageUrl)
     {
         $this->imageUrl = $imageUrl;
-
-        return $this;
     }
 
     /**
-     * Checks if this card has the "Shadow" keyword.
-     * @param string $shadow The keyword "Shadow" in whatever language.
-     * @return bool
+     * @inheritdoc
      */
     public function hasShadowKeyword($shadow): bool
     {
@@ -1046,7 +815,7 @@ class Card implements Serializable
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function serialize()
     {
@@ -1129,7 +898,7 @@ class Card implements Serializable
     }
 
     /**
-     * @param string $serialized
+     * @inheritdoc
      * @throws Exception
      */
     public function unserialize($serialized)
@@ -1145,6 +914,11 @@ class Card implements Serializable
         return $this->name ?: '';
     }
 
+    /**
+     * Converts a given snake_cased text to CamelCase.
+     * @param string $snake
+     * @return string
+     */
     protected function snakeToCamel($snake)
     {
         $parts = explode('_', $snake);

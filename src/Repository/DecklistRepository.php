@@ -2,12 +2,12 @@
 
 namespace App\Repository;
 
-use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use Doctrine\ORM\EntityRepository;
 
 class DecklistRepository extends EntityRepository
 {
-    public function findDuplicate(Decklist $decklist)
+    public function findDuplicate(DecklistInterface $decklist)
     {
         $qb = $this->createQueryBuilder('d')
             ->select('d, f')
@@ -22,7 +22,7 @@ class DecklistRepository extends EntityRepository
     }
 
     //findBy([ 'parent' => $decklist->getParent() ], [ 'version' => 'DESC' ]);
-    public function findVersions(Decklist $decklist)
+    public function findVersions(DecklistInterface $decklist)
     {
         $qb = $this->createQueryBuilder('d')
             ->select('d, f, ds, c')

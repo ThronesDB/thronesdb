@@ -2,16 +2,14 @@
 
 namespace App\Entity;
 
-use App\Model\SlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Decklistslot
- *
  * @ORM\Table(name="decklistslot")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Decklistslot implements SlotInterface
+class Decklistslot implements DecklistslotInterface
 {
 
     /**
@@ -41,7 +39,7 @@ class Decklistslot implements SlotInterface
     protected $decklist;
 
     /**
-     * @var Card
+     * @var CardInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Card")
      * @ORM\JoinColumns({
@@ -51,9 +49,15 @@ class Decklistslot implements SlotInterface
     protected $card;
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getId()
     {
@@ -61,23 +65,15 @@ class Decklistslot implements SlotInterface
     }
 
     /**
-     * Set quantity
-     *
-     * @param int $quantity
-     *
-     * @return Decklistslot
+     * @inheritdoc
      */
     public function setQuantity($quantity)
     {
         $this->quantity = $quantity;
-
-        return $this;
     }
 
     /**
-     * Get quantity
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getQuantity()
     {
@@ -85,23 +81,15 @@ class Decklistslot implements SlotInterface
     }
 
     /**
-     * Set decklist
-     *
-     * @param Decklist $decklist
-     *
-     * @return Decklistslot
+     * @inheritdoc
      */
     public function setDecklist(Decklist $decklist = null)
     {
         $this->decklist = $decklist;
-
-        return $this;
     }
 
     /**
-     * Get decklist
-     *
-     * @return Decklist
+     * @inheritdoc
      */
     public function getDecklist()
     {
@@ -109,23 +97,15 @@ class Decklistslot implements SlotInterface
     }
 
     /**
-     * Set card
-     *
-     * @param Card $card
-     *
-     * @return Decklistslot
+     * @inheritdoc
      */
-    public function setCard(Card $card = null)
+    public function setCard(CardInterface $card = null)
     {
         $this->card = $card;
-
-        return $this;
     }
 
     /**
-     * Get card
-     *
-     * @return Card
+     * @inheritdoc
      */
     public function getCard()
     {

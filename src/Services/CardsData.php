@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Controller\SearchController;
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Cycle;
+use App\Entity\CycleInterface;
 use App\Entity\Faction;
 use App\Entity\Pack;
+use App\Entity\PackInterface;
 use App\Entity\Review;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -132,7 +135,7 @@ class CardsData
 
     public function allsetsdata()
     {
-        /** @var Cycle[] $list_cycles */
+        /** @var CycleInterface[] $list_cycles */
         $list_cycles = $this->doctrine->getRepository(Cycle::class)->findAll();
         $lines = [];
 
@@ -162,18 +165,18 @@ class CardsData
 
     public function allsetsdatathreaded()
     {
+        /* @var CycleInterface[] $list_cycles */
         $list_cycles = $this->doctrine->getRepository(Cycle::class)->findBy(
             [],
             array("position" => "ASC")
         );
         $cycles = [];
 
-        /* @var $cycle Cycle */
         foreach ($list_cycles as $cycle) {
             $list_packs = $cycle->getPacks();
             $packs = [];
 
-            /* @var $pack Pack */
+            /* @var PackInterface $pack */
             foreach ($list_packs as $pack) {
                 $label = $pack->getName();
 
@@ -525,12 +528,12 @@ class CardsData
     }
 
     /**
-     * @param Card        $card
-     * @param bool        $api
+     * @param CardInterface $card
+     * @param bool $api
      * @param string|null $version
      * @return array
      */
-    public function getCardInfo(Card $card, bool $api, string $version = null)
+    public function getCardInfo(CardInterface $card, bool $api, string $version = null)
     {
         $cardinfo = [];
 

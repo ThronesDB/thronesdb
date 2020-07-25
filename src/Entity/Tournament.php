@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="tournament")
  * @ORM\Entity
  */
-class Tournament
+class Tournament implements TournamentInterface
 {
     /**
      * @var int
@@ -53,7 +53,7 @@ class Tournament
     }
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -61,9 +61,7 @@ class Tournament
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -71,23 +69,15 @@ class Tournament
     }
 
     /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return Tournament
+     * @inheritdoc
      */
     public function setDescription($description)
     {
         $this->description = $description;
-
-        return $this;
     }
 
     /**
-     * Get description
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getDescription()
     {
@@ -95,7 +85,7 @@ class Tournament
     }
 
     /**
-     * @return bool
+     * @inheritdoc
      */
     public function isActive() : bool
     {
@@ -103,7 +93,7 @@ class Tournament
     }
 
     /**
-     * @param bool $active
+     * @inheritdoc
      */
     public function setActive(bool $active) : void
     {
@@ -111,33 +101,23 @@ class Tournament
     }
 
     /**
-     * Add decklist
-     *
-     * @param Decklist $decklist
-     *
-     * @return Tournament
+     * @inheritdoc
      */
-    public function addDecklist(Decklist $decklist)
+    public function addDecklist(DecklistInterface $decklist)
     {
-        $this->decklists[] = $decklist;
-
-        return $this;
+        $this->decklists->add($decklist);
     }
 
     /**
-     * Remove decklist
-     *
-     * @param Decklist $decklist
+     * @inheritdoc
      */
-    public function removeDecklist(Decklist $decklist)
+    public function removeDecklist(DecklistInterface $decklist)
     {
         $this->decklists->removeElement($decklist);
     }
 
     /**
-     * Get decklists
-     *
-     * @return Collection
+     * @inheritdoc
      */
     public function getDecklists()
     {

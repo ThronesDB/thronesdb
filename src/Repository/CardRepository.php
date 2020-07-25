@@ -2,12 +2,20 @@
 
 namespace App\Repository;
 
-use App\Entity\Card;
+use App\Entity\CardInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
+/**
+ * Class CardRepository
+ * @package App\Repository
+ */
 class CardRepository extends EntityRepository
 {
+    /**
+     * @return CardInterface[]
+     */
     public function findAll()
     {
         $qb = $this->createQueryBuilder('c')
@@ -21,6 +29,10 @@ class CardRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param $type
+     * @return CardInterface[]
+     */
     public function findByType($type)
     {
         $qb = $this->createQueryBuilder('c')
@@ -35,6 +47,11 @@ class CardRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param $code
+     * @return CardInterface|null
+     * @throws NonUniqueResultException
+     */
     public function findByCode($code)
     {
         $qb = $this->createQueryBuilder('c')
@@ -46,6 +63,10 @@ class CardRepository extends EntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
+    /**
+     * @param $codes
+     * @return CardInterface[]
+     */
     public function findAllByCodes($codes)
     {
         $qb = $this->createQueryBuilder('c')
@@ -62,7 +83,13 @@ class CardRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findByRelativePosition(Card $card, int $position)
+    /**
+     * @param CardInterface $card
+     * @param int $position
+     * @return CardInterface|null
+     * @throws NonUniqueResultException
+     */
+    public function findByRelativePosition(CardInterface $card, int $position)
     {
         $qb = $this->createQueryBuilder('c')
             ->select('c')
@@ -76,16 +103,29 @@ class CardRepository extends EntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
+    /**
+     * @param $card
+     * @return CardInterface|null
+     * @throws NonUniqueResultException
+     */
     public function findPreviousCard($card)
     {
         return $this->findByRelativePosition($card, -1);
     }
 
+    /**
+     * @param $card
+     * @return CardInterface|null
+     * @throws NonUniqueResultException
+     */
     public function findNextCard($card)
     {
         return $this->findByRelativePosition($card, 1);
     }
 
+    /**
+     * @return array
+     */
     public function findTraits()
     {
         $qb = $this->createQueryBuilder('c')

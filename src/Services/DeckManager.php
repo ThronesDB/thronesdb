@@ -3,16 +3,16 @@
 namespace App\Services;
 
 use App\Entity\Card;
-use App\Entity\Deck;
 use App\Entity\Deckchange;
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\Deckslot;
-use App\Entity\Faction;
-use App\Entity\Pack;
-use App\Entity\User;
+use App\Entity\FactionInterface;
+use App\Entity\PackInterface;
+use App\Entity\UserInterface;
 use App\Helper\AgendaHelper;
 use App\Helper\DeckValidationHelper;
-use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
@@ -57,25 +57,25 @@ class DeckManager
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      * @return Collection
-     * @see User::getDecks()
+     * @see UserInterface::getDecks()
      */
-    public function getByUser(User $user)
+    public function getByUser(UserInterface $user)
     {
         return $user->getDecks();
     }
 
     /**
-     * @param User $user
-     * @param Deck $deck
+     * @param UserInterface $user
+     * @param DeckInterface $deck
      * @param int $decklist_id
      * @param string $name
-     * @param Faction $faction
+     * @param FactionInterface $faction
      * @param string $description
      * @param string|array $tags
      * @param array $content
-     * @param Deck $source_deck
+     * @param DeckInterface $source_deck
      * @return int
      * @throws ORMException
      * @throws OptimisticLockException
@@ -85,7 +85,7 @@ class DeckManager
         $deck_content = [];
 
         if ($decklist_id) {
-            /* @var Decklist $decklist */
+            /* @var DecklistInterface $decklist */
             $decklist = $this->doctrine->getRepository(Decklist::class)->find($decklist_id);
             if ($decklist) {
                 $deck->setParent($decklist);
@@ -98,7 +98,7 @@ class DeckManager
         $deck->setUser($user);
         $deck->setMinorVersion($deck->getMinorVersion() + 1);
         $cards = [];
-        /* @var $latestPack Pack */
+        /* @var PackInterface $latestPack */
         $latestPack = null;
         foreach ($content as $card_code => $qty) {
             $card = $this->doctrine->getRepository(Card::class)->findOneBy(array(

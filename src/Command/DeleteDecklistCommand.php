@@ -3,12 +3,17 @@
 namespace App\Command;
 
 use App\Entity\Deck;
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
+/**
+ * @package App\Command
+ */
 class DeleteDecklistCommand extends ContainerAwareCommand
 {
     protected function configure()
@@ -35,7 +40,7 @@ class DeleteDecklistCommand extends ContainerAwareCommand
                 'precedent' => $decklist
         ));
         foreach ($successors as $successor) {
-            /* @var $successor Decklist */
+            /* @var DecklistInterface $successor */
             $successor->setPrecedent(null);
         }
 
@@ -43,7 +48,7 @@ class DeleteDecklistCommand extends ContainerAwareCommand
                 'parent' => $decklist
         ));
         foreach ($children as $child) {
-            /* @var $child Deck */
+            /* @var DeckInterface $child */
             $child->setParent(null);
         }
 

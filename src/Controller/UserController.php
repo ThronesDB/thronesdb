@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\CardInterface;
 use App\Entity\Decklist;
+use App\Entity\DecklistInterface;
 use App\Entity\Faction;
-use App\Entity\Review;
+use App\Entity\ReviewInterface;
 use App\Entity\User;
+use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +18,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends Controller
 {
-
     /*
      * displays details about a user and the list of decklists he published
      */
@@ -28,7 +30,7 @@ class UserController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $em->getRepository(User::class)->find($user_id);
         if (! $user) {
             throw new NotFoundHttpException("No such user.");
@@ -46,14 +48,14 @@ class UserController extends Controller
         $factions = $this->getDoctrine()->getRepository(Faction::class)->findAll();
 
         return $this->render('User/profile_edit.html.twig', array(
-                'user'=> $user,
+                'user' => $user,
                 'factions' => $factions
         ));
     }
 
     public function saveProfileAction(Request $request)
     {
-        /* @var $user User */
+        /* @var UserInterface $user */
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
 
@@ -111,6 +113,7 @@ class UserController extends Controller
 
         $authorizationChecker = $this->container->get('security.authorization_checker');
         if ($authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            /** @var UserInterface $user */
             $user = $this->getUser();
             $user_id = $user->getId();
 
@@ -127,9 +130,9 @@ class UserController extends Controller
             );
 
             if (isset($decklist_id)) {
-                /* @var $em EntityManager */
+                /* @var EntityManager $em */
                 $em = $this->getDoctrine()->getManager();
-                /* @var $decklist Decklist */
+                /* @var DecklistInterface $decklist */
                 $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
 
                 if ($decklist) {
@@ -162,12 +165,12 @@ class UserController extends Controller
             if (isset($card_id)) {
                 /* @var $em EntityManager */
                 $em = $this->getDoctrine()->getManager();
-                /* @var $card Card */
+                /* @var CardInterface $card */
                 $card = $em->getRepository(Card::class)->find($card_id);
 
                 if ($card) {
                     $reviews = $card->getReviews();
-                    /* @var $review Review */
+                    /* @var ReviewInterface $review */
                     foreach ($reviews as $review) {
                         if ($review->getUser()->getId() === $user->getId()) {
                             $content['review_id'] = $review->getId();

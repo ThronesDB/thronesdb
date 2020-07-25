@@ -5,7 +5,7 @@ namespace App\Services;
 
 use Doctrine\ORM\EntityManager;
 use App\Model\SlotCollectionInterface;
-use App\Model\SlotInterface;
+use App\Entity\SlotInterface;
 use App\Model\SlotCollectionDecorator;
 use App\Entity\Deckslot;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,7 +41,6 @@ class Diff
         // list of all the codes found in every slots
         $cardCodes = [];
 
-        /* @var $slots SlotCollectionInterface */
         foreach ($list_slots as $slots) {
             /* @var $slot SlotInterface */
             foreach ($slots as $slot) {

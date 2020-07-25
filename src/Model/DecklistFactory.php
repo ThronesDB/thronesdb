@@ -2,13 +2,14 @@
 
 namespace App\Model;
 
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
-use App\Entity\Deck;
-use DateTime;
-use Doctrine\ORM\EntityManager;
+use App\Entity\DecklistInterface;
+use App\Entity\Decklistslot;
 use App\Helper\DeckValidationHelper;
 use App\Services\Texts;
-use App\Entity\Decklistslot;
+use DateTime;
+use Doctrine\ORM\EntityManager;
 use Exception;
 
 class DecklistFactory
@@ -42,13 +43,13 @@ class DecklistFactory
     }
 
     /**
-     * @param Deck $deck
+     * @param DeckInterface $deck
      * @param null $name
      * @param null $descriptionMd
-     * @return Decklist
+     * @return DecklistInterface
      * @throws Exception
      */
-    public function createDecklistFromDeck(Deck $deck, $name = null, $descriptionMd = null)
+    public function createDecklistFromDeck(DeckInterface $deck, $name = null, $descriptionMd = null)
     {
         $lastPack = $deck->getLastPack();
         if (!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new DateTime()) {

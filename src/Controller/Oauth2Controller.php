@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Faction;
+use App\Entity\FactionInterface;
 use App\Entity\Tournament;
-use App\Entity\User;
-use DateTime;
+use App\Entity\TournamentInterface;
+use App\Entity\UserInterface;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,12 +21,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class Oauth2Controller extends Controller
 {
-    public function userAction(Request $request)
+    public function userAction()
     {
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = $this->getUser();
         $data = [
             'id'         => $user->getId(),
@@ -62,11 +64,11 @@ class Oauth2Controller extends Controller
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
-        /* @var $decks Deck[] */
+        /* @var $decks DeckInterface[] */
         $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['user' => $this->getUser()]);
 
         if (! empty($decks)) {
-            $dateUpdates = array_map(function (Deck $deck) {
+            $dateUpdates = array_map(function (DeckInterface $deck) {
                 return $deck->getDateUpdate();
             }, $decks);
 
@@ -107,7 +109,7 @@ class Oauth2Controller extends Controller
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
 
         if ($deck->getUser()->getId() !== $this->getUser()->getId()) {
@@ -191,8 +193,6 @@ class Oauth2Controller extends Controller
      */
     public function saveDeckAction($id, Request $request)
     {
-        /* @var $deck Deck */
-
         if (!$id) {
             $deck = new Deck();
             $deck->setUuid(Uuid::uuid4());
@@ -215,7 +215,7 @@ class Oauth2Controller extends Controller
                 'msg'     => "Faction code missing",
             ]);
         }
-        /* @var Faction $faction */
+        /* @var FactionInterface $faction */
         $faction = $this->getDoctrine()
             ->getManager()
             ->getRepository(Faction::class)
@@ -320,7 +320,7 @@ class Oauth2Controller extends Controller
      */
     public function publishDeckAction($id, Request $request)
     {
-        /* @var $deck Deck */
+        /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
         if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied to this object.");
@@ -336,7 +336,7 @@ class Oauth2Controller extends Controller
         $tournament_id = intval(
             filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT)
         );
-        /* @var Tournament $tournament */
+        /* @var TournamentInterface $tournament */
         $tournament = $this->getDoctrine()->getManager()->getRepository(Tournament::class)->find($tournament_id);
 
         $precedent_id = trim($request->request->get('precedent'));

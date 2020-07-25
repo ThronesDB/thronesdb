@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\User;
+use App\Entity\UserInterface;
 use DateInterval;
 use DateTime;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,7 +29,7 @@ class DeleteInactiveCommand extends ContainerAwareCommand
 
         $users = $em->getRepository(User::class)->findBy(array('enabled' => false));
         foreach ($users as $user) {
-            /* @var User $user */
+            /* @var UserInterface $user */
             if ($user->getDateCreation() < $limit) {
                 $count++;
                 $em->remove($user);
