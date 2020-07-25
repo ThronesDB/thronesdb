@@ -427,17 +427,17 @@ class Decklist extends CommonDeck implements JsonSerializable
     }
 
     /**
-     * @param Decklistslot $slot
+     * @param DecklistslotInterface $slot
      */
-    public function addSlot(Decklistslot $slot)
+    public function addSlot(DecklistslotInterface $slot)
     {
         $this->slots->add($slot);
     }
 
     /**
-     * @param Decklistslot $slot
+     * @param DecklistslotInterface $slot
      */
-    public function removeSlot(Decklistslot $slot)
+    public function removeSlot(DecklistslotInterface $slot)
     {
         $this->slots->removeElement($slot);
     }

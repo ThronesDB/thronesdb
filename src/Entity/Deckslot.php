@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Entity\SlotInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="deckslot")
  * @ORM\Entity
+ * @package App\Entity
  */
-class Deckslot implements SlotInterface
+class Deckslot implements DeckslotInterface
 {
     /**
      * @var int
@@ -48,7 +48,7 @@ class Deckslot implements SlotInterface
     protected $card;
 
     /**
-     * @param int $id
+     * @inheritdoc
      */
     public function setId($id)
     {
@@ -56,7 +56,7 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -64,7 +64,7 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @param int $quantity
+     * @inheritdoc
      */
     public function setQuantity($quantity)
     {
@@ -72,7 +72,7 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getQuantity()
     {
@@ -80,7 +80,7 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @param DeckInterface $deck
+     * @inheritdoc
      */
     public function setDeck(DeckInterface $deck = null)
     {
@@ -88,7 +88,7 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @return DeckInterface
+     * @inheritdoc
      */
     public function getDeck()
     {
@@ -96,7 +96,7 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @param CardInterface $card
+     * @inheritdoc
      */
     public function setCard(CardInterface $card = null)
     {
@@ -104,7 +104,7 @@ class Deckslot implements SlotInterface
     }
 
     /**
-     * @return CardInterface
+     * @inheritdoc
      */
     public function getCard()
     {

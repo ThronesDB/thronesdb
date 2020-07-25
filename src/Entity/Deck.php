@@ -292,7 +292,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function addSlot(Deckslot $slot)
+    public function addSlot(DeckslotInterface $slot)
     {
         $this->slots->add($slot);
     }
@@ -300,7 +300,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function removeSlot(Deckslot $slot)
+    public function removeSlot(DeckslotInterface $slot)
     {
         $this->slots->removeElement($slot);
     }

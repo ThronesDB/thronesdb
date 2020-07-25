@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Classes\BannedListChecker;
 use App\Classes\RestrictedListChecker;
-use App\Entity\Decklistslot;
+use App\Entity\DecklistslotInterface;
 use App\Entity\PackInterface;
 use App\Entity\SlotInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -380,7 +380,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         $slots = $this->getSlots()->getValues();
         $cardCodes = [];
         /**
-         * @var Decklistslot $slot;
+         * @var DecklistslotInterface $slot;
          */
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();
@@ -397,7 +397,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         $slots = $this->getSlots()->getValues();
         $cardCodes = [];
         /**
-         * @var Decklistslot $slot;
+         * @var DecklistslotInterface $slot;
          */
         foreach ($slots as $slot) {
             $cardCodes[] = $slot->getCard()->getCode();

@@ -29,14 +29,14 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     public function getTags();
 
     /**
-     * @param Deckslot $slot
+     * @param DeckslotInterface $slot
      */
-    public function addSlot(Deckslot $slot);
+    public function addSlot(DeckslotInterface $slot);
 
     /**
-     * @param Deckslot $slot
+     * @param DeckslotInterface $slot
      */
-    public function removeSlot(Deckslot $slot);
+    public function removeSlot(DeckslotInterface $slot);
 
     /**
      * @param Decklist $child
