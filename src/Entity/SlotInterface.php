@@ -27,6 +27,4 @@ interface SlotInterface
      * @param int $quantity
      */
     public function setQuantity($quantity);
-
-
 }
