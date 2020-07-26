@@ -16,10 +16,6 @@ app_decklist:
   resource: "app_decklist.yaml"
   prefix: /decklist
 
-app_review:
-  resource: "app_review.yaml"
-  prefix: /review
-
 app_tag:
   resource: "app_tag.yaml"
   prefix: /tag
@@ -49,12 +45,3 @@ decklists_list:
     page: 1
   requirements:
     page: \d+
-
-card_reviews_list:
-  path: /reviews/{page}
-  defaults:
-    _controller: App\Controller\ReviewController:listAction
-    page: 1
-  requirements:
-    page: \d+
-

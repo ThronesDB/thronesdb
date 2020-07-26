@@ -47,12 +47,3 @@ decklist_comment_hide:
     methods: [POST]
     defaults:
         _controller: App\Controller\SocialController:hidecommentAction
-
-card_reviews_list_byauthor:
-    path: /reviews/{user_id}/{page}
-    defaults:
-        _controller: App\Controller\ReviewController:byauthorAction
-        page: 1
-    requirements:
-        page: \d+
-        user_id: \d+
