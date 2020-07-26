@@ -6,6 +6,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use FOS\UserBundle\Controller\RegistrationController as BaseController;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @package App\Controller
+ * @todo Either wire this controller up or remove it. [ST 2020/07/25]
+ */
 class RegistrationController extends BaseController
 {
     /**
