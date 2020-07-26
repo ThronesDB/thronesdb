@@ -25,9 +25,9 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class BuilderController
  * @package App\Controller
  */
 class BuilderController extends Controller
@@ -44,6 +44,10 @@ class BuilderController extends Controller
         "00030", // The King's Voice (VHotK)
     ];
 
+    /**
+     * @Route("/deck/new", name="deck_buildform", methods={"GET"})
+     * @return Response
+     */
     public function buildformAction()
     {
         $response = new Response();
@@ -68,6 +72,7 @@ class BuilderController extends Controller
     }
 
     /**
+     * @Route("/deck/build", name="deck_initbuild", methods={"POST"})
      * @param Request $request
      * @return RedirectResponse
      * @throws ORMException
@@ -146,6 +151,10 @@ class BuilderController extends Controller
         return $this->redirect($this->get('router')->generate('deck_edit', ['deck_uuid' => $deck->getUuid()]));
     }
 
+    /**
+     * @Route("/deck/import", name="deck_import", methods={"GET"})
+     * @return Response
+     */
     public function importAction()
     {
         $response = new Response();
@@ -170,6 +179,7 @@ class BuilderController extends Controller
     }
 
     /**
+     * @Route("/deck/fileimport", name="deck_fileimport", methods={"POST"})
      * @param Request $request
      * @return RedirectResponse|Response
      * @throws ORMException
@@ -231,6 +241,17 @@ class BuilderController extends Controller
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
+    /**
+     * @Route(
+     *     "/deck/export/octgn/{deck_uuid}",
+     *     name="deck_download",
+     *     methods={"GET"},
+     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
+     * )
+     * @param Request $request
+     * @param string $deck_uuid
+     * @return Response
+     */
     public function downloadAction(Request $request, $deck_uuid)
     {
         /* @var DeckInterface $deck */
@@ -262,6 +283,493 @@ class BuilderController extends Controller
                 return $this->downloadInDefaultTextFormat($deck);
         }
     }
+
+    /**
+     * @Route(
+     *     "/deck/clone/{deck_uuid}",
+     *     name="deck_clone",
+     *     methods={"GET"},
+     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
+     * )
+     * @param string $deck_uuid
+     * @return Response
+     */
+    public function cloneAction($deck_uuid)
+    {
+        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
+
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+            return $this->render(
+                'Default/error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck.'
+                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                )
+            );
+        }
+
+        $content = [];
+        foreach ($deck->getSlots() as $slot) {
+            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
+        }
+
+        return $this->forward(
+            'App\Controller\BuilderController:saveAction',
+            array(
+                'name' => $deck->getName().' (clone)',
+                'faction_code' => $deck->getFaction()->getCode(),
+                'content' => json_encode($content),
+                'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
+            )
+        );
+    }
+
+    /**
+     * @Route("/deck/save", name="deck_save", methods={"POST"})
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function saveAction(Request $request)
+    {
+
+        /* @var EntityManager $em*/
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        if (count($user->getDecks()) > $user->getMaxNbDecks()) {
+            return new Response(
+                'You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.'
+            );
+        }
+
+        $id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
+        $deck = null;
+        $source_deck = null;
+        if ($id) {
+            $deck = $em->getRepository(Deck::class)->find($id);
+            if (!$deck || $user->getId() != $deck->getUser()->getId()) {
+                throw new UnauthorizedHttpException("You don't have access to this deck.");
+            }
+            $source_deck = $deck;
+        }
+
+        $faction_code = filter_var($request->get('faction_code'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        if (!$faction_code) {
+            return new Response('Cannot import deck without faction');
+        }
+        $faction = $em->getRepository(Faction::class)->findOneBy(['code' => $faction_code]);
+        if (!$faction) {
+            return new Response('Cannot import deck with unknown faction '.$faction_code);
+        }
+
+        $cancel_edits = (boolean)filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
+        if ($cancel_edits) {
+            if ($deck) {
+                $this->get('deck_manager')->revert($deck);
+            }
+
+            return $this->redirect($this->generateUrl('decks_list'));
+        }
+
+        $is_copy = (boolean)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
+        if ($is_copy || !$id) {
+            $deck = new Deck();
+            $deck->setUuid(Uuid::uuid4());
+        }
+
+        $content = (array)json_decode($request->get('content'));
+        if (!count($content)) {
+            return new Response('Cannot import empty deck');
+        }
+
+        $name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        $decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
+        $description = trim($request->get('description'));
+        $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+
+        $this->get('deck_manager')->save(
+            $this->getUser(),
+            $deck,
+            $decklist_id,
+            $name,
+            $faction,
+            $description,
+            $tags,
+            $content,
+            $source_deck ? $source_deck : null
+        );
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('decks_list'));
+    }
+
+    /**
+     * @Route("/deck/delete", name="deck_delete", methods={"POST"})
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function deleteAction(Request $request)
+    {
+        /* @var $em EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        $deck_id = filter_var($request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
+        /** @var DeckInterface $deck */
+        $deck = $em->getRepository(Deck::class)->find($deck_id);
+        if (!$deck) {
+            return $this->redirect($this->generateUrl('decks_list'));
+        }
+        if ($this->getUser()->getId() != $deck->getUser()->getId()) {
+            throw new UnauthorizedHttpException("You don't have access to this deck.");
+        }
+
+        foreach ($deck->getChildren() as $decklist) {
+            /** @var DecklistInterface $decklist */
+            $decklist->setParent(null);
+        }
+        $em->remove($deck);
+        $em->flush();
+
+        $this->get('session')
+            ->getFlashBag()
+            ->set('notice', "Deck deleted.");
+
+        return $this->redirect($this->generateUrl('decks_list'));
+    }
+
+    /**
+     * @Route("/deck/delete_list", name="deck_delete_list", methods={"POST"})
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function deleteListAction(Request $request)
+    {
+        /* @var $em EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        $list_id = explode('-', $request->get('ids'));
+
+        foreach ($list_id as $id) {
+            /* @var DeckInterface $deck */
+            $deck = $em->getRepository(Deck::class)->find($id);
+            if (!$deck) {
+                continue;
+            }
+            if ($this->getUser()->getId() != $deck->getUser()->getId()) {
+                continue;
+            }
+
+            foreach ($deck->getChildren() as $decklist) {
+                $decklist->setParent(null);
+            }
+            $em->remove($deck);
+        }
+        $em->flush();
+
+        $this->get('session')
+            ->getFlashBag()
+            ->set('notice', "Decks deleted.");
+
+        return $this->redirect($this->generateUrl('decks_list'));
+    }
+
+    /**
+     * @Route(
+     *     "/deck/edit/{deck_uuid}",
+     *     name="deck_edit",
+     *     methods={"GET"},
+     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
+     * )
+     *
+     * @param string $deck_uuid
+     * @return Response
+     */
+    public function editAction($deck_uuid)
+    {
+        /** @var DeckInterface $deck */
+        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
+
+        if ($this->getUser()->getId() != $deck->getUser()->getId()) {
+            return $this->render(
+                'Default/error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck.',
+                )
+            );
+        }
+
+        return $this->render(
+            'Builder/deckedit.html.twig',
+            array(
+                'pagetitle' => "Deckbuilder",
+                'deck' => $deck,
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/deck/view/{deck_uuid}",
+     *     name="deck_view",
+     *     methods={"GET"},
+     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
+     * )
+     * @param string $deck_uuid
+     * @return Response
+     */
+    public function viewAction($deck_uuid)
+    {
+        /** @var DeckInterface $deck */
+        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
+
+        if (!$deck) {
+            return $this->render(
+                'Default/error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => "This deck doesn't exist.",
+                )
+            );
+        }
+
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
+        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+            return $this->render(
+                'Default/error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck.'
+                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                )
+            );
+        }
+
+        $tournaments = $this->getDoctrine()->getManager()->getRepository(Tournament::class)->findAll();
+
+        return $this->render(
+            'Builder/deckview.html.twig',
+            array(
+                'pagetitle' => "Deckbuilder",
+                'deck' => $deck,
+                'is_owner' => $is_owner,
+                'tournaments' => $tournaments,
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/deck/compare/{deck1_uuid}/{deck2_uuid}",
+     *     name="decks_diff",
+     *     methods={"GET"},
+     *     requirements={
+     *          "deck1_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}",
+     *          "deck2_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"
+     *     }
+     * )
+     * @param string $deck1_uuid
+     * @param string $deck2_uuid
+     * @return Response
+     */
+    public function compareAction($deck1_uuid, $deck2_uuid)
+    {
+        $repo = $this->getDoctrine()->getManager()->getRepository(Deck::class);
+
+        /* @var DeckInterface $deck1 */
+        $deck1 = $repo->findOneBy(['uuid' => $deck1_uuid]);
+        /* @var DeckInterface $deck2 */
+        $deck2 = $repo->findOneBy(['uuid' => $deck2_uuid]);
+
+        if (!$deck1 || !$deck2) {
+            return $this->render(
+                'Default/error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'This deck cannot be found.',
+                )
+            );
+        }
+
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck1->getUser()->getId();
+        if (!$deck1->getUser()->getIsShareDecks() && !$is_owner) {
+            return $this->render(
+                'Default/error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck.'
+                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                )
+            );
+        }
+
+        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck2->getUser()->getId();
+        if (!$deck2->getUser()->getIsShareDecks() && !$is_owner) {
+            return $this->render(
+                'Default/error.html.twig',
+                array(
+                    'pagetitle' => "Error",
+                    'error' => 'You are not allowed to view this deck.'
+                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                )
+            );
+        }
+
+        $plotIntersection = $this->get('diff')->getSlotsDiff(
+            [
+                $deck1->getSlots()->getPlotDeck(),
+                $deck2->getSlots()->getPlotDeck(),
+            ]
+        );
+
+        $drawIntersection = $this->get('diff')->getSlotsDiff(
+            [
+                $deck1->getSlots()->getDrawDeck(),
+                $deck2->getSlots()->getDrawDeck(),
+            ]
+        );
+
+        return $this->render(
+            'Compare/deck_compare.html.twig',
+            [
+                'deck1' => $deck1,
+                'deck2' => $deck2,
+                'plot_deck' => $plotIntersection,
+                'draw_deck' => $drawIntersection,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/decks", name="decks_list", methods={"GET"})
+     * @return Response
+     */
+    public function listAction()
+    {
+        /* @var UserInterface $user */
+        $user = $this->getUser();
+
+        $decks = $this->get('deck_manager')->getByUser($user);
+
+        /* @todo refactor this out, use DQL not raw SQL [ST 2019/04/04] */
+        $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
+            "SELECT t.id, t.description FROM tournament t ORDER BY t.description desc"
+        )->fetchAll();
+
+        if (count($decks)) {
+            $tags = [];
+            foreach ($decks as $deck) {
+                /* @var DeckInterface $deck */
+                $tags[] = $deck->getTags();
+            }
+            $tags = array_unique($tags);
+
+            return $this->render(
+                'Builder/decks.html.twig',
+                array(
+                    'pagetitle' => $this->get("translator")->trans('nav.mydecks'),
+                    'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
+                    'decks' => $decks,
+                    'tags' => $tags,
+                    'nbmax' => $user->getMaxNbDecks(),
+                    'nbdecks' => count($decks),
+                    'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
+                    'tournaments' => $tournaments,
+                )
+            );
+        } else {
+            return $this->render(
+                'Builder/no-decks.html.twig',
+                array(
+                    'pagetitle' => $this->get("translator")->trans('nav.mydecks'),
+                    'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
+                    'nbmax' => $user->getMaxNbDecks(),
+                    'tournaments' => $tournaments,
+                )
+            );
+        }
+    }
+
+    /**
+     * @Route("/deck/copy/{decklist_id}", name="deck_copy", methods={"GET"}, requirements={"decklist_id"="\d+"})
+     * @param int $decklist_id
+     * @return Response
+     */
+    public function copyAction($decklist_id)
+    {
+        /* @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var DecklistInterface $decklist */
+        $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
+
+        $content = [];
+        foreach ($decklist->getSlots() as $slot) {
+            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
+        }
+
+        return $this->forward(
+            'App\Controller\BuilderController:saveAction',
+            array(
+                'name' => $decklist->getName(),
+                'faction_code' => $decklist->getFaction()->getCode(),
+                'content' => json_encode($content),
+                'decklist_id' => $decklist_id,
+            )
+        );
+    }
+
+    /**
+     * @Route("/deck/autosave", name="deck_autosave", methods={"POST"})
+     * @param Request $request
+     * @return Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function autosaveAction(Request $request)
+    {
+        $user = $this->getUser();
+
+        /* @var $em EntityManager */
+        $em = $this->getDoctrine()->getManager();
+
+        $deck_id = $request->get('deck_id');
+
+        /* @var DeckInterface $deck */
+        $deck = $em->getRepository(Deck::class)->find($deck_id);
+        if (!$deck) {
+            throw new BadRequestHttpException("Cannot find deck ".$deck_id);
+        }
+        if ($user->getId() != $deck->getUser()->getId()) {
+            throw new UnauthorizedHttpException("You don't have access to this deck.");
+        }
+
+        $diff = (array)json_decode($request->get('diff'));
+        if (count($diff) != 2) {
+            $this->get('logger')->error("cannot use diff", $diff);
+            throw new BadRequestHttpException("Wrong content ".json_encode($diff));
+        }
+
+        if (count($diff[0]) || count($diff[1])) {
+            $change = new Deckchange();
+            $change->setDeck($deck);
+            $change->setVariation(json_encode($diff));
+            $change->setIsSaved(false);
+            $em->persist($change);
+            $em->flush();
+        }
+
+        return new Response($change->getDatecreation()->format('c'));
+    }
+
 
     /**
      * @param DeckInterface $deck
@@ -347,443 +855,5 @@ class BuilderController extends Controller
         $response->setContent($content);
 
         return $response;
-    }
-
-    public function cloneAction($deck_uuid)
-    {
-        /* @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
-
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
-        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
-            return $this->render(
-                'Default/error.html.twig',
-                array(
-                    'pagetitle' => "Error",
-                    'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
-                )
-            );
-        }
-
-        $content = [];
-        foreach ($deck->getSlots() as $slot) {
-            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
-        }
-
-        return $this->forward(
-            'App\Controller\BuilderController:saveAction',
-            array(
-                'name' => $deck->getName().' (clone)',
-                'faction_code' => $deck->getFaction()->getCode(),
-                'content' => json_encode($content),
-                'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
-            )
-        );
-    }
-
-    /**
-     * @param Request $request
-     * @return RedirectResponse|Response
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function saveAction(Request $request)
-    {
-
-        /* @var EntityManager $em*/
-        $em = $this->getDoctrine()->getManager();
-
-        $user = $this->getUser();
-        if (count($user->getDecks()) > $user->getMaxNbDecks()) {
-            return new Response(
-                'You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.'
-            );
-        }
-
-        $id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        $deck = null;
-        $source_deck = null;
-        if ($id) {
-            $deck = $em->getRepository(Deck::class)->find($id);
-            if (!$deck || $user->getId() != $deck->getUser()->getId()) {
-                throw new UnauthorizedHttpException("You don't have access to this deck.");
-            }
-            $source_deck = $deck;
-        }
-
-        $faction_code = filter_var($request->get('faction_code'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        if (!$faction_code) {
-            return new Response('Cannot import deck without faction');
-        }
-        $faction = $em->getRepository(Faction::class)->findOneBy(['code' => $faction_code]);
-        if (!$faction) {
-            return new Response('Cannot import deck with unknown faction '.$faction_code);
-        }
-
-        $cancel_edits = (boolean)filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
-        if ($cancel_edits) {
-            if ($deck) {
-                $this->get('deck_manager')->revert($deck);
-            }
-
-            return $this->redirect($this->generateUrl('decks_list'));
-        }
-
-        $is_copy = (boolean)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
-        if ($is_copy || !$id) {
-            $deck = new Deck();
-            $deck->setUuid(Uuid::uuid4());
-        }
-
-        $content = (array)json_decode($request->get('content'));
-        if (!count($content)) {
-            return new Response('Cannot import empty deck');
-        }
-
-        $name = filter_var($request->get('name'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-        $decklist_id = filter_var($request->get('decklist_id'), FILTER_SANITIZE_NUMBER_INT);
-        $description = trim($request->get('description'));
-        $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
-
-        $this->get('deck_manager')->save(
-            $this->getUser(),
-            $deck,
-            $decklist_id,
-            $name,
-            $faction,
-            $description,
-            $tags,
-            $content,
-            $source_deck ? $source_deck : null
-        );
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('decks_list'));
-    }
-
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function deleteAction(Request $request)
-    {
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        $deck_id = filter_var($request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
-        /** @var DeckInterface $deck */
-        $deck = $em->getRepository(Deck::class)->find($deck_id);
-        if (!$deck) {
-            return $this->redirect($this->generateUrl('decks_list'));
-        }
-        if ($this->getUser()->getId() != $deck->getUser()->getId()) {
-            throw new UnauthorizedHttpException("You don't have access to this deck.");
-        }
-
-        foreach ($deck->getChildren() as $decklist) {
-            /** @var DecklistInterface $decklist */
-            $decklist->setParent(null);
-        }
-        $em->remove($deck);
-        $em->flush();
-
-        $this->get('session')
-            ->getFlashBag()
-            ->set('notice', "Deck deleted.");
-
-        return $this->redirect($this->generateUrl('decks_list'));
-    }
-
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function deleteListAction(Request $request)
-    {
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        $list_id = explode('-', $request->get('ids'));
-
-        foreach ($list_id as $id) {
-            /* @var DeckInterface $deck */
-            $deck = $em->getRepository(Deck::class)->find($id);
-            if (!$deck) {
-                continue;
-            }
-            if ($this->getUser()->getId() != $deck->getUser()->getId()) {
-                continue;
-            }
-
-            foreach ($deck->getChildren() as $decklist) {
-                $decklist->setParent(null);
-            }
-            $em->remove($deck);
-        }
-        $em->flush();
-
-        $this->get('session')
-            ->getFlashBag()
-            ->set('notice', "Decks deleted.");
-
-        return $this->redirect($this->generateUrl('decks_list'));
-    }
-
-    public function editAction($deck_uuid)
-    {
-        /** @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
-
-        if ($this->getUser()->getId() != $deck->getUser()->getId()) {
-            return $this->render(
-                'Default/error.html.twig',
-                array(
-                    'pagetitle' => "Error",
-                    'error' => 'You are not allowed to view this deck.',
-                )
-            );
-        }
-
-        return $this->render(
-            'Builder/deckedit.html.twig',
-            array(
-                'pagetitle' => "Deckbuilder",
-                'deck' => $deck,
-            )
-        );
-    }
-
-    /**
-     * @param $deck_uuid
-     * @return Response
-     */
-    public function viewAction($deck_uuid)
-    {
-        /** @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
-
-        if (!$deck) {
-            return $this->render(
-                'Default/error.html.twig',
-                array(
-                    'pagetitle' => "Error",
-                    'error' => "This deck doesn't exist.",
-                )
-            );
-        }
-
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
-        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
-            return $this->render(
-                'Default/error.html.twig',
-                array(
-                    'pagetitle' => "Error",
-                    'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
-                )
-            );
-        }
-
-        $tournaments = $this->getDoctrine()->getManager()->getRepository(Tournament::class)->findAll();
-
-        return $this->render(
-            'Builder/deckview.html.twig',
-            array(
-                'pagetitle' => "Deckbuilder",
-                'deck' => $deck,
-                'is_owner' => $is_owner,
-                'tournaments' => $tournaments,
-            )
-        );
-    }
-
-    /**
-     * @param int $deck1_uuid
-     * @param int $deck2_uuid
-     * @return Response
-     */
-    public function compareAction($deck1_uuid, $deck2_uuid)
-    {
-        $repo = $this->getDoctrine()->getManager()->getRepository(Deck::class);
-
-        /* @var DeckInterface $deck1 */
-        $deck1 = $repo->findOneBy(['uuid' => $deck1_uuid]);
-        /* @var DeckInterface $deck2 */
-        $deck2 = $repo->findOneBy(['uuid' => $deck2_uuid]);
-
-        if (!$deck1 || !$deck2) {
-            return $this->render(
-                'Default/error.html.twig',
-                array(
-                    'pagetitle' => "Error",
-                    'error' => 'This deck cannot be found.',
-                )
-            );
-        }
-
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck1->getUser()->getId();
-        if (!$deck1->getUser()->getIsShareDecks() && !$is_owner) {
-            return $this->render(
-                'Default/error.html.twig',
-                array(
-                    'pagetitle' => "Error",
-                    'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
-                )
-            );
-        }
-
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck2->getUser()->getId();
-        if (!$deck2->getUser()->getIsShareDecks() && !$is_owner) {
-            return $this->render(
-                'Default/error.html.twig',
-                array(
-                    'pagetitle' => "Error",
-                    'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
-                )
-            );
-        }
-
-        $plotIntersection = $this->get('diff')->getSlotsDiff(
-            [
-                $deck1->getSlots()->getPlotDeck(),
-                $deck2->getSlots()->getPlotDeck(),
-            ]
-        );
-
-        $drawIntersection = $this->get('diff')->getSlotsDiff(
-            [
-                $deck1->getSlots()->getDrawDeck(),
-                $deck2->getSlots()->getDrawDeck(),
-            ]
-        );
-
-        return $this->render(
-            'Compare/deck_compare.html.twig',
-            [
-                'deck1' => $deck1,
-                'deck2' => $deck2,
-                'plot_deck' => $plotIntersection,
-                'draw_deck' => $drawIntersection,
-            ]
-        );
-    }
-
-    public function listAction()
-    {
-        /* @var UserInterface $user */
-        $user = $this->getUser();
-
-        $decks = $this->get('deck_manager')->getByUser($user);
-
-        /* @todo refactor this out, use DQL not raw SQL [ST 2019/04/04] */
-        $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
-            "SELECT t.id, t.description FROM tournament t ORDER BY t.description desc"
-        )->fetchAll();
-
-        if (count($decks)) {
-            $tags = [];
-            foreach ($decks as $deck) {
-                /* @var DeckInterface $deck */
-                $tags[] = $deck->getTags();
-            }
-            $tags = array_unique($tags);
-
-            return $this->render(
-                'Builder/decks.html.twig',
-                array(
-                    'pagetitle' => $this->get("translator")->trans('nav.mydecks'),
-                    'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
-                    'decks' => $decks,
-                    'tags' => $tags,
-                    'nbmax' => $user->getMaxNbDecks(),
-                    'nbdecks' => count($decks),
-                    'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
-                    'tournaments' => $tournaments,
-                )
-            );
-        } else {
-            return $this->render(
-                'Builder/no-decks.html.twig',
-                array(
-                    'pagetitle' => $this->get("translator")->trans('nav.mydecks'),
-                    'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
-                    'nbmax' => $user->getMaxNbDecks(),
-                    'tournaments' => $tournaments,
-                )
-            );
-        }
-    }
-
-    public function copyAction($decklist_id)
-    {
-        /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var DecklistInterface $decklist */
-        $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
-
-        $content = [];
-        foreach ($decklist->getSlots() as $slot) {
-            $content[$slot->getCard()->getCode()] = $slot->getQuantity();
-        }
-
-        return $this->forward(
-            'App\Controller\BuilderController:saveAction',
-            array(
-                'name' => $decklist->getName(),
-                'faction_code' => $decklist->getFaction()->getCode(),
-                'content' => json_encode($content),
-                'decklist_id' => $decklist_id,
-            )
-        );
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function autosaveAction(Request $request)
-    {
-        $user = $this->getUser();
-
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        $deck_id = $request->get('deck_id');
-
-        /* @var DeckInterface $deck */
-        $deck = $em->getRepository(Deck::class)->find($deck_id);
-        if (!$deck) {
-            throw new BadRequestHttpException("Cannot find deck ".$deck_id);
-        }
-        if ($user->getId() != $deck->getUser()->getId()) {
-            throw new UnauthorizedHttpException("You don't have access to this deck.");
-        }
-
-        $diff = (array)json_decode($request->get('diff'));
-        if (count($diff) != 2) {
-            $this->get('logger')->error("cannot use diff", $diff);
-            throw new BadRequestHttpException("Wrong content ".json_encode($diff));
-        }
-
-        if (count($diff[0]) || count($diff[1])) {
-            $change = new Deckchange();
-            $change->setDeck($deck);
-            $change->setVariation(json_encode($diff));
-            $change->setIsSaved(false);
-            $em->persist($change);
-            $em->flush();
-        }
-
-        return new Response($change->getDatecreation()->format('c'));
     }
 }

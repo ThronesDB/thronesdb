@@ -34,12 +34,6 @@ donators:
   defaults:
     _controller: App\Controller\SocialController:donatorsAction
 
-decks_list:
-  path: /decks
-  methods: [GET]
-  defaults:
-    _controller: App\Controller\BuilderController:listAction
-
 decklists_searchform:
   path: /decklists/search
   methods: [GET]
