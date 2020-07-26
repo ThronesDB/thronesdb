@@ -210,44 +210,6 @@ class ReviewController extends Controller
     }
 
     /**
-     * @todo This is not properly wired up, if reviews need to be deleted then do it from the CLI. [ST 2020/07/25]
-     * @param int $id
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function removeAction($id, Request $request)
-    {
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var UserInterface $user */
-        $user = $this->getUser();
-        if (!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            throw $this->createAccessDeniedException('No user or not admin');
-        }
-
-        $review_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var ReviewInterface $review */
-        $review = $em->getRepository(Review::class)->find($review_id);
-        if (!$review) {
-            throw new Exception("Unable to find review.");
-        }
-
-        $votes = $review->getVotes();
-        foreach ($votes as $vote) {
-            $review->removeVote($vote);
-        }
-        $em->remove($review);
-        $em->flush();
-
-        return new JsonResponse([
-            'success' => true
-        ]);
-    }
-
-    /**
      * @Route(
      *     "/reviews/{page}",
      *     name="card_reviews_list",
