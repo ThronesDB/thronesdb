@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ApiController extends Controller
 {
     /**
-     * @Route("/api/packs/", name="api_packs", methods={"GET"})
+     * @Route("/api/public/packs/", name="api_packs", methods={"GET"})
      *
      * Get the description of all the packs as an array of JSON objects.
      *
@@ -115,7 +115,12 @@ class ApiController extends Controller
     /**
      * Get the description of a card as a JSON object.
      *
-     * @Route("/api/card/{card_code}.{_format}", name="api_card", methods={"GET"}, requirements={"_format": "json"})
+     * @Route(
+     *     "/api/public/card/{card_code}.{_format}",
+     *     name="api_card",
+     *     methods={"GET"},
+     *     requirements={"_format": "json"}
+     * )
      *
      * @Operation(
      *     tags={"Public"},
@@ -187,7 +192,7 @@ class ApiController extends Controller
     /**
      * Get the description of all the cards as an array of JSON objects.
      *
-     * @Route("/api/cards/", name="api_cards", methods={"GET"})
+     * @Route("/api/public/cards/", name="api_cards", methods={"GET"})
      *
      * @Operation(
      *     tags={"Public"},
@@ -260,7 +265,7 @@ class ApiController extends Controller
      * Get the description of all the card from a pack, as an array of JSON objects.
      *
      * @Route(
-     *     "/api/cards/{pack_code}.{_format}",
+     *     "/api/public/cards/{pack_code}.{_format}",
      *     name="api_cards_pack",
      *     methods={"GET"},
      *     requirements={"_format": "json"}
@@ -346,7 +351,7 @@ class ApiController extends Controller
      * Get the description of a decklist as a JSON object.
      *
      * @Route(
-     *     "/api/decklist/{decklist_id}.{_format}",
+     *     "/api/public/decklist/{decklist_id}.{_format}",
      *     name="api_decklist",
      *     methods={"GET"},
      *     requirements={"_format": "json", "decklist_id"="\d+"}
@@ -415,7 +420,7 @@ class ApiController extends Controller
      * Get the description of all the decklists published at a given date, as an array of JSON objects.
      *
      * @Route(
-     *     "/api/decklists/by_date/{date}.{_format}",
+     *     "/api/public/decklists/by_date/{date}.{_format}",
      *     name="api_decklists_by_date",
      *     methods={"GET"},
      *     requirements={"_format": "json", "decklist_id"="\d\d\d\d-\d\d-\d\d"}
