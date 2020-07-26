@@ -13,18 +13,22 @@ use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 use Nelmio\ApiDocBundle\Annotation\Operation;
-use Ramsey\Collection\CollectionInterface;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * @package App\Controller
+ */
 class ApiController extends Controller
 {
-
     /**
+     * @Route("/api/packs/", name="api_packs", methods={"GET"})
+     *
      * Get the description of all the packs as an array of JSON objects.
      *
      * @Operation(
@@ -111,6 +115,8 @@ class ApiController extends Controller
     /**
      * Get the description of a card as a JSON object.
      *
+     * @Route("/api/card/{card_code}.{_format}", name="api_card", methods={"GET"}, requirements={"_format": "json"})
+     *
      * @Operation(
      *     tags={"Public"},
      *     summary="One Card",
@@ -127,7 +133,7 @@ class ApiController extends Controller
      *     )
      * )
      *
-     * @param $card_code
+     * @param string $card_code
      * @param Request $request
      * @return Response|NotFoundHttpException
      */
@@ -180,6 +186,8 @@ class ApiController extends Controller
 
     /**
      * Get the description of all the cards as an array of JSON objects.
+     *
+     * @Route("/api/cards/", name="api_cards", methods={"GET"})
      *
      * @Operation(
      *     tags={"Public"},
@@ -251,6 +259,13 @@ class ApiController extends Controller
     /**
      * Get the description of all the card from a pack, as an array of JSON objects.
      *
+     * @Route(
+     *     "/api/cards/{pack_code}.{_format}",
+     *     name="api_cards_pack",
+     *     methods={"GET"},
+     *     requirements={"_format": "json"}
+     * )
+     *
      * @Operation(
      *     tags={"Public"},
      *     summary="All the Cards from One Pack",
@@ -266,8 +281,7 @@ class ApiController extends Controller
      *         description="Returned when successful"
      *     )
      * )
-     *
-     * @param $pack_code
+     * @param string $pack_code
      * @param Request $request
      * @return Response|NotFoundHttpException
      * @throws Exception
@@ -331,6 +345,13 @@ class ApiController extends Controller
     /**
      * Get the description of a decklist as a JSON object.
      *
+     * @Route(
+     *     "/api/decklist/{decklist_id}.{_format}",
+     *     name="api_decklist",
+     *     methods={"GET"},
+     *     requirements={"_format": "json", "decklist_id"="\d+"}
+     * )
+     *
      * @Operation(
      *     tags={"Public"},
      *     summary="One Decklist",
@@ -346,8 +367,8 @@ class ApiController extends Controller
      *         description="Returned when successful"
      *     )
      * )
-     *
-     * @param $decklist_id
+    *
+     * @param string $decklist_id
      * @param Request $request
      * @return Response|NotFoundHttpException
      */
@@ -392,6 +413,13 @@ class ApiController extends Controller
 
     /**
      * Get the description of all the decklists published at a given date, as an array of JSON objects.
+     *
+     * @Route(
+     *     "/api/decklists/by_date/{date}.{_format}",
+     *     name="api_decklists_by_date",
+     *     methods={"GET"},
+     *     requirements={"_format": "json", "decklist_id"="\d\d\d\d-\d\d-\d\d"}
+     * )
      *
      * @Operation(
      *     tags={"Public"},
@@ -438,7 +466,6 @@ class ApiController extends Controller
         $criteria->where($expr->gte('dateCreation', $start));
         $criteria->andWhere($expr->lt('dateCreation', $end));
 
-        /* @var CollectionInterface $decklists */
         $decklists = $this->getDoctrine()->getRepository(Decklist::class)->matching($criteria);
         if (!$decklists) {
             die();
