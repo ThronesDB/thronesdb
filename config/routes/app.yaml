@@ -4,10 +4,6 @@ app_api:
   options:
     i18n: false
 
-app_cards:
-  resource: "app_cards.yaml"
-  prefix: /
-
 app_deck:
   resource: "app_deck.yaml"
   prefix: /deck
