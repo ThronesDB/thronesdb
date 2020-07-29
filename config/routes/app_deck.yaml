@@ -1,7 +1,0 @@
-deck_publish_form:
-    path: /publish/{deck_uuid}
-    methods: [GET]
-    defaults:
-        _controller: App\Controller\SocialController:publishFormAction
-    requirements:
-        deck_uuid: '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'

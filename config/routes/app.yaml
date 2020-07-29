@@ -4,36 +4,5 @@ app_api:
   options:
     i18n: false
 
-app_deck:
-  resource: "app_deck.yaml"
-  prefix: /deck
-
-app_decklist:
-  resource: "app_decklist.yaml"
-  prefix: /decklist
-
 app_user:
   resource: "app_user.yaml"
-  prefix: /user
-
-donators:
-  path: /donators
-  methods: [GET]
-  defaults:
-    _controller: App\Controller\SocialController:donatorsAction
-
-decklists_searchform:
-  path: /decklists/search
-  methods: [GET]
-  defaults:
-    _controller: App\Controller\SocialController:searchAction
-
-decklists_list:
-  path: /decklists/{type}/{page}
-  methods: [GET]
-  defaults:
-    _controller: App\Controller\SocialController:listAction
-    type: popular
-    page: 1
-  requirements:
-    page: \d+

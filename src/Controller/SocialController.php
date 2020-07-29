@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -46,6 +47,13 @@ class SocialController extends Controller
     /**
      * Checks to see if a deck can be published in its current saved state
      * If it is, displays the decklist edit form for initial publication of a deck.
+     *
+     * @Route(
+     *     "/deck/publish/{deck_uuid}",
+     *     name="deck_publish_form",
+     *     methods={"GET"},
+     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
+     * )
      *
      * @param string $deck_uuid
      * @return RedirectResponse|Response
@@ -151,6 +159,8 @@ class SocialController extends Controller
     /**
      * Creates a new decklist from a deck (publish action).
      *
+     * @Route("/decklist/create", name="decklist_create", methods={"POST"})
+     *
      * @param Request $request
      * @return RedirectResponse|Response
      * @throws NonUniqueResultException
@@ -254,7 +264,9 @@ class SocialController extends Controller
     /**
      * Displays the decklist edit form.
      *
-     * @param string $decklist_id
+     * @Route("/decklist/edit/{decklist_id}", name="decklist_edit", methods={"GET"}, requirements={"decklist_id"="\d+"})
+     *
+     * @param int $decklist_id
      * @return Response
      */
     public function editFormAction($decklist_id)
@@ -293,6 +305,13 @@ class SocialController extends Controller
 
     /**
      * Save the name and description of a decklist by its publisher.
+     *
+     * @Route(
+     *     "/decklist/save/{decklist_id}",
+     *     name="decklist_save",
+     *     methods={"POST"},
+     *     requirements={"decklist_id"="\d+"}
+     * )
      *
      * @param string $decklist_id
      * @param Request $request
@@ -372,6 +391,13 @@ class SocialController extends Controller
 
     /**
      * Deletes a decklist if it has no comment, no vote, no favorite.
+     *
+     * @Route(
+     *     "/decklist/delete/{decklist_id}",
+     *     name="decklist_delete",
+     *     methods={"POST"},
+     *     requirements={"decklist_id"="\d+"}
+     * )
      *
      * @param string $decklist_id
      * @param Request $request
@@ -528,13 +554,20 @@ class SocialController extends Controller
     /**
      * Displays the lists of decklists.
      *
+     * @Route(
+     *     "/decklists/{type}/{page}",
+     *     name="decklists_list",
+     *     methods={"GET"},
+     *     defaults={"type"="popular", "page"=1},
+     *     requirements={"page"="\d+"}
+     * )
+     *
      * @param Request $request
      * @param string $type
-     * @param string $faction
      * @param int $page
      * @return Response
      */
-    public function listAction(Request $request, $type, $faction = null, $page = 1)
+    public function listAction(Request $request, $type, $page = 1)
     {
         $translator = $this->get('translator');
 
@@ -615,6 +648,14 @@ class SocialController extends Controller
     /**
      * Displays the content of a decklist along with comments, siblings, similar, etc.
      *
+     * @Route(
+     *     "/decklist/view/{decklist_id}/{decklist_name}",
+     *     name="decklist_detail",
+     *     methods={"GET"},
+     *     defaults={"decklist_name"=null},
+     *     requirements={"decklist_id"="\d+"}
+     * )
+     *
      * @param string $decklist_id
      * @return Response
      */
@@ -661,6 +702,8 @@ class SocialController extends Controller
 
     /**
      * Adds a decklist to a user's list of favorites.
+     *
+     * @Route("/user/favorite", name="decklist_favorite", methods={"POST"})
      *
      * @param Request $request
      * @return Response
@@ -722,6 +765,8 @@ class SocialController extends Controller
 
     /**
      * Records a user's comment.
+     *
+     * @Route("/user/comment", name="decklist_comment", methods={"POST"})
      *
      * @param Request $request
      * @return RedirectResponse
@@ -845,6 +890,8 @@ class SocialController extends Controller
     /**
      * Hides a comment, or if $hidden is false, unhide a comment.
      *
+     * @Route("/user/hidecomment/{comment_id}/{hidden}", name="decklist_comment_hide", methods={"POST"})
+     *
      * @param string $comment_id
      * @param string $hidden
      * @return Response
@@ -879,6 +926,8 @@ class SocialController extends Controller
 
     /**
      * Records a user's vote.
+     *
+     * @Route("/user/like", name="decklist_like", methods={"POST"})
      *
      * @param Request $request
      * @return Response
@@ -932,6 +981,7 @@ class SocialController extends Controller
 
     /**
      * (Unused) returns an ordered list of decklists similar to the one given.
+     * @todo This is not wired up, enable or remove this. [ST 2020/07/28]
      */
     public function findSimilarDecklists($decklist_id, $number)
     {
@@ -998,6 +1048,13 @@ class SocialController extends Controller
         return $arr;
     }
 
+    /**
+     * @Route("/decklist/export/text/{decklist_id}", name="decklist_download", requirements={"decklist_id"="\d+"})
+     *
+     * @param Request $request
+     * @param int $decklist_id
+     * @return Response
+     */
     public function downloadAction(Request $request, $decklist_id)
     {
         /* @var EntityManager $em */
@@ -1109,6 +1166,8 @@ class SocialController extends Controller
      * @param Request $request
      * @return Response
      * @throws DBALException
+     *
+     * @todo This is not wired up, enable or remove this. [ST 2020/07/28]
      */
     public function usercommentsAction($page, Request $request)
     {
@@ -1203,6 +1262,8 @@ class SocialController extends Controller
      * @param Request $request
      * @return Response
      * @throws DBALException
+     *
+     * @todo This is not wired up, enable or remove this. [ST 2020/07/28]
      */
     public function commentsAction($page, Request $request)
     {
@@ -1288,6 +1349,8 @@ class SocialController extends Controller
     }
 
     /**
+     * @Route("/decklists/search", name="decklists_searchform", methods={"GET"})
+     *
      * @param Request $request
      * @return Response
      */
@@ -1385,6 +1448,7 @@ class SocialController extends Controller
     }
 
     /**
+     * @Route("/donators", name="donators", methods={"GET"})
      * @param Request $request
      * @return Response
      * @throws DBALException
