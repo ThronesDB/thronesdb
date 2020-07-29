@@ -4,11 +4,16 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * @package App\Controller
+ */
 class SecurityController extends Controller
 {
     /**
+     * @Route("/oauth/v2/auth_login", name="oauth_server_auth_login")
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
@@ -23,6 +28,9 @@ class SecurityController extends Controller
         );
     }
 
+    /**
+     * @Route("/oauth/v2/auth_login_check", name="oauth_server_auth_login_check")
+     */
     public function loginCheckAction()
     {
     }
