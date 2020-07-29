@@ -12,10 +12,6 @@ app_decklist:
   resource: "app_decklist.yaml"
   prefix: /decklist
 
-app_tag:
-  resource: "app_tag.yaml"
-  prefix: /tag
-
 app_user:
   resource: "app_user.yaml"
   prefix: /user
