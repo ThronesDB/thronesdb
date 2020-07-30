@@ -5,10 +5,6 @@
 #    path: /
 #    defaults: { _controller: 'App\Controller\DefaultController::index' }
 # these routes are available to anybody
-app:
-    resource: "routes/app.yaml"
-    prefix: /
-
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

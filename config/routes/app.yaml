@@ -1,8 +1,0 @@
-app_api:
-  resource: "app_api.yaml"
-  prefix: /api
-  options:
-    i18n: false
-
-app_user:
-  resource: "app_user.yaml"
