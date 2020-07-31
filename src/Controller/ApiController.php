@@ -120,7 +120,8 @@ class ApiController extends Controller
      *     "/api/public/card/{card_code}.{_format}",
      *     name="api_card",
      *     methods={"GET"},
-     *     requirements={"_format": "json"},
+     *     defaults={"_format"="json"},
+     *     requirements={"_format"="json"},
      *     options={"i18n" = false}
      * )
      *
@@ -270,7 +271,8 @@ class ApiController extends Controller
      *     "/api/public/cards/{pack_code}.{_format}",
      *     name="api_cards_pack",
      *     methods={"GET"},
-     *     requirements={"_format": "json"},
+     *     defaults={"_format"="json"},
+     *     requirements={"_format"="json"},
      *     options={"i18n" = false}
      * )
      *
@@ -357,7 +359,8 @@ class ApiController extends Controller
      *     "/api/public/decklist/{decklist_id}.{_format}",
      *     name="api_decklist",
      *     methods={"GET"},
-     *     requirements={"_format": "json", "decklist_id"="\d+"},
+     *     defaults={"_format"="json"},
+     *     requirements={"_format"="json", "decklist_id"="\d+"},
      *     options={"i18n" = false}
      * )
      *
@@ -427,7 +430,8 @@ class ApiController extends Controller
      *     "/api/public/decklists/by_date/{date}.{_format}",
      *     name="api_decklists_by_date",
      *     methods={"GET"},
-     *     requirements={"_format": "json", "decklist_id"="\d\d\d\d-\d\d-\d\d"},
+     *     defaults={"_format"="json"},
+     *     requirements={"_format"="json", "decklist_id"="\d\d\d\d-\d\d-\d\d"},
      *     options={"i18n" = false}
      * )
      *
