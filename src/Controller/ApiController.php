@@ -8,6 +8,7 @@ use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
+use App\Services\CardsData;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
@@ -177,7 +178,7 @@ class ApiController extends Controller
         // build the response
 
         /* @var CardInterface $card */
-        $card = $this->get('cards_data')->getCardInfo($card, true, $version);
+        $card = $this->get(CardsData::class)->getCardInfo($card, true, $version);
 
         $content = json_encode($card);
         if (isset($jsonp)) {
@@ -248,7 +249,7 @@ class ApiController extends Controller
         $cards = array();
         /* @var CardInterface $card */
         foreach ($list_cards as $card) {
-            $cards[] = $this->get('cards_data')->getCardInfo($card, true, $version);
+            $cards[] = $this->get(CardsData::class)->getCardInfo($card, true, $version);
         }
 
         $content = json_encode($cards);
@@ -315,13 +316,13 @@ class ApiController extends Controller
             return $this->createNotFoundException();
         }
 
-        $conditions = $this->get('cards_data')->syntax("e:$pack_code");
-        $this->get('cards_data')->validateConditions($conditions);
-        $query = $this->get('cards_data')->buildQueryFromConditions($conditions);
+        $conditions = $this->get(CardsData::class)->syntax("e:$pack_code");
+        $this->get(CardsData::class)->validateConditions($conditions);
+        $query = $this->get(CardsData::class)->buildQueryFromConditions($conditions);
 
         $cards = array();
         $last_modified = null;
-        if ($query && $rows = $this->get('cards_data')->getSearchRows($conditions, "set")) {
+        if ($query && $rows = $this->get(CardsData::class)->getSearchRows($conditions, "set")) {
             for ($rowindex = 0; $rowindex < count($rows); $rowindex++) {
                 if (empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) {
                     $last_modified = $rows[$rowindex]->getDateUpdate();
@@ -332,7 +333,7 @@ class ApiController extends Controller
                 return $response;
             }
             for ($rowindex = 0; $rowindex < count($rows); $rowindex++) {
-                $card = $this->get('cards_data')->getCardInfo($rows[$rowindex], true, $version);
+                $card = $this->get(CardsData::class)->getCardInfo($rows[$rowindex], true, $version);
                 $cards[] = $card;
             }
         }
