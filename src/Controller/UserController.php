@@ -129,7 +129,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/api/public/user/info", name="app_api_public", methods={"GET"})
+     * @Route("/api/public/user/info", name="user_info", methods={"GET"}, options={"i18n" = false})
      * @param Request $request
      * @return Response
      */

@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class Oauth2Controller extends Controller
 {
     /**
-     * @Route("/api/oauth2/user", name="api_oauth2_user", methods={"GET"})
+     * @Route("/api/oauth2/user", name="api_oauth2_user", methods={"GET"}, options={"i18n" = false})
      * @return Response
      */
     public function userAction()
@@ -55,7 +55,7 @@ class Oauth2Controller extends Controller
     /**
      * Get the description of all the Decks of the authenticated user
      *
-     * @Route("/api/oauth2/decks", name="api_oauth2_decks", methods={"GET"})
+     * @Route("/api/oauth2/decks", name="api_oauth2_decks", methods={"GET"}, options={"i18n" = false})
      *
      * @Operation(
      *     tags={"Protected"},
@@ -100,7 +100,13 @@ class Oauth2Controller extends Controller
     /**
      * Get the description of one Deck of the authenticated user
      *
-     * @Route("/api/oauth2/deck/load/{id}", name="api_oauth2_load_deck", methods={"GET"}, requirements={"id"="\d+"})
+     * @Route(
+     *     "/api/oauth2/deck/load/{id}",
+     *     name="api_oauth2_load_deck",
+     *     methods={"GET"},
+     *     requirements={"id"="\d+"},
+     *     options={"i18n" = false}
+     * )
      *
      * @Operation(
      *     tags={"Protected"},
@@ -148,7 +154,13 @@ class Oauth2Controller extends Controller
      * then send the object as the param of an ajax request.
      * If successful, id of Deck is in the msg.
      *
-     * @Route("/api/oauth2/deck/save/{id}", name="api_oauth2_save_deck", methods={"PUT"}, requirements={"id"="\d+"})
+     * @Route(
+     *     "/api/oauth2/deck/save/{id}",
+     *     name="api_oauth2_save_deck",
+     *     methods={"PUT"},
+     *     requirements={"id"="\d+"},
+     *     options={"i18n" = false}
+     * )
      *
      * @Operation(
      *     tags={"Protected"},
@@ -300,7 +312,8 @@ class Oauth2Controller extends Controller
      *     "/api/oauth2/deck/publish/{id}",
      *     name="api_oauth2_publish_deck",
      *     methods={"PUT"},
-     *     requirements={"id"="\d+"}
+     *     requirements={"id"="\d+"},
+     *     options={"i18n" = false}
      * )
      *
      * @Operation(

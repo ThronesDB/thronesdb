@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ApiController extends Controller
 {
     /**
-     * @Route("/api/public/packs/", name="api_packs", methods={"GET"})
+     * @Route("/api/public/packs/", name="api_packs", methods={"GET"}, options={"i18n" = false})
      *
      * Get the description of all the packs as an array of JSON objects.
      *
@@ -119,7 +119,8 @@ class ApiController extends Controller
      *     "/api/public/card/{card_code}.{_format}",
      *     name="api_card",
      *     methods={"GET"},
-     *     requirements={"_format": "json"}
+     *     requirements={"_format": "json"},
+     *     options={"i18n" = false}
      * )
      *
      * @Operation(
@@ -192,7 +193,7 @@ class ApiController extends Controller
     /**
      * Get the description of all the cards as an array of JSON objects.
      *
-     * @Route("/api/public/cards/", name="api_cards", methods={"GET"})
+     * @Route("/api/public/cards/", name="api_cards", methods={"GET"}, options={"i18n" = false})
      *
      * @Operation(
      *     tags={"Public"},
@@ -268,7 +269,8 @@ class ApiController extends Controller
      *     "/api/public/cards/{pack_code}.{_format}",
      *     name="api_cards_pack",
      *     methods={"GET"},
-     *     requirements={"_format": "json"}
+     *     requirements={"_format": "json"},
+     *     options={"i18n" = false}
      * )
      *
      * @Operation(
@@ -354,7 +356,8 @@ class ApiController extends Controller
      *     "/api/public/decklist/{decklist_id}.{_format}",
      *     name="api_decklist",
      *     methods={"GET"},
-     *     requirements={"_format": "json", "decklist_id"="\d+"}
+     *     requirements={"_format": "json", "decklist_id"="\d+"},
+     *     options={"i18n" = false}
      * )
      *
      * @Operation(
@@ -423,7 +426,8 @@ class ApiController extends Controller
      *     "/api/public/decklists/by_date/{date}.{_format}",
      *     name="api_decklists_by_date",
      *     methods={"GET"},
-     *     requirements={"_format": "json", "decklist_id"="\d\d\d\d-\d\d-\d\d"}
+     *     requirements={"_format": "json", "decklist_id"="\d\d\d\d-\d\d-\d\d"},
+     *     options={"i18n" = false}
      * )
      *
      * @Operation(

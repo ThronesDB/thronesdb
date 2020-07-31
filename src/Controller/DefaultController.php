@@ -168,7 +168,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/api/", name="api_intro", methods={"GET"})
+     * @Route("/api/", name="api_intro", methods={"GET"}, options={"i18n" = false})
      * @return Response
      */
     public function apiIntroAction()

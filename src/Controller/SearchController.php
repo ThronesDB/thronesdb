@@ -170,7 +170,7 @@ class SearchController extends Controller
     /**
      * @Route(
      *     "/set/{pack_code}/{view}/{sort}/{page}",
-     *     name="cards_zoom",
+     *     name="cards_list",
      *     methods={"GET"},
      *     defaults={"view"="list", "sort"="set", "page"=1}
      * )

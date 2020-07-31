@@ -1049,7 +1049,12 @@ class SocialController extends Controller
     }
 
     /**
-     * @Route("/decklist/export/text/{decklist_id}", name="decklist_download", requirements={"decklist_id"="\d+"})
+     * @Route(
+     *     "/decklist/export/text/{decklist_id}",
+     *     name="decklist_download",
+     *     methods={"GET"},
+     *     requirements={"decklist_id"="\d+"}
+     * )
      *
      * @param Request $request
      * @param int $decklist_id
