@@ -5,13 +5,25 @@ namespace App\Command;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
-class DonatorCommand extends ContainerAwareCommand
+/**
+ * @package App\Command
+ */
+class DonatorCommand extends Command
 {
+    protected EntityManagerInterface  $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct();
+        $this->entityManager = $entityManager;
+    }
+
     protected function configure()
     {
         $this
@@ -30,15 +42,12 @@ class DonatorCommand extends ContainerAwareCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $email = $input->getArgument('email');
         $donation = $input->getArgument('donation');
 
-        /* @var $em EntityManager */
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $repo = $em->getRepository(User::class);
-        /* @var UserInterface $user */
+        $repo = $this->entityManager->getRepository(User::class);
         $user = $repo->findOneBy(array('email' => $email));
         if (!$user) {
             $user = $repo->findOneBy(array('username' => $email));
@@ -47,7 +56,7 @@ class DonatorCommand extends ContainerAwareCommand
         if ($user) {
             if ($donation) {
                 $user->setDonation($donation + $user->getDonation());
-                $em->flush();
+                $this->entityManager->flush();
                 $output->writeln(date('c') . " " . "Success");
             } else {
                 $output->writeln(date('c') . " User " . $user->getUsername() . " donated " . $user->getDonation());
@@ -55,5 +64,6 @@ class DonatorCommand extends ContainerAwareCommand
         } else {
             $output->writeln(date('c') . " " . "Cannot find user [$email]");
         }
+        return 0;
     }
 }

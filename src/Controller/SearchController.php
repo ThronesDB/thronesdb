@@ -9,6 +9,7 @@ use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
 use App\Entity\Type;
+use App\Services\CardsData;
 use DateTime;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,7 +92,7 @@ class SearchController extends Controller
 
         $dbh = $this->getDoctrine()->getConnection();
 
-        $packs = $this->get('cards_data')->allsetsdata();
+        $packs = $this->get(CardsData::class)->allsetsdata();
 
         $cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
         $types = $this->getDoctrine()->getRepository(Type::class)->findAll();
@@ -324,7 +325,7 @@ class SearchController extends Controller
         $sort = $request->query->get('sort') ?: 'name';
 
         // we may be able to redirect to a better url if the search is on a single set
-        $conditions = $this->get('cards_data')->syntax($q);
+        $conditions = $this->get(CardsData::class)->syntax($q);
         if (count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
             if ($conditions[0][0] == array_search('pack', SearchController::$searchKeys)) {
                 $url = $this->get('router')->generate(
@@ -398,12 +399,12 @@ class SearchController extends Controller
             $view = 'list';
         }
 
-        $conditions = $this->get('cards_data')->syntax($q);
-        $conditions = $this->get('cards_data')->validateConditions($conditions);
+        $conditions = $this->get(CardsData::class)->syntax($q);
+        $conditions = $this->get(CardsData::class)->validateConditions($conditions);
 
         // reconstruction de la bonne chaine de recherche pour affichage
-        $q = $this->get('cards_data')->buildQueryFromConditions($conditions);
-        if ($q && $rows = $this->get('cards_data')->getSearchRows($conditions, $sort)) {
+        $q = $this->get(CardsData::class)->buildQueryFromConditions($conditions);
+        if ($q && $rows = $this->get(CardsData::class)->getSearchRows($conditions, $sort)) {
             if (count($rows) == 1) {
                 $includeReviews = true;
             }
@@ -443,7 +444,7 @@ class SearchController extends Controller
             for ($rowindex = $first; $rowindex < $last && $rowindex < count($rows); $rowindex++) {
                 $card = $rows[$rowindex];
                 $pack = $card->getPack();
-                $cardinfo = $this->get('cards_data')->getCardInfo($card, false, null);
+                $cardinfo = $this->get(CardsData::class)->getCardInfo($card, false, null);
                 if (empty($availability[$pack->getCode()])) {
                     $availability[$pack->getCode()] = false;
                     if ($pack->getDateRelease() && $pack->getDateRelease() <= new DateTime()) {
@@ -452,7 +453,7 @@ class SearchController extends Controller
                 }
                 $cardinfo['available'] = $availability[$pack->getCode()];
                 if ($includeReviews) {
-                    $cardinfo['reviews'] = $this->get('cards_data')->getReviews($card);
+                    $cardinfo['reviews'] = $this->get(CardsData::class)->getReviews($card);
                 }
                 $cards[] = $cardinfo;
             }

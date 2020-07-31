@@ -5,13 +5,22 @@ namespace App\Command;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
-class ImportImagesCommand extends ContainerAwareCommand
+class ImportImagesCommand extends Command
 {
+    protected EntityManagerInterface  $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct();
+        $this->entityManager = $entityManager;
+    }
+
     protected function configure()
     {
         $this
@@ -19,17 +28,12 @@ class ImportImagesCommand extends ContainerAwareCommand
             ->setDescription('Download missing card images from FFG websites');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $client = new Client([
-            'http_errors' => false,
-        ]);
-
-        /* @var EntityManager $em */
-        $em = $this->getContainer()->get('doctrine')->getManager();
+        $client = new Client([ 'http_errors' => false ]);
 
         /** @var CardInterface[] $cards */
-        $cards = $em->getRepository(Card::class)->findBy(['imageUrl' => null]);
+        $cards = $this->entityManager->getRepository(Card::class)->findBy(['imageUrl' => null]);
 
         foreach ($cards as $card) {
             $position = $card->getPosition();
@@ -63,6 +67,7 @@ class ImportImagesCommand extends ContainerAwareCommand
             }
         }
 
-        $em->flush();
+        $this->entityManager->flush();
+        return 0;
     }
 }

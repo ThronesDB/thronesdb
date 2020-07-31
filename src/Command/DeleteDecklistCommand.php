@@ -6,16 +6,25 @@ use App\Entity\Deck;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 /**
  * @package App\Command
  */
-class DeleteDecklistCommand extends ContainerAwareCommand
+class DeleteDecklistCommand extends Command
 {
+    protected EntityManagerInterface  $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct();
+        $this->entityManager = $entityManager;
+    }
+
     protected function configure()
     {
         $this
@@ -25,18 +34,15 @@ class DeleteDecklistCommand extends ContainerAwareCommand
             'decklist_id',
             InputArgument::REQUIRED,
             'Id of the decklist'
-        )
-        ;
+        );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $em = $this->getContainer()->get('doctrine')->getManager();
-
         $decklist_id = $input->getArgument('decklist_id');
-        $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
+        $decklist = $this->entityManager->getRepository(Decklist::class)->find($decklist_id);
 
-        $successors = $em->getRepository(Decklist::class)->findBy(array(
+        $successors = $this->entityManager->getRepository(Decklist::class)->findBy(array(
                 'precedent' => $decklist
         ));
         foreach ($successors as $successor) {
@@ -44,7 +50,7 @@ class DeleteDecklistCommand extends ContainerAwareCommand
             $successor->setPrecedent(null);
         }
 
-        $children = $em->getRepository(Deck::class)->findBy(array(
+        $children = $this->entityManager->getRepository(Deck::class)->findBy(array(
                 'parent' => $decklist
         ));
         foreach ($children as $child) {
@@ -52,10 +58,12 @@ class DeleteDecklistCommand extends ContainerAwareCommand
             $child->setParent(null);
         }
 
-        $em->flush();
-        $em->remove($decklist);
-        $em->flush();
+        $this->entityManager->flush();
+        $this->entityManager->remove($decklist);
+        $this->entityManager->flush();
 
         $output->writeln("Decklist deleted");
+
+        return 0;
     }
 }

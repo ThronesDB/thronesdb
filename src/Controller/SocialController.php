@@ -15,6 +15,7 @@ use App\Entity\Tournament;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use App\Model\DecklistManager;
+use App\Services\CardsData;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -543,7 +544,7 @@ class SocialController extends Controller
 
             $params['cards'] = '';
             foreach ($cards as $card) {
-                $cardinfo = $this->get('cards_data')->getCardInfo($card, false, null);
+                $cardinfo = $this->get(CardsData::class)->getCardInfo($card, false, null);
                 $params['cards'] .= $this->renderView('Search/card.html.twig', $cardinfo);
             }
         }

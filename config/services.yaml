@@ -60,6 +60,11 @@ services:
         autowire: true
         autoconfigure: true
 
+    # services
+    App\Services\CardsData:
+        public: true
+        arguments: ["@doctrine", "@request_stack", "@router", "@translator"]
+
     App\Services\DataimportFileLocator:
         public: true
         arguments: ['%kernel.root_dir%']
@@ -90,10 +95,6 @@ services:
     diff:
         class: App\Services\Diff
         arguments: ["@doctrine.orm.entity_manager"]
-    cards_data:
-        public: true
-        class: App\Services\CardsData
-        arguments: ["@doctrine", "@request_stack", "@router", "@translator"]
     decklist_manager:
         class: App\Model\DecklistManager
         shared: false
