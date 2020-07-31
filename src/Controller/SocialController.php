@@ -560,9 +560,11 @@ class SocialController extends Controller
      *     name="decklists_list",
      *     methods={"GET"},
      *     defaults={"type"="popular", "page"=1},
-     *     requirements={"page"="\d+"}
+     *     requirements={
+     *         "type"="find|favorites|mine|recent|hottopics|tournament|popular",
+     *         "page"="\d+"
+     *     }
      * )
-     *
      * @param Request $request
      * @param string $type
      * @param int $page
