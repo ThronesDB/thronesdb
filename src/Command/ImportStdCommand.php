@@ -29,29 +29,18 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ImportStdCommand extends Command
 {
-    /**
-     * @var string
-     */
     const PACKS_SUBDIRECTORY_NAME = 'packs';
 
-    /* @var EntityManagerInterface $em */
-    protected $em;
+    protected array $collections = [];
 
-    /** @var array $collections */
-    protected $collections = [];
+    protected EntityManagerInterface  $entityManager;
 
-    /**
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();
-        $this->em = $em;
+        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function configure()
     {
         $this
@@ -69,7 +58,7 @@ class ImportStdCommand extends Command
      * @inheritdoc
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path = $input->getArgument('path');
         $path = rtrim($path, DIRECTORY_SEPARATOR);
@@ -88,11 +77,11 @@ class ImportStdCommand extends Command
         $imported = $this->importCyclesJsonFile($rawCyclesData, $output);
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-            if (!$helper->ask($input, $output, $question)) {
-                die();
+            if (! $helper->ask($input, $output, $question)) {
+                return 0;
             }
         }
-        $this->em->flush();
+        $this->entityManager->flush();
         $this->collections['Cycle'] = $this->loadCollection(Cycle::class);
         $output->writeln("Done.");
 
@@ -113,12 +102,12 @@ class ImportStdCommand extends Command
         }
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-            if (!$helper->ask($input, $output, $question)) {
-                die();
+            if (! $helper->ask($input, $output, $question)) {
+                return 0;
             }
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
         $this->collections['Pack'] = $this->loadCollection(Pack::class);
         $output->writeln("Done.");
 
@@ -130,14 +119,16 @@ class ImportStdCommand extends Command
         $imported = $this->importCards($sortedCycles, $multiNames, $output);
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
-            if (!$helper->ask($input, $output, $question)) {
-                die();
+            if (! $helper->ask($input, $output, $question)) {
+                return 0;
             }
         }
-        $this->em->flush();
+        $this->entityManager->flush();
         $output->writeln("Done.");
+        return 0;
     }
 
+    /**
     /**
      * @param array $list
      * @param OutputInterface $output
@@ -162,7 +153,7 @@ class ImportStdCommand extends Command
             ], [], [], $output);
             if ($entity) {
                 $result[] = $entity;
-                $this->em->persist($entity);
+                $this->entityManager->persist($entity);
             }
             $position++;
         }
@@ -201,7 +192,7 @@ class ImportStdCommand extends Command
         ], [], $output);
         if ($entity) {
             $result[] = $entity;
-            $this->em->persist($entity);
+            $this->entityManager->persist($entity);
         }
         return $result;
     }
@@ -294,7 +285,7 @@ class ImportStdCommand extends Command
                     );
                     if ($entity) {
                         $result[] = $entity;
-                        $this->em->persist($entity);
+                        $this->entityManager->persist($entity);
                     }
                 }
             }
@@ -312,7 +303,7 @@ class ImportStdCommand extends Command
      */
     protected function copyFieldValueToEntity($entity, $entityName, $fieldName, $newJsonValue, OutputInterface $output)
     {
-        $metadata = $this->em->getClassMetadata($entityName);
+        $metadata = $this->entityManager->getClassMetadata($entityName);
         $type = $metadata->fieldMappings[$fieldName]['type'];
 
         // new value, by default what json gave us is the correct typed value
@@ -363,7 +354,7 @@ class ImportStdCommand extends Command
      */
     protected function copyKeyToEntity($entity, $entityName, $data, $key, OutputInterface $output, $isMandatory = true)
     {
-        $metadata = $this->em->getClassMetadata($entityName);
+        $metadata = $this->entityManager->getClassMetadata($entityName);
 
         if (!key_exists($key, $data)) {
             if ($isMandatory) {
@@ -404,7 +395,7 @@ class ImportStdCommand extends Command
             throw new Exception("Missing key [code] in ".json_encode($data));
         }
 
-        $entity = $this->em->getRepository($entityName)->findOneBy(['code' => $data['code']]);
+        $entity = $this->entityManager->getRepository($entityName)->findOneBy(['code' => $data['code']]);
         if (!$entity) {
             $entity = new $entityName();
         }
@@ -670,7 +661,7 @@ class ImportStdCommand extends Command
     protected function loadCollection($entityName)
     {
         $collection = [];
-        $entities = $this->em->getRepository($entityName)->findAll();
+        $entities = $this->entityManager->getRepository($entityName)->findAll();
         foreach ($entities as $entity) {
             $collection[$entity->getCode()] = $entity;
         }
@@ -686,7 +677,7 @@ class ImportStdCommand extends Command
     {
         $code = $fileInfo->getBasename('.json');
 
-        $pack = $this->em->getRepository(Pack::class)->findOneBy(['code' => $code]);
+        $pack = $this->entityManager->getRepository(Pack::class)->findOneBy(['code' => $code]);
         if (!$pack) {
             throw new Exception("Unable to find Pack [$code]");
         }
