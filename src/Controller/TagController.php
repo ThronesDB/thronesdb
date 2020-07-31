@@ -4,12 +4,26 @@ namespace App\Controller;
 use App\Entity\Deck;
 use App\Entity\DeckInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @package App\Controller
+ */
 class TagController extends Controller
 {
+    /**
+     * @Route("/tag/add", name="tag_add", methods={"POST"})
+     *
+     * @param Request $request
+     * @return Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function addAction(Request $request)
     {
         $list_id = $request->get('ids');
@@ -38,6 +52,14 @@ class TagController extends Controller
         return new Response(json_encode($response));
     }
 
+    /**
+     * @Route("/tag/remove", name="tag_remove", methods={"POST"})
+     *
+     * @param Request $request
+     * @return Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function removeAction(Request $request)
     {
         $list_id = $request->get('ids');
@@ -66,6 +88,14 @@ class TagController extends Controller
         return new Response(json_encode($response));
     }
 
+    /**
+     * @Route("/tag/clear", name="tag_clear", methods={"POST"})
+     *
+     * @param Request $request
+     * @return Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function clearAction(Request $request)
     {
         $list_id = $request->get('ids');

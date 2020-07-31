@@ -10,12 +10,20 @@ use App\Entity\Pack;
 use App\Entity\PackInterface;
 use App\Entity\Type;
 use DateTime;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @package App\Controller
+ */
 class SearchController extends Controller
 {
+    /**
+     * @var string[]
+     */
     public static $searchKeys = array(
             ''  => 'code',
             'a' => 'flavor',
@@ -42,6 +50,9 @@ class SearchController extends Controller
             'y' => 'quantity',
     );
 
+    /**
+     * @var string[]
+     */
     public static $searchTypes = array(
             't' => 'code',
             'e' => 'code',
@@ -68,6 +79,10 @@ class SearchController extends Controller
             'u' => 'boolean',
     );
 
+    /**
+     * @Route("/search", name="cards_search", methods={"GET"})
+     * @return Response
+     */
     public function formAction()
     {
         $response = new Response();
@@ -112,6 +127,12 @@ class SearchController extends Controller
         ), $response);
     }
 
+    /**
+     * @Route("/card/{card_code}", name="cards_zoom", methods={"GET"}, requirements={"card_code"="\d+"})
+     * @param string $card_code
+     * @param Request $request
+     * @return Response
+     */
     public function zoomAction($card_code, Request $request)
     {
         /* @var CardInterface $card */
@@ -146,6 +167,20 @@ class SearchController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/set/{pack_code}/{view}/{sort}/{page}",
+     *     name="cards_list",
+     *     methods={"GET"},
+     *     defaults={"view"="list", "sort"="set", "page"=1}
+     * )
+     * @param string $pack_code
+     * @param string $view
+     * @param string $sort
+     * @param int $page
+     * @param Request $request
+     * @return Response
+     */
     public function listAction($pack_code, $view, $sort, $page, Request $request)
     {
         /* @var PackInterface $pack */
@@ -178,6 +213,20 @@ class SearchController extends Controller
         );
     }
 
+    /**
+     * @Route(
+     *     "/cycle/{cycle_code}/{view}/{sort}/{page}",
+     *     name="cards_cycle",
+     *     methods={"GET"},
+     *     defaults={"view"="list", "sort"="faction", "page"=1}
+     * )
+     * @param string $cycle_code
+     * @param string $view
+     * @param string $sort
+     * @param int $page
+     * @param Request $request
+     * @return Response
+     */
     public function cycleAction($cycle_code, $view, $sort, $page, Request $request)
     {
         $cycle = $this->getDoctrine()->getRepository(Cycle::class)->findOneBy(array("code" => $cycle_code));
@@ -208,9 +257,10 @@ class SearchController extends Controller
     }
 
     /**
+     * @Route("/process", name="cards_processSearchForm", methods={"GET"})
      * Processes the action of the card search form
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function processAction(Request $request)
     {
@@ -262,8 +312,9 @@ class SearchController extends Controller
 
     /**
      * Processes the action of the single card search input
+     * @Route("/find", name="cards_find", methods={"GET"})
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function findAction(Request $request)
     {

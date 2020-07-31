@@ -6,15 +6,23 @@ use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\Type;
 use App\Entity\TypeInterface;
-use App\Model\DecklistManager;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Model\DecklistManager;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends Controller
 {
     use LocaleAwareTemplating;
 
+    /**
+     * @Route("/", name="index", methods={"GET"})
+     *
+     * @return Response
+     * @throws Exception
+     */
     public function indexAction()
     {
         $response = new Response();
@@ -85,6 +93,10 @@ class DefaultController extends Controller
         ], $response);
     }
 
+    /**
+     * @Route("/rulesreference", name="rulesreference", methods={"GET"})
+     * @return Response
+     */
     public function rulesreferenceAction()
     {
         $response = new Response();
@@ -99,6 +111,10 @@ class DefaultController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/faq", name="faq", methods={"GET"})
+     * @return Response
+     */
     public function faqAction()
     {
         $response = new Response();
@@ -113,6 +129,10 @@ class DefaultController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/tournamentregulations", name="tournamentregulations", methods={"GET"})
+     * @return Response
+     */
     public function tournamentregulationsAction()
     {
         $response = new Response();
@@ -130,6 +150,11 @@ class DefaultController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/about", name="about", methods={"GET"})
+     * @param Request $request
+     * @return Response
+     */
     public function aboutAction(Request $request)
     {
         $response = new Response();
@@ -142,6 +167,10 @@ class DefaultController extends Controller
         ), $response);
     }
 
+    /**
+     * @Route("/api/", name="api_intro", methods={"GET"}, options={"i18n" = false})
+     * @return Response
+     */
     public function apiIntroAction()
     {
         $response = new Response();

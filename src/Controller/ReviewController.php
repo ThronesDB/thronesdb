@@ -21,11 +21,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * @package App\Controller
+ */
 class ReviewController extends Controller
 {
     /**
+     * @Route("/review/post", name="card_review_post", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      * @throws ORMException
@@ -96,6 +101,14 @@ class ReviewController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/review/edit", name="card_review_edit", methods={"POST"})
+     * @todo Clean this up. Response should always be JSON response (may require frontend changes). [ST 2020/07/25]
+     * @param Request $request
+     * @return JsonResponse|Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function editAction(Request $request)
     {
 
@@ -143,6 +156,14 @@ class ReviewController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/review/like", name="card_review_like", methods={"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function likeAction(Request $request)
     {
         /* @var $em EntityManager */
@@ -188,36 +209,18 @@ class ReviewController extends Controller
         ]);
     }
 
-    public function removeAction($id, Request $request)
-    {
-        /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
-
-        /* @var UserInterface $user */
-        $user = $this->getUser();
-        if (!$user || !in_array('ROLE_SUPER_ADMIN', $user->getRoles())) {
-            throw $this->createAccessDeniedException('No user or not admin');
-        }
-
-        $review_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        /* @var ReviewInterface $review */
-        $review = $em->getRepository(Review::class)->find($review_id);
-        if (!$review) {
-            throw new Exception("Unable to find review.");
-        }
-
-        $votes = $review->getVotes();
-        foreach ($votes as $vote) {
-            $review->removeVote($vote);
-        }
-        $em->remove($review);
-        $em->flush();
-
-        return new JsonResponse([
-            'success' => true
-        ]);
-    }
-
+    /**
+     * @Route(
+     *     "/reviews/{page}",
+     *     name="card_reviews_list",
+     *     methods={"GET"},
+     *     defaults={"page"=1},
+     *     requirements={"page"="\d+"}
+     * )
+     * @param Request $request
+     * @param int $page
+     * @return Response
+     */
     public function listAction(Request $request, $page = 1)
     {
         $response = new Response();
@@ -285,6 +288,19 @@ class ReviewController extends Controller
                         ), $response);
     }
 
+    /**
+     * @Route(
+     *     "/user/reviews/{user_id}/{page}",
+     *     name="card_reviews_list_byauthor",
+     *     methods={"GET"},
+     *     defaults={"page"=1},
+     *     requirements={"page"="\d+", "user_id"="\d+"}
+     * )
+     * @param Request $request
+     * @param int $user_id
+     * @param int $page
+     * @return Response
+     */
     public function byauthorAction(Request $request, $user_id, $page = 1)
     {
         $response = new Response();
@@ -357,10 +373,16 @@ class ReviewController extends Controller
         ), $response);
     }
 
+    /**
+     * @Route("/review/comment", name="card_reviewcomment_post", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function commentAction(Request $request)
     {
-
-        /* @var $em EntityManager */
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         $fromEmail = $this->getParameter('email_sender_address');

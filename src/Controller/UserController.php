@@ -12,14 +12,30 @@ use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @package App\Controller
+ */
 class UserController extends Controller
 {
-    /*
-     * displays details about a user and the list of decklists he published
+    /**
+     * @Route(
+     *     "/user/profile/{user_id}/{user_name}/{page}",
+     *     name="user_profile_public",
+     *     methods={"GET"},
+     *     defaults={"page"=1},
+     *     requirements={"user_id"="\d+"}
+     * )
+     * @param int $user_id
+     * @param string $user_name
+     * @param int $page
+     * @param Request $request
+     * @return Response
      */
     public function publicProfileAction($user_id, $user_name, $page, Request $request)
     {
@@ -41,6 +57,10 @@ class UserController extends Controller
         ));
     }
 
+    /**
+     * @Route("/user/profile_edit", name="user_profile_edit", methods={"GET"})
+     * @return Response
+     */
     public function editProfileAction()
     {
         $user = $this->getUser();
@@ -53,6 +73,12 @@ class UserController extends Controller
         ));
     }
 
+    /**
+     * @Route("/user/profile_save", name="user_profile_save", methods={"POST"})
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function saveProfileAction(Request $request)
     {
         /* @var UserInterface $user */
@@ -102,6 +128,11 @@ class UserController extends Controller
         return $this->redirect($this->generateUrl('user_profile_edit'));
     }
 
+    /**
+     * @Route("/api/public/user/info", name="user_info", methods={"GET"}, options={"i18n" = false})
+     * @param Request $request
+     * @return Response
+     */
     public function infoAction(Request $request)
     {
         $jsonp = $request->query->get('jsonp');
@@ -195,6 +226,12 @@ class UserController extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/user/remind/{username}", name="remind_email", methods={"GET"})
+     *
+     * @param $username
+     * @return RedirectResponse|Response
+     */
     public function remindAction($username)
     {
         $user = $this->get('fos_user.user_manager')->findUserByUsername($username);

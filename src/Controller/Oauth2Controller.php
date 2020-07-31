@@ -18,9 +18,17 @@ use Nelmio\ApiDocBundle\Annotation\Operation;
 use Swagger\Annotations as SWG;
 use App\Entity\Deck;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @package App\Controller
+ */
 class Oauth2Controller extends Controller
 {
+    /**
+     * @Route("/api/oauth2/user", name="api_oauth2_user", methods={"GET"}, options={"i18n" = false})
+     * @return Response
+     */
     public function userAction()
     {
         $response = new Response();
@@ -47,6 +55,8 @@ class Oauth2Controller extends Controller
     /**
      * Get the description of all the Decks of the authenticated user
      *
+     * @Route("/api/oauth2/decks", name="api_oauth2_decks", methods={"GET"}, options={"i18n" = false})
+     *
      * @Operation(
      *     tags={"Protected"},
      *     summary="All the Decks",
@@ -56,8 +66,8 @@ class Oauth2Controller extends Controller
      *     )
      * )
      *
-     *
      * @param Request $request
+     * @return Response
      */
     public function listDecksAction(Request $request)
     {
@@ -90,6 +100,14 @@ class Oauth2Controller extends Controller
     /**
      * Get the description of one Deck of the authenticated user
      *
+     * @Route(
+     *     "/api/oauth2/deck/load/{id}",
+     *     name="api_oauth2_load_deck",
+     *     methods={"GET"},
+     *     requirements={"id"="\d+"},
+     *     options={"i18n" = false}
+     * )
+     *
      * @Operation(
      *     tags={"Protected"},
      *     summary="Load One Deck",
@@ -98,7 +116,6 @@ class Oauth2Controller extends Controller
      *         description="Returned when successful"
      *     )
      * )
-     *
      *
      * @param Request $request
      * @param int $id
@@ -135,7 +152,15 @@ class Oauth2Controller extends Controller
      * but only a few are writable.
      * So you can parse the result from the load, change a few values,
      * then send the object as the param of an ajax request.
-     * If successful, id of Deck is in the msg
+     * If successful, id of Deck is in the msg.
+     *
+     * @Route(
+     *     "/api/oauth2/deck/save/{id}",
+     *     name="api_oauth2_save_deck",
+     *     methods={"PUT"},
+     *     requirements={"id"="\d+"},
+     *     options={"i18n" = false}
+     * )
      *
      * @Operation(
      *     tags={"Protected"},
@@ -282,6 +307,14 @@ class Oauth2Controller extends Controller
     /**
      * Try to publish one Deck of the authenticated user
      * If publication is successful, update the version of the deck and return the id of the decklist
+     *
+     * @Route(
+     *     "/api/oauth2/deck/publish/{id}",
+     *     name="api_oauth2_publish_deck",
+     *     methods={"PUT"},
+     *     requirements={"id"="\d+"},
+     *     options={"i18n" = false}
+     * )
      *
      * @Operation(
      *     tags={"Protected"},
