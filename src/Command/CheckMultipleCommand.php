@@ -5,18 +5,16 @@ namespace App\Command;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class CheckMultipleCommand
  * @package App\Command
  */
-class CheckMultipleCommand extends ContainerAwareCommand
+class CheckMultipleCommand extends Command
 {
-    /** @var EntityManagerInterface $entityManager */
-    private $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -31,7 +29,7 @@ class CheckMultipleCommand extends ContainerAwareCommand
             ->setDescription('Check card is_multiple field');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $cards = $this->entityManager->getRepository(Card::class)->findAll();
 
@@ -61,5 +59,6 @@ class CheckMultipleCommand extends ContainerAwareCommand
                 );
             }
         }
+        return 0;
     }
 }

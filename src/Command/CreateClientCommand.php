@@ -2,14 +2,23 @@
 
 namespace App\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use FOS\OAuthServerBundle\Model\ClientManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateClientCommand extends ContainerAwareCommand
+class CreateClientCommand extends Command
 {
+    protected ClientManagerInterface $clientManager;
+
+    public function __construct(ClientManagerInterface $clientManager)
+    {
+        $this->clientManager = $clientManager;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -39,12 +48,11 @@ class CreateClientCommand extends ContainerAwareCommand
     {
         $redirectUris = [ $input->getArgument('redirect-uri') ];
 
-        $clientManager = $this->getContainer()->get('fos_oauth_server.client_manager.default');
-        $client = $clientManager->createClient();
+        $client = $this->clientManager->createClient();
         $client->setRedirectUris($redirectUris);
         $client->setAllowedGrantTypes($input->getOption('grant-type'));
         $client->setName($input->getArgument('client-name'));
-        $clientManager->updateClient($client);
+        $this->clientManager->updateClient($client);
         $output->writeln(
             sprintf(
                 'Added a new client with public id <info>%s</info>, secret <info>%s</info>',
@@ -52,5 +60,6 @@ class CreateClientCommand extends ContainerAwareCommand
                 $client->getSecret()
             )
         );
+        return 0;
     }
 }
