@@ -53,14 +53,45 @@ services:
         resource: "../src/Controller"
         tags: ["controller.service_arguments"]
 
-    # commands
+    # Commands
     App\Command\:
         resource: '../src/Command/*'
         public: false
         autowire: true
         autoconfigure: true
 
-    # services
+    # makes classes in src/DataFixtures available to be used as services
+    App\DataFixtures\:
+        resource: '../src/DataFixtures'
+        tags: ['doctrine.fixture.orm']
+        arguments: [ '@App\Services\DataimportFileLocator']
+
+    # Core exception listener
+    App\Listener\CoreExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
+
+    # Helpers
+    App\Helper\AgendaHelper:
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    App\Helper\DeckValidationHelper:
+        public: true
+        class: App\Helper\DeckValidationHelper
+        arguments: ['@App\Helper\AgendaHelper', "@translator"]
+
+
+    # "Model" classes
+    App\Model\DecklistFactory:
+        public: true
+        arguments: ["@doctrine.orm.entity_manager", '@App\Helper\DeckValidationHelper', '@App\Services\Texts']
+
+    App\Model\DecklistManager:
+        class: App\Model\DecklistManager
+        shared: false
+        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
+
+    # Services
     App\Services\CardsData:
         public: true
         arguments: ["@doctrine", "@request_stack", "@router", "@translator"]
@@ -69,44 +100,18 @@ services:
         public: true
         arguments: ['%kernel.root_dir%']
 
-    # makes classes in src/DataFixtures available to be used as services
-    App\DataFixtures\:
-        resource: '../src/DataFixtures'
-        tags: ['doctrine.fixture.orm']
-        arguments: [ '@App\Services\DataimportFileLocator']
-
-    # core exception listener
-    core_exception_listener:
-        class: App\Listener\CoreExceptionListener
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
-
-    deck_import_service:
+    App\Services\DeckImportService:
         public: true
-        class: App\Services\DeckImportService
         arguments: ["@doctrine.orm.entity_manager"]
-    deck_manager:
+
+    App\Services\DeckManager:
         public: true
-        class: App\Services\DeckManager
-        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
-    texts:
-        class: App\Services\Texts
+        arguments: ["@doctrine.orm.entity_manager", '@App\Helper\DeckValidationHelper', '@App\Helper\AgendaHelper', '@App\Services\Diff', "@logger"]
+
+    App\Services\Diff:
+        public: true
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    App\Services\Texts:
+        public: true
         arguments: ["%kernel.root_dir%"]
-    diff:
-        class: App\Services\Diff
-        arguments: ["@doctrine.orm.entity_manager"]
-    decklist_manager:
-        class: App\Model\DecklistManager
-        shared: false
-        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
-    decklist_factory:
-        public: true
-        class: App\Model\DecklistFactory
-        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@texts"]
-    agenda_helper:
-        class: App\Helper\AgendaHelper
-        arguments: ["@doctrine.orm.entity_manager"]
-    deck_validation_helper:
-        public: true
-        class: App\Helper\DeckValidationHelper
-        arguments: ["@agenda_helper", "@translator"]

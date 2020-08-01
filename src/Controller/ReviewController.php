@@ -9,6 +9,7 @@ use App\Entity\Reviewcomment;
 use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
+use App\Services\Texts;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -80,7 +81,8 @@ class ReviewController extends Controller
             $review_raw
         );
 
-        $review_html = $this->get('texts')->markdown($review_raw);
+        // @todo inject service as method argument [ST 2020/08/01]
+        $review_html = $this->get(Texts::class)->markdown($review_raw);
         if (!$review_html) {
             throw new Exception("Your review is empty.");
         }
@@ -141,7 +143,8 @@ class ReviewController extends Controller
             $review_raw
         );
 
-        $review_html = $this->get('texts')->markdown($review_raw);
+        // @todo inject service as method argument [ST 2020/08/01]
+        $review_html = $this->get(Texts::class)->markdown($review_raw);
         if (!$review_html) {
             return new Response('Your review is empty.');
         }

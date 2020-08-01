@@ -14,6 +14,11 @@ use App\Entity\FactionInterface;
 use App\Entity\Pack;
 use App\Entity\Tournament;
 use App\Entity\UserInterface;
+use App\Helper\AgendaHelper;
+use App\Services\DeckImportService;
+use App\Services\DeckManager;
+use App\Services\Diff;
+use App\Services\Texts;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -121,9 +126,9 @@ class BuilderController extends Controller
                 )
             );
             $pack = $agenda->getPack();
-            $tags[] = $this->get('agenda_helper')->getMinorFactionCode($agenda);
+            // @todo inject service as method argument [ST 2020/08/01]
+            $tags[] = $this->get(AgendaHelper::class)->getMinorFactionCode($agenda);
         }
-
 
         /** @var UserInterface $user */
         $user = $this->getUser();
@@ -209,7 +214,8 @@ class BuilderController extends Controller
             }
         }
 
-        $service = $this->get('deck_import_service');
+        // @todo inject service as method argument [ST 2020/08/01]
+        $service = $this->get(DeckImportService::class);
         $data = $service->parseTextImport(file_get_contents($filename));
 
         if (empty($data['faction'])) {
@@ -224,7 +230,8 @@ class BuilderController extends Controller
         $deck = new Deck();
         $deck->setUuid(Uuid::uuid4());
 
-        $this->get('deck_manager')->save(
+        // @todo inject service as method argument [ST 2020/08/01]
+        $this->get(DeckManager::class)->save(
             $this->getUser(),
             $deck,
             null,
@@ -369,7 +376,8 @@ class BuilderController extends Controller
         $cancel_edits = (boolean)filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if ($cancel_edits) {
             if ($deck) {
-                $this->get('deck_manager')->revert($deck);
+                // @todo inject service as method argument [ST 2020/08/01]
+                $this->get(DeckManager::class)->revert($deck);
             }
 
             return $this->redirect($this->generateUrl('decks_list'));
@@ -391,7 +399,8 @@ class BuilderController extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('deck_manager')->save(
+        // @todo inject service as method argument [ST 2020/08/01]
+        $this->get(DeckManager::class)->save(
             $this->getUser(),
             $deck,
             $decklist_id,
@@ -623,14 +632,16 @@ class BuilderController extends Controller
             );
         }
 
-        $plotIntersection = $this->get('diff')->getSlotsDiff(
+        // @todo inject service as method argument [ST 2020/08/01]
+        $plotIntersection = $this->get(Diff::class)->getSlotsDiff(
             [
                 $deck1->getSlots()->getPlotDeck(),
                 $deck2->getSlots()->getPlotDeck(),
             ]
         );
 
-        $drawIntersection = $this->get('diff')->getSlotsDiff(
+        // @todo inject service as method argument [ST 2020/08/01]
+        $drawIntersection = $this->get(Diff::class)->getSlotsDiff(
             [
                 $deck1->getSlots()->getDrawDeck(),
                 $deck2->getSlots()->getDrawDeck(),
@@ -657,7 +668,8 @@ class BuilderController extends Controller
         /* @var UserInterface $user */
         $user = $this->getUser();
 
-        $decks = $this->get('deck_manager')->getByUser($user);
+        // @todo inject service as method argument [ST 2020/08/01]
+        $decks = $this->get(DeckManager::class)->getByUser($user);
 
         /* @todo refactor this out, use DQL not raw SQL [ST 2019/04/04] */
         $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
@@ -790,7 +802,8 @@ class BuilderController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($deck->getName()).'.o8d'
+                // @todo inject service as method argument [ST 2020/08/01]
+                $this->get(Texts::class)->slugify($deck->getName()).'.o8d'
             )
         );
 
@@ -819,7 +832,8 @@ class BuilderController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($deck->getName()).'.txt'
+                // @todo inject service as method argument [ST 2020/08/01]
+                $this->get(Texts::class)->slugify($deck->getName()).'.txt'
             )
         );
 
@@ -848,7 +862,8 @@ class BuilderController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($deck->getName()).'.txt'
+                // @todo inject service as method argument [ST 2020/08/01]
+                $this->get(Texts::class)->slugify($deck->getName()).'.txt'
             )
         );
 

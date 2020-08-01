@@ -6,6 +6,7 @@ use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\Type;
 use App\Entity\TypeInterface;
+use App\Helper\AgendaHelper;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +30,8 @@ class DefaultController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        /**
-         * @var DecklistManager $decklist_manager
-         */
-        $decklist_manager = $this->get('decklist_manager');
+        // @todo inject service as method argument [ST 2020/08/01]
+        $decklist_manager = $this->get(DecklistManager::class);
         $decklist_manager->setLimit(1);
 
         $typeNames = [];
@@ -68,7 +67,8 @@ class DefaultController extends Controller
 
                 $factions = [ $faction->getName() ];
                 foreach ($decklist->getSlots()->getAgendas() as $agenda) {
-                    $minor_faction = $this->get('agenda_helper')->getMinorFaction($agenda->getCard());
+                    // @todo inject service as method argument [ST 2020/08/01]
+                    $minor_faction = $this->get(AgendaHelper::class)->getMinorFaction($agenda->getCard());
                     if ($minor_faction) {
                         $factions[] = $minor_faction->getName();
                     } elseif ($agenda->getCard()->getCode() != '06018') { // prevent Alliance agenda to show up

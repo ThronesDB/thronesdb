@@ -14,20 +14,11 @@ use Exception;
 
 class DecklistFactory
 {
-    /**
-     * @var EntityManager
-     */
-    protected $doctrine;
+    protected EntityManager $doctrine;
 
-    /**
-     * @var DeckValidationHelper
-     */
-    protected $deckValidationHelper;
+    protected DeckValidationHelper $deckValidationHelper;
 
-    /**
-     * @var Texts
-     */
-    protected $texts;
+    protected Texts $texts;
 
     /**
      * DecklistFactory constructor.
