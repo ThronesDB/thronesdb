@@ -3,7 +3,7 @@ nelmio_api_doc:
     documentation:
         info:
             title: ThronesDB API
-            version: 1.0.0
+            version: 1.1.0
             description: ThronesDB's public and protected APIs endpoints.
     areas:
         path_patterns: # an array of regexps
@@ -11,6 +11,7 @@ nelmio_api_doc:
             - ^/api/oauth2/decks/
             - ^/api/public/card/
             - ^/api/public/cards/
+            - ^/api/public/cycles/
             - ^/api/public/decklist/
             - ^/api/public/decklists/
             - ^/api/public/packs/

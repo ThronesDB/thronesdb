@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Card;
 use App\Entity\CardInterface;
+use App\Entity\Cycle;
 use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Pack;
@@ -103,6 +104,86 @@ class ApiController extends Controller
         }
 
         $content = json_encode($packs);
+        if (isset($jsonp)) {
+            $content = "$jsonp($content)";
+            $response->headers->set('Content-Type', 'application/javascript');
+        } else {
+            $response->headers->set('Content-Type', 'application/json');
+        }
+        $response->setContent($content);
+        return $response;
+    }
+
+    /**
+     * @Route("/api/public/cycles/", name="api_cycles", methods={"GET"}, options={"i18n" = false})
+     *
+     * Get the description of all the cycles as an array of JSON objects.
+     *
+     * @Operation(
+     *     tags={"Public"},
+     *     summary="All the Cycles",
+     *     @SWG\Parameter(
+     *         name="jsonp",
+     *         in="query",
+     *         description="JSONP callback",
+     *         required=false,
+     *         @SWG\Schema(type="string")
+     *     ),
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function listCyclesAction(Request $request)
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->headers->add(array(
+            'Access-Control-Allow-Origin' => '*',
+            'Content-Language' => $request->getLocale()
+        ));
+
+        $jsonp = $request->query->get('jsonp');
+
+        $cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
+
+        // check the last-modified-since header
+        $lastModified = null;
+        foreach ($cycles as $cycle) {
+            if (!$lastModified || $lastModified < $cycle->getDateUpdate()) {
+                $lastModified = $cycle->getDateUpdate();
+            }
+        }
+        $response->setLastModified($lastModified);
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        // build the response
+        $data = [];
+        foreach ($cycles as $cycle) {
+            $packs = array_map(function (PackInterface $pack) {
+                return $pack->getCode();
+            }, $cycle->getPacks()->toArray());
+            $data[] = array(
+                "name" => $cycle->getName(),
+                "code" => $cycle->getCode(),
+                "position" => $cycle->getPosition(),
+                "url" => $this->get('router')->generate(
+                    'cards_cycle',
+                    array('cycle_code' => $cycle->getCode()),
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+                'packs' => $packs
+            );
+        }
+
+        $content = json_encode($data);
         if (isset($jsonp)) {
             $content = "$jsonp($content)";
             $response->headers->set('Content-Type', 'application/javascript');
