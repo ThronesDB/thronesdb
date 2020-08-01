@@ -161,7 +161,7 @@ class ApiController extends Controller
 
         $card = $this->getDoctrine()->getRepository(Card::class)->findOneBy(array("code" => $card_code));
         if (!$card instanceof CardInterface) {
-            return $this->createNotFoundException();
+            throw $this->createNotFoundException();
         }
 
         // check the last-modified-since header
@@ -315,7 +315,7 @@ class ApiController extends Controller
 
         $pack = $this->getDoctrine()->getRepository(Pack::class)->findOneBy(array('code' => $pack_code));
         if (!$pack instanceof PackInterface) {
-            return $this->createNotFoundException();
+            throw $this->createNotFoundException();
         }
 
         $conditions = $this->get(CardsData::class)->syntax("e:$pack_code");
@@ -402,7 +402,7 @@ class ApiController extends Controller
         /* @var DecklistInterface $decklist */
         $decklist = $this->getDoctrine()->getRepository(Decklist::class)->find($decklist_id);
         if (!$decklist instanceof Decklist) {
-            return $this->createNotFoundException();
+            throw $this->createNotFoundException();
         }
 
         $response->setLastModified($decklist->getDateUpdate());
