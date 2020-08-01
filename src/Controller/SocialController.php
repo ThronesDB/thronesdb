@@ -14,8 +14,10 @@ use App\Entity\Faction;
 use App\Entity\Tournament;
 use App\Entity\User;
 use App\Entity\UserInterface;
+use App\Model\DecklistFactory;
 use App\Model\DecklistManager;
 use App\Services\CardsData;
+use App\Services\Texts;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
@@ -141,8 +143,12 @@ class SocialController extends Controller
         }
 
         // decklist for the form ; won't be persisted
-        $decklist = $this->get('decklist_factory')
-            ->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
+        // @todo inject service as method argument [ST 2020/08/01]
+        $decklist = $this->get(DecklistFactory::class)->createDecklistFromDeck(
+            $deck,
+            $deck->getName(),
+            $deck->getDescriptionMd()
+        );
 
         $tournaments = $em->getRepository(Tournament::class)->findAll();
 
@@ -235,7 +241,8 @@ class SocialController extends Controller
         $precedent = $precedent_id ? $em->getRepository(Decklist::class)->find($precedent_id) : null;
 
         try {
-            $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
+            // @todo inject service as method argument [ST 2020/08/01]
+            $decklist = $this->get(DecklistFactory::class)->createDecklistFromDeck($deck, $name, $descriptionMd);
         } catch (Exception $e) {
             return $this->render(
                 'Default/error.html.twig',
@@ -352,7 +359,8 @@ class SocialController extends Controller
             $name = "Untitled";
         }
         $descriptionMd = trim($request->request->get('descriptionMd'));
-        $descriptionHtml = $this->get('texts')->markdown($descriptionMd);
+        // @todo inject service as method argument [ST 2020/08/01]
+        $descriptionHtml = $this->get(Texts::class)->markdown($descriptionMd);
 
         $tournament_id = intval(filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT));
         $tournament = $em->getRepository(Tournament::class)->find($tournament_id);
@@ -371,7 +379,8 @@ class SocialController extends Controller
             : null;
 
         $decklist->setName($name);
-        $decklist->setNameCanonical($this->get('texts')->slugify($name).'-'.$decklist->getVersion());
+        // @todo inject service as method argument [ST 2020/08/01]
+        $decklist->setNameCanonical($this->get(Texts::class)->slugify($name).'-'.$decklist->getVersion());
         $decklist->setDescriptionMd($descriptionMd);
         $decklist->setDescriptionHtml($descriptionHtml);
         $decklist->setPrecedent($precedent);
@@ -578,8 +587,8 @@ class SocialController extends Controller
         $response->setPublic();
         $response->setMaxAge($this->container->getParameter('cache_expiration'));
 
-        /* @var DecklistManager $decklist_manager */
-        $decklist_manager = $this->get('decklist_manager');
+        // @todo inject service as method argument [ST 2020/08/01]
+        $decklist_manager = $this->get(DecklistManager::class);
         $decklist_manager->setLimit(30);
         $decklist_manager->setPage($page);
 
@@ -806,7 +815,8 @@ class SocialController extends Controller
                 $mentioned_usernames = array_unique($matches[1]);
             }
 
-            $comment_html = $this->get('texts')->markdown($comment_text);
+            // @todo inject service as method argument [ST 2020/08/01]
+            $comment_html = $this->get(Texts::class)->markdown($comment_text);
 
             $now = new DateTime();
 
@@ -1106,7 +1116,8 @@ class SocialController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($decklist->getName()).'.o8d'
+                // @todo inject service as method argument [ST 2020/08/01]
+                $this->get(Texts::class)->slugify($decklist->getName()).'.o8d'
             )
         );
 
@@ -1133,7 +1144,8 @@ class SocialController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($decklist->getName()).'.txt'
+                // @todo inject service as method argument [ST 2020/08/01]
+                $this->get(Texts::class)->slugify($decklist->getName()).'.txt'
             )
         );
 
@@ -1160,7 +1172,8 @@ class SocialController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($decklist->getName()).'.txt'
+                // @todo inject service as method argument [ST 2020/08/01]
+                $this->get(Texts::class)->slugify($decklist->getName()).'.txt'
             )
         );
 

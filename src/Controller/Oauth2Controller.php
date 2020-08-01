@@ -9,6 +9,8 @@ use App\Entity\FactionInterface;
 use App\Entity\Tournament;
 use App\Entity\TournamentInterface;
 use App\Entity\UserInterface;
+use App\Model\DecklistFactory;
+use App\Services\DeckManager;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -284,7 +286,8 @@ class Oauth2Controller extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('deck_manager')->save(
+        // @todo inject service as method argument [ST 2020/08/01]
+        $this->get(DeckManager::class)->save(
             $this->getUser(),
             $deck,
             $decklist_id,
@@ -386,7 +389,8 @@ class Oauth2Controller extends Controller
             : null;
 
         try {
-            $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
+            // @todo inject service as method argument [ST 2020/08/01]
+            $decklist = $this->get(DecklistFactory::class)->createDecklistFromDeck($deck, $name, $descriptionMd);
         } catch (Exception $e) {
             return new JsonResponse([
                 'success' => false,
