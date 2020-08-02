@@ -55,19 +55,25 @@ services:
 
     # Commands
     App\Command\:
-        resource: '../src/Command/*'
-        public: false
         autowire: true
         autoconfigure: true
+        public: false
+        resource: '../src/Command/*'
 
     # makes classes in src/DataFixtures available to be used as services
     App\DataFixtures\:
+        autowire: true
+        autoconfigure: true
+        public: false
         resource: '../src/DataFixtures'
         tags: ['doctrine.fixture.orm']
         arguments: [ '@App\Services\DataimportFileLocator']
 
     # Core exception listener
     App\Listener\CoreExceptionListener:
+        autowire: true
+        autoconfigure: true
+        public: false
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
 
