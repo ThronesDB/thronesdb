@@ -7,14 +7,14 @@ use App\Entity\UserInterface;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 /**
  * @package App\Command
  */
-class DeleteInactiveCommand extends ContainerAwareCommand
+class DeleteInactiveCommand extends Command
 {
     protected EntityManagerInterface  $entityManager;
 
