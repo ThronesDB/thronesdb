@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Classes;
 
 use App\Entity\PackInterface;
 use App\Entity\SlotInterface;

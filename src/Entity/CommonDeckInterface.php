@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Model\SlotCollectionInterface;
+use App\Classes\SlotCollectionInterface;
 use DateTime;
 
 /**

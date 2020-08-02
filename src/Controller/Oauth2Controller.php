@@ -9,7 +9,7 @@ use App\Entity\FactionInterface;
 use App\Entity\Tournament;
 use App\Entity\TournamentInterface;
 use App\Entity\UserInterface;
-use App\Model\DecklistFactory;
+use App\Services\DecklistFactory;
 use App\Services\DeckManager;
 use Exception;
 use Ramsey\Uuid\Uuid;

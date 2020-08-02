@@ -7,11 +7,11 @@ use App\Entity\Faction;
 use App\Entity\Type;
 use App\Entity\TypeInterface;
 use App\Helper\AgendaHelper;
+use App\Services\DecklistManager;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Model\DecklistManager;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends Controller

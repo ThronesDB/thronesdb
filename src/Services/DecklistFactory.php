@@ -1,33 +1,29 @@
 <?php
 
-namespace App\Model;
+namespace App\Services;
 
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Decklistslot;
 use App\Helper\DeckValidationHelper;
-use App\Services\Texts;
 use DateTime;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 class DecklistFactory
 {
-    protected EntityManager $doctrine;
+    protected EntityManagerInterface $doctrine;
 
     protected DeckValidationHelper $deckValidationHelper;
 
     protected Texts $texts;
 
-    /**
-     * DecklistFactory constructor.
-     * @param EntityManager $doctrine
-     * @param DeckValidationHelper $deckValidationHelper
-     * @param Texts $texts
-     */
-    public function __construct(EntityManager $doctrine, DeckValidationHelper $deckValidationHelper, Texts $texts)
-    {
+    public function __construct(
+        EntityManagerInterface $doctrine,
+        DeckValidationHelper $deckValidationHelper,
+        Texts $texts
+    ) {
         $this->doctrine = $doctrine;
         $this->deckValidationHelper = $deckValidationHelper;
         $this->texts = $texts;
