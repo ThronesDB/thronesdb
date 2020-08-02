@@ -78,22 +78,18 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
 
     # Helpers
-    App\Helper\AgendaHelper:
-        arguments: ["@doctrine.orm.entity_manager"]
-
-    App\Helper\DeckValidationHelper:
+    App\Helper\:
+        autowire: true
+        autoconfigure: true
         public: true
-        class: App\Helper\DeckValidationHelper
-        arguments: ['@App\Helper\AgendaHelper', "@translator"]
+        resource: '../src/Helper/*'
 
-
-    # "Model" classes
+    # Models
     App\Model\DecklistFactory:
         public: true
         arguments: ["@doctrine.orm.entity_manager", '@App\Helper\DeckValidationHelper', '@App\Services\Texts']
 
     App\Model\DecklistManager:
-        class: App\Model\DecklistManager
         shared: false
         arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
 

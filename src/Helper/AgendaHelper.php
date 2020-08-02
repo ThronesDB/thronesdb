@@ -5,18 +5,15 @@ namespace App\Helper;
 use App\Entity\CardInterface;
 use App\Entity\Faction;
 use App\Entity\FactionInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AgendaHelper
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $doctrine;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $doctrine)
     {
-        $this->entityManager = $entityManager;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -56,7 +53,7 @@ class AgendaHelper
     {
         $code = $this->getMinorFactionCode($agenda);
         if ($code) {
-            return $this->entityManager->getRepository(Faction::class)->findOneBy([ 'code' => $code ]);
+            return $this->doctrine->getRepository(Faction::class)->findOneBy([ 'code' => $code ]);
         }
         return null;
     }
