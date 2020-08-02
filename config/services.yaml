@@ -84,15 +84,6 @@ services:
         public: true
         resource: '../src/Helper/*'
 
-    # Models
-    App\Model\DecklistFactory:
-        public: true
-        arguments: ["@doctrine.orm.entity_manager", '@App\Helper\DeckValidationHelper', '@App\Services\Texts']
-
-    App\Model\DecklistManager:
-        shared: false
-        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
-
     # Services
     App\Services\CardsData:
         public: true
@@ -105,6 +96,14 @@ services:
     App\Services\DeckImportService:
         public: true
         arguments: ["@doctrine.orm.entity_manager"]
+
+    App\Services\DecklistFactory:
+        public: true
+        arguments: ["@doctrine.orm.entity_manager", '@App\Helper\DeckValidationHelper', '@App\Services\Texts']
+
+    App\Services\DecklistManager:
+        shared: false
+        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
 
     App\Services\DeckManager:
         public: true

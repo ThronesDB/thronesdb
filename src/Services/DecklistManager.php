@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App\Services;
 
 use App\Entity\Card;
 use App\Entity\CardInterface;
