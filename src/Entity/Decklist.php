@@ -180,7 +180,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     protected $parent;
 
     /**
-     * @var Decklist
+     * @var DecklistInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Decklist", inversedBy="successors")
      * @ORM\JoinColumns({
@@ -275,7 +275,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param string $nameCanonical
+     * @inheritdoc
      */
     public function setNameCanonical($nameCanonical)
     {
@@ -283,7 +283,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getNameCanonical()
     {
@@ -291,7 +291,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param DateTime $dateCreation
+     * @inheritdoc
      */
     public function setDateCreation($dateCreation)
     {
@@ -307,7 +307,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param DateTime $dateUpdate
+     * @inheritdoc
      */
     public function setDateUpdate($dateUpdate)
     {
@@ -323,7 +323,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param string $descriptionMd
+     * @inheritdoc
      */
     public function setDescriptionMd($descriptionMd)
     {
@@ -339,7 +339,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param string $descriptionHtml
+     * @inheritdoc
      */
     public function setDescriptionHtml($descriptionHtml)
     {
@@ -347,7 +347,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getDescriptionHtml()
     {
@@ -355,7 +355,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param string $signature
+     * @inheritdoc
      */
     public function setSignature($signature)
     {
@@ -363,7 +363,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getSignature()
     {
@@ -371,7 +371,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param int $nbVotes
+     * @inheritdoc
      */
     public function setNbVotes($nbVotes)
     {
@@ -379,7 +379,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getnbVotes()
     {
@@ -387,7 +387,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param int $nbFavorites
+     * @inheritdoc
      */
     public function setNbFavorites($nbFavorites)
     {
@@ -395,7 +395,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getNbFavorites()
     {
@@ -403,7 +403,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param int $nbComments
+     * @inheritdoc
      */
     public function setNbComments($nbComments)
     {
@@ -411,7 +411,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getNbComments()
     {
@@ -427,7 +427,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param DecklistslotInterface $slot
+     * @inheritdoc
      */
     public function addSlot(DecklistslotInterface $slot)
     {
@@ -435,7 +435,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param DecklistslotInterface $slot
+     * @inheritdoc
      */
     public function removeSlot(DecklistslotInterface $slot)
     {
@@ -443,7 +443,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param CommentInterface $comment
+     * @inheritdoc
      */
     public function addComment(CommentInterface $comment)
     {
@@ -451,7 +451,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param CommentInterface $comment
+     * @inheritdoc
      */
     public function removeComment(CommentInterface $comment)
     {
@@ -459,7 +459,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getComments()
     {
@@ -467,23 +467,23 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param Decklist $successor
+     * @inheritdoc
      */
-    public function addSuccessor(Decklist $successor)
+    public function addSuccessor(DecklistInterface $successor)
     {
         $this->successors->add($successor);
     }
 
     /**
-     * @param Decklist $successor
+     * @inheritdoc
      */
-    public function removeSuccessor(Decklist $successor)
+    public function removeSuccessor(DecklistInterface $successor)
     {
         $this->successors->removeElement($successor);
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getSuccessors()
     {
@@ -491,7 +491,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param DeckInterface $child
+     * @inheritdoc
      */
     public function addChild(DeckInterface $child)
     {
@@ -499,7 +499,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param DeckInterface $child
+     * @inheritdoc
      */
     public function removeChild(DeckInterface $child)
     {
@@ -507,7 +507,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getChildren()
     {
@@ -547,7 +547,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param PackInterface $lastPack
+     * @inheritdoc
      */
     public function setLastPack(PackInterface $lastPack = null)
     {
@@ -555,7 +555,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return PackInterface
+     * @inheritdoc
      */
     public function getLastPack()
     {
@@ -563,7 +563,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param DeckInterface $parent
+     * @inheritdoc
      */
     public function setParent(DeckInterface $parent = null)
     {
@@ -571,7 +571,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return DeckInterface
+     * @inheritdoc
      */
     public function getParent()
     {
@@ -579,15 +579,15 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param Decklist $precedent
+     * @inheritdoc
      */
-    public function setPrecedent(Decklist $precedent = null)
+    public function setPrecedent(DecklistInterface $precedent = null)
     {
         $this->precedent = $precedent;
     }
 
     /**
-     * @return Decklist
+     * @inheritdoc
      */
     public function getPrecedent()
     {
@@ -595,7 +595,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param TournamentInterface $tournament
+     * @inheritdoc
      */
     public function setTournament(TournamentInterface $tournament = null)
     {
@@ -603,7 +603,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return TournamentInterface
+     * @inheritdoc
      */
     public function getTournament()
     {
@@ -611,7 +611,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param UserInterface $favorite
+     * @inheritdoc
      */
     public function addFavorite(UserInterface $favorite)
     {
@@ -619,7 +619,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param UserInterface $favorite
+     * @inheritdoc
      */
     public function removeFavorite(UserInterface $favorite)
     {
@@ -627,7 +627,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getFavorites()
     {
@@ -635,7 +635,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param UserInterface $vote
+     * @inheritdoc
      */
     public function addVote(UserInterface $vote)
     {
@@ -643,7 +643,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param UserInterface $vote
+     * @inheritdoc
      */
     public function removeVote(UserInterface $vote)
     {
@@ -651,7 +651,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @return Collection
+     * @inheritdoc
      */
     public function getVotes()
     {
@@ -659,7 +659,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     }
 
     /**
-     * @param string $version
+     * @inheritdoc
      */
     public function setVersion($version)
     {

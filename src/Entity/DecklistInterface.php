@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\Collection;
 use JsonSerializable;
 
@@ -97,14 +96,14 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     public function getComments();
 
     /**
-     * @param Decklist $successor
+     * @param DecklistInterface $successor
      */
-    public function addSuccessor(Decklist $successor);
+    public function addSuccessor(DecklistInterface $successor);
 
     /**
-     * @param Decklist $successor
+     * @param DecklistInterface $successor
      */
-    public function removeSuccessor(Decklist $successor);
+    public function removeSuccessor(DecklistInterface $successor);
 
     /**
      * @return Collection
@@ -127,7 +126,7 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     public function getChildren();
 
     /**
-     * @param PackInterface $lastPack
+     * @param PackInterface|null $lastPack
      */
     public function setLastPack(PackInterface $lastPack = null);
 
@@ -137,7 +136,7 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     public function getLastPack();
 
     /**
-     * @param DeckInterface $parent
+     * @param DeckInterface|null $parent
      */
     public function setParent(DeckInterface $parent = null);
 
@@ -147,9 +146,9 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     public function getParent();
 
     /**
-     * @param Decklist $precedent
+     * @param DecklistInterface|null $precedent
      */
-    public function setPrecedent(Decklist $precedent = null);
+    public function setPrecedent(DecklistInterface $precedent = null);
 
     /**
      * @return Decklist
@@ -157,7 +156,7 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     public function getPrecedent();
 
     /**
-     * @param TournamentInterface $tournament
+     * @param TournamentInterface|null $tournament
      */
     public function setTournament(TournamentInterface $tournament = null);
 
