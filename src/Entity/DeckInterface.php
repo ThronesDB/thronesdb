@@ -79,7 +79,7 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     public function getLastPack();
 
     /**
-     * @param DecklistInterface $parent
+     * @param DecklistInterface|null $parent
      */
     public function setParent(DecklistInterface $parent = null);
 
