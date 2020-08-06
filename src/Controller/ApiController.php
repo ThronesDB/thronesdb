@@ -16,17 +16,18 @@ use Doctrine\Common\Collections\Criteria;
 use Exception;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Swagger\Annotations as SWG;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @package App\Controller
  */
-class ApiController extends Controller
+class ApiController extends AbstractController
 {
     /**
      * @Route("/api/public/packs/", name="api_packs", methods={"GET"}, options={"i18n" = false})
@@ -50,13 +51,15 @@ class ApiController extends Controller
      * )
      *
      * @param Request $request
+     * @param RouterInterface $router
+     * @param int $cacheExpiration
      * @return Response
      */
-    public function listPacksAction(Request $request)
+    public function listPacksAction(Request $request, RouterInterface $router, int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->add(array(
             'Access-Control-Allow-Origin' => '*',
             'Content-Language' => $request->getLocale()
@@ -95,7 +98,7 @@ class ApiController extends Controller
                 "available" => $pack->getDateRelease() ? $pack->getDateRelease()->format('Y-m-d') : '',
                 "known" => intval($real),
                 "total" => $max,
-                "url" => $this->get('router')->generate(
+                "url" => $router->generate(
                     'cards_list',
                     array('pack_code' => $pack->getCode()),
                     UrlGeneratorInterface::ABSOLUTE_URL
@@ -136,13 +139,15 @@ class ApiController extends Controller
      * )
      *
      * @param Request $request
+     * @param RouterInterface $router
+     * @param int $cacheExpiration
      * @return Response
      */
-    public function listCyclesAction(Request $request)
+    public function listCyclesAction(Request $request, RouterInterface $router, int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->add(array(
             'Access-Control-Allow-Origin' => '*',
             'Content-Language' => $request->getLocale()
@@ -174,7 +179,7 @@ class ApiController extends Controller
                 "name" => $cycle->getName(),
                 "code" => $cycle->getCode(),
                 "position" => $cycle->getPosition(),
-                "url" => $this->get('router')->generate(
+                "url" => $router->generate(
                     'cards_cycle',
                     array('cycle_code' => $cycle->getCode()),
                     UrlGeneratorInterface::ABSOLUTE_URL
@@ -224,15 +229,17 @@ class ApiController extends Controller
      *
      * @param string $card_code
      * @param Request $request
+     * @param CardsData $cardsData
+     * @param int $cacheExpiration
      * @return Response|NotFoundHttpException
      */
-    public function getCardAction($card_code, Request $request)
+    public function getCardAction($card_code, Request $request, CardsData $cardsData, int $cacheExpiration)
     {
         $version = $request->query->get('v', '1.0');
 
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->add(array(
             'Access-Control-Allow-Origin' => '*',
             'Content-Language' => $request->getLocale()
@@ -258,9 +265,7 @@ class ApiController extends Controller
         }
 
         // build the response
-
-        /* @var CardInterface $card */
-        $card = $this->get(CardsData::class)->getCardInfo($card, true, $version);
+        $card = $cardsData->getCardInfo($card, true, $version);
 
         $content = json_encode($card);
         if (isset($jsonp)) {
@@ -295,15 +300,18 @@ class ApiController extends Controller
      * )
      *
      * @param Request $request
+     * @param CardsData $cardsData
+     * @param int $cacheExpiration
+
      * @return Response
      */
-    public function listCardsAction(Request $request)
+    public function listCardsAction(Request $request, CardsData $cardsData, int $cacheExpiration)
     {
         $version = $request->query->get('v', '1.0');
 
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->add(array(
             'Access-Control-Allow-Origin' => '*'
         ));
@@ -331,7 +339,7 @@ class ApiController extends Controller
         $cards = array();
         /* @var CardInterface $card */
         foreach ($list_cards as $card) {
-            $cards[] = $this->get(CardsData::class)->getCardInfo($card, true, $version);
+            $cards[] = $cardsData->getCardInfo($card, true, $version);
         }
 
         $content = json_encode($cards);
@@ -374,16 +382,18 @@ class ApiController extends Controller
      * )
      * @param string $pack_code
      * @param Request $request
+     * @param CardsData $cardsData
+     * @param int $cacheExpiration
      * @return Response|NotFoundHttpException
      * @throws Exception
      */
-    public function listCardsByPackAction($pack_code, Request $request)
+    public function listCardsByPackAction($pack_code, Request $request, CardsData $cardsData, int $cacheExpiration)
     {
         $version = $request->query->get('v', '1.0');
 
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
         $jsonp = $request->query->get('jsonp');
@@ -399,13 +409,13 @@ class ApiController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $conditions = $this->get(CardsData::class)->syntax("e:$pack_code");
-        $this->get(CardsData::class)->validateConditions($conditions);
-        $query = $this->get(CardsData::class)->buildQueryFromConditions($conditions);
+        $conditions = $cardsData->syntax("e:$pack_code");
+        $cardsData->validateConditions($conditions);
+        $query = $cardsData->buildQueryFromConditions($conditions);
 
         $cards = array();
         $last_modified = null;
-        if ($query && $rows = $this->get(CardsData::class)->getSearchRows($conditions, "set")) {
+        if ($query && $rows = $cardsData->getSearchRows($conditions, "set")) {
             for ($rowindex = 0; $rowindex < count($rows); $rowindex++) {
                 if (empty($last_modified) || $last_modified < $rows[$rowindex]->getDateUpdate()) {
                     $last_modified = $rows[$rowindex]->getDateUpdate();
@@ -416,7 +426,7 @@ class ApiController extends Controller
                 return $response;
             }
             for ($rowindex = 0; $rowindex < count($rows); $rowindex++) {
-                $card = $this->get(CardsData::class)->getCardInfo($rows[$rowindex], true, $version);
+                $card = $cardsData->getCardInfo($rows[$rowindex], true, $version);
                 $cards[] = $card;
             }
         }
@@ -463,13 +473,14 @@ class ApiController extends Controller
     *
      * @param string $decklist_id
      * @param Request $request
+     * @param int $cacheExpiration
      * @return Response|NotFoundHttpException
      */
-    public function getDecklistAction($decklist_id, Request $request)
+    public function getDecklistAction($decklist_id, Request $request, int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
         $jsonp = $request->query->get('jsonp');
@@ -534,13 +545,14 @@ class ApiController extends Controller
      *
      * @param string $date
      * @param Request $request
+     * @param int $cacheExpiration
      * @return Response
      */
-    public function listDecklistsByDateAction($date, Request $request)
+    public function listDecklistsByDateAction($date, Request $request, int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->add(array('Access-Control-Allow-Origin' => '*'));
 
         $jsonp = $request->query->get('jsonp');

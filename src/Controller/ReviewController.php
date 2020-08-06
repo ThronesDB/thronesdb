@@ -15,8 +15,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+use FOS\UserBundle\Mailer\MailerInterface;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,16 +29,18 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * @package App\Controller
  */
-class ReviewController extends Controller
+class ReviewController extends AbstractController
 {
     /**
      * @Route("/review/post", name="card_review_post", methods={"POST"})
      * @param Request $request
+     * @param Texts $texts
      * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Exception
      */
-    public function postAction(Request $request)
+    public function postAction(Request $request, Texts $texts)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -81,8 +84,7 @@ class ReviewController extends Controller
             $review_raw
         );
 
-        // @todo inject service as method argument [ST 2020/08/01]
-        $review_html = $this->get(Texts::class)->markdown($review_raw);
+        $review_html = $texts->markdown($review_raw);
         if (!$review_html) {
             throw new Exception("Your review is empty.");
         }
@@ -107,11 +109,12 @@ class ReviewController extends Controller
      * @Route("/review/edit", name="card_review_edit", methods={"POST"})
      * @todo Clean this up. Response should always be JSON response (may require frontend changes). [ST 2020/07/25]
      * @param Request $request
+     * @param Texts $texts
      * @return JsonResponse|Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request, Texts $texts)
     {
 
         /* @var $em EntityManager */
@@ -143,8 +146,7 @@ class ReviewController extends Controller
             $review_raw
         );
 
-        // @todo inject service as method argument [ST 2020/08/01]
-        $review_html = $this->get(Texts::class)->markdown($review_raw);
+        $review_html = $texts->markdown($review_raw);
         if (!$review_html) {
             return new Response('Your review is empty.');
         }
@@ -221,14 +223,15 @@ class ReviewController extends Controller
      *     requirements={"page"="\d+"}
      * )
      * @param Request $request
+     * @param int $cacheExpiration
      * @param int $page
      * @return Response
      */
-    public function listAction(Request $request, $page = 1)
+    public function listAction(Request $request, int $cacheExpiration, $page = 1)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $limit = 5;
         if ($page < 1) {
@@ -300,15 +303,16 @@ class ReviewController extends Controller
      *     requirements={"page"="\d+", "user_id"="\d+"}
      * )
      * @param Request $request
+     * @param int $cacheExpiration
      * @param int $user_id
      * @param int $page
      * @return Response
      */
-    public function byauthorAction(Request $request, $user_id, $page = 1)
+    public function byauthorAction(Request $request, int $cacheExpiration, $user_id, $page = 1)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $limit = 5;
         if ($page < 1) {
@@ -379,16 +383,16 @@ class ReviewController extends Controller
     /**
      * @Route("/review/comment", name="card_reviewcomment_post", methods={"POST"})
      * @param Request $request
+     * @param MailerInterface $mailer
+     * @param string $emailSenderAddress
      * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function commentAction(Request $request)
+    public function commentAction(Request $request, MailerInterface $mailer, string $emailSenderAddress)
     {
         /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
-
-        $fromEmail = $this->getParameter('email_sender_address');
 
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -440,10 +444,10 @@ class ReviewController extends Controller
         );
         foreach ($spool as $email => $view) {
             $message = (new Swift_Message("[thronesdb] New review comment"))
-                    ->setFrom(array($fromEmail => $user->getUsername()))
+                    ->setFrom(array($emailSenderAddress => $user->getUsername()))
                     ->setTo($email)
                     ->setBody($this->renderView($view, $email_data), 'text/html');
-            $this->get('mailer')->send($message);
+            $$mailer->send($message);
         }
 
         return new JsonResponse([

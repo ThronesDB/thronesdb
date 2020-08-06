@@ -9,30 +9,39 @@ use App\Entity\TypeInterface;
 use App\Helper\AgendaHelper;
 use App\Services\DecklistManager;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class DefaultController extends Controller
+class DefaultController extends AbstractController
 {
     use LocaleAwareTemplating;
 
     /**
      * @Route("/", name="index", methods={"GET"})
      *
+     * @param int $cacheExpiration
+     * @param string $gameName
+     * @param string $publisherName
+     * @param DecklistManager $decklistManager
+     * @param AgendaHelper $agendaHelper
      * @return Response
      * @throws Exception
      */
-    public function indexAction()
-    {
+    public function indexAction(
+        int $cacheExpiration,
+        string $gameName,
+        string $publisherName,
+        DecklistManager $decklistManager,
+        AgendaHelper $agendaHelper
+    ) {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
-        // @todo inject service as method argument [ST 2020/08/01]
-        $decklist_manager = $this->get(DecklistManager::class);
-        $decklist_manager->setLimit(1);
+        $decklistManager->setLimit(1);
 
         $typeNames = [];
         /* @var TypeInterface $type */
@@ -49,8 +58,8 @@ class DefaultController extends Controller
             $array = [];
             $array['faction'] = $faction;
 
-            $decklist_manager->setFaction($faction);
-            $paginator = $decklist_manager->findDecklistsByPopularity();
+            $decklistManager->setFaction($faction);
+            $paginator = $decklistManager->findDecklistsByPopularity();
             /* @var DecklistInterface $decklist */
             $decklist = $paginator->getIterator()->current();
 
@@ -67,8 +76,7 @@ class DefaultController extends Controller
 
                 $factions = [ $faction->getName() ];
                 foreach ($decklist->getSlots()->getAgendas() as $agenda) {
-                    // @todo inject service as method argument [ST 2020/08/01]
-                    $minor_faction = $this->get(AgendaHelper::class)->getMinorFaction($agenda->getCard());
+                    $minor_faction = $agendaHelper->getMinorFaction($agenda->getCard());
                     if ($minor_faction) {
                         $factions[] = $minor_faction->getName();
                     } elseif ($agenda->getCard()->getCode() != '06018') { // prevent Alliance agenda to show up
@@ -81,12 +89,9 @@ class DefaultController extends Controller
             }
         }
 
-        $game_name = $this->container->getParameter('game_name');
-        $publisher_name = $this->container->getParameter('publisher_name');
-
         return $this->render('Default/index.html.twig', [
-            'pagetitle' =>  "$game_name Deckbuilder",
-            'pagedescription' => "Build your deck for $game_name by $publisher_name."
+            'pagetitle' =>  "${gameName} Deckbuilder",
+            'pagedescription' => "Build your deck for ${gameName} by ${publisherName}."
                 . " Browse the cards and the thousand of decklists submitted by the community."
                 . " Publish your own decks and get feedback.",
             'decklists_by_faction' => $decklists_by_faction
@@ -95,17 +100,19 @@ class DefaultController extends Controller
 
     /**
      * @Route("/rulesreference", name="rulesreference", methods={"GET"})
+     * @param int $cacheExpiration
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function rulesreferenceAction()
+    public function rulesreferenceAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $page = $this->renderView(
             'Default/rulesreference.html.twig',
-            array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "Rules Reference")
+            array("pagetitle" => $translator->trans("nav.rules"), "pagedescription" => "Rules Reference")
         );
         $response->setContent($page);
         return $response;
@@ -113,17 +120,19 @@ class DefaultController extends Controller
 
     /**
      * @Route("/faq", name="faq", methods={"GET"})
+     * @param int $cacheExpiration
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function faqAction()
+    public function faqAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $page = $this->renderView(
             'Default/faq.html.twig',
-            array("pagetitle" => $this->get("translator")->trans("nav.rules"), "pagedescription" => "F.A.Q")
+            array("pagetitle" => $translator->trans("nav.rules"), "pagedescription" => "F.A.Q")
         );
         $response->setContent($page);
         return $response;
@@ -131,18 +140,20 @@ class DefaultController extends Controller
 
     /**
      * @Route("/tournamentregulations", name="tournamentregulations", methods={"GET"})
+     * @param int $cacheExpiration
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function tournamentregulationsAction()
+    public function tournamentregulationsAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $page = $this->renderView(
             'Default/tournamentregulations.html.twig',
             array(
-                "pagetitle" => $this->get("translator")->trans("nav.rules"),
+                "pagetitle" => $translator->trans("nav.rules"),
                 "pagedescription" => "Tournament Regulations"
             )
         );
@@ -153,34 +164,39 @@ class DefaultController extends Controller
     /**
      * @Route("/about", name="about", methods={"GET"})
      * @param Request $request
+     * @param int $cacheExpiration
+     * @param string $gameName
      * @return Response
      */
-    public function aboutAction(Request $request)
+    public function aboutAction(Request $request, int $cacheExpiration, string $gameName)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         return $this->render($this->getLocaleSpecificViewPath('about', $request->getLocale()), array(
                 "pagetitle" => "About",
-                "game_name" => $this->container->getParameter('game_name'),
+                "game_name" => $gameName,
         ), $response);
     }
 
     /**
      * @Route("/api/", name="api_intro", methods={"GET"}, options={"i18n" = false})
+     * @param int $cacheExpiration
+     * @param string $gameName
+     * @param string $publisherName
      * @return Response
      */
-    public function apiIntroAction()
+    public function apiIntroAction(int $cacheExpiration, string $gameName, string $publisherName)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         return $this->render('Default/apiIntro.html.twig', array(
                 "pagetitle" => "API",
-                "game_name" => $this->container->getParameter('game_name'),
-                "publisher_name" => $this->container->getParameter('publisher_name'),
+                "game_name" => $gameName,
+                "publisher_name" => $publisherName,
         ), $response);
     }
 }
