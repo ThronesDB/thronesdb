@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 /**
  * @package App\Controller
  */
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     /**
      * @Route("/oauth/v2/auth_login", name="oauth_server_auth_login")

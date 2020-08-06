@@ -11,17 +11,22 @@ use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\UserBundle\Mailer\Mailer;
+use FOS\UserBundle\Mailer\MailerInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @package App\Controller
  */
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * @Route(
@@ -31,17 +36,18 @@ class UserController extends Controller
      *     defaults={"page"=1},
      *     requirements={"user_id"="\d+"}
      * )
+     * @param int $cacheExpiration
      * @param int $user_id
      * @param string $user_name
      * @param int $page
-     * @param Request $request
      * @return Response
+     * @todo Eliminate unused args from route and action. [ST 2020/08/09]
      */
-    public function publicProfileAction($user_id, $user_name, $page, Request $request)
+    public function publicProfileAction(int $cacheExpiration, $user_id, $user_name, $page)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -77,9 +83,10 @@ class UserController extends Controller
      * @Route("/user/profile_save", name="user_profile_save", methods={"POST"})
      *
      * @param Request $request
+     * @param SessionInterface $session
      * @return RedirectResponse
      */
-    public function saveProfileAction(Request $request)
+    public function saveProfileAction(Request $request, SessionInterface $session)
     {
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -90,10 +97,7 @@ class UserController extends Controller
             $user_existing = $em->getRepository(User::class)->findOneBy(array('username' => $username));
 
             if ($user_existing) {
-                $this->get('session')
-                ->getFlashBag()
-                ->set('error', "Username $username is already taken.");
-
+                $session->getFlashBag()->set('error', "Username $username is already taken.");
                 return $this->redirect($this->generateUrl('user_profile_edit'));
             }
 
@@ -121,9 +125,7 @@ class UserController extends Controller
 
         $this->getDoctrine()->getManager()->flush();
 
-        $this->get('session')
-            ->getFlashBag()
-            ->set('notice', "Successfully saved your profile.");
+        $session->getFlashBag()->set('notice', "Successfully saved your profile.");
 
         return $this->redirect($this->generateUrl('user_profile_edit'));
     }
@@ -131,9 +133,10 @@ class UserController extends Controller
     /**
      * @Route("/api/public/user/info", name="user_info", methods={"GET"}, options={"i18n" = false})
      * @param Request $request
+     * @param RouterInterface $router
      * @return Response
      */
-    public function infoAction(Request $request)
+    public function infoAction(Request $request, RouterInterface $router)
     {
         $jsonp = $request->query->get('jsonp');
 
@@ -142,13 +145,12 @@ class UserController extends Controller
 
         $content = null;
 
-        $authorizationChecker = $this->container->get('security.authorization_checker');
-        if ($authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             /** @var UserInterface $user */
             $user = $this->getUser();
             $user_id = $user->getId();
 
-            $public_profile_url = $this->get('router')->generate('user_profile_public', array(
+            $public_profile_url = $router->generate('user_profile_public', array(
                     'user_id' => $user_id,
                     'user_name' => urlencode($user->getUsername())
             ));
@@ -229,12 +231,21 @@ class UserController extends Controller
     /**
      * @Route("/user/remind/{username}", name="remind_email", methods={"GET"})
      *
-     * @param $username
+     * @param UserManagerInterface $userManager
+     * @param MailerInterface $mailer
+     * @param SessionInterface $session
+     * @param RouterInterface $router
+     * @param string $username
      * @return RedirectResponse|Response
      */
-    public function remindAction($username)
-    {
-        $user = $this->get('fos_user.user_manager')->findUserByUsername($username);
+    public function remindAction(
+        UserManagerInterface $userManager,
+        MailerInterface $mailer,
+        SessionInterface $session,
+        RouterInterface $router,
+        $username
+    ) {
+        $user = $userManager->findUserByUsername($username);
         if (!$user) {
             throw new NotFoundHttpException("Cannot find user from username [$username]");
         }
@@ -242,11 +253,11 @@ class UserController extends Controller
             return $this->render('User/remind-no-token.html.twig');
         }
 
-        $this->get('fos_user.mailer')->sendConfirmationEmailMessage($user);
+        $mailer->sendConfirmationEmailMessage($user);
 
-        $this->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
+        $session->set('fos_user_send_confirmation_email/email', $user->getEmail());
 
-        $url = $this->get('router')->generate('fos_user_registration_check_email');
+        $url = $router->generate('fos_user_registration_check_email');
         return $this->redirect($url);
     }
 }

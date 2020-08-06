@@ -21,10 +21,7 @@ class DataimportFileLocator
      */
     const DATAIMPORT_FILE_DIR = '@IliosCoreBundle/Resources/dataimport';
 
-    /**
-     * @var FileLocator
-     */
-    protected $fileLocator;
+    protected FileLocator $fileLocator;
 
     public function __construct($kernelRootDirectory)
     {
