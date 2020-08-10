@@ -21,7 +21,7 @@
     "friendsofsymfony/user-bundle": "^2.0",
     "guzzlehttp/guzzle": "^7.0",
     "incenteev/composer-parameter-handler": "^2.0",
-    "jms/i18n-routing-bundle": "^2.0.1",
+    "jms/i18n-routing-bundle": "@stable",
     "nelmio/api-doc-bundle": "^3.6",
     "nelmio/cors-bundle": "^1.5",
     "ramsey/uuid-doctrine": "^1.5",
@@ -32,13 +32,13 @@
     "symfony/console": "4.4.*",
     "symfony/dotenv": "5.1.*",
     "symfony/flex": "^1.3.1",
-    "symfony/framework-bundle": "3.4.*",
+    "symfony/framework-bundle": "^4.4",
     "symfony/monolog-bundle": "3.5.*",
     "symfony/polyfill-apcu": "^1.0",
     "symfony/polyfill-mbstring": "^1.14.0",
     "symfony/swiftmailer-bundle": "^3.3.1",
     "symfony/templating": "^4",
-    "symfony/yaml": "5.1.*",
+    "symfony/yaml": "^4.4",
     "twig/twig": "^2.7.0",
     "willdurand/js-translation-bundle": "^3.0.1"
   },
@@ -49,7 +49,7 @@
     "phpstan/phpstan": "^0.12.31",
     "phpunit/phpunit": "^7",
     "squizlabs/php_codesniffer": "@stable",
-    "symfony/browser-kit": "3.4.*",
+    "symfony/browser-kit": "@stable",
     "symfony/phpunit-bridge": "^5.1"
   },
   "config": {
@@ -92,10 +92,9 @@
     "symfony/symfony": "*"
   },
   "extra": {
-    "src-dir": "src/App",
     "symfony": {
-      "allow-contrib": false,
-      "require": "3.4.*"
+      "allow-contrib": true,
+      "require": "4.4.*"
     }
   }
 }
