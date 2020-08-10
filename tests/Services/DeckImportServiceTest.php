@@ -8,8 +8,8 @@ use App\Repository\CardRepository;
 use App\Repository\PackRepository;
 use App\Services\DeckImportService;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class DeckImportServiceTest
@@ -42,7 +42,7 @@ class DeckImportServiceTest extends TestCase
     /**
      * @inheritdoc
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->mockEntityManager = m::mock(EntityManager::class);
         $this->mockCardRepository = m::mock(CardRepository::class);
@@ -61,7 +61,7 @@ class DeckImportServiceTest extends TestCase
     /**
      * @inheritdoc
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         unset($this->service);
         unset($this->mockEntityManager);

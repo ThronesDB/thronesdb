@@ -3,7 +3,7 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Card;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class CardTest
