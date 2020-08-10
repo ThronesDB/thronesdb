@@ -268,10 +268,11 @@ class BuilderController extends AbstractController
      *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
      * )
      * @param Request $request
+     * @param Texts $texts
      * @param string $deck_uuid
      * @return Response
      */
-    public function downloadAction(Request $request, $deck_uuid)
+    public function downloadAction(Request $request, Texts $texts, $deck_uuid)
     {
         /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
@@ -292,14 +293,14 @@ class BuilderController extends AbstractController
 
         switch ($format) {
             case 'octgn':
-                return $this->downloadInOctgnFormat($deck);
+                return $this->downloadInOctgnFormat($deck, $texts);
                 break;
             case 'text_cycle':
-                return $this->downloadInTextFormatSortedByCycle($deck);
+                return $this->downloadInTextFormatSortedByCycle($deck, $texts);
                 break;
             case 'text':
             default:
-                return $this->downloadInDefaultTextFormat($deck);
+                return $this->downloadInDefaultTextFormat($deck, $texts);
         }
     }
 
