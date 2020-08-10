@@ -94,6 +94,7 @@ services:
 
     App\Services\DeckManager:
         arguments: ["@doctrine.orm.entity_manager", '@App\Services\DeckValidationHelper', '@App\Services\AgendaHelper', '@App\Services\Diff', "@logger"]
+        shared: false
 
     App\Services\DeckValidationHelper:
         arguments: ['@App\Services\AgendaHelper', "@translator"]
