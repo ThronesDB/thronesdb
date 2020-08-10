@@ -181,12 +181,13 @@ class SocialController extends AbstractController
      *
      * @param Request $request
      * @param DecklistFactory $decklistFactory
+     * @param TranslatorInterface $translator
      * @return RedirectResponse|Response
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createAction(Request $request, DecklistFactory $decklistFactory)
+    public function createAction(Request $request, DecklistFactory $decklistFactory, TranslatorInterface $translator)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -1516,7 +1517,7 @@ class SocialController extends AbstractController
      * @return Response
      * @throws DBALException
      */
-    public function donatorsAction(Request $reques, int $cacheExpiration)
+    public function donatorsAction(Request $request, int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
