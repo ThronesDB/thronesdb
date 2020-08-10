@@ -6,7 +6,7 @@ use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\Type;
 use App\Entity\TypeInterface;
-use App\Helper\AgendaHelper;
+use App\Services\AgendaHelper;
 use App\Services\DecklistManager;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

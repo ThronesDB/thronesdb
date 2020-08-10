@@ -14,7 +14,7 @@ use App\Entity\Faction;
 use App\Entity\Tournament;
 use App\Entity\User;
 use App\Entity\UserInterface;
-use App\Helper\DeckValidationHelper;
+use App\Services\DeckValidationHelper;
 use App\Services\CardsData;
 use App\Services\DecklistFactory;
 use App\Services\DecklistManager;

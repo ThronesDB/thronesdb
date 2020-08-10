@@ -1,29 +1,21 @@
 <?php
 
-namespace App\Helper;
+namespace App\Services;
 
+use App\Classes\SlotCollectionInterface;
 use App\Entity\CardInterface;
 use App\Entity\CommonDeckInterface;
-use App\Classes\SlotCollectionInterface;
 use App\Entity\SlotInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Class DeckValidationHelper
- * @package App\Helper
+ * @package App\Services
  */
 class DeckValidationHelper
 {
+    protected AgendaHelper $agenda_helper;
 
-    /**
-     * @var AgendaHelper
-     */
-    protected $agenda_helper;
-
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
+    protected TranslatorInterface  $translator;
 
     /**
      * DeckValidationHelper constructor.

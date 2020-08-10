@@ -14,7 +14,7 @@ use App\Entity\FactionInterface;
 use App\Entity\Pack;
 use App\Entity\Tournament;
 use App\Entity\UserInterface;
-use App\Helper\AgendaHelper;
+use App\Services\AgendaHelper;
 use App\Services\DeckImportService;
 use App\Services\DeckManager;
 use App\Services\Diff;

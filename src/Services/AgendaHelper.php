@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helper;
+namespace App\Services;
 
 use App\Entity\CardInterface;
 use App\Entity\Faction;
