@@ -6,7 +6,7 @@ use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Decklistslot;
-use App\Helper\DeckValidationHelper;
+use App\Services\DeckValidationHelper;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;

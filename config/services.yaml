@@ -73,11 +73,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
 
-    # Helpers
-    App\Helper\:
-        resource: '../src/Helper/*'
-
     # Services
+    App\Services\AgendaHelper:
+        arguments: ["@doctrine.orm.entity_manager"]
+
     App\Services\CardsData:
         arguments: ["@doctrine", "@request_stack", "@router", "@translator"]
 
@@ -88,13 +87,16 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
 
     App\Services\DecklistFactory:
-        arguments: ["@doctrine.orm.entity_manager", '@App\Helper\DeckValidationHelper', '@App\Services\Texts']
+        arguments: ["@doctrine.orm.entity_manager", '@App\Services\DeckValidationHelper', '@App\Services\Texts']
 
     App\Services\DecklistManager:
         arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
 
     App\Services\DeckManager:
-        arguments: ["@doctrine.orm.entity_manager", '@App\Helper\DeckValidationHelper', '@App\Helper\AgendaHelper', '@App\Services\Diff', "@logger"]
+        arguments: ["@doctrine.orm.entity_manager", '@App\Services\DeckValidationHelper', '@App\Services\AgendaHelper', '@App\Services\Diff', "@logger"]
+
+    App\Services\DeckValidationHelper:
+        arguments: ['@App\Services\AgendaHelper', "@translator"]
 
     App\Services\Diff:
         arguments: ["@doctrine.orm.entity_manager"]
