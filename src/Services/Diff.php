@@ -3,12 +3,12 @@
 
 namespace App\Services;
 
-use Doctrine\ORM\EntityManager;
 use App\Classes\SlotCollectionInterface;
 use App\Entity\SlotInterface;
 use App\Classes\SlotCollectionDecorator;
 use App\Entity\Deckslot;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  *
@@ -16,16 +16,13 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Diff
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
+    protected EntityManagerInterface $em;
 
     /**
      * Diff constructor.
-     * @param EntityManager $doctrine
+     * @param EntityManagerInterface $doctrine
      */
-    public function __construct(EntityManager $doctrine)
+    public function __construct(EntityManagerInterface $doctrine)
     {
         $this->em = $doctrine;
     }

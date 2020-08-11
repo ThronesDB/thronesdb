@@ -10,12 +10,12 @@ use App\Entity\Faction;
 use App\Entity\FactionInterface;
 use App\Entity\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * The job of this class is to find and return decklists
@@ -29,36 +29,24 @@ class DecklistManager
     protected $limit = 30;
     protected $maxcount = 0;
 
-    /**
-     * @var EntityManager
-     */
-    protected $doctrine;
+    protected EntityManagerInterface $doctrine;
+
+    protected RequestStack $request_stack;
+
+    protected RouterInterface $router;
+
+    protected LoggerInterface $logger;
 
     /**
-     * @var RequestStack
-     */
-    protected $request_stack;
-
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @param EntityManager $doctrine
+     * @param EntityManagerInterface $doctrine
      * @param RequestStack $request_stack
-     * @param Router $router
+     * @param RouterInterface $router
      * @param LoggerInterface $logger
      */
     public function __construct(
-        EntityManager $doctrine,
+        EntityManagerInterface $doctrine,
         RequestStack $request_stack,
-        Router $router,
+        RouterInterface $router,
         LoggerInterface $logger
     ) {
         $this->doctrine = $doctrine;

@@ -11,43 +11,28 @@ use App\Entity\Deckslot;
 use App\Entity\FactionInterface;
 use App\Entity\PackInterface;
 use App\Entity\UserInterface;
-use App\Services\AgendaHelper;
-use App\Services\DeckValidationHelper;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
-use Symfony\Bridge\Monolog\Logger;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class DeckManager
 {
-    /**
-     * @var EntityManager
-     */
-    protected $doctrine;
-    /**
-     * @var DeckValidationHelper
-     */
-    protected $deck_validation_helper;
-    /**
-     * @var AgendaHelper
-     */
-    protected $agenda_helper;
-    /**
-     * @var Diff
-     */
-    protected $diff;
-    /**
-     * @var Logger
-     */
-    protected $logger;
+    protected EntityManagerInterface $doctrine;
+
+    protected DeckValidationHelper $deck_validation_helper;
+
+    protected AgendaHelper $agenda_helper;
+
+    protected Diff $diff;
+
+    protected LoggerInterface $logger;
 
     public function __construct(
-        EntityManager $doctrine,
+        EntityManagerInterface $doctrine,
         DeckValidationHelper $deck_validation_helper,
         AgendaHelper $agenda_helper,
         Diff $diff,
-        Logger $logger
+        LoggerInterface $logger
     ) {
         $this->doctrine = $doctrine;
         $this->deck_validation_helper = $deck_validation_helper;
@@ -77,8 +62,6 @@ class DeckManager
      * @param array $content
      * @param DeckInterface $source_deck
      * @return int
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function save($user, $deck, $decklist_id, $name, $faction, $description, $tags, $content, $source_deck)
     {
