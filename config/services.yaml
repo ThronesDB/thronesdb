@@ -34,12 +34,18 @@ parameters:
 services:
     # default configuration for services in *this* file
     _defaults:
-        autowire: false # Automatically injects dependencies in your services.
-        autoconfigure: false # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         public:
-            true # Allows optimizing the container by removing unused services; this also means
+            false # Allows optimizing the container by removing unused services; this also means
             # fetching services directly from the container via $container->get() won't work.
-            # The best practice is to be explicit about your dependencies anyway.
+            # The best practice is to be explicit about your dependencies anyway.\
+        bind:
+            $cacheExpiration: '%cache_expiration%'
+            $emailSenderAddress: '%email_sender_address%'
+            $kernelRootDirectory: '%kernel.root_dir%'
+            $gameName: '%game_name%'
+            $publisherName: '%publisher_name%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -53,21 +59,9 @@ services:
         resource: "../src/Controller"
         tags: ["controller.service_arguments"]
 
-    # commands
+    # Commands
     App\Command\:
         resource: '../src/Command/*'
-        public: false
-        autowire: true
-        autoconfigure: true
-
-    # services
-    App\Services\CardsData:
-        public: true
-        arguments: ["@doctrine", "@request_stack", "@router", "@translator"]
-
-    App\Services\DataimportFileLocator:
-        public: true
-        arguments: ['%kernel.root_dir%']
 
     # makes classes in src/DataFixtures available to be used as services
     App\DataFixtures\:
@@ -75,38 +69,11 @@ services:
         tags: ['doctrine.fixture.orm']
         arguments: [ '@App\Services\DataimportFileLocator']
 
-    # core exception listener
-    core_exception_listener:
-        class: App\Listener\CoreExceptionListener
+    # Core exception listener
+    App\Listener\CoreExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
 
-    deck_import_service:
-        public: true
-        class: App\Services\DeckImportService
-        arguments: ["@doctrine.orm.entity_manager"]
-    deck_manager:
-        public: true
-        class: App\Services\DeckManager
-        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@agenda_helper", "@diff", "@logger"]
-    texts:
-        class: App\Services\Texts
-        arguments: ["%kernel.root_dir%"]
-    diff:
-        class: App\Services\Diff
-        arguments: ["@doctrine.orm.entity_manager"]
-    decklist_manager:
-        class: App\Model\DecklistManager
+    # Services
+    App\Services\DeckManager:
         shared: false
-        arguments: ["@doctrine.orm.entity_manager", "@request_stack", "@router", "@logger"]
-    decklist_factory:
-        public: true
-        class: App\Model\DecklistFactory
-        arguments: ["@doctrine.orm.entity_manager", "@deck_validation_helper", "@texts"]
-    agenda_helper:
-        class: App\Helper\AgendaHelper
-        arguments: ["@doctrine.orm.entity_manager"]
-    deck_validation_helper:
-        public: true
-        class: App\Helper\DeckValidationHelper
-        arguments: ["@agenda_helper", "@translator"]

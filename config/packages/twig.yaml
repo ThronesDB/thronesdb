@@ -5,8 +5,8 @@ twig:
     globals:
         default_locale: "%kernel.default_locale%"
         supported_locales: "%supported_locales%"
-        cards_data: "@App\\Services\\CardsData"
-        deck_validation_helper: "@deck_validation_helper"
+        cards_data: '@App\Services\CardsData'
+        deck_validation_helper: '@App\Services\DeckValidationHelper'
         google_analytics_tracking_code: "%google_analytics_tracking_code%"
         allow_search_engine_tracking: "%allow_search_engine_tracking%"
     form_themes:

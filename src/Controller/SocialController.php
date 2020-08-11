@@ -14,34 +14,41 @@ use App\Entity\Faction;
 use App\Entity\Tournament;
 use App\Entity\User;
 use App\Entity\UserInterface;
-use App\Model\DecklistManager;
+use App\Services\DeckValidationHelper;
 use App\Services\CardsData;
+use App\Services\DecklistFactory;
+use App\Services\DecklistManager;
+use App\Services\Texts;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use PDO;
+use Swift_Mailer;
 use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class SocialController
  * @package App\Controller
  */
-class SocialController extends Controller
+class SocialController extends AbstractController
 {
     use LocaleAwareTemplating;
 
@@ -56,16 +63,23 @@ class SocialController extends Controller
      *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
      * )
      *
+     * @param TranslatorInterface $translator
+     * @param SessionInterface $session
+     * @param DeckValidationHelper $deckValidationHelper
+     * @param DecklistFactory $decklistFactory
      * @param string $deck_uuid
      * @return RedirectResponse|Response
+     * @throws NoResultException
      * @throws NonUniqueResultException
-     * @throws Exception
      */
-    public function publishFormAction($deck_uuid)
-    {
-        $translator = $this->get('translator');
-
-        /* @var $em EntityManager */
+    public function publishFormAction(
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        DeckValidationHelper $deckValidationHelper,
+        DecklistFactory $decklistFactory,
+        $deck_uuid
+    ) {
+        /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
         /* @var UserInterface $user */
@@ -82,7 +96,7 @@ class SocialController extends Controller
 
         $yesterday = (new DateTime())->modify('-24 hours');
         if (false && $user->getDateCreation() > $yesterday) {
-            $this->get('session')
+            $session
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.antispam.newbie'));
 
@@ -97,7 +111,7 @@ class SocialController extends Controller
         $decklistsSinceYesterday = $query->getSingleScalarResult();
 
         if (false && $decklistsSinceYesterday > $user->getReputation()) {
-            $this->get('session')
+            $session
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.antispam.limit'));
 
@@ -106,16 +120,16 @@ class SocialController extends Controller
 
         $lastPack = $deck->getLastPack();
         if (!$lastPack->getDateRelease() || $lastPack->getDateRelease() > new DateTime()) {
-            $this->get('session')
+            $session
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.unreleased'));
 
             return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
         }
 
-        $problem = $this->get('deck_validation_helper')->findProblem($deck);
+        $problem = $deckValidationHelper->findProblem($deck);
         if ($problem) {
-            $this->get('session')->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.invalid'));
+            $session->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.invalid'));
 
             return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
         }
@@ -134,15 +148,18 @@ class SocialController extends Controller
                         'decklist_name' => $decklist->getNameCanonical(),
                     )
                 );
-                $this->get('session')
+                $session
                     ->getFlashBag()
                     ->set('warning', $translator->trans('decklist.publish.warnings.published', array("%url%" => $url)));
             }
         }
 
         // decklist for the form ; won't be persisted
-        $decklist = $this->get('decklist_factory')
-            ->createDecklistFromDeck($deck, $deck->getName(), $deck->getDescriptionMd());
+        $decklist = $decklistFactory->createDecklistFromDeck(
+            $deck,
+            $deck->getName(),
+            $deck->getDescriptionMd()
+        );
 
         $tournaments = $em->getRepository(Tournament::class)->findAll();
 
@@ -163,15 +180,15 @@ class SocialController extends Controller
      * @Route("/decklist/create", name="decklist_create", methods={"POST"})
      *
      * @param Request $request
+     * @param DecklistFactory $decklistFactory
+     * @param TranslatorInterface $translator
      * @return RedirectResponse|Response
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, DecklistFactory $decklistFactory, TranslatorInterface $translator)
     {
-        $translator = $this->get("translator");
-
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
         /* @var UserInterface $user */
@@ -235,7 +252,7 @@ class SocialController extends Controller
         $precedent = $precedent_id ? $em->getRepository(Decklist::class)->find($precedent_id) : null;
 
         try {
-            $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
+            $decklist = $decklistFactory->createDecklistFromDeck($deck, $name, $descriptionMd);
         } catch (Exception $e) {
             return $this->render(
                 'Default/error.html.twig',
@@ -286,7 +303,7 @@ class SocialController extends Controller
             throw $this->createNotFoundException("Decklist not found");
         }
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')
             && $user->getId() !== $decklist->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied");
         }
@@ -314,15 +331,16 @@ class SocialController extends Controller
      *     requirements={"decklist_id"="\d+"}
      * )
      *
-     * @param string $decklist_id
      * @param Request $request
+     * @param Texts $texts
+     * @param string $decklist_id
      * @return RedirectResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function saveAction($decklist_id, Request $request)
+    public function saveAction(Request $request, Texts $texts, $decklist_id)
     {
-        /* @var $em EntityManager */
+        /* @var EntityManager $em*/
         $em = $this->getDoctrine()->getManager();
 
         $user = $this->getUser();
@@ -335,7 +353,7 @@ class SocialController extends Controller
             throw $this->createNotFoundException("Decklist not found");
         }
 
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')
             && $user->getId() !== $decklist->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied");
         }
@@ -352,7 +370,7 @@ class SocialController extends Controller
             $name = "Untitled";
         }
         $descriptionMd = trim($request->request->get('descriptionMd'));
-        $descriptionHtml = $this->get('texts')->markdown($descriptionMd);
+        $descriptionHtml = $texts->markdown($descriptionMd);
 
         $tournament_id = intval(filter_var($request->request->get('tournament'), FILTER_SANITIZE_NUMBER_INT));
         $tournament = $em->getRepository(Tournament::class)->find($tournament_id);
@@ -371,7 +389,7 @@ class SocialController extends Controller
             : null;
 
         $decklist->setName($name);
-        $decklist->setNameCanonical($this->get('texts')->slugify($name).'-'.$decklist->getVersion());
+        $decklist->setNameCanonical($texts->slugify($name).'-'.$decklist->getVersion());
         $decklist->setDescriptionMd($descriptionMd);
         $decklist->setDescriptionHtml($descriptionHtml);
         $decklist->setPrecedent($precedent);
@@ -452,11 +470,16 @@ class SocialController extends Controller
         );
     }
 
-    private function searchForm(Request $request)
+    /**
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param CardsData $cardsData
+     * @return string
+     */
+    protected function searchForm(Request $request, TranslatorInterface $translator, CardsData $cardsData)
     {
         $doctrine = $this->getDoctrine();
         $dbh = $doctrine->getConnection();
-        $em = $doctrine->getEntityManager();
 
         $cards_code = $request->query->get('cards');
         $faction_code = filter_var($request->query->get('faction'), FILTER_SANITIZE_STRING);
@@ -474,7 +497,7 @@ class SocialController extends Controller
         $on = 0;
         $off = 0;
         $categories[] = array(
-            "label" => $this->get("translator")->trans('decklist.list.search.allowed.core'),
+            "label" => $translator->trans('decklist.list.search.allowed.core'),
             "packs" => [],
         );
         $list_cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
@@ -544,7 +567,7 @@ class SocialController extends Controller
 
             $params['cards'] = '';
             foreach ($cards as $card) {
-                $cardinfo = $this->get(CardsData::class)->getCardInfo($card, false, null);
+                $cardinfo = $cardsData->getCardInfo($card, false, null);
                 $params['cards'] .= $this->renderView('Search/card.html.twig', $cardinfo);
             }
         }
@@ -566,38 +589,46 @@ class SocialController extends Controller
      *     }
      * )
      * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param DecklistManager $decklistManager
+     * @param CardsData $cardsData
+     * @param int $cacheExpiration
      * @param string $type
      * @param int $page
      * @return Response
      */
-    public function listAction(Request $request, $type, $page = 1)
-    {
-        $translator = $this->get('translator');
+    public function listAction(
+        Request $request,
+        TranslatorInterface $translator,
+        DecklistManager $decklistManager,
+        CardsData $cardsData,
+        int $cacheExpiration,
+        $type,
+        $page = 1
+    ) {
 
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
-        /* @var DecklistManager $decklist_manager */
-        $decklist_manager = $this->get('decklist_manager');
-        $decklist_manager->setLimit(30);
-        $decklist_manager->setPage($page);
+        $decklistManager->setLimit(30);
+        $decklistManager->setPage($page);
 
         $header = '';
 
         switch ($type) {
             case 'find':
-                $header = $this->searchForm($request);
-                $paginator = $decklist_manager->findDecklistsWithComplexSearch();
+                $header = $this->searchForm($request, $translator, $cardsData);
+                $paginator = $decklistManager->findDecklistsWithComplexSearch();
                 break;
             case 'favorites':
                 $response->setPrivate();
                 /* @var UserInterface $user */
                 $user = $this->getUser();
                 if ($user) {
-                    $paginator = $decklist_manager->findDecklistsByFavorite($user);
+                    $paginator = $decklistManager->findDecklistsByFavorite($user);
                 } else {
-                    $paginator = $decklist_manager->getEmptyList();
+                    $paginator = $decklistManager->getEmptyList();
                 }
                 break;
             case 'mine':
@@ -605,27 +636,27 @@ class SocialController extends Controller
                 /* @var UserInterface $user */
                 $user = $this->getUser();
                 if ($user) {
-                    $paginator = $decklist_manager->findDecklistsByAuthor($user);
+                    $paginator = $decklistManager->findDecklistsByAuthor($user);
                 } else {
-                    $paginator = $decklist_manager->getEmptyList();
+                    $paginator = $decklistManager->getEmptyList();
                 }
                 break;
             case 'recent':
-                $paginator = $decklist_manager->findDecklistsByAge(false);
+                $paginator = $decklistManager->findDecklistsByAge(false);
                 break;
             case 'halloffame':
-                $paginator = $decklist_manager->findDecklistsInHallOfFame();
+                $paginator = $decklistManager->findDecklistsInHallOfFame();
                 break;
             case 'hottopics':
-                $paginator = $decklist_manager->findDecklistsInHotTopic();
+                $paginator = $decklistManager->findDecklistsInHotTopic();
                 break;
             case 'tournament':
-                $paginator = $decklist_manager->findDecklistsInTournaments();
+                $paginator = $decklistManager->findDecklistsInTournaments();
                 break;
             case 'popular':
             default:
                 $type = 'popular';
-                $paginator = $decklist_manager->findDecklistsByPopularity();
+                $paginator = $decklistManager->findDecklistsByPopularity();
                 break;
         }
 
@@ -640,9 +671,9 @@ class SocialController extends Controller
                 'url' => $request->getRequestUri(),
                 'header' => $header,
                 'type' => $type,
-                'pages' => $decklist_manager->getClosePages(),
-                'prevurl' => $decklist_manager->getPreviousUrl(),
-                'nexturl' => $decklist_manager->getNextUrl(),
+                'pages' => $decklistManager->getClosePages(),
+                'prevurl' => $decklistManager->getPreviousUrl(),
+                'nexturl' => $decklistManager->getNextUrl(),
             ),
             $response
         );
@@ -659,20 +690,22 @@ class SocialController extends Controller
      *     requirements={"decklist_id"="\d+"}
      * )
      *
+     * @param TranslatorInterface $translator
+     * @param int $cacheExpiration
      * @param string $decklist_id
      * @return Response
      */
-    public function viewAction($decklist_id)
+    public function viewAction(TranslatorInterface $translator, int $cacheExpiration, $decklist_id)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $decklistRepo = $this->getDoctrine()->getManager()->getRepository(Decklist::class);
 
         $decklist = $decklistRepo->find($decklist_id);
         if (!$decklist) {
-            throw $this->createNotFoundException($this->get("translator")->trans('decklist.view.errors.notfound'));
+            throw $this->createNotFoundException($translator->trans('decklist.view.errors.notfound'));
         }
 
         $duplicate = $decklistRepo->findDuplicate($decklist);
@@ -772,11 +805,17 @@ class SocialController extends Controller
      * @Route("/user/comment", name="decklist_comment", methods={"POST"})
      *
      * @param Request $request
+     * @param Texts $texts
+     * @param Swift_Mailer $mailer
+     * @param string $emailSenderAddress
      * @return RedirectResponse
-     * @throws Exception
      */
-    public function commentAction(Request $request)
-    {
+    public function commentAction(
+        Request $request,
+        Texts $texts,
+        Swift_Mailer $mailer,
+        string $emailSenderAddress
+    ) {
         /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
@@ -790,8 +829,6 @@ class SocialController extends Controller
 
         $comment_text = trim($request->get('comment'));
         if ($decklist && !empty($comment_text)) {
-            $fromEmail = $this->getParameter('email_sender_address');
-
             $comment_text = preg_replace(
                 '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)'
                 .'(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))'
@@ -806,7 +843,7 @@ class SocialController extends Controller
                 $mentioned_usernames = array_unique($matches[1]);
             }
 
-            $comment_html = $this->get('texts')->markdown($comment_text);
+            $comment_html = $texts->markdown($comment_text);
 
             $now = new DateTime();
 
@@ -872,10 +909,10 @@ class SocialController extends Controller
             );
             foreach ($spool as $email => $view) {
                 $message = (new Swift_Message("[thronesdb] New comment"))
-                    ->setFrom(array($fromEmail => $user->getUsername()))
+                    ->setFrom(array($emailSenderAddress => $user->getUsername()))
                     ->setTo($email)
                     ->setBody($this->renderView($view, $email_data), 'text/html');
-                $this->get('mailer')->send($message);
+                $mailer->send($message);
             }
         }
 
@@ -1060,10 +1097,12 @@ class SocialController extends Controller
      * )
      *
      * @param Request $request
+     * @param int $cacheExpiration
+     * @param Texts $texts
      * @param int $decklist_id
      * @return Response
      */
-    public function downloadAction(Request $request, $decklist_id)
+    public function downloadAction(Request $request, int $cacheExpiration, Texts $texts, $decklist_id)
     {
         /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -1078,35 +1117,36 @@ class SocialController extends Controller
 
         switch ($format) {
             case 'octgn':
-                return $this->downloadInOctgnFormat($decklist);
+                return $this->downloadInOctgnFormat($cacheExpiration, $texts, $decklist);
                 break;
             case 'text_cycle':
-                return $this->downloadInTextFormatSortedByCycle($decklist);
+                return $this->downloadInTextFormatSortedByCycle($cacheExpiration, $texts, $decklist);
                 break;
             case 'text':
             default:
-                return $this->downloadInDefaultTextFormat($decklist);
+                return $this->downloadInDefaultTextFormat($cacheExpiration, $texts, $decklist);
         }
     }
 
-    protected function downloadInOctgnFormat(DecklistInterface $decklist)
+    /**
+     * @param int $cacheExpiration
+     * @param Texts $texts
+     * @param DecklistInterface $decklist
+     * @return Response
+     */
+    protected function downloadInOctgnFormat(int $cacheExpiration, Texts $texts, DecklistInterface $decklist)
     {
-        $content = $this->renderView(
-            'Export/octgn.xml.twig',
-            [
-                "deck" => $decklist->getTextExport(),
-            ]
-        );
+        $content = $this->renderView('Export/octgn.xml.twig', [ "deck" => $decklist->getTextExport() ]);
 
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->set('Content-Type', 'application/octgn');
         $response->headers->set(
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($decklist->getName()).'.o8d'
+                $texts->slugify($decklist->getName()).'.o8d'
             )
         );
 
@@ -1115,7 +1155,13 @@ class SocialController extends Controller
         return $response;
     }
 
-    protected function downloadInDefaultTextFormat(DecklistInterface $decklist)
+    /**
+     * @param int $cacheExpiration
+     * @param Texts $texts
+     * @param DecklistInterface $decklist
+     * @return Response
+     */
+    protected function downloadInDefaultTextFormat(int $cacheExpiration, Texts $texts, DecklistInterface $decklist)
     {
         $content = $this->renderView(
             'Export/default.txt.twig',
@@ -1127,23 +1173,31 @@ class SocialController extends Controller
 
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set(
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($decklist->getName()).'.txt'
+                $texts->slugify($decklist->getName()).'.txt'
             )
         );
 
         $response->setContent($content);
-
         return $response;
     }
 
-    protected function downloadInTextFormatSortedByCycle(DecklistInterface $decklist)
-    {
+    /**
+     * @param int $cacheExpiration
+     * @param Texts $texts
+     * @param DecklistInterface $decklist
+     * @return Response
+     */
+    protected function downloadInTextFormatSortedByCycle(
+        int $cacheExpiration,
+        Texts $texts,
+        DecklistInterface $decklist
+    ) {
         $content = $this->renderView(
             'Export/sortedbycycle.txt.twig',
             [
@@ -1154,13 +1208,13 @@ class SocialController extends Controller
 
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
         $response->headers->set('Content-Type', 'text/plain');
         $response->headers->set(
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($decklist->getName()).'.txt'
+                $texts->slugify($decklist->getName()).'.txt'
             )
         );
 
@@ -1266,18 +1320,19 @@ class SocialController extends Controller
     }
 
     /**
-     * @param $page
      * @param Request $request
+     * @param int $cacheExpiration
+     * @param int $page
      * @return Response
      * @throws DBALException
      *
      * @todo This is not wired up, enable or remove this. [ST 2020/07/28]
      */
-    public function commentsAction($page, Request $request)
+    public function commentsAction(Request $request, int $cacheExpiration, $page)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $limit = 100;
         if ($page < 1) {
@@ -1360,15 +1415,15 @@ class SocialController extends Controller
      * @Route("/decklists/search", name="decklists_searchform", methods={"GET"})
      *
      * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param int $cacheExpiration
      * @return Response
      */
-    public function searchAction(Request $request)
+    public function searchAction(Request $request, TranslatorInterface $translator, int $cacheExpiration)
     {
-        $translator = $this->get("translator");
-
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $factions = $this->getDoctrine()->getRepository(Faction::class)->findAllAndOrderByName();
 
@@ -1458,14 +1513,15 @@ class SocialController extends Controller
     /**
      * @Route("/donators", name="donators", methods={"GET"})
      * @param Request $request
+     * @param int $cacheExpiration
      * @return Response
      * @throws DBALException
      */
-    public function donatorsAction(Request $request)
+    public function donatorsAction(Request $request, int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         /* @var $dbh Connection */
         $dbh = $this->getDoctrine()->getConnection();

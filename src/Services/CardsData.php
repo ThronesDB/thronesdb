@@ -14,45 +14,32 @@ use App\Entity\Review;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CardsData
 {
-    /**
-     * @var Registry $doctrine
-     */
-    protected $doctrine;
+    protected RegistryInterface $doctrine;
+
+    protected RequestStack $request_stack;
+
+    protected RouterInterface $router;
+
+    protected TranslatorInterface $translator;
 
     /**
-     * @var RequestStack $request_stack
-     */
-    protected $request_stack;
-
-    /**
-     * @var Router $router
-     */
-    protected $router;
-
-    /**
-     * @var TranslatorInterface $translator
-     */
-    protected $translator;
-
-    /**
-     * CardsData constructor.
-     * @param Registry $doctrine
+     * @param RegistryInterface $doctrine
      * @param RequestStack $request_stack
-     * @param Router $router
+     * @param RouterInterface $router
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        Registry $doctrine,
+        RegistryInterface $doctrine,
         RequestStack $request_stack,
-        Router $router,
+        RouterInterface $router,
         TranslatorInterface $translator
     ) {
         $this->doctrine = $doctrine;

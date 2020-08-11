@@ -11,21 +11,26 @@ use App\Entity\PackInterface;
 use App\Entity\Type;
 use App\Services\CardsData;
 use DateTime;
+use Doctrine\ORM\NonUniqueResultException;
+use Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @package App\Controller
  */
-class SearchController extends Controller
+class SearchController extends AbstractController
 {
     /**
-     * @var string[]
+     * @var string[] $searchKeys
+     * @todo redeclare as constant [ST 2020/08/09]
      */
-    public static $searchKeys = array(
+    public static array $searchKeys = array(
             ''  => 'code',
             'a' => 'flavor',
             'b' => 'claim',
@@ -52,47 +57,51 @@ class SearchController extends Controller
     );
 
     /**
-     * @var string[]
+     * @var string[] $searchTypes
+     * @todo redeclare as constant [ST 2020/08/09]
      */
-    public static $searchTypes = array(
-            't' => 'code',
-            'e' => 'code',
-            'f' => 'code',
-            ''  => 'string',
-            'a' => 'string',
-            'i' => 'string',
-            'd' => 'string',
-            'k' => 'string',
-            'r' => 'string',
-            'x' => 'string',
-            'b' => 'integer',
-            'c' => 'integer',
-            'h' => 'integer',
-            'n' => 'integer',
-            'o' => 'integer',
-            's' => 'integer',
-            'v' => 'integer',
-            'y' => 'integer',
-            'g' => 'boolean',
-            'l' => 'boolean',
-            'm' => 'boolean',
-            'p' => 'boolean',
-            'u' => 'boolean',
+    public static array $searchTypes = array(
+        't' => 'code',
+        'e' => 'code',
+        'f' => 'code',
+        '' => 'string',
+        'a' => 'string',
+        'i' => 'string',
+        'd' => 'string',
+        'k' => 'string',
+        'r' => 'string',
+        'x' => 'string',
+        'b' => 'integer',
+        'c' => 'integer',
+        'h' => 'integer',
+        'n' => 'integer',
+        'o' => 'integer',
+        's' => 'integer',
+        'v' => 'integer',
+        'y' => 'integer',
+        'g' => 'boolean',
+        'l' => 'boolean',
+        'm' => 'boolean',
+        'p' => 'boolean',
+        'u' => 'boolean',
     );
 
     /**
      * @Route("/search", name="cards_search", methods={"GET"})
+     * @param int $cacheExpiration
+     * @param CardsData $cardsData
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function formAction()
+    public function formAction(int $cacheExpiration, CardsData $cardsData, TranslatorInterface $translator)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $dbh = $this->getDoctrine()->getConnection();
 
-        $packs = $this->get(CardsData::class)->allsetsdata();
+        $packs = $cardsData->allsetsdata();
 
         $cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
         $types = $this->getDoctrine()->getRepository(Type::class)->findAll();
@@ -117,7 +126,7 @@ class SearchController extends Controller
         }, $list_illustrators);
 
         return $this->render('Search/searchform.html.twig', array(
-                "pagetitle" => $this->get("translator")->trans('search.title'),
+                "pagetitle" => $translator->trans('search.title'),
                 "pagedescription" => "Find all the cards of the game, easily searchable.",
                 "packs" => $packs,
                 "cycles" => $cycles,
@@ -132,9 +141,12 @@ class SearchController extends Controller
      * @Route("/card/{card_code}", name="cards_zoom", methods={"GET"}, requirements={"card_code"="\d+"})
      * @param string $card_code
      * @param Request $request
+     * @param string $gameName
+     * @param string $publisherName
      * @return Response
+     * @throws NonUniqueResultException
      */
-    public function zoomAction($card_code, Request $request)
+    public function zoomAction($card_code, Request $request, string $gameName, string $publisherName)
     {
         /* @var CardInterface $card */
         $card = $this->getDoctrine()->getRepository(Card::class)->findByCode($card_code);
@@ -142,17 +154,14 @@ class SearchController extends Controller
             throw $this->createNotFoundException('Sorry, this card is not in the database (yet?)');
         }
 
-        $game_name = $this->container->getParameter('game_name');
-        $publisher_name = $this->container->getParameter('publisher_name');
-
         $meta = $card->getName()
              . ", a "
             . $card->getFaction()->getName()
             . " "
             . $card->getType()->getName()
-            . " card for $game_name from the set "
+            . " card for ${gameName} from the set "
             . $card->getPack()->getName()
-            . " published by $publisher_name.";
+            . " published by ${publisherName}.";
 
         return $this->forward(
             'App\Controller\SearchController:displayAction',
@@ -180,22 +189,29 @@ class SearchController extends Controller
      * @param string $sort
      * @param int $page
      * @param Request $request
+     * @param string $gameName
+     * @param string $publisherName
      * @return Response
      */
-    public function listAction($pack_code, $view, $sort, $page, Request $request)
-    {
+    public function listAction(
+        $pack_code,
+        $view,
+        $sort,
+        $page,
+        Request $request,
+        string $gameName,
+        string $publisherName
+    ) {
         /* @var PackInterface $pack */
         $pack = $this->getDoctrine()->getRepository(Pack::class)->findByCode($pack_code);
         if (!$pack) {
             throw $this->createNotFoundException('This pack does not exist');
         }
 
-        $game_name = $this->container->getParameter('game_name');
-        $publisher_name = $this->container->getParameter('publisher_name');
 
-        $meta = $pack->getName().", a set of cards for $game_name"
+        $meta = $pack->getName().", a set of cards for ${gameName}"
                 .($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
-                ." by $publisher_name.";
+                ." by ${publisherName}.";
 
         $key = array_search('pack', SearchController::$searchKeys);
 
@@ -226,19 +242,25 @@ class SearchController extends Controller
      * @param string $sort
      * @param int $page
      * @param Request $request
+     * @param string $gameName
+     * @param string $publisherName
      * @return Response
      */
-    public function cycleAction($cycle_code, $view, $sort, $page, Request $request)
-    {
+    public function cycleAction(
+        $cycle_code,
+        $view,
+        $sort,
+        $page,
+        Request $request,
+        string $gameName,
+        string $publisherName
+    ) {
         $cycle = $this->getDoctrine()->getRepository(Cycle::class)->findOneBy(array("code" => $cycle_code));
         if (!$cycle) {
             throw $this->createNotFoundException('This cycle does not exist');
         }
 
-        $game_name = $this->container->getParameter('game_name');
-        $publisher_name = $this->container->getParameter('publisher_name');
-
-        $meta = $cycle->getName().", a cycle of datapack for $game_name published by $publisher_name.";
+        $meta = $cycle->getName().", a cycle of datapack for ${gameName} published by ${publisherName}.";
 
         $key = array_search('cycle', SearchController::$searchKeys);
 
@@ -315,9 +337,11 @@ class SearchController extends Controller
      * Processes the action of the single card search input
      * @Route("/find", name="cards_find", methods={"GET"})
      * @param Request $request
+     * @param CardsData $cardsData
+     * @param RouterInterface $router
      * @return RedirectResponse|Response
      */
-    public function findAction(Request $request)
+    public function findAction(Request $request, CardsData $cardsData, RouterInterface $router)
     {
         $q = $request->query->get('q');
         $page = $request->query->get('page') ?: 1;
@@ -325,10 +349,10 @@ class SearchController extends Controller
         $sort = $request->query->get('sort') ?: 'name';
 
         // we may be able to redirect to a better url if the search is on a single set
-        $conditions = $this->get(CardsData::class)->syntax($q);
+        $conditions = $cardsData->syntax($q);
         if (count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
             if ($conditions[0][0] == array_search('pack', SearchController::$searchKeys)) {
-                $url = $this->get('router')->generate(
+                $url = $router->generate(
                     'cards_list',
                     array(
                         'pack_code' => $conditions[0][2],
@@ -345,7 +369,7 @@ class SearchController extends Controller
                     ->getRepository(Cycle::class)
                     ->findOneBy(array('position' => $cycle_position));
                 if ($cycle) {
-                    $url = $this->get('router')->generate(
+                    $url = $router->generate(
                         'cards_cycle',
                         array(
                             'cycle_code' => $cycle->getCode(),
@@ -373,11 +397,34 @@ class SearchController extends Controller
         );
     }
 
-    public function displayAction(Request $request, $q, $sort, $view = "card", $page = 1, $pagetitle = "", $meta = "")
-    {
+    /**
+     * @todo Replace this forwarding target with non-action helper method. [ST 2020/08/09]
+     * @param string $cacheExpiration
+     * @param CardsData $cardsData
+     * @param RouterInterface $router
+     * @param $q
+     * @param $sort
+     * @param string $view
+     * @param int $page
+     * @param string $pagetitle
+     * @param string $meta
+     * @return Response|null
+     * @throws Exception
+     */
+    public function displayAction(
+        string $cacheExpiration,
+        CardsData $cardsData,
+        RouterInterface $router,
+        $q,
+        $sort,
+        $view = "card",
+        $page = 1,
+        $pagetitle = "",
+        $meta = ""
+    ) {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         static $availability = [];
 
@@ -399,12 +446,12 @@ class SearchController extends Controller
             $view = 'list';
         }
 
-        $conditions = $this->get(CardsData::class)->syntax($q);
-        $conditions = $this->get(CardsData::class)->validateConditions($conditions);
+        $conditions = $cardsData->syntax($q);
+        $conditions = $cardsData->validateConditions($conditions);
 
         // reconstruction de la bonne chaine de recherche pour affichage
-        $q = $this->get(CardsData::class)->buildQueryFromConditions($conditions);
-        if ($q && $rows = $this->get(CardsData::class)->getSearchRows($conditions, $sort)) {
+        $q = $cardsData->buildQueryFromConditions($conditions);
+        if ($q && $rows = $cardsData->getSearchRows($conditions, $sort)) {
             if (count($rows) == 1) {
                 $includeReviews = true;
             }
@@ -435,7 +482,6 @@ class SearchController extends Controller
             $nb_per_page = $pagesizes[$view];
             $first = $nb_per_page * ($page - 1);
             if ($first > count($rows)) {
-                $page = 1;
                 $first = 0;
             }
             $last = $first + $nb_per_page;
@@ -444,7 +490,7 @@ class SearchController extends Controller
             for ($rowindex = $first; $rowindex < $last && $rowindex < count($rows); $rowindex++) {
                 $card = $rows[$rowindex];
                 $pack = $card->getPack();
-                $cardinfo = $this->get(CardsData::class)->getCardInfo($card, false, null);
+                $cardinfo = $cardsData->getCardInfo($card, false, null);
                 if (empty($availability[$pack->getCode()])) {
                     $availability[$pack->getCode()] = false;
                     if ($pack->getDateRelease() && $pack->getDateRelease() <= new DateTime()) {
@@ -453,7 +499,7 @@ class SearchController extends Controller
                 }
                 $cardinfo['available'] = $availability[$pack->getCode()];
                 if ($includeReviews) {
-                    $cardinfo['reviews'] = $this->get(CardsData::class)->getReviews($card);
+                    $cardinfo['reviews'] = $cardsData->getReviews($card);
                 }
                 $cards[] = $cardinfo;
             }
@@ -463,9 +509,9 @@ class SearchController extends Controller
             // si on a des cartes on affiche une bande de navigation/pagination
             if (count($rows)) {
                 if (count($rows) == 1) {
-                    $pagination = $this->setnavigation($card, $q, $view, $sort);
+                    $pagination = $this->setnavigation($router, $card);
                 } else {
-                    $pagination = $this->pagination($nb_per_page, count($rows), $first, $q, $view, $sort);
+                    $pagination = $this->pagination($router, $nb_per_page, count($rows), $first, $q, $view, $sort);
                 }
             }
 
@@ -520,37 +566,41 @@ class SearchController extends Controller
         ), $response);
     }
 
-    public function setnavigation($card, $q, $view, $sort)
+    /**
+     * @param RouterInterface $router
+     * @param CardInterface $card
+     * @return string
+     * @throws NonUniqueResultException
+     */
+    protected function setnavigation(RouterInterface $router, CardInterface $card)
     {
         $repo = $this->getDoctrine()->getRepository(Card::class);
         $prev = $repo->findPreviousCard($card);
         $next = $repo->findNextCard($card);
         return $this->renderView('Search/setnavigation.html.twig', array(
                 "prevtitle" => $prev ? $prev->getName() : "",
-                "prevhref" => $prev ? $this->get('router')
-                    ->generate(
-                        'cards_zoom',
-                        array('card_code' => $prev->getCode())
-                    ) : "",
+                "prevhref" => $prev ? $router->generate('cards_zoom', ['card_code' => $prev->getCode()]) : "",
                 "nexttitle" => $next ? $next->getName() : "",
-                "nexthref" => $next ? $this->get('router')
-                    ->generate(
-                        'cards_zoom',
-                        array('card_code' => $next->getCode())
-                    ) : "",
+                "nexthref" => $next ? $router->generate('cards_zoom', ['card_code' => $next->getCode()]) : "",
                 "settitle" => $card->getPack()->getName(),
-                "sethref" => $this->get('router')
-                    ->generate(
-                        'cards_list',
-                        array('pack_code' => $card->getPack()->getCode())
-                    ),
+                "sethref" => $router->generate('cards_list', ['pack_code' => $card->getPack()->getCode()]),
         ));
     }
 
-    public function paginationItem($q, $v, $s, $ps, $pi, $total)
+    /**
+     * @param RouterInterface $router
+     * @param $q
+     * @param $v
+     * @param $s
+     * @param $ps
+     * @param $pi
+     * @param $total
+     * @return string
+     */
+    protected function paginationItem(RouterInterface $router, $q, $v, $s, $ps, $pi, $total)
     {
         return $this->renderView('Search/paginationitem.html.twig', array(
-            "href" => $q == null ? "" : $this->get('router')
+            "href" => $q == null ? "" : $router
                 ->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'page' => $pi)),
             "ps" => $ps,
             "pi" => $pi,
@@ -559,7 +609,17 @@ class SearchController extends Controller
         ));
     }
 
-    public function pagination($pagesize, $total, $current, $q, $view, $sort)
+    /**
+     * @param RouterInterface $router
+     * @param $pagesize
+     * @param $total
+     * @param $current
+     * @param $q
+     * @param $view
+     * @param $sort
+     * @return string
+     */
+    protected function pagination(RouterInterface $router, $pagesize, $total, $current, $q, $view, $sort)
     {
         if ($total < $pagesize) {
             $pagesize = $total;
@@ -570,24 +630,24 @@ class SearchController extends Controller
 
         $first = "";
         if ($pageindex > 2) {
-            $first = $this->paginationItem($q, $view, $sort, $pagesize, 1, $total);
+            $first = $this->paginationItem($router, $q, $view, $sort, $pagesize, 1, $total);
         }
 
         $prev = "";
         if ($pageindex > 1) {
-            $prev = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex - 1, $total);
+            $prev = $this->paginationItem($router, $q, $view, $sort, $pagesize, $pageindex - 1, $total);
         }
 
-        $current = $this->paginationItem(null, $view, $sort, $pagesize, $pageindex, $total);
+        $current = $this->paginationItem($router, null, $view, $sort, $pagesize, $pageindex, $total);
 
         $next = "";
         if ($pageindex < $pagecount) {
-            $next = $this->paginationItem($q, $view, $sort, $pagesize, $pageindex + 1, $total);
+            $next = $this->paginationItem($router, $q, $view, $sort, $pagesize, $pageindex + 1, $total);
         }
 
         $last = "";
         if ($pageindex < $pagecount - 1) {
-            $last = $this->paginationItem($q, $view, $sort, $pagesize, $pagecount, $total);
+            $last = $this->paginationItem($router, $q, $view, $sort, $pagesize, $pagecount, $total);
         }
 
         return $this->renderView('Search/pagination.html.twig', array(

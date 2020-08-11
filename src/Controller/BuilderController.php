@@ -14,23 +14,32 @@ use App\Entity\FactionInterface;
 use App\Entity\Pack;
 use App\Entity\Tournament;
 use App\Entity\UserInterface;
+use App\Services\AgendaHelper;
+use App\Services\DeckImportService;
+use App\Services\DeckManager;
+use App\Services\Diff;
+use App\Services\Texts;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @package App\Controller
  */
-class BuilderController extends Controller
+class BuilderController extends AbstractController
 {
     /**
      * @const EXCLUDED_AGENDAS Codes of agendas that should not be available for selection in the new deck wizard.
@@ -46,13 +55,15 @@ class BuilderController extends Controller
 
     /**
      * @Route("/deck/new", name="deck_buildform", methods={"GET"})
+     * @param int $cacheExpiration
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function buildformAction()
+    public function buildformAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
 
         $em = $this->getDoctrine()->getManager();
@@ -63,7 +74,7 @@ class BuilderController extends Controller
         return $this->render(
             'Builder/initbuild.html.twig',
             [
-                'pagetitle' => $this->get('translator')->trans('decks.form.new'),
+                'pagetitle' => $translator->trans('decks.form.new'),
                 'factions' => $factions,
                 'agendas' => $agendas,
             ],
@@ -74,14 +85,21 @@ class BuilderController extends Controller
     /**
      * @Route("/deck/build", name="deck_initbuild", methods={"POST"})
      * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param SessionInterface $session
+     * @param RouterInterface $router
+     * @param AgendaHelper $agendaHelper
      * @return RedirectResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function initbuildAction(Request $request)
-    {
-        $translator = $this->get('translator');
-
+    public function initbuildAction(
+        Request $request,
+        TranslatorInterface $translator,
+        SessionInterface $session,
+        RouterInterface $router,
+        AgendaHelper $agendaHelper
+    ) {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
@@ -89,14 +107,14 @@ class BuilderController extends Controller
         $agenda_code = $request->request->get('agenda');
 
         if (!$faction_code) {
-            $this->get('session')->getFlashBag()->set('error', $translator->trans("decks.build.errors.nofaction"));
+            $session->getFlashBag()->set('error', $translator->trans("decks.build.errors.nofaction"));
 
             return $this->redirect($this->generateUrl('deck_buildform'));
         }
 
         $faction = $em->getRepository(Faction::class)->findByCode($faction_code);
         if (!$faction) {
-            $this->get('session')->getFlashBag()->set('error', $translator->trans("decks.build.errors.nofaction"));
+            $session->getFlashBag()->set('error', $translator->trans("decks.build.errors.nofaction"));
 
             return $this->redirect($this->generateUrl('deck_buildform'));
         }
@@ -121,9 +139,8 @@ class BuilderController extends Controller
                 )
             );
             $pack = $agenda->getPack();
-            $tags[] = $this->get('agenda_helper')->getMinorFactionCode($agenda);
+            $tags[] = $agendaHelper->getMinorFactionCode($agenda);
         }
-
 
         /** @var UserInterface $user */
         $user = $this->getUser();
@@ -148,18 +165,19 @@ class BuilderController extends Controller
         $em->persist($deck);
         $em->flush();
 
-        return $this->redirect($this->get('router')->generate('deck_edit', ['deck_uuid' => $deck->getUuid()]));
+        return $this->redirect($router->generate('deck_edit', ['deck_uuid' => $deck->getUuid()]));
     }
 
     /**
      * @Route("/deck/import", name="deck_import", methods={"GET"})
+     * @param int $cacheExpiration
      * @return Response
      */
-    public function importAction()
+    public function importAction(int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
-        $response->setMaxAge($this->container->getParameter('cache_expiration'));
+        $response->setMaxAge($cacheExpiration);
 
         $factions = $this->getDoctrine()->getRepository(Faction::class)->findAll();
 
@@ -181,11 +199,13 @@ class BuilderController extends Controller
     /**
      * @Route("/deck/fileimport", name="deck_fileimport", methods={"POST"})
      * @param Request $request
+     * @param DeckImportService $deckImportService
+     * @param DeckManager $deckManager
      * @return RedirectResponse|Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function fileimportAction(Request $request)
+    public function fileimportAction(Request $request, DeckImportService $deckImportService, DeckManager $deckManager)
     {
         $uploadedFile = $request->files->get('upfile');
         if (!isset($uploadedFile)) {
@@ -209,8 +229,7 @@ class BuilderController extends Controller
             }
         }
 
-        $service = $this->get('deck_import_service');
-        $data = $service->parseTextImport(file_get_contents($filename));
+        $data = $deckImportService->parseTextImport(file_get_contents($filename));
 
         if (empty($data['faction'])) {
             return $this->render(
@@ -224,7 +243,7 @@ class BuilderController extends Controller
         $deck = new Deck();
         $deck->setUuid(Uuid::uuid4());
 
-        $this->get('deck_manager')->save(
+        $deckManager->save(
             $this->getUser(),
             $deck,
             null,
@@ -249,10 +268,11 @@ class BuilderController extends Controller
      *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
      * )
      * @param Request $request
+     * @param Texts $texts
      * @param string $deck_uuid
      * @return Response
      */
-    public function downloadAction(Request $request, $deck_uuid)
+    public function downloadAction(Request $request, Texts $texts, $deck_uuid)
     {
         /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
@@ -273,14 +293,14 @@ class BuilderController extends Controller
 
         switch ($format) {
             case 'octgn':
-                return $this->downloadInOctgnFormat($deck);
+                return $this->downloadInOctgnFormat($deck, $texts);
                 break;
             case 'text_cycle':
-                return $this->downloadInTextFormatSortedByCycle($deck);
+                return $this->downloadInTextFormatSortedByCycle($deck, $texts);
                 break;
             case 'text':
             default:
-                return $this->downloadInDefaultTextFormat($deck);
+                return $this->downloadInDefaultTextFormat($deck, $texts);
         }
     }
 
@@ -329,11 +349,12 @@ class BuilderController extends Controller
     /**
      * @Route("/deck/save", name="deck_save", methods={"POST"})
      * @param Request $request
+     * @param DeckManager $deckManager
      * @return RedirectResponse|Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function saveAction(Request $request)
+    public function saveAction(Request $request, DeckManager $deckManager)
     {
 
         /* @var EntityManager $em*/
@@ -369,7 +390,7 @@ class BuilderController extends Controller
         $cancel_edits = (boolean)filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if ($cancel_edits) {
             if ($deck) {
-                $this->get('deck_manager')->revert($deck);
+                $deckManager->revert($deck);
             }
 
             return $this->redirect($this->generateUrl('decks_list'));
@@ -391,7 +412,7 @@ class BuilderController extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('deck_manager')->save(
+        $deckManager->save(
             $this->getUser(),
             $deck,
             $decklist_id,
@@ -410,11 +431,12 @@ class BuilderController extends Controller
     /**
      * @Route("/deck/delete", name="deck_delete", methods={"POST"})
      * @param Request $request
+     * @param SessionInterface $session
      * @return RedirectResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteAction(Request $request)
+    public function deleteAction(Request $request, SessionInterface $session)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -436,9 +458,7 @@ class BuilderController extends Controller
         $em->remove($deck);
         $em->flush();
 
-        $this->get('session')
-            ->getFlashBag()
-            ->set('notice', "Deck deleted.");
+        $session->getFlashBag()->set('notice', "Deck deleted.");
 
         return $this->redirect($this->generateUrl('decks_list'));
     }
@@ -446,11 +466,12 @@ class BuilderController extends Controller
     /**
      * @Route("/deck/delete_list", name="deck_delete_list", methods={"POST"})
      * @param Request $request
+     * @param SessionInterface $session
      * @return RedirectResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteListAction(Request $request)
+    public function deleteListAction(Request $request, SessionInterface $session)
     {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -474,10 +495,7 @@ class BuilderController extends Controller
         }
         $em->flush();
 
-        $this->get('session')
-            ->getFlashBag()
-            ->set('notice', "Decks deleted.");
-
+        $session->getFlashBag()->set('notice', "Decks deleted.");
         return $this->redirect($this->generateUrl('decks_list'));
     }
 
@@ -578,9 +596,10 @@ class BuilderController extends Controller
      * )
      * @param string $deck1_uuid
      * @param string $deck2_uuid
+     * @param Diff $diff
      * @return Response
      */
-    public function compareAction($deck1_uuid, $deck2_uuid)
+    public function compareAction($deck1_uuid, $deck2_uuid, Diff $diff)
     {
         $repo = $this->getDoctrine()->getManager()->getRepository(Deck::class);
 
@@ -623,19 +642,8 @@ class BuilderController extends Controller
             );
         }
 
-        $plotIntersection = $this->get('diff')->getSlotsDiff(
-            [
-                $deck1->getSlots()->getPlotDeck(),
-                $deck2->getSlots()->getPlotDeck(),
-            ]
-        );
-
-        $drawIntersection = $this->get('diff')->getSlotsDiff(
-            [
-                $deck1->getSlots()->getDrawDeck(),
-                $deck2->getSlots()->getDrawDeck(),
-            ]
-        );
+        $plotIntersection = $diff->getSlotsDiff([$deck1->getSlots()->getPlotDeck(), $deck2->getSlots()->getPlotDeck()]);
+        $drawIntersection = $diff->getSlotsDiff([$deck1->getSlots()->getDrawDeck(), $deck2->getSlots()->getDrawDeck()]);
 
         return $this->render(
             'Compare/deck_compare.html.twig',
@@ -650,14 +658,16 @@ class BuilderController extends Controller
 
     /**
      * @Route("/decks", name="decks_list", methods={"GET"})
+     * @param DeckManager $deckManager
+     * @param TranslatorInterface $translator
      * @return Response
      */
-    public function listAction()
+    public function listAction(DeckManager $deckManager, TranslatorInterface $translator)
     {
         /* @var UserInterface $user */
         $user = $this->getUser();
 
-        $decks = $this->get('deck_manager')->getByUser($user);
+        $decks = $deckManager->getByUser($user);
 
         /* @todo refactor this out, use DQL not raw SQL [ST 2019/04/04] */
         $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
@@ -675,7 +685,7 @@ class BuilderController extends Controller
             return $this->render(
                 'Builder/decks.html.twig',
                 array(
-                    'pagetitle' => $this->get("translator")->trans('nav.mydecks'),
+                    'pagetitle' => $translator->trans('nav.mydecks'),
                     'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
                     'decks' => $decks,
                     'tags' => $tags,
@@ -689,7 +699,7 @@ class BuilderController extends Controller
             return $this->render(
                 'Builder/no-decks.html.twig',
                 array(
-                    'pagetitle' => $this->get("translator")->trans('nav.mydecks'),
+                    'pagetitle' => $translator->trans('nav.mydecks'),
                     'pagedescription' => "Create custom decks with the help of a powerful deckbuilder.",
                     'nbmax' => $user->getMaxNbDecks(),
                     'tournaments' => $tournaments,
@@ -730,11 +740,12 @@ class BuilderController extends Controller
     /**
      * @Route("/deck/autosave", name="deck_autosave", methods={"POST"})
      * @param Request $request
+     * @param LoggerInterface $logger
      * @return Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function autosaveAction(Request $request)
+    public function autosaveAction(Request $request, LoggerInterface $logger)
     {
         $user = $this->getUser();
 
@@ -754,7 +765,7 @@ class BuilderController extends Controller
 
         $diff = (array)json_decode($request->get('diff'));
         if (count($diff) != 2) {
-            $this->get('logger')->error("cannot use diff", $diff);
+            $logger->error("cannot use diff", $diff);
             throw new BadRequestHttpException("Wrong content ".json_encode($diff));
         }
 
@@ -773,9 +784,10 @@ class BuilderController extends Controller
 
     /**
      * @param DeckInterface $deck
+     * @param Texts $texts
      * @return Response
      */
-    protected function downloadInOctgnFormat(DeckInterface $deck)
+    protected function downloadInOctgnFormat(DeckInterface $deck, Texts $texts)
     {
         $content = $this->renderView(
             'Export/octgn.xml.twig',
@@ -790,7 +802,7 @@ class BuilderController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($deck->getName()).'.o8d'
+                $texts->slugify($deck->getName()).'.o8d'
             )
         );
 
@@ -801,9 +813,10 @@ class BuilderController extends Controller
 
     /**
      * @param DeckInterface $deck
+     * @param Texts $texts
      * @return Response
      */
-    protected function downloadInDefaultTextFormat(DeckInterface $deck)
+    protected function downloadInDefaultTextFormat(DeckInterface $deck, Texts $texts)
     {
         $content = $this->renderView(
             'Export/default.txt.twig',
@@ -819,7 +832,7 @@ class BuilderController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($deck->getName()).'.txt'
+                $texts->slugify($deck->getName()).'.txt'
             )
         );
 
@@ -830,9 +843,10 @@ class BuilderController extends Controller
 
     /**
      * @param DeckInterface $deck
+     * @param Texts $texts
      * @return Response
      */
-    protected function downloadInTextFormatSortedByCycle(DeckInterface $deck)
+    protected function downloadInTextFormatSortedByCycle(DeckInterface $deck, Texts $texts)
     {
         $content = $this->renderView(
             'Export/sortedbycycle.txt.twig',
@@ -848,7 +862,7 @@ class BuilderController extends Controller
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $this->get('texts')->slugify($deck->getName()).'.txt'
+                $texts->slugify($deck->getName()).'.txt'
             )
         );
 

@@ -30,3 +30,6 @@
 /public/css
 /public/manifest.json
 /public/js
+
+#ignore output dir of HTMLPurifier
+/src/URI

@@ -9,9 +9,11 @@ use App\Entity\FactionInterface;
 use App\Entity\Tournament;
 use App\Entity\TournamentInterface;
 use App\Entity\UserInterface;
+use App\Services\DecklistFactory;
+use App\Services\DeckManager;
 use Exception;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Nelmio\ApiDocBundle\Annotation\Operation;
@@ -23,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @package App\Controller
  */
-class Oauth2Controller extends Controller
+class Oauth2Controller extends AbstractController
 {
     /**
      * @Route("/api/oauth2/user", name="api_oauth2_user", methods={"GET"}, options={"i18n" = false})
@@ -214,9 +216,11 @@ class Oauth2Controller extends Controller
      * )
      *
      *
+     * @param int $id
      * @param Request $request
+     * @param DeckManager $deckManager
      */
-    public function saveDeckAction($id, Request $request)
+    public function saveDeckAction($id, Request $request, DeckManager $deckManager)
     {
         if (!$id) {
             $deck = new Deck();
@@ -284,7 +288,7 @@ class Oauth2Controller extends Controller
         $description = trim($request->get('description'));
         $tags = filter_var($request->get('tags'), FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 
-        $this->get('deck_manager')->save(
+        $deckManager->save(
             $this->getUser(),
             $deck,
             $decklist_id,
@@ -349,9 +353,10 @@ class Oauth2Controller extends Controller
      *
      * @param int $id
      * @param Request $request
+     * @param DecklistFactory $decklistFactory
      * @return Response $response
      */
-    public function publishDeckAction($id, Request $request)
+    public function publishDeckAction($id, Request $request, DecklistFactory $decklistFactory)
     {
         /* @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
@@ -386,7 +391,7 @@ class Oauth2Controller extends Controller
             : null;
 
         try {
-            $decklist = $this->get('decklist_factory')->createDecklistFromDeck($deck, $name, $descriptionMd);
+            $decklist = $decklistFactory->createDecklistFromDeck($deck, $name, $descriptionMd);
         } catch (Exception $e) {
             return new JsonResponse([
                 'success' => false,

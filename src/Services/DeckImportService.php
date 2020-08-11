@@ -7,6 +7,7 @@ use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Description of DeckImportService
@@ -15,17 +16,17 @@ use Doctrine\ORM\EntityManager;
  */
 class DeckImportService
 {
-    /**
-     *
-     * @var EntityManager
-     */
-    public $em;
+    public EntityManagerInterface $em;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
 
+    /**
+     * @param string $text
+     * @return array
+     */
     public function parseTextImport($text)
     {
         $data = [

@@ -13,23 +13,17 @@ use Parsedown;
  */
 class Texts
 {
-    /**
-     * @var HTMLPurifier
-     */
-    protected $purifier;
+    protected HTMLPurifier $purifier;
 
-    /**
-     * @var Parsedown
-     */
-    protected $parsedown;
+    protected Parsedown $parsedown;
 
     /**
      * Texts constructor.
-     * @param string $root_dir
+     * @param string $kernelRootDirectory
      */
-    public function __construct($root_dir)
+    public function __construct($kernelRootDirectory)
     {
-        $config = HTMLPurifier_Config::create(array('Cache.SerializerPath' => $root_dir));
+        $config = HTMLPurifier_Config::create(array('Cache.SerializerPath' => $kernelRootDirectory));
         $def = $config->getHTMLDefinition(true);
         $def->addAttribute('a', 'data-code', 'Text');
         $this->purifier = new HTMLPurifier($config);

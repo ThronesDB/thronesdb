@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Model;
+namespace App\Classes;
 
-use App\Classes\BannedListChecker;
-use App\Classes\RestrictedListChecker;
 use App\Entity\DecklistslotInterface;
 use App\Entity\PackInterface;
 use App\Entity\SlotInterface;
