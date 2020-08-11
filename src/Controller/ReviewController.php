@@ -15,7 +15,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
-use FOS\UserBundle\Mailer\MailerInterface;
+use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -383,13 +383,13 @@ class ReviewController extends AbstractController
     /**
      * @Route("/review/comment", name="card_reviewcomment_post", methods={"POST"})
      * @param Request $request
-     * @param MailerInterface $mailer
+     * @param Swift_Mailer $mailer
      * @param string $emailSenderAddress
      * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function commentAction(Request $request, MailerInterface $mailer, string $emailSenderAddress)
+    public function commentAction(Request $request, Swift_Mailer $mailer, string $emailSenderAddress)
     {
         /* @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();

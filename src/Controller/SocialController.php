@@ -28,8 +28,8 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
-use FOS\UserBundle\Mailer\MailerInterface;
 use PDO;
+use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -806,14 +806,14 @@ class SocialController extends AbstractController
      *
      * @param Request $request
      * @param Texts $texts
-     * @param MailerInterface $mailer
+     * @param Swift_Mailer $mailer
      * @param string $emailSenderAddress
      * @return RedirectResponse
      */
     public function commentAction(
         Request $request,
         Texts $texts,
-        MailerInterface $mailer,
+        Swift_Mailer $mailer,
         string $emailSenderAddress
     ) {
         /* @var UserInterface $user */

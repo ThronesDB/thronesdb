@@ -11,9 +11,8 @@ use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Mailer\Mailer;
-use FOS\UserBundle\Mailer\MailerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
+use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -232,7 +231,7 @@ class UserController extends AbstractController
      * @Route("/user/remind/{username}", name="remind_email", methods={"GET"})
      *
      * @param UserManagerInterface $userManager
-     * @param MailerInterface $mailer
+     * @param Swift_Mailer $mailer
      * @param SessionInterface $session
      * @param RouterInterface $router
      * @param string $username
@@ -240,7 +239,7 @@ class UserController extends AbstractController
      */
     public function remindAction(
         UserManagerInterface $userManager,
-        MailerInterface $mailer,
+        Swift_Mailer $mailer,
         SessionInterface $session,
         RouterInterface $router,
         $username
