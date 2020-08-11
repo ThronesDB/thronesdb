@@ -77,5 +77,8 @@ services:
     App\Services\DataimportFileLocator:
         arguments: ['%kernel.root_dir%']
 
+    App\Services\DeckManager:
+        shared: false
+
     App\Services\Texts:
         arguments: ["%kernel.root_dir%"]
