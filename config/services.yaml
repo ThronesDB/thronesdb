@@ -43,6 +43,7 @@ services:
         bind:
             $cacheExpiration: '%cache_expiration%'
             $emailSenderAddress: '%email_sender_address%'
+            $kernelRootDirectory: '%kernel.root_dir%'
             $gameName: '%game_name%'
             $publisherName: '%publisher_name%'
 
@@ -74,11 +75,5 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onCoreException, priority: 1000 }
 
     # Services
-    App\Services\DataimportFileLocator:
-        arguments: ['%kernel.root_dir%']
-
     App\Services\DeckManager:
         shared: false
-
-    App\Services\Texts:
-        arguments: ["%kernel.root_dir%"]
