@@ -584,7 +584,7 @@ class SocialController extends AbstractController
      *     methods={"GET"},
      *     defaults={"type"="popular", "page"=1},
      *     requirements={
-     *         "type"="find|favorites|mine|recent|hottopics|tournament|popular",
+     *         "type"="find|favorites|mine|recent|halloffame|hottopics|tournament|popular",
      *         "page"="\d+"
      *     }
      * )
