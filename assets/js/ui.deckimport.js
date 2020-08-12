@@ -4,7 +4,7 @@
 {
     ui.on_content_change = function on_content_change(event)
     {
-        var text = $(content).val(),
+        var text = $('#content').val(),
                 slots = {},
                 faction_code,
                 faction_name;
