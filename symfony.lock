@@ -1,17 +1,5 @@
 {
-    "paragonie/random_compat": {
-        "version": "v2.0.18"
-    },
     "php": {
         "version": "7.4"
-    },
-    "symfony/polyfill-ctype": {
-        "version": "v1.18.1"
-    },
-    "symfony/polyfill-iconv": {
-        "version": "v1.18.1"
-    },
-    "symfony/polyfill-php70": {
-        "version": "v1.18.1"
     }
 }
