@@ -48,7 +48,6 @@
     "justinrainbow/json-schema": "^5.2",
     "mockery/mockery": "^1.2",
     "phpstan/phpstan": "^0.12.31",
-    "phpunit/phpunit": "^7",
     "squizlabs/php_codesniffer": "@stable",
     "symfony/browser-kit": "@stable",
     "symfony/phpunit-bridge": "^5.1"
