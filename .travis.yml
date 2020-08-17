@@ -47,4 +47,4 @@ script:
   # run unit tests
   - ./bin/phpunit --exclude-group=api tests
   # this runs the static code analyzer
-  - ./vendor/bin/phpstan analyse src tests
+  - ./vendor/bin/phpstan analyse --no-progress
