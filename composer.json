@@ -47,7 +47,9 @@
     "beberlei/assert": "^3.2",
     "justinrainbow/json-schema": "^5.2",
     "mockery/mockery": "^1.2",
+    "phpstan/extension-installer": "^1.0",
     "phpstan/phpstan": "^0.12.31",
+    "phpstan/phpstan-symfony": "^0.12.7",
     "squizlabs/php_codesniffer": "@stable",
     "symfony/browser-kit": "@stable",
     "symfony/phpunit-bridge": "^5.1"

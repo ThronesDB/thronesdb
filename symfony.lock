@@ -2,6 +2,12 @@
     "php": {
         "version": "7.4"
     },
+    "phpstan/extension-installer": {
+        "version": "1.0.4"
+    },
+    "phpstan/phpstan-symfony": {
+        "version": "0.12.7"
+    },
     "symfony/phpunit-bridge": {
         "version": "4.3",
         "recipe": {

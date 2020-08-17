@@ -1,7 +1,4 @@
 parameters:
-    bootstrapFiles:
-        - ./bin/.phpunit/phpunit-7.5-0/vendor/autoload.php
-    paths:
-        - src
-        - tests
+    symfony:
+        container_xml_path: var/cache/dev/srcApp_KernelDevDebugContainer.xml
     level: 0
