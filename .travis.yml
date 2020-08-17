@@ -34,8 +34,6 @@ before_script:
   - bin/console cache:clear --env=test --no-interaction
 
 script:
-  # this runs the static code analyzer
-  - ./vendor/bin/phpstan analyse src tests
   # this checks that the source code follows the Symfony Code Syntax rules
   - ./vendor/bin/phpcs --ignore=src/migrations src tests
   # this checks that the YAML config files contain no syntax errors
@@ -48,3 +46,5 @@ script:
   - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
   # run unit tests
   - ./vendor/bin/phpunit --exclude-group=api tests
+  # this runs the static code analyzer
+  - ./vendor/bin/phpstan analyse src tests
