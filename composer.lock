@@ -9926,7 +9926,7 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v5.1.4",
+            "version": "v5.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/browser-kit.git",
@@ -9999,7 +9999,7 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v5.1.4",
+            "version": "v5.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
@@ -10157,8 +10157,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "jms/i18n-routing-bundle": 0,
-        "squizlabs/php_codesniffer": 0,
-        "symfony/browser-kit": 0
+        "squizlabs/php_codesniffer": 0
     },
     "prefer-stable": false,
     "prefer-lowest": false,
