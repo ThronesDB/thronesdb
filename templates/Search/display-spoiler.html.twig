@@ -8,12 +8,13 @@
                 {% if row*3+col < cards|length %}
                     {% set card = cards[row*3+col] %}
                     <div class="col-sm-4 display-spoiler-card">
-                        <div class="faction-icon"><span
-                                    class="icon-{{ card.faction_code }} fg-{{ card.faction_code }}"></span></div>
                         <h4>
                             {% include 'Search/card-name-with-link.html.twig' %}
                         </h4>
                         <div class="card-content">
+                            <div class="faction-icon">
+                                <span class="icon-{{ card.faction_code }} fg-{{ card.faction_code }}"></span>
+                            </div>
                             {% include 'Search/card-faction.html.twig' %}
                             {% include 'Search/card-info.html.twig' %}
                             {% include 'Search/card-text.html.twig' %}
