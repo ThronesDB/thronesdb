@@ -28,8 +28,6 @@ parameters:
         zh: 中文
     supported_locales:
         - en
-        - es
-#        - de
 
 services:
     # default configuration for services in *this* file
