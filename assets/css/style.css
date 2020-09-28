@@ -124,6 +124,12 @@ footer {
 }
 .navbar-default {
     font-size: 16px;
+    background-color: #a6dcee;
+    border-color: #1d7a99;
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    background-color: #34afd8;
 }
 
 div.tags span.tag {
