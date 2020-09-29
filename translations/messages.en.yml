@@ -1,4 +1,4 @@
-slogan: A ThronesDB instance featuring revamped cards by the Design Team.
+slogan: A ThronesDB instance featuring redesigned cards by the Design Team.
 
 data_load_fail: "Unable to load the data. Click <a href='javascript:window.location.reload(true)'>here</a> to reload your page."
 login_required: You must be logged in for this operation.
