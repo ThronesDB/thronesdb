@@ -27,23 +27,37 @@
         card_line_label_tpl = _.template('<abbr class="legality <%= cls %>" title="<%= title %>" data-title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
         layouts = {},
         layout_data = {},
-        // Restricted/Banned Lists issued by The Conclave (v2.0)
+        // Restricted/Banned Lists issued by The Playtesting Team (v2.1)
         joust_restricted_list = [
+        ],
+        joust_pods = [
+        ],
+        joust_banned_list = [
+            "01119", // Doran's Game (Core)
             "02034", // Crown of Gold (TRtW)
             "02065", // Halder (NMG)
             "02091", // Raider from Pyke (CoW)
             "02092", // Iron Mines (CoW)
             "02102", // Ward (TS)
+            "03038", // To the Rose Banner! (WotN)
+            "04001", // The Dragon's Tail (AtSK)
+            "05010", // Taena Merryweather (LoCR)
+            "05049", // Littlefinger's Meddling (LoCR)
             "06004", // All Men Are Fools (AMAF)
+            "06011", // Drowned Disciple (AMAF)
             "06038", // Great Hall (GtR)
             "06039", // "The Dornishman's Wife" (GtR)
             "06040", // The Annals of Castle Black (GtR)
+            "06063", // Oldtown Informer (TRW)
             "06098", // Flea Bottom (OR)
+            "07018", // Abandoned Stronghold (WotW)
+            "08019", // The Iron Bank (TAK)
             "08080", // The King in the North (FotOG)
             "08082", // I Am No One (TFM)
             "09001", // Mace Tyrell (HoT)
             "09037", // Qotho (HoT)
             "09051", // Trade Routes (HoT)
+            "10017", // Dorne (SoD)
             "10045", // The Wars To Come (SoD)
             "10048", // Forced March (SoD)
             "10050", // Breaking Ties (SoD)
@@ -53,91 +67,32 @@
             "11034", // Meereen (TMoW)
             "11051", // Drowned God Fanatic (SoKL)
             "11061", // Meera Reed (MoD)
+            "11071", // Victarion Greyjoy (MoD)
+            "11076", // A Mission in Essos (MoD)
+            "11079", // The Free Folk (MoD)
+            "11081", // Bear Island Scout (IDP)
+            "11082", // Skagos (IDP)
+            "11085", // Three-Finger Hobb (IDP)
+            "11093", // Drogon (IDP)
             "11114", // Gifts for the Widow (DitD)
             "12002", // Euron Crow's Eye (KotI)
             "12029", // Desert Raider (KotI)
+            "12045", // Sea of Blood (KotI)
             "12046", // We Take Westeros! (KotI)
             "12047", // Return to the Fields (KotI)
             "13044", // Unexpected Guile (PoS)
+            "13079", // Kingdom of Shadows (BtRK)
             "13085", // Yoren (TB)
             "13086", // Bound for the Wall (TB)
             "13103", // The Queen's Retinue (LMHR)
+            "13118", // Valyrian Steel (LMHR)
             "14008", // Selyse Baratheon (FotS)
+            "15001", // Daenerys Targaryen (DotE)
+            "15017", // Womb of the World (DotE)
             "15030", // The Red Keep (DotE)
             "15033", // Clydas (DotE)
             "15045", // Bribery (DotE)
-            "16027", // Aloof and Apart (TTWDFL)
-        ],
-        joust_pods = [
-            {
-                name: "P1",
-                restricted: "13085", // Yoren (TB)
-                cards: [
-                    "04026", // Craven (CtA)
-                    "11085", // Three-Finger Hobb (IDP)
-                ],
-            },
-            {
-                name: "P2",
-                restricted: "11051", // Drowned God Fanatic (SoKL)
-                cards: [
-                    "06011", // Drowned Disciple (AMAF)
-                ],
-            },
-            {
-                name: "P3",
-                restricted: "11114", // Gifts for the Widow (DitD)
-                cards: [
-                    "15001", // Daenerys Targaryen (DotE)
-                ]
-            },
-            {
-                name: "P4",
-                restricted: "09037", // Qotho (HoT)
-                cards: [
-                    "15017", // Womb of the World (DotE)
-                ]
-            },
-            {
-                name: "P5",
-                restricted: "09001", // Mace Tyrell (HoT)
-                cards: [
-                    "09017", // The Hightower (HoT)
-                ]
-            },
-            {
-                name: "P6",
-                restricted: "12029", // Desert Raider (KotI)
-                cards: [
-                    "06011", // Drowned Disciple (AMAF)
-                ]
-            },
-            {
-                name: "P7",
-                restricted: "11021", // Wyman Manderly (TMoW)
-                cards: [
-                    "11081", // Bear Island Scout (IDP)
-                    "11082", // Skagos (IDP)
-                ]
-            },
-            {
-                name: "P8",
-                restricted: "06040", // The Annals of Castle Black (GtR)
-                cards: [
-                    "06063", // Oldtown Informer (TRW)
-                    "06100", // Wheels Within Wheels (OR)
-
-                ]
-            },
-        ],
-        joust_banned_list = [
-            "03038", // To the Rose Banner! (WotN)
-            "04001", // The Dragon's Tail (AtSK)
-            "05010", // Taena Merryweather (LoCR)
-            "05049", // Littlefinger's Meddling (LoCR)
-            "11076", // A Mission in Essos (MoD)
-            "12045", // Sea of Blood (KotI)
-            "13079", // Kingdom of Shadows (BtRK)
+            "15050", // At the Palace of Sorrows (DotE)
             "16001", // Ser Davos Seaworth (TTWDFL)
             "16002", // Melisandre's Favor (TTWDFL)
             "16003", // Wintertime Marauders (TTWDFL)
@@ -170,6 +125,7 @@
             "16034", // Search and Detain (TTWDFL)
             "16035", // The Art of Seduction (TTWDFL)
             "16036", // The Gathering Storm (TTWDFL)
+            "17147", // The Dragon's Tail (R)
         ],
         melee_restricted_list = [
             "01001", // A Clash of Kings (Core)
@@ -205,10 +161,66 @@
             "15045", // Bribery (DotE)
         ],
         melee_banned_list = [
+            "01119", // Doran's Game (Core)
+            "02034", // Crown of Gold (TRtW)
+            "02065", // Halder (NMG)
+            "02091", // Raider from Pyke (CoW)
+            "02092", // Iron Mines (CoW)
+            "02102", // Ward (TS)
             "03038", // To the Rose Banner! (WotN)
+            "04001", // The Dragon's Tail (AtSK)
             "05010", // Taena Merryweather (LoCR)
             "05049", // Littlefinger's Meddling (LoCR)
+            "06004", // All Men Are Fools (AMAF)
+            "06011", // Drowned Disciple (AMAF)
+            "06038", // Great Hall (GtR)
+            "06039", // "The Dornishman's Wife" (GtR)
+            "06040", // The Annals of Castle Black (GtR)
+            "06063", // Oldtown Informer (TRW)
+            "06098", // Flea Bottom (OR)
+            "07018", // Abandoned Stronghold (WotW)
+            "08019", // The Iron Bank (TAK)
+            "08080", // The King in the North (FotOG)
+            "08082", // I Am No One (TFM)
+            "09001", // Mace Tyrell (HoT)
+            "09037", // Qotho (HoT)
+            "09051", // Trade Routes (HoT)
+            "10017", // Dorne (SoD)
+            "10045", // The Wars To Come (SoD)
+            "10048", // Forced March (SoD)
+            "10050", // Breaking Ties (SoD)
+            "11012", // Nighttime Marauders (TSC)
+            "11021", // Wyman Manderly (TMoW)
+            "11033", // Hizdahr zo Loraq (TMoW)
+            "11034", // Meereen (TMoW)
+            "11051", // Drowned God Fanatic (SoKL)
+            "11061", // Meera Reed (MoD)
+            "11071", // Victarion Greyjoy (MoD)
             "11076", // A Mission in Essos (MoD)
+            "11079", // The Free Folk (MoD)
+            "11081", // Bear Island Scout (IDP)
+            "11082", // Skagos (IDP)
+            "11085", // Three-Finger Hobb (IDP)
+            "11093", // Drogon (IDP)
+            "11114", // Gifts for the Widow (DitD)
+            "12002", // Euron Crow's Eye (KotI)
+            "12029", // Desert Raider (KotI)
+            "12045", // Sea of Blood (KotI)
+            "12046", // We Take Westeros! (KotI)
+            "12047", // Return to the Fields (KotI)
+            "13044", // Unexpected Guile (PoS)
+            "13079", // Kingdom of Shadows (BtRK)
+            "13085", // Yoren (TB)
+            "13086", // Bound for the Wall (TB)
+            "13103", // The Queen's Retinue (LMHR)
+            "13118", // Valyrian Steel (LMHR)
+            "14008", // Selyse Baratheon (FotS)
+            "15001", // Daenerys Targaryen (DotE)
+            "15017", // Womb of the World (DotE)
+            "15030", // The Red Keep (DotE)
+            "15033", // Clydas (DotE)
+            "15045", // Bribery (DotE)
+            "15050", // At the Palace of Sorrows (DotE)
             "16001", // Ser Davos Seaworth (TTWDFL)
             "16002", // Melisandre's Favor (TTWDFL)
             "16003", // Wintertime Marauders (TTWDFL)
