@@ -333,9 +333,9 @@ interface CardInterface extends Serializable
     public function getImageUrl();
 
     /**
-     * @param string $imageUrl
+     * @param string|null $imageUrl
      */
-    public function setImageUrl(string $imageUrl);
+    public function setImageUrl(string $imageUrl = null);
 
     /**
      * Checks if this card has the "Shadow" keyword.

@@ -796,7 +796,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setImageUrl(string $imageUrl)
+    public function setImageUrl(string $imageUrl = null)
     {
         $this->imageUrl = $imageUrl;
     }
