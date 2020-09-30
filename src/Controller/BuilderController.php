@@ -51,6 +51,11 @@ class BuilderController extends AbstractController
         '00003', // Treaty (VDS)
         '00004', // Uniting the Seven Kingdoms (VDS)
         "00030", // The King's Voice (VHotK)
+        "10045", // The Wars To Come (SoD)
+        "11079", // The Free Folk (MoD)
+        "12045", // Sea of Blood (KotI)
+        "13079", // Kingdom of Shadows (BtRK)
+        "13118", // Valyrian Steel (LMHR)
     ];
 
     /**
