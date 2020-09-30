@@ -232,6 +232,9 @@ class ImportStdCommand extends Command
                     if (array_key_exists('errata', $item) && $item['errata']) {
                         $data['text'] .= "\n<em>Errata'd.</em>";
                     }
+                    if (array_key_exists('imageUrl', $item)) {
+                        $data['image_url'] = $item['imageUrl'];
+                    }
                     $data['traits'] = $item['traits'] ? implode('. ', $item['traits']) . '.' : '';
                     $data['type_code'] = $item['type'];
                     $data['strength'] = null;
@@ -279,7 +282,8 @@ class ImportStdCommand extends Command
                             'illustrator',
                             'traits',
                             'cost',
-                            'octgn_id'
+                            'octgn_id',
+                            'image_url'
                         ],
                         $output
                     );
