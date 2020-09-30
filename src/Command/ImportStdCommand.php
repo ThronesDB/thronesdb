@@ -257,6 +257,19 @@ class ImportStdCommand extends Command
 
                     $position++;
 
+                    $optionalProps = [
+                        'designer',
+                        'illustrator',
+                        'traits',
+                        'cost',
+                        'octgn_id',
+
+                    ];
+
+                    if (array_key_exists('image_url', $data)) {
+                        $optionalProps[] = 'image_url';
+                    }
+
                     $entity = $this->getEntityFromData(
                         Card::class,
                         $data,
@@ -277,14 +290,7 @@ class ImportStdCommand extends Command
                             'pack_code',
                             'type_code'
                         ],
-                        [
-                            'designer',
-                            'illustrator',
-                            'traits',
-                            'cost',
-                            'octgn_id',
-                            'image_url'
-                        ],
+                        $optionalProps,
                         $output
                     );
                     if ($entity) {
