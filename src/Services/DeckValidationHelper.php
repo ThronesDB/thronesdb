@@ -53,7 +53,8 @@ class DeckValidationHelper
                     $expectedPlotDeckSize = 10;
                     $expectedMaxDoublePlot = 2;
                     break;
-                case '13118': // Valyrian Steel
+                case '13118': // Valyrian Steel (BtRK)
+                case '17152': // Valyrian Steel (R)
                 case '16028': // Dark Wings, Dark Words
                     $expectedMinCardCount = 75;
                     break;
@@ -232,6 +233,8 @@ class DeckValidationHelper
                 return $this->validateTheWhiteBook($slots);
             case '13118':
                 return $this->validateValyrianSteel($slots);
+            case '17152':
+                return $this->validateRedesignedValyrianSteel($slots);
             case '16028':
                 return $this->validateDarkWingsDarkWords($slots);
             default:
@@ -410,6 +413,30 @@ class DeckValidationHelper
         foreach ($nonAttachmentSlots as $slot) {
             $names[] = $slot->getCard()->getName();
         }
+
+        $attachmentsSlots = $slots->getDrawDeck()->filterByType('attachment');
+        /* @var SlotInterface $slot */
+        foreach ($attachmentsSlots as $slot) {
+            $name = $slot->getCard()->getName();
+            if (in_array($name, $names)) {
+                return false;
+            }
+            if (1 < $slot->getQuantity()) {
+                return false;
+            }
+            $names[] = $name;
+        }
+        return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateRedesignedValyrianSteel(SlotCollectionInterface $slots): bool
+    {
+        // Your deck cannot include more than 1 copy of each attachment.
+        $names = [];
 
         $attachmentsSlots = $slots->getDrawDeck()->filterByType('attachment');
         /* @var SlotInterface $slot */

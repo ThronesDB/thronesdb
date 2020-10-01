@@ -1144,7 +1144,7 @@
             } else if (agenda && agenda.code === '10045') {
                 expectedPlotDeckSize = 10;
                 expectedMaxDoublePlot = 2;
-            } else if (agenda && ['13118', '16028'].indexOf(agenda.code) > -1) {
+            } else if (agenda && ['13118', '17152', '16028'].indexOf(agenda.code) > -1) {
                 expectedMinCardCount = 75;
             } else if (agenda && agenda.code === '16030') {
                 expectedMinCardCount = 100;
@@ -1229,6 +1229,22 @@
             for (i = 0, n = notAttachments.length; i < n; i++) {
                 names.push(notAttachments[i].name);
             }
+
+            for (i = 0, n = attachments.length; i < n; i++) {
+                if (attachments[i].indeck > 1) {
+                    return false;
+                }
+                if (-1 !== names.indexOf(attachments[i].name)) {
+                    return false;
+                }
+                names.push(attachments[i].name);
+            }
+            return true;
+        };
+        var validate_redesigned_valyrian_steel = function() {
+            var i, n;
+            var names = [];
+            var attachments = deck.get_cards(null, {type_code: 'attachment'});
 
             for (i = 0, n = attachments.length; i < n; i++) {
                 if (attachments[i].indeck > 1) {
@@ -1328,6 +1344,8 @@
                 return validate_the_white_book();
             case '13118':
                 return validate_valyrian_steel();
+            case '17152':
+                return validate_redesigned_valyrian_steel();
             case '16028':
                 return validate_dark_wings_dark_words();
         }
