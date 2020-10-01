@@ -1496,7 +1496,8 @@
                 return card.faction_code === deck.get_minor_faction_code(agenda);
             case '09045':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.maester')) !== -1;
-            case '13079':
+            case '13079': // Kingdom of Shadows (BtRK)
+            case '17148': // Kingdom of Shadows (R)
                 return card.type_code === 'character' && card_has_shadow_keyword(card, Translator.trans('card.keywords.shadow'));
             case '13099':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.kingsguard')) !== -1;

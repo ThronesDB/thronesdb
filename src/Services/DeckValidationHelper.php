@@ -182,7 +182,8 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
-            case '13079': // Kingdom of Shadows
+            case '13079': // Kingdom of Shadows (BtRK)
+            case '17148': // Kingdom of Shadows (R)
                 $langKey = $this->translator->trans('card.keywords.shadow');
                 return $card->getType()->getCode() === 'character' && $card->hasShadowKeyword($langKey);
             case '13099': // The White Book

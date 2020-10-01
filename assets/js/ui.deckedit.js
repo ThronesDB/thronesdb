@@ -194,7 +194,7 @@
         var i;
 
         // special case - for "The Conclave", "Kingdom of Shadows", and "The White Book" pre-select all factions.
-        if (agendas.length && -1 !== ["09045", "13079", "13099"].indexOf(agendas[0]['code'])) {
+        if (agendas.length && -1 !== ["09045", "13079", "17148", "13099"].indexOf(agendas[0]['code'])) {
             faction_codes = app.deck.get_all_faction_codes();
         } else {
             faction_codes = app.deck.get_minor_faction_codes();
