@@ -237,9 +237,22 @@ class DeckValidationHelper
                 return $this->validateRedesignedValyrianSteel($slots);
             case '16028':
                 return $this->validateDarkWingsDarkWords($slots);
+            case '17149':
+                return $this->validateRedesignedSeaOfBlood($slots);
             default:
                 return true;
         }
+    }
+
+    protected function validateRedesignedSeaOfBlood($slots): bool
+    {
+        $eventSlots = $slots->getDrawDeck()->filterByType('event');
+        foreach ($eventSlots as $slot) {
+            if ($slot->getCard()->getFaction()->getCode() === 'neutral') {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

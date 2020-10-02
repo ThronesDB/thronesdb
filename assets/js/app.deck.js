@@ -1211,6 +1211,10 @@
 
     deck.validate_agenda = function validate_agenda(agenda)
     {
+        var validate_redesigned_sea_of_blood = function() {
+            var neutralEvents = deck.get_cards(null, { type_code: 'event', faction_code: 'neutral' });
+            return !neutralEvents.length;
+        }
         var validate_the_white_book = function() {
             var i, n;
             var names = [];
@@ -1348,6 +1352,8 @@
                 return validate_redesigned_valyrian_steel();
             case '16028':
                 return validate_dark_wings_dark_words();
+            case '17149':
+                return validate_redesigned_sea_of_blood();
         }
         return true;
     };
