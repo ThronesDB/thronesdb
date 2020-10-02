@@ -46,10 +46,11 @@ class DeckValidationHelper
         foreach ($slots->getAgendas() as $agenda) {
             $code = $agenda->getCard()->getCode();
             switch ($code) {
-                case '05045': // The Wars To Come
+                case '05045': // "The Rains of Castamere"
                     $expectedPlotDeckSize = 12;
                     break;
-                case '10045': // "The Rains of Castamere"
+                case '10045': // The Wars To Come (SoD)
+                case '17151': // The Wars To Come (R)
                     $expectedPlotDeckSize = 10;
                     $expectedMaxDoublePlot = 2;
                     break;

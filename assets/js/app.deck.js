@@ -1141,7 +1141,7 @@
         agendas.forEach(function (agenda) {
             if (agenda && agenda.code === '05045') {
                 expectedPlotDeckSize = 12;
-            } else if (agenda && agenda.code === '10045') {
+            } else if (agenda && ['10045', '17151'].indexOf(agenda.code) > -1) {
                 expectedPlotDeckSize = 10;
                 expectedMaxDoublePlot = 2;
             } else if (agenda && ['13118', '17152', '16028'].indexOf(agenda.code) > -1) {
