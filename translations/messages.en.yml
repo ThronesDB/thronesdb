@@ -399,6 +399,7 @@ card:
     banner: Banner
     maester: Maester
     kingsguard: Kingsguard
+    wildling: Wildling
   reviews:
     title: Reviews
     none: No review yet for this card.

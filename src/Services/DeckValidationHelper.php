@@ -193,6 +193,12 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
+            case '17150': // The Free Folk (R)
+                $trait = $this->translator->trans('card.traits.wildling');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
         }
         return false;
     }
@@ -239,6 +245,8 @@ class DeckValidationHelper
                 return $this->validateDarkWingsDarkWords($slots);
             case '17149':
                 return $this->validateRedesignedSeaOfBlood($slots);
+            case '17150':
+                return $this->validateRedesignedFreeFolk($slots);
             default:
                 return true;
         }
@@ -406,6 +414,32 @@ class DeckValidationHelper
             /* @var CardInterface $card */
             $card = $slot->getCard();
             if ($card->getFaction()->getCode() !== 'neutral') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateRedesignedFreeFolk(SlotCollectionInterface $slots): bool
+    {
+        foreach ($slots->getPlotDeck()->getSlots() as $slot) {
+            /* @var CardInterface $card */
+            $card = $slot->getCard();
+            if ($card->getFaction()->getCode() !== 'neutral') {
+                return false;
+            }
+        }
+
+        foreach ($slots->getDrawDeck()->getSlots() as $slot) {
+            $trait = $this->translator->trans('card.traits.wildling');
+            $card = $slot->getCard();
+            if ($card->getFaction()->getCode() !== 'neutral'
+                && ! preg_match("/$trait\\./", $card->getTraits())) {
                 return false;
             }
         }

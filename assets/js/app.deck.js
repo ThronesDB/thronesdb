@@ -1211,6 +1211,17 @@
 
     deck.validate_agenda = function validate_agenda(agenda)
     {
+        var validate_redesigned_the_free_folk = function() {
+            var re = new RegExp(Translator.trans('card.traits.wildling') + '\\.');
+            var i, n;
+            var nonNeutralCards = deck.get_cards(null, {faction_code: { $ne: 'neutral' }});
+            for (i = 0, n = nonNeutralCards.length; i < n; i++) {
+                if (nonNeutralCards[i].type_code !== 'character' || ! re.test(nonNeutralCards[i].traits)) {
+                    return false;
+                }
+            }
+            return true;
+        }
         var validate_redesigned_sea_of_blood = function() {
             var neutralEvents = deck.get_cards(null, { type_code: 'event', faction_code: 'neutral' });
             return !neutralEvents.length;
@@ -1344,6 +1355,8 @@
                     return false;
                 }
                 break;
+            case '17150':
+                return validate_redesigned_the_free_folk();
             case '13099':
                 return validate_the_white_book();
             case '13118':
@@ -1479,12 +1492,14 @@
      */
     deck.can_include_card = function can_include_card(card)
     {
+        var agendas = deck.get_agendas();
+        var agendaCodes = agendas.map(function(agenda) { return agenda.code });
         // neutral card => yes
         if(card.faction_code === 'neutral')
             return true;
 
-        // in-house card => yes
-        if(card.faction_code === faction_code)
+        // in-house card => yes, unless agenda is redesigned "Free Folk".
+        if(card.faction_code === faction_code && (-1 === agendaCodes.indexOf('17150')))
             return true;
 
         // out-of-house and loyal => no
@@ -1492,7 +1507,7 @@
             return false;
 
         // agenda => yes
-        var agendas = deck.get_agendas();
+
         for(var i = 0; i < agendas.length; i++) {
             if(deck.card_allowed_by_agenda(agendas[i], card)) {
                 return true;
@@ -1525,6 +1540,10 @@
                 return card.type_code === 'character' && card_has_shadow_keyword(card, Translator.trans('card.keywords.shadow'));
             case '13099':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.kingsguard')) !== -1;
+            case '17150':
+                return card.faction_code === 'neutral' ||
+                  (card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.wildling')) !== -1);
+
         }
     };
 })(app.deck = {}, jQuery);

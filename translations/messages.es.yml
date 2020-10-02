@@ -398,6 +398,7 @@ card:
     banner: Estandarte
     maester: Maestre
     kingsguard: Guardia Real
+    wildling: Salvaje
   reviews:
     title: Reseñas
     none: Aún no hay reseñas para esta carta.
