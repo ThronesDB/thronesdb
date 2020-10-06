@@ -1486,9 +1486,10 @@
     {
         var agendas = deck.get_agendas();
         var agendaCodes = agendas.map(function(agenda) { return agenda.code });
-        // neutral card => yes
-        if(card.faction_code === 'neutral')
-            return true;
+        // neutral card => yes, unless the agenda is redesigned "Sea of Blood" and the card is an event.
+        if(card.faction_code === 'neutral') {
+            return !(-1 !== agendaCodes.indexOf('17149') && card.type_code === 'event');
+        }
 
         // in-house card => yes, unless agenda is redesigned "Free Folk".
         if(card.faction_code === faction_code && (-1 === agendaCodes.indexOf('17150')))
