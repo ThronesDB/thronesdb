@@ -8364,7 +8364,7 @@
         },
         {
             "name": "symfony/templating",
-            "version": "v4.4.14",
+            "version": "v4.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/templating.git",
@@ -10198,7 +10198,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "jms/i18n-routing-bundle": 0,
-        "squizlabs/php_codesniffer": 0
+        "squizlabs/php_codesniffer": 0,
+        "symfony/browser-kit": 0
     },
     "prefer-stable": false,
     "prefer-lowest": false,
