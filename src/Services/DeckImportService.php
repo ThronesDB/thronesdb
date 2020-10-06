@@ -65,10 +65,14 @@ class DeckImportService
             } elseif (preg_match('/^\s*#\d{3}\s(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
-            } elseif (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {
+            } elseif (preg_match('/^([^\(]+).*x(\d)/u', $line, $matches)) {
                 $quantity = intval($matches[2]);
                 $name = trim($matches[1]);
-            } elseif (preg_match('/^([^\(]+)/', $line, $matches)) {
+            } elseif (preg_match('/^([^\(]+) \(([^)]+)/u', $line, $matches)) {
+                $quantity = 1;
+                $name = trim($matches[1]);
+                $packNameOrCode = trim($matches[2]);
+            } elseif (preg_match('/^([^\(]+)/u', $line, $matches)) {
                 $quantity = 1;
                 $name = trim($matches[1]);
             } else {
