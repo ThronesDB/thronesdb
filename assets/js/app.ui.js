@@ -23,7 +23,11 @@
         lines.push("");
         lines.push(deck.get_faction_name());
         agendas.forEach(function(agenda) {
-            lines.push(agenda.name);
+            var title = agenda.name;
+            if (agenda.is_multiple) {
+                title = title + " (" + agenda.pack_name + ")";
+            }
+            lines.push(title);
         });
         lines.push("");
         if (included_packs.length > 1) {
