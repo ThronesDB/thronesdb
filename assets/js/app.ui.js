@@ -25,7 +25,7 @@
         agendas.forEach(function(agenda) {
             var title = agenda.name;
             if (agenda.is_multiple) {
-                title = title + " (" + agenda.pack_name + ")";
+                title = title + " (" + agenda.pack_code + ")";
             }
             lines.push(title);
         });
