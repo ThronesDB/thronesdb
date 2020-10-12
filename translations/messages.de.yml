@@ -91,6 +91,9 @@ decks:
         hint: Umschalt+Klicken um nur eine Option auszuwählen; Alt+Umschalt+Klicken um alle anderen Optionen auszuwählen.
       options:
         label: Optionen
+        hide:
+          bannedjoust: Zeige keine Karten die nicht für Tjost Turniere zugelassen sind
+          bannedmelee: Zeige keine Karten die nicht für Buhurt Turniere zugelassen sind
         show:
           unusable: Zeige Karten, die nicht verwendet werden können
           onlyused: Zeige nur verwendete Karten

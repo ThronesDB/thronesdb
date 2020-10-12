@@ -24,6 +24,8 @@
         Config = _.extend({
             'show-unusable': false,
             'show-only-deck': false,
+            'hide-banned-melee': false,
+            'hide-banned-joust': false,
             'display-column': 1,
             'core-set': 3,
             'buttons-behavior': 'cumulative'
@@ -53,11 +55,12 @@
             $('input[name=' + radio + '][value=' + Config[radio] + ']').prop('checked', true);
         });
         // checkbox
-        ['show-unusable', 'show-only-deck'].forEach(function (checkbox)
+        ['show-unusable', 'show-only-deck', 'hide-banned-melee', 'hide-banned-joust'].forEach(function (checkbox)
         {
             if(Config[checkbox])
                 $('input[name=' + checkbox + ']').prop('checked', true);
         });
+
     };
 
     /**
@@ -627,7 +630,12 @@
             var unusable = !app.deck.can_include_card(card);
             if(!Config['show-unusable'] && unusable)
                 return;
-
+            if (Config['hide-banned-joust'] && -1 !== app.data.joust_banned_list.indexOf(card.code)) {
+                return;
+            }
+            if (Config['hide-banned-melee'] && -1 !== app.data.melee_banned_list.indexOf(card.code)) {
+                return;
+            }
             var row = divs[card.code];
             if(!row)
                 row = divs[card.code] = ui.build_row(card);

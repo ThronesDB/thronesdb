@@ -91,6 +91,9 @@ decks:
         hint: Shift+Click to select only one option ; Alt+Shift+Click to select all other options
       options:
         label: Options
+        hide:
+          bannedjoust: Hide banned Joust cards
+          bannedmelee: Hide banned Melee cards
         show:
           unusable: Show unusable cards
           onlyused: Show only used cards

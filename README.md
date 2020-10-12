@@ -23,7 +23,6 @@ This guide assumes you know how to use the command-line and that your machine ha
 - run `php bin/console bazinga:js-translation:dump assets/js` to export translation files for the frontend
 - run `php bin/console fos:js-routing:dump --target=public/js/fos_js_routes.js` to export routes for the frontend
 - run `gulp` to build web assets
-- run `php bin/console server:run`
 
 ## Setup an admin account
 

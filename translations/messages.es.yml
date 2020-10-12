@@ -91,6 +91,9 @@ decks:
         hint: Mayús+Click para seleccionar solo uno; Alt+Mayús+Click para seleccionar todas las otras opciones
       options:
         label: Opciones
+        hide:
+          bannedjoust: Ocultar cartas de Justas prohibidas
+          bannedmelee: Occultar cartas de Contienda prohibidas
         show:
           unusable: Mostrar cartas que no se pueden usar
           onlyused: Sólo mostrar cartas usadas
