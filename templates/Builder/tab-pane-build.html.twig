@@ -21,12 +21,38 @@
                     data-toggle="dropdown">{{ 'decks.edit.build.options.label' | trans }} <span class="caret"></span>
             </button>
             <ul class="dropdown-menu pull-right" id="config-options">
-                <li><a href="#"><label><input type="checkbox"
-                                              name="show-unusable"> {{ 'decks.edit.build.options.show.unusable' | trans }}
-                        </label></a></li>
-                <li><a href="#"><label><input type="checkbox"
-                                              name="show-only-deck"> {{ 'decks.edit.build.options.show.onlyused' | trans }}
-                        </label></a></li>
+                <li>
+                    <a href="#">
+                        <label>
+                            <input type="checkbox" name="show-unusable">
+                            {{ 'decks.edit.build.options.show.unusable' | trans }}
+                        </label>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <label>
+                            <input type="checkbox" name="show-only-deck">
+                            {{ 'decks.edit.build.options.show.onlyused' | trans }}
+                        </label>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <label>
+                            <input type="checkbox" name="hide-banned-joust">
+                            {{ 'decks.edit.build.options.hide.bannedjoust' | trans }}
+                        </label>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <label>
+                            <input type="checkbox" name="hide-banned-melee">
+                            {{ 'decks.edit.build.options.hide.bannedmelee' | trans }}
+                        </label>
+                    </a>
+                </li>
                 {% for i in 1..3 %}
                     <li>
                         <a href="#">
