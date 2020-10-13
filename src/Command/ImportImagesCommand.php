@@ -48,7 +48,7 @@ class ImportImagesCommand extends Command
                 $position = $position . 'B';
             }
 
-            $url = sprintf('http://lcg-cdn.fantasyflightgames.com/got2nd/GT%02d_%s.jpg', $cgdbId, $position);
+            $url = sprintf('https://lcg-cdn.fantasyflightgames.com/got2nd/GT%02d_%s.jpg', $cgdbId, $position);
 
             $response = $client->request('GET', $url);
 
