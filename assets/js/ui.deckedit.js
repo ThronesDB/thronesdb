@@ -155,8 +155,8 @@
             // checked or unchecked ? checked by default
             var checked = true;
 
-            // if not yet available, uncheck pack
-            if(record.available === "") {
+            // if publication date is not yet available, or if it's in the future then uncheck pack
+            if(! record.available || Date.parse(record.available) > Date.now()) {
                 checked = false;
             }
 
