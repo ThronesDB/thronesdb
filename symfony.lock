@@ -157,6 +157,19 @@
             "config/packages/stof_doctrine_extensions.yaml"
         ]
     },
+    "symfony/console": {
+        "version": "4.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "ea8c0eda34fda57e7d5cd8cbd889e2a387e3472c"
+        },
+        "files": [
+            "bin/console",
+            "config/bootstrap.php"
+        ]
+    },
     "symfony/phpunit-bridge": {
         "version": "4.3",
         "recipe": {
