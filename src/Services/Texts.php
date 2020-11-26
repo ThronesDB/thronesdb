@@ -19,11 +19,11 @@ class Texts
 
     /**
      * Texts constructor.
-     * @param string $kernelRootDirectory
+     * @param string $kernelProjectDirectory
      */
-    public function __construct($kernelRootDirectory)
+    public function __construct(string $kernelProjectDirectory)
     {
-        $config = HTMLPurifier_Config::create(array('Cache.SerializerPath' => $kernelRootDirectory));
+        $config = HTMLPurifier_Config::create(array('Cache.SerializerPath' => $kernelProjectDirectory));
         $def = $config->getHTMLDefinition(true);
         $def->addAttribute('a', 'data-code', 'Text');
         $this->purifier = new HTMLPurifier($config);

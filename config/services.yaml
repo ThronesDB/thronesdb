@@ -43,7 +43,7 @@ services:
         bind:
             $cacheExpiration: '%cache_expiration%'
             $emailSenderAddress: '%email_sender_address%'
-            $kernelRootDirectory: '%kernel.root_dir%'
+            $kernelProjectDirectory: '%kernel.project_dir%'
             $gameName: '%game_name%'
             $publisherName: '%publisher_name%'
 
