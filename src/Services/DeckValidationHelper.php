@@ -6,7 +6,7 @@ use App\Classes\SlotCollectionInterface;
 use App\Entity\CardInterface;
 use App\Entity\CommonDeckInterface;
 use App\Entity\SlotInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @package App\Services
