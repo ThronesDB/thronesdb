@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\Instantiator\Exception\ExceptionInterface;
 use Doctrine\Migrations\AbstractMigration;
 use Exception;
 use Ramsey\Uuid\Uuid;

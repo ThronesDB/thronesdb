@@ -150,23 +150,23 @@
 <script src="{{ asset('js/translations.js') }}"></script>
 
 <script type="text/javascript">
-    var app = {};
-    moment.locale('{{ app.request.locale }}');
+  var app = {};
+  moment.locale('{{ app.request.locale }}');
 </script>
 <script src="{{ asset('js/app.js') }}"></script>
 <script>
-    window.addEventListener("load", function () {
-        window.cookieconsent.initialise({
-            "palette": {
-                "popup": {
-                    "background": "#000"
-                },
-                "button": {
-                    "background": "#f1d600"
-                }
-            }
-        })
-    });
+  window.addEventListener("load", function () {
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": {
+          "background": "#000"
+        },
+        "button": {
+          "background": "#f1d600"
+        }
+      }
+    })
+  });
 </script>
 {% if app.environment == 'prod' %}
     {% include 'Default/google-analytics.html.twig' %}
