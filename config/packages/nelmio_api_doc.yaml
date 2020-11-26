@@ -1,17 +1,9 @@
-# NelmioApiDocBundle Configuration
 nelmio_api_doc:
     documentation:
         info:
-            title: ThronesDB API
-            version: 1.1.0
-            description: ThronesDB's public and protected APIs endpoints.
-    areas:
-        path_patterns: # an array of regexps
-            - ^/api/oauth2/deck/
-            - ^/api/oauth2/decks/
-            - ^/api/public/card/
-            - ^/api/public/cards/
-            - ^/api/public/cycles/
-            - ^/api/public/decklist/
-            - ^/api/public/decklists/
-            - ^/api/public/packs/
+            title: My App
+            description: This is an awesome app!
+            version: 1.0.0
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc

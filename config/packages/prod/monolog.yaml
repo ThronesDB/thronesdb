@@ -4,12 +4,11 @@ monolog:
             type: fingers_crossed
             action_level: error
             handler: nested
+            excluded_http_codes: [404, 405]
             buffer_size: 50 # How many messages should be saved? Prevent memory leaks
-            excluded_404s:
-                - ^/bundles/cards
         nested:
             type: stream
-            path: '%kernel.logs_dir%/%kernel.environment%.log'
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
         console:
             type: console
