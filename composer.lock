@@ -8096,7 +8096,7 @@
         },
         {
             "name": "symfony/templating",
-            "version": "v4.4.16",
+            "version": "v4.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/templating.git",
