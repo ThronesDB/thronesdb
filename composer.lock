@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "79cff957d8723841ee23ef86ebd6edc6",
+    "content-hash": "1ff2c8c56653482101bfbbf2b2c6515f",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -5835,24 +5835,25 @@
         },
         {
             "name": "symfony/intl",
-            "version": "v4.4.16",
+            "version": "v5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/intl.git",
-                "reference": "08aa334e1380eeef5450a11d40224d6bfa03efc3"
+                "reference": "eaac169bf64d307d48daef7e349729d670df6659"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/intl/zipball/08aa334e1380eeef5450a11d40224d6bfa03efc3",
-                "reference": "08aa334e1380eeef5450a11d40224d6bfa03efc3",
+                "url": "https://api.github.com/repos/symfony/intl/zipball/eaac169bf64d307d48daef7e349729d670df6659",
+                "reference": "eaac169bf64d307d48daef7e349729d670df6659",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1.3",
-                "symfony/polyfill-intl-icu": "~1.0"
+                "php": ">=7.2.5",
+                "symfony/polyfill-intl-icu": "~1.0",
+                "symfony/polyfill-php80": "^1.15"
             },
             "require-dev": {
-                "symfony/filesystem": "^3.4|^4.0|^5.0"
+                "symfony/filesystem": "^4.4|^5.0"
             },
             "suggest": {
                 "ext-intl": "to use the component with locales other than \"en\""
@@ -5915,7 +5916,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T11:50:19+00:00"
+            "time": "2020-11-03T11:59:17+00:00"
         },
         {
             "name": "symfony/mime",
@@ -8158,16 +8159,16 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v4.4.16",
+            "version": "v4.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "73095716af79f610f3b6338b911357393fdd10ab"
+                "reference": "84821e6a14a637e817f25d11147388695b6f790a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/73095716af79f610f3b6338b911357393fdd10ab",
-                "reference": "73095716af79f610f3b6338b911357393fdd10ab",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/84821e6a14a637e817f25d11147388695b6f790a",
+                "reference": "84821e6a14a637e817f25d11147388695b6f790a",
                 "shasum": ""
             },
             "require": {
@@ -8239,7 +8240,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T11:50:19+00:00"
+            "time": "2020-11-27T06:35:49+00:00"
         },
         {
             "name": "symfony/translation-contracts",
@@ -8318,16 +8319,16 @@
         },
         {
             "name": "symfony/twig-bridge",
-            "version": "v4.4.16",
+            "version": "v4.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/twig-bridge.git",
-                "reference": "841c46c963891122429cfa1b56f06aeef9c1c010"
+                "reference": "7d119d2cffb4d11a42690205c2427625c80a060e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/twig-bridge/zipball/841c46c963891122429cfa1b56f06aeef9c1c010",
-                "reference": "841c46c963891122429cfa1b56f06aeef9c1c010",
+                "url": "https://api.github.com/repos/symfony/twig-bridge/zipball/7d119d2cffb4d11a42690205c2427625c80a060e",
+                "reference": "7d119d2cffb4d11a42690205c2427625c80a060e",
                 "shasum": ""
             },
             "require": {
@@ -8350,7 +8351,7 @@
                 "symfony/error-handler": "^4.4|^5.0",
                 "symfony/expression-language": "^3.4|^4.0|^5.0",
                 "symfony/finder": "^3.4|^4.0|^5.0",
-                "symfony/form": "^4.3.5",
+                "symfony/form": "^4.4.17",
                 "symfony/http-foundation": "^4.3|^5.0",
                 "symfony/http-kernel": "^4.4",
                 "symfony/mime": "^4.3|^5.0",
@@ -8426,11 +8427,11 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T11:50:19+00:00"
+            "time": "2020-11-17T16:25:11+00:00"
         },
         {
             "name": "symfony/twig-bundle",
-            "version": "v4.4.16",
+            "version": "v4.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/twig-bundle.git",
@@ -9022,37 +9023,38 @@
         },
         {
             "name": "willdurand/js-translation-bundle",
-            "version": "3.0.1",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/willdurand/BazingaJsTranslationBundle.git",
-                "reference": "a64af02e1b2193ba77dfbb08a5df14d2c7d3bae4"
+                "reference": "45741f7c6e88a0e5f5e60f5e2c22ddc06b5d1bd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/willdurand/BazingaJsTranslationBundle/zipball/a64af02e1b2193ba77dfbb08a5df14d2c7d3bae4",
-                "reference": "a64af02e1b2193ba77dfbb08a5df14d2c7d3bae4",
+                "url": "https://api.github.com/repos/willdurand/BazingaJsTranslationBundle/zipball/45741f7c6e88a0e5f5e60f5e2c22ddc06b5d1bd3",
+                "reference": "45741f7c6e88a0e5f5e60f5e2c22ddc06b5d1bd3",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1",
-                "symfony/console": "~3.4|~4.0|~5.0",
-                "symfony/finder": "~3.4|~4.0|~5.0",
-                "symfony/framework-bundle": "~3.4|~4.0|~5.0",
-                "symfony/intl": "~3.4|~4.0|~5.0",
-                "symfony/translation": "~3.4|~4.0|~5.0",
-                "symfony/twig-bundle": "~3.4|~4.0|~5.0"
+                "symfony/console": "~4.4|~5.0",
+                "symfony/finder": "~4.4|~5.0",
+                "symfony/framework-bundle": "~4.4|~5.0",
+                "symfony/intl": "~4.4|~5.0",
+                "symfony/translation": "~4.4|~5.0",
+                "symfony/twig-bundle": "~4.4|~5.0"
             },
             "replace": {
                 "willdurand/expose-translation-bundle": "2.5.*"
             },
             "require-dev": {
                 "phpunit/phpunit": "^4.8|~5.7|~6.5",
-                "symfony/asset": "~3.4|~4.0|~5.0",
-                "symfony/browser-kit": "~3.4|~4.0|~5.0",
+                "symfony/asset": "~4.4|~5.0",
+                "symfony/browser-kit": "~4.4|~5.0",
+                "symfony/filesystem": "~4.4|~5.0",
                 "symfony/phpunit-bridge": "^5.0",
-                "symfony/twig-bundle": "~3.4|~4.0|~5.0",
-                "symfony/yaml": "~3.4|~4.0|~5.0"
+                "symfony/twig-bundle": "~4.4|~5.0",
+                "symfony/yaml": "~4.4|~5.0"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -9081,7 +9083,7 @@
                 "symfony",
                 "translation"
             ],
-            "time": "2020-02-17T14:41:11+00:00"
+            "time": "2020-11-08T14:18:24+00:00"
         },
         {
             "name": "willdurand/jsonp-callback-validator",
