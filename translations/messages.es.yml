@@ -138,6 +138,9 @@ decks:
       delete:
         label: Borrar
         selected: Borrar todos los mazos seleccionados
+      download:
+        label: Descargar
+        selected: Descargar todos los mazos seleccionados
     labelswitch: Click para cambiar a esta etiqueta. Mayús+Click para alternar esta etiqueta.
     download:
       octgn: Fichero OCTGN

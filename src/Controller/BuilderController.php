@@ -464,6 +464,45 @@ class BuilderController extends AbstractController
     }
 
     /**
+     * @Route("/deck/download_list", name="deck_download_list", methods={"POST"})
+     * @param Request $request
+     * @param SessionInterface $session
+     * @return Response
+     */
+    public function downloadListAction(Request $request, SessionInterface $session)
+    {
+        /* @var $em EntityManager */
+        $em = $this->getDoctrine()->getManager();
+        $ids = explode('-', $request->get('ids'));
+        $decks = $em->getRepository(Deck::class)->findBy(['id' => $ids]);
+
+        $currentUserId = $this->getUser()->getId();
+        $decks = array_values(array_filter($decks, function (DeckInterface $deck) use ($currentUserId) {
+            return $currentUserId === $deck->getUser()->getId();
+        }));
+
+        $exports = [];
+        foreach ($decks as $deck) {
+            $content = $this->renderView('Export/default.txt.twig', [ "deck" => $deck->getTextExport() ]);
+            $exports[] = str_replace("\n", "\r\n", $content);
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'decks.txt'
+            )
+        );
+
+        $response->setContent(implode("\r\n===\r\n", $exports));
+
+        return $response;
+    }
+
+    /**
      * @Route("/deck/delete_list", name="deck_delete_list", methods={"POST"})
      * @param Request $request
      * @param SessionInterface $session

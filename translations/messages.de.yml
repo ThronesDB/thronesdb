@@ -138,6 +138,9 @@ decks:
       delete:
         label: Löschen
         selected: Alle ausgewählten Decklisten entfernen
+      download:
+        label: Herunterladen
+        selected: Alle ausgewählten Decklisten herunterladen
     labelswitch: Klicken nur Decklisten mit diesem Tag anzuzeigen. Umschalt+Klicken um auch Decklisten mit diesem Tag anzuzeigen.
     download:
       text: Textdatei
