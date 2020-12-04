@@ -202,8 +202,6 @@ class BuilderController extends AbstractController
      * @param DeckImportService $deckImportService
      * @param DeckManager $deckManager
      * @return RedirectResponse|Response
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
     public function fileimportAction(Request $request, DeckImportService $deckImportService, DeckManager $deckManager)
     {
@@ -212,10 +210,7 @@ class BuilderController extends AbstractController
             throw new BadRequestHttpException("No file");
         }
 
-        $origname = $uploadedFile->getClientOriginalName();
-        $origext = $uploadedFile->getClientOriginalExtension();
         $filename = $uploadedFile->getPathname();
-        $name = str_replace(".$origext", '', $origname);
 
         if (function_exists("finfo_open")) {
             // return mime type ala mimetype extension
@@ -247,7 +242,7 @@ class BuilderController extends AbstractController
             $this->getUser(),
             $deck,
             null,
-            $name,
+            $data['name'],
             $data['faction'],
             $data['description'],
             null,

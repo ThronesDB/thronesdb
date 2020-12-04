@@ -32,14 +32,33 @@ class DeckImportService
         $data = [
             'content' => [],
             'faction' => null,
-            'description' => ''
+            'description' => '',
+            'name' => 'new deck',
         ];
 
-        $lines = explode("\n", $text);
+        $lines = explode("\n", trim($text));
+
+        // trim whitespace off of all lines and filter out any blank lines
+        $lines = array_values(
+            array_filter(
+                array_map(
+                    function ($line) {
+                        return trim($line);
+                    },
+                    $lines
+                ),
+                function ($line) {
+                    return '' !== $line;
+                }
+            )
+        );
 
         if (empty($lines)) {
             return $data;
         }
+
+        // set the deck's name from the first line in the given import
+        $data['name'] = $lines[0];
 
         // load all packs upfront and map them by their names and codes for easy lookup below
         $packs = $this->em->getRepository(Pack::class)->findAll();
