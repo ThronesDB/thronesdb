@@ -224,31 +224,24 @@ class BuilderController extends AbstractController
             }
         }
 
-        $data = $deckImportService->parseTextImport(file_get_contents($filename));
+        $parsedData = $deckImportService->parseTextImport(file_get_contents($filename));
 
-        if (empty($data['faction'])) {
-            return $this->render(
-                'Default/error.html.twig',
-                [
-                    'error' => "Unable to recognize the Faction of the deck.",
-                ]
+        foreach ($parsedData['decks'] as $data) {
+            $deck = new Deck();
+            $deck->setUuid(Uuid::uuid4());
+
+            $deckManager->save(
+                $this->getUser(),
+                $deck,
+                null,
+                $data['name'],
+                $data['faction'],
+                $data['description'],
+                null,
+                $data['content'],
+                null
             );
         }
-
-        $deck = new Deck();
-        $deck->setUuid(Uuid::uuid4());
-
-        $deckManager->save(
-            $this->getUser(),
-            $deck,
-            null,
-            $data['name'],
-            $data['faction'],
-            $data['description'],
-            null,
-            $data['content'],
-            null
-        );
 
         $this->getDoctrine()->getManager()->flush();
 

@@ -8,6 +8,7 @@ use App\Entity\Pack;
 use App\Entity\PackInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 /**
  * Description of DeckImportService
@@ -25,9 +26,51 @@ class DeckImportService
 
     /**
      * @param string $text
+     * @param string $delimiter
      * @return array
      */
-    public function parseTextImport($text)
+    public function parseTextImport(string $text, string $delimiter = '==='): array
+    {
+        $rhett = [
+            'decks' => [],
+            'errors' => [],
+        ];
+
+        $text = trim($text);
+        if ('' === $text) {
+            return $rhett;
+        }
+
+        // load all packs upfront and map them by their names and codes for easy lookup below
+        $packs = $this->em->getRepository(Pack::class)->findAll();
+        $packsByName = array_combine(array_map(function (PackInterface $pack) {
+            return $pack->getName();
+        }, $packs), $packs);
+        $packsByCode = array_combine(array_map(function (PackInterface $pack) {
+            return $pack->getCode();
+        }, $packs), $packs);
+
+        $textChunks = explode($delimiter, $text);
+
+        foreach ($textChunks as $text) {
+            try {
+                $rhett['decks'][] = $this->parseOneTextImport($text, $packsByName, $packsByCode);
+            } catch (Exception $e) {
+                $rhett['errors'][] = $e->getMessage();
+            }
+        }
+
+        return $rhett;
+    }
+
+    /**
+     * @param string $text
+     * @param array $packsByName
+     * @param array $packsByCode
+     * @return array
+     * @throws Exception
+     */
+    protected function parseOneTextImport(string $text, array $packsByName, array $packsByCode): array
     {
         $data = [
             'content' => [],
@@ -54,20 +97,12 @@ class DeckImportService
         );
 
         if (empty($lines)) {
-            return $data;
+            throw new Exception('Empty input given.');
         }
+
 
         // set the deck's name from the first line in the given import
         $data['name'] = $lines[0];
-
-        // load all packs upfront and map them by their names and codes for easy lookup below
-        $packs = $this->em->getRepository(Pack::class)->findAll();
-        $packsByName = array_combine(array_map(function (PackInterface $pack) {
-            return $pack->getName();
-        }, $packs), $packs);
-        $packsByCode = array_combine(array_map(function (PackInterface $pack) {
-            return $pack->getCode();
-        }, $packs), $packs);
 
         foreach ($lines as $line) {
             $matches = [];
@@ -124,6 +159,10 @@ class DeckImportService
                     $data['faction'] = $faction;
                 }
             }
+        }
+
+        if (empty($data['faction'])) {
+            throw new Exception('Unable to find the Faction of the deck.');
         }
 
         return $data;
