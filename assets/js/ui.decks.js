@@ -197,6 +197,7 @@
                 break;
             case 'btn-download-selected':
                 ui.download_selected(ids);
+                $(".selected-decks-dropdown-toggle").dropdown("toggle");
         }
         return false;
     };
