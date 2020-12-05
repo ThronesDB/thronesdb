@@ -6,7 +6,6 @@ use App\Entity\Card;
 use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
@@ -17,6 +16,28 @@ use Exception;
  */
 class DeckImportService
 {
+    // three equal signs (or more) in a row are used
+    // to separate multiple decks in one upload
+    const DECKS_DELIMITER_REGEXP = '/[=]{3,}/';
+
+    // <quantity>x<card name> (<pack code|name>)
+    // <quantity><card name> (<pack code|name>)
+    const CARD_WITH_PACK_INFO_REGEXP = '/^\s*(\d)x?([^(]+) \(([^)]+)/u';
+
+    // <quantity>x<card name>
+    // <quantity><card name>
+    const CARD_WITHOUT_PACK_INFO_REGEXP = '/^\s*(\d)x?([\pLl\pLu\pN\-.\'!:" ]+)/u';
+
+    // #<three digits> <quantity>x<card name>
+    // #<three digits> <quantity><card name>
+    const CARD_WITHOUT_PACK_INFO_ALT1_REGEXP = '/^\s*#\d{3}\s(\d)x?([\pLl\pLu\pN\-.\'!: ]+)/u';
+
+    // <card name>x<quantity>
+    const CARD_WITHOUT_PACK_INFO_ALT2_REGEXP = '/^([^(]+).*x(\d)/';
+
+    // <card name>
+    const SINGLE_CARD_WITHOUT_PACK_INFO_REGEXP = '/^([^(]+)/';
+
     public EntityManagerInterface $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -26,10 +47,9 @@ class DeckImportService
 
     /**
      * @param string $text
-     * @param string $delimiter
      * @return array
      */
-    public function parseTextImport(string $text, string $delimiter = '==='): array
+    public function parseTextImport(string $text): array
     {
         $rhett = [
             'decks' => [],
@@ -50,7 +70,7 @@ class DeckImportService
             return $pack->getCode();
         }, $packs), $packs);
 
-        $textChunks = explode($delimiter, $text);
+        $textChunks = preg_split(self::DECKS_DELIMITER_REGEXP, $text, null, PREG_SPLIT_NO_EMPTY);
 
         foreach ($textChunks as $text) {
             try {
@@ -109,20 +129,20 @@ class DeckImportService
             $packNameOrCode = null;
             $card = null;
 
-            if (preg_match('/^\s*(\d)x?([^(]+) \(([^)]+)/u', $line, $matches)) {
+            if (preg_match(self::CARD_WITH_PACK_INFO_REGEXP, $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
                 $packNameOrCode = trim($matches[3]);
-            } elseif (preg_match('/^\s*(\d)x?([\pLl\pLu\pN\-\.\'\!\:" ]+)/u', $line, $matches)) {
+            } elseif (preg_match(self::CARD_WITHOUT_PACK_INFO_REGEXP, $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
-            } elseif (preg_match('/^\s*#\d{3}\s(\d)x?([\pLl\pLu\pN\-\.\'\!\: ]+)/u', $line, $matches)) {
+            } elseif (preg_match(self::CARD_WITHOUT_PACK_INFO_ALT1_REGEXP, $line, $matches)) {
                 $quantity = intval($matches[1]);
                 $name = trim($matches[2]);
-            } elseif (preg_match('/^([^\(]+).*x(\d)/', $line, $matches)) {
+            } elseif (preg_match(self::CARD_WITHOUT_PACK_INFO_ALT2_REGEXP, $line, $matches)) {
                 $quantity = intval($matches[2]);
                 $name = trim($matches[1]);
-            } elseif (preg_match('/^([^\(]+)/', $line, $matches)) {
+            } elseif (preg_match(self::SINGLE_CARD_WITHOUT_PACK_INFO_REGEXP, $line, $matches)) {
                 $quantity = 1;
                 $name = trim($matches[1]);
             } else {
@@ -162,7 +182,8 @@ class DeckImportService
         }
 
         if (empty($data['faction'])) {
-            throw new Exception('Unable to find the Faction of the deck.');
+            throw new Exception('Unable
+             to find the Faction of the deck.');
         }
 
         return $data;
