@@ -189,8 +189,7 @@ class DeckImportService
         }
 
         if (empty($data['faction'])) {
-            throw new Exception('Unable
-             to find the Faction of the deck.');
+            throw new Exception('Unable to find the Faction of the deck.');
         }
 
         return $data;
