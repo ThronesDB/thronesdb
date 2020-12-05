@@ -65,23 +65,20 @@ class DeckImportService
 
         $decks = [];
 
+        // trim whitespace off of all lines and filter out any blank lines
+        $removeFiller = function (array $lines) {
+            $lines = array_map(function ($line) {
+                return trim($line);
+            }, $lines);
+            $lines = array_filter($lines, function ($line) {
+                return '' !== $line;
+            });
+            return array_values($lines);
+        };
+
         foreach ($textChunks as $text) {
             $lines = explode("\n", trim($text));
-
-            // trim whitespace off of all lines and filter out any blank lines
-            $lines = array_values(
-                array_filter(
-                    array_map(
-                        function ($line) {
-                            return trim($line);
-                        },
-                        $lines
-                    ),
-                    function ($line) {
-                        return '' !== $line;
-                    }
-                )
-            );
+            $lines = $removeFiller($lines);
 
             if (!empty($lines)) {
                 $decks[] = $lines;

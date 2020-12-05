@@ -357,11 +357,11 @@ class DeckImportServiceTest extends TestCase
         $card = new Card();
         $card->setCode('whatever');
         $this->mockPackRepository->shouldReceive('findAll')->andReturn([ $pack ]);
-        $this->mockCardRepository->shouldReceive('findOneBy')->andReturn($card)->times(5);
+        $this->mockCardRepository->shouldReceive('findOneBy')->andReturn(null)->times(5);
         $this->mockFactionRepository->shouldReceive('findOneBy')->andReturn(null)->times(5);
         $data = $this->service->parseTextImport($text);
         $this->assertEmpty($data['decks']);
         $this->assertCount(1, $data['errors']);
-        $this->assertEquals('Unable to find the Faction of the deck.', $data['errors'][0]->getMessage());
+        $this->assertEquals('Unable to find the Faction of the deck.', $data['errors'][0]);
     }
 }
