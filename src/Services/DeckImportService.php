@@ -61,6 +61,37 @@ class DeckImportService
             return $rhett;
         }
 
+        $textChunks = preg_split(self::DECKS_DELIMITER_REGEXP, $text, null, PREG_SPLIT_NO_EMPTY);
+
+        $decks = [];
+
+        foreach ($textChunks as $text) {
+            $lines = explode("\n", trim($text));
+
+            // trim whitespace off of all lines and filter out any blank lines
+            $lines = array_values(
+                array_filter(
+                    array_map(
+                        function ($line) {
+                            return trim($line);
+                        },
+                        $lines
+                    ),
+                    function ($line) {
+                        return '' !== $line;
+                    }
+                )
+            );
+
+            if (!empty($lines)) {
+                $decks[] = $lines;
+            }
+        }
+
+        if (empty($decks)) {
+            return $rhett;
+        }
+
         // load all packs upfront and map them by their names and codes for easy lookup below
         $packs = $this->em->getRepository(Pack::class)->findAll();
         $packsByName = array_combine(array_map(function (PackInterface $pack) {
@@ -70,11 +101,9 @@ class DeckImportService
             return $pack->getCode();
         }, $packs), $packs);
 
-        $textChunks = preg_split(self::DECKS_DELIMITER_REGEXP, $text, null, PREG_SPLIT_NO_EMPTY);
-
-        foreach ($textChunks as $text) {
+        foreach ($decks as $lines) {
             try {
-                $rhett['decks'][] = $this->parseOneTextImport($text, $packsByName, $packsByCode);
+                $rhett['decks'][] = $this->parseOneTextImport($lines, $packsByName, $packsByCode);
             } catch (Exception $e) {
                 $rhett['errors'][] = $e->getMessage();
             }
@@ -84,13 +113,13 @@ class DeckImportService
     }
 
     /**
-     * @param string $text
+     * @param array $lines
      * @param array $packsByName
      * @param array $packsByCode
      * @return array
      * @throws Exception
      */
-    protected function parseOneTextImport(string $text, array $packsByName, array $packsByCode): array
+    protected function parseOneTextImport(array $lines, array $packsByName, array $packsByCode): array
     {
         $data = [
             'content' => [],
@@ -98,28 +127,6 @@ class DeckImportService
             'description' => '',
             'name' => 'new deck',
         ];
-
-        $lines = explode("\n", trim($text));
-
-        // trim whitespace off of all lines and filter out any blank lines
-        $lines = array_values(
-            array_filter(
-                array_map(
-                    function ($line) {
-                        return trim($line);
-                    },
-                    $lines
-                ),
-                function ($line) {
-                    return '' !== $line;
-                }
-            )
-        );
-
-        if (empty($lines)) {
-            throw new Exception('Empty input given.');
-        }
-
 
         // set the deck's name from the first line in the given import
         $data['name'] = $lines[0];
