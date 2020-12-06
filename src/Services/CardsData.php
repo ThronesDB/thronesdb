@@ -13,16 +13,16 @@ use App\Entity\PackInterface;
 use App\Entity\Review;
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry;
 use Exception;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CardsData
 {
-    protected RegistryInterface $doctrine;
+    protected ManagerRegistry $doctrine;
 
     protected RequestStack $request_stack;
 
@@ -31,13 +31,13 @@ class CardsData
     protected TranslatorInterface $translator;
 
     /**
-     * @param RegistryInterface $doctrine
+     * @param ManagerRegistry $doctrine
      * @param RequestStack $request_stack
      * @param RouterInterface $router
      * @param TranslatorInterface $translator
      */
     public function __construct(
-        RegistryInterface $doctrine,
+        ManagerRegistry $doctrine,
         RequestStack $request_stack,
         RouterInterface $router,
         TranslatorInterface $translator

@@ -63,6 +63,14 @@
         }, 500);
     };
 
+    ui.download_selected = function(ids)
+    {
+        var $form = $('#download-deck-list-form');
+        var $input = $('#download-deck-list-id');
+        $input.val(ids.join('-'));
+        $form.submit();
+    };
+
     ui.tag_remove_process = function tag_remove_process(event)
     {
         event.preventDefault();
@@ -158,6 +166,17 @@
         location.href = Routing.generate('decks_diff', {deck1_uuid: ids[0], deck2_uuid: ids[1]});
     };
 
+    ui.handle_deck_selection_change = function handle_deck_selection_change()
+    {
+        var $checked = $('#decks').find('input[type=checkbox]:checked');
+        var $button = $('#btn-group-selection button');
+        if ($checked.length) {
+            $button.removeClass('btn-default').addClass('btn-primary')
+        } else {
+            $button.addClass('btn-default').removeClass('btn-primary')
+        }
+    }
+
     ui.do_action_selection = function do_action_selection(event)
     {
         event.stopPropagation();
@@ -187,6 +206,9 @@
             case 'btn-delete-selected':
                 ui.confirm_delete_all(ids);
                 break;
+            case 'btn-download-selected':
+                ui.download_selected(ids);
+                $(".selected-decks-dropdown-toggle").dropdown("toggle");
         }
         return false;
     };
@@ -197,18 +219,24 @@
      */
     ui.on_dom_loaded = function on_dom_loaded()
     {
+        $('.list-decks .toggle_all').on('click', function ()
+        {
+            $('.list-decks-deck input[type="checkbox"]').prop('checked', this.checked);
+            ui.handle_deck_selection_change();
+        });
 
         $('#decks').on('click', 'button.btn-delete-deck', ui.confirm_delete);
-        $('#decks').on('click', 'input[type=checkbox]', function (event)
+        $('#decks').on('click', 'input[type=checkbox]', function ()
         {
-            var checked = $(this).closest('tbody').find('input[type=checkbox]:checked');
-            var button = $('#btn-group-selection button');
-            if(checked.size()) {
-                button.removeClass('btn-default').addClass('btn-primary')
+            var $checked = $('#decks').find('input[type=checkbox]:checked');
+            var $all = $('#decks').find('input[type=checkbox]');
+            var $toggle = $('.list-decks .toggle_all');
+            if ($checked.length < $all.length) {
+                $toggle.prop('checked', false);
             } else {
-                button.addClass('btn-default').removeClass('btn-primary')
+                $toggle.prop('checked', true);
             }
-
+            ui.handle_deck_selection_change();
         });
 
         $('#btn-group-selection').on('click', 'button[id],a[id]', ui.do_action_selection);

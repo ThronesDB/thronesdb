@@ -208,7 +208,10 @@ ol {
 
 /********* LIST OF DECKS ************/
 
-.list-decks>tbody>tr>td {
+.list-decks > thead > tr {
+    font-size: 2em;
+}
+.list-decks > tbody > tr > td {
     vertical-align: middle;
 }
 .list-decks img {

@@ -47,6 +47,7 @@ forms:
   sort: Sort
 
 decks:
+  selectAll: select all
   privatedecks: My private decks
   slotcount: "(%current%/%max% slots)"
   version: Version %version%
@@ -138,6 +139,9 @@ decks:
       delete:
         label: Delete
         selected: Delete all decks selected
+      download:
+        label: Download
+        selected: Download all decks selected
     labelswitch: Click to switch to this tag. Shift-click to toggle this tag.
     download:
       octgn: Octgn file
@@ -156,6 +160,13 @@ decks:
       by_set: by Set, then Name
       by_setnumber: by Set, then Number
       by_type: by Type
+  import:
+    error:
+      cannotFindFaction: Unable to find the faction of the deck.
+      general: Import failed.
+    success: "{1} Deck successfully imported. | ]1,Inf] %success% out of %all% deck successfully imported."
+    failures: "{1} Failed to import deck. | ]1, Inf] Failed to import %failures% out of %all% decks."
+    failureReasons: "{1} Reason: \"%reasons%\" | ]1, Inf] Reasons: \"%reasons%\""
   modals:
     card:
       go: Go to card page
@@ -194,6 +205,8 @@ decks:
     oddhint: "Odds to have at least 1 copy of a desired card, after having drawn that many cards from the deck, depending of the number of copies in the deck (1 - 2 - 3)"
     odds: Odds
     more: more
+  save:
+    outOfSlots: You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.
   smartfilter:
     title: Smart filter syntax
     example: "Example: <tt>m:1 s>3</tt> shows all characters with a <span class='icon-military'></span> icon and a STR greater than 3"

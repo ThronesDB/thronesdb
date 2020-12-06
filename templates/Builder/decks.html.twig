@@ -48,12 +48,25 @@
                 <div class="row" style="margin-bottom:10px">
                     <div class="col-md-12">
                         <div class="btn-group" id="btn-group-selection">
-                            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
+                            <button
+                                type="button"
+                                class="btn btn-default dropdown-toggle btn-sm selected-decks-dropdown-toggle"
+                                data-toggle="dropdown"
+                            >
                                 <span class="fas fa-check"></span>
                                 {{ 'decks.form.selection.label' | trans }}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
+                                <li class="dropdown-header">
+                                    <span class="fas fa-file-download"></span>
+                                    {{ 'decks.form.selection.download.label' | trans }}
+                                </li>
+                                <li>
+                                    <a href="#" id="btn-download-selected">
+                                        {{ 'decks.form.selection.download.selected' | trans }}
+                                    </a>
+                                </li>
                                 <li class="dropdown-header">
                                     <span class="fas fa-exchange-alt"></span>
                                     {{ 'decks.form.selection.compare.label' | trans }}
@@ -101,18 +114,21 @@
 
             <!-- Left-side column -->
             <div class="col-md-8 col-md-pull-4">
-
-                <h1>
-                    {{ 'decks.privatedecks' | trans }}
-                    <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">
-                        {{ 'decks.slotcount' | trans({'%max%': nbmax, '%current%': nbdecks}) }}
-                    </small>
-                </h1>
-
                 <table class="table table-expanded list-decks">
+                    <thead>
+                        <tr>
+                            <td><input type="checkbox" class="toggle_all" title="{{ 'decks.selectAll' | trans }}" ></td>
+                            <td colspan="3" role="heading" aria-level="1">
+                                {{ 'decks.privatedecks' | trans }}
+                                <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">
+                                    {{ 'decks.slotcount' | trans({'%max%': nbmax, '%current%': nbdecks}) }}
+                                </small>
+                            </td>
+                        </tr>
+                    </thead>
                     <tbody id="decks">
                     {% for deck in decks %}
-                        <tr data-id="{{ deck.id }}" data-uuid="{{ deck.uuid }}">
+                        <tr data-id="{{ deck.id }}" data-uuid="{{ deck.uuid }}" class="list-decks-deck">
                             <td><input type="checkbox"></td>
                             <td class="hidden-xs">
                                 <img
@@ -210,5 +226,6 @@
     {% include 'Modale/tag_remove.html.twig' %}
     {% include 'Modale/tag_clear.html.twig' %}
     {% include 'Modale/diff.html.twig' %}
+    {% include 'Builder/download_list.html.twig' %}
 
 {% endblock %}

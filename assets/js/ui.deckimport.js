@@ -9,19 +9,24 @@
                 faction_code,
                 faction_name;
 
-        text.match(/[^\r\n]+/g).forEach(function (token)
-        {
+        var $name = $('#deckimport .decklist-name');
+        var firstLine = true;
+        text.match(/[^\r\n]+/g).forEach(function (token) {
             var qty = 1, name = token.trim(), card, packName;
             if (name.match(/^(\d+)x? ([^(]+) \(([^)]+)\)/)) {
                 qty = parseInt(RegExp.$1, 10);
                 name = RegExp.$2.trim();
                 packName = RegExp.$3.trim();
-            } else if(name.match(/^(\d+)x? (.*)/)) {
+            } else if (name.match(/^(\d+)x? (.*)/)) {
                 qty = parseInt(RegExp.$1, 10);
                 name = RegExp.$2.trim();
             } else if (name.match(/^([^(]+) \(([^)]+)\)/)) {
                 name = RegExp.$1.trim();
                 packName = RegExp.$2.trim();
+            } else {
+                if (firstLine) {
+                    $name.val(token);
+                }
             }
             if (packName) {
                 card = app.data.cards.findOne({name: name, pack_name: packName});
@@ -40,6 +45,7 @@
             } else {
                 console.log('rejecting string [' + name + ']');
             }
+            firstLine = false;
         });
 
         app.deck.init({
