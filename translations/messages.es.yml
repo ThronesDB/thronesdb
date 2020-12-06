@@ -159,6 +159,13 @@ decks:
       by_set: por capítulo, luego nombre
       by_setnumber: por capítulo, luego número
       by_type: por tipo
+  import:
+    error:
+      cannotFindFaction: No se pudo encontrar la facción del mazo.
+      general: Falló la importación.
+    success: "{1} Mazo importada con éxito. | ]1,Inf] %success% de cada %all% mazos importados con éxito."
+    failures: "{1} No se pudo importar el mazo. | ]1, Inf] No se pudieron importar %failures% de los %all% mazos."
+    failureReasons: "{1} Razón: \"%reasons%\" | ]1, Inf] Razones: \"%reasons%\""
   modals:
     card:
       go: Ir a la página de la carta
@@ -197,6 +204,8 @@ decks:
     oddhint: "Probabilidades de robar al menos una copia de las cartas deseadas, después de robar tantas del mazo, dependiendo del número de copias incluidas (1 - 2 - 3)"
     odds: Probabilidades
     more: más
+  save:
+    outOfSlots: Has alcanzado el número máximo de mazos permitidos. Elimina algunos mazos o aumenta tu reputación.
   smartfilter:
     title: Sintaxis del filtro inteligente
     example: "Ejemplo: <tt>m:1 s>3</tt> muestra todos los Personajes con icono <span class='icon-military'></span> y FUE mayor que 3"

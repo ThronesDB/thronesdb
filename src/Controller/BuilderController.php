@@ -201,10 +201,18 @@ class BuilderController extends AbstractController
      * @param Request $request
      * @param DeckImportService $deckImportService
      * @param DeckManager $deckManager
-     * @return RedirectResponse|Response
+     * @param SessionInterface $session
+     * @param TranslatorInterface $translator
+     * @throws BadRequestHttpException
+     * @return RedirectResponse
      */
-    public function fileimportAction(Request $request, DeckImportService $deckImportService, DeckManager $deckManager)
-    {
+    public function fileimportAction(
+        Request $request,
+        DeckImportService $deckImportService,
+        DeckManager $deckManager,
+        SessionInterface $session,
+        TranslatorInterface $translator
+    ) {
         $uploadedFile = $request->files->get('upfile');
         if (!isset($uploadedFile)) {
             throw new BadRequestHttpException("No file");
@@ -226,6 +234,27 @@ class BuilderController extends AbstractController
 
         $parsedData = $deckImportService->parseTextImport(file_get_contents($filename));
 
+        // Cancel import if number of given lists exceeds the number of available deck slots.
+        // No partial import of (bulk) uploads is supported.
+        /** @var UserInterface $user */
+        $user = $this->getUser();
+        $existingDecks = $deckManager->getByUser($user);
+        $numberSuccessfullyParsedDecks = count($parsedData['decks']);
+        $numberOfFailedParsedDecks = count($parsedData['errors']);
+        $errorMessages = array_unique($parsedData['errors']);
+        $numberOfDecksUploaded = $numberSuccessfullyParsedDecks + $numberOfFailedParsedDecks;
+
+        if ($user->getMaxNbDecks() < $numberOfDecksUploaded + count($existingDecks)) {
+            $session->getFlashBag()->set(
+                'error',
+                $translator->trans('decks.import.error.general')
+                . ' ' .
+                $translator->trans('decks.save.outOfSlots')
+            );
+            return $this->redirect($this->generateUrl('decks_list'));
+        }
+
+        // finally, import all the "good" decks(s)
         foreach ($parsedData['decks'] as $data) {
             $deck = new Deck();
             $deck->setUuid(Uuid::uuid4());
@@ -244,6 +273,31 @@ class BuilderController extends AbstractController
         }
 
         $this->getDoctrine()->getManager()->flush();
+        if ($numberSuccessfullyParsedDecks) {
+            $session->getFlashBag()->set(
+                'notice',
+                $translator->transChoice(
+                    "decks.import.success",
+                    $numberOfDecksUploaded,
+                    [ '%success%' => $numberSuccessfullyParsedDecks, '%all%' => $numberOfDecksUploaded ]
+                )
+            );
+        }
+        if ($numberOfFailedParsedDecks) {
+            $session->getFlashBag()->set(
+                'error',
+                $translator->transChoice(
+                    "decks.import.failures",
+                    $numberOfDecksUploaded,
+                    [ '%failures%' => $numberOfFailedParsedDecks, '%all%' => $numberOfDecksUploaded ]
+                ) . " " .
+                $translator->transChoice(
+                    "decks.import.failureReasons",
+                    count($errorMessages),
+                    [ '%reasons%' => implode('", "', $errorMessages) ]
+                )
+            );
+        }
 
         return $this->redirect($this->generateUrl('decks_list'));
     }
@@ -338,11 +392,10 @@ class BuilderController extends AbstractController
      * @Route("/deck/save", name="deck_save", methods={"POST"})
      * @param Request $request
      * @param DeckManager $deckManager
+     * @param TranslatorInterface $translator
      * @return RedirectResponse|Response
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
-    public function saveAction(Request $request, DeckManager $deckManager)
+    public function saveAction(Request $request, DeckManager $deckManager, TranslatorInterface $translator)
     {
 
         /* @var EntityManager $em*/
@@ -351,7 +404,7 @@ class BuilderController extends AbstractController
         $user = $this->getUser();
         if (count($user->getDecks()) > $user->getMaxNbDecks()) {
             return new Response(
-                'You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.'
+                $translator->trans('decks.save.outOfSlots')
             );
         }
 

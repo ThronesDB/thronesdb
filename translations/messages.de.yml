@@ -159,6 +159,13 @@ decks:
       by_set: nach Pack, dann Name
       by_setnumber: nach Pack, dann Kartennummer
       by_type: nach Typ
+  import:
+    error:
+      cannotFindFaction: Die Fraktion des Decks konnte nicht gefunden werden.
+      general: Import fehlgeschlagen.
+    success: "{1} Deck erfolgreich importiert. | ]1,Inf] %success% von %all% Decks erfolgreich importiert."
+    failures: "{1} Deck konnte nicht importiert werden. | ]1, Inf] Fehler beim Importieren von %failures% von %all% Decks."
+    failureReasons: "{1} Grund: \"%reasons%\" | ]1, Inf] Gründe: \"%reasons%\""
   modals:
     card:
       go: Zur Seite der Karte wechseln
@@ -197,6 +204,8 @@ decks:
     oddhint: "Wahrscheinlichkeit, mindestens eine Kopie einer gewünschten Karten zu ziehen, nachdem diese Anzahl Karten vom Nachziehstapel gezogen wurden, abhängig von der Anzahl der Kopien im Nachziehstapel (1 - 2 - 3)"
     odds: Wahrscheinlichkeit
     more: Mehr
+  save:
+    outOfSlots: Du hast die maximal zulässige Anzahl von Decks erreicht. Lösche einige Decks oder erhöhe Deinen Ruf.
   smartfilter:
     title: Syntax des intelligenten Filters
     example: "Beispiel: <tt>m:1 s>3</tt> zeigt alle Charaktere mit einem <span class='icon-military'></span>-Symbol und mehr als 3 Stärke."

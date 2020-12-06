@@ -8,6 +8,7 @@ use App\Entity\Pack;
 use App\Entity\PackInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Description of DeckImportService
@@ -38,11 +39,14 @@ class DeckImportService
     // <card name>
     const SINGLE_CARD_WITHOUT_PACK_INFO_REGEXP = '/^([^(]+)/';
 
-    public EntityManagerInterface $em;
+    protected EntityManagerInterface $em;
 
-    public function __construct(EntityManagerInterface $em)
+    protected TranslatorInterface $translator;
+
+    public function __construct(EntityManagerInterface $em, TranslatorInterface $translator)
     {
         $this->em = $em;
+        $this->translator = $translator;
     }
 
     /**
@@ -186,7 +190,7 @@ class DeckImportService
         }
 
         if (empty($data['faction'])) {
-            throw new Exception('Unable to find the Faction of the deck.');
+            throw new Exception($this->translator->trans('decks.import.error.cannotFindFaction'));
         }
 
         return $data;

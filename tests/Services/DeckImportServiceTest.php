@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class DeckImportServiceTest
@@ -27,6 +28,7 @@ class DeckImportServiceTest extends TestCase
     protected MockInterface $mockCardRepository;
     protected MockInterface $mockPackRepository;
     protected MockInterface $mockFactionRepository;
+    protected MockInterface $mockTranslator;
     protected DeckImportService $service;
 
     protected function setUp(): void
@@ -47,7 +49,8 @@ class DeckImportServiceTest extends TestCase
             ->shouldReceive('getRepository')
             ->with(Faction::class)
             ->andReturn($this->mockFactionRepository);
-        $this->service = new DeckImportService($this->mockEntityManager);
+        $this->mockTranslator = Mockery::mock(TranslatorInterface::class);
+        $this->service = new DeckImportService($this->mockEntityManager, $this->mockTranslator);
     }
 
     protected function tearDown(): void
@@ -57,6 +60,7 @@ class DeckImportServiceTest extends TestCase
         unset($this->mockCardRepository);
         unset($this->mockPackRepository);
         unset($this->mockFactionRepository);
+        unset($this->mockTranslator);
     }
 
     /**
@@ -356,12 +360,17 @@ class DeckImportServiceTest extends TestCase
         $pack = new Pack();
         $card = new Card();
         $card->setCode('whatever');
+        $this->mockTranslator
+            ->shouldReceive('trans')
+            ->with('decks.import.error.cannotFindFaction')
+            ->andReturn('Unable to find the faction of the deck.')
+            ->once();
         $this->mockPackRepository->shouldReceive('findAll')->andReturn([ $pack ]);
         $this->mockCardRepository->shouldReceive('findOneBy')->andReturn(null)->times(5);
         $this->mockFactionRepository->shouldReceive('findOneBy')->andReturn(null)->times(5);
         $data = $this->service->parseTextImport($text);
         $this->assertEmpty($data['decks']);
         $this->assertCount(1, $data['errors']);
-        $this->assertEquals('Unable to find the Faction of the deck.', $data['errors'][0]);
+        $this->assertEquals('Unable to find the faction of the deck.', $data['errors'][0]);
     }
 }
