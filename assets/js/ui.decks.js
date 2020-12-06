@@ -166,6 +166,17 @@
         location.href = Routing.generate('decks_diff', {deck1_uuid: ids[0], deck2_uuid: ids[1]});
     };
 
+    ui.handle_deck_selection_change = function handle_deck_selection_change()
+    {
+        var checked = $('#decks').find('input[type=checkbox]:checked');
+        var button = $('#btn-group-selection button');
+        if (checked.size()) {
+            button.removeClass('btn-default').addClass('btn-primary')
+        } else {
+            button.addClass('btn-default').removeClass('btn-primary')
+        }
+    }
+
     ui.do_action_selection = function do_action_selection(event)
     {
         event.stopPropagation();
@@ -208,18 +219,24 @@
      */
     ui.on_dom_loaded = function on_dom_loaded()
     {
+        $('#decks .select_all').on('click', function ()
+        {
+            $('.list-decks-deck input[type="checkbox"]:not(:checked)').prop('checked', true);
+            ui.handle_deck_selection_change();
+            return false;
+        });
+
+        $('#decks .select_none').on('click', function ()
+        {
+            $('.list-decks-deck input[type="checkbox"]:checked').prop('checked', false);
+            ui.handle_deck_selection_change();
+            return false;
+        });
 
         $('#decks').on('click', 'button.btn-delete-deck', ui.confirm_delete);
         $('#decks').on('click', 'input[type=checkbox]', function (event)
         {
-            var checked = $(this).closest('tbody').find('input[type=checkbox]:checked');
-            var button = $('#btn-group-selection button');
-            if(checked.size()) {
-                button.removeClass('btn-default').addClass('btn-primary')
-            } else {
-                button.addClass('btn-default').removeClass('btn-primary')
-            }
-
+            ui.handle_deck_selection_change();
         });
 
         $('#btn-group-selection').on('click', 'button[id],a[id]', ui.do_action_selection);

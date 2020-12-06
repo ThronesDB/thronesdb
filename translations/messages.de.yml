@@ -47,6 +47,8 @@ forms:
   sort: Sortieren
 
 decks:
+  all: Alle
+  none: Keine
   privatedecks: Meine privaten Decklisten
   slotcount: "(%current%/%max% Decklisten)"
   version: Version %version%
