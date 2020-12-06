@@ -114,29 +114,19 @@
 
             <!-- Left-side column -->
             <div class="col-md-8 col-md-pull-4">
-
-                <h1>
-                    {{ 'decks.privatedecks' | trans }}
-                    <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">
-                        {{ 'decks.slotcount' | trans({'%max%': nbmax, '%current%': nbdecks}) }}
-                    </small>
-                </h1>
-
                 <table class="table table-expanded list-decks">
-                    <tbody id="decks">
-                    {% if decks.count %}
+                    <thead>
                         <tr>
-                            <td colspan="4">
-                                <a href="#" class="select_all clickable">
-                                    <span class="fas fa-check"></span> {{ 'decks.all' | trans }}
-                                </a>
-                                /
-                                <a href="#" class="select_none clickable">
-                                    <span class="fas fa-times"></span> {{ 'decks.none' | trans }}
-                                </a>
+                            <td><input type="checkbox" class="toggle_all" title="{{ 'decks.selectAll' | trans }}" ></td>
+                            <td colspan="3" role="heading" aria-level="1">
+                                {{ 'decks.privatedecks' | trans }}
+                                <small style="font-size:16px" class="hidden-xs {% if cannotcreate %}text-danger{% endif %}">
+                                    {{ 'decks.slotcount' | trans({'%max%': nbmax, '%current%': nbdecks}) }}
+                                </small>
                             </td>
                         </tr>
-                    {% endif %}
+                    </thead>
+                    <tbody id="decks">
                     {% for deck in decks %}
                         <tr data-id="{{ deck.id }}" data-uuid="{{ deck.uuid }}" class="list-decks-deck">
                             <td><input type="checkbox"></td>

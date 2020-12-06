@@ -47,8 +47,7 @@ forms:
   sort: Sort
 
 decks:
-  all: all
-  none: none
+  selectAll: select all
   privatedecks: My private decks
   slotcount: "(%current%/%max% slots)"
   version: Version %version%
