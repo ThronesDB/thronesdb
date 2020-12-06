@@ -124,8 +124,21 @@
 
                 <table class="table table-expanded list-decks">
                     <tbody id="decks">
+                    {% if decks.count %}
+                        <tr>
+                            <td colspan="4">
+                                <a href="#" class="select_all clickable">
+                                    <span class="fas fa-check"></span> {{ 'decks.all' | trans }}
+                                </a>
+                                /
+                                <a href="#" class="select_none clickable">
+                                    <span class="fas fa-times"></span> {{ 'decks.none' | trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
                     {% for deck in decks %}
-                        <tr data-id="{{ deck.id }}" data-uuid="{{ deck.uuid }}">
+                        <tr data-id="{{ deck.id }}" data-uuid="{{ deck.uuid }}" class="list-decks-deck">
                             <td><input type="checkbox"></td>
                             <td class="hidden-xs">
                                 <img
