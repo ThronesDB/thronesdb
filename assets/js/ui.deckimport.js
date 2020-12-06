@@ -54,8 +54,8 @@
             slots: slots
         });
         app.deck.display('#deck');
-        $('input[name=content').val(app.deck.get_json());
-        $('input[name=faction_code').val(faction_code);
+        $('input[name=content]').val(app.deck.get_json());
+        $('input[name=faction_code]').val(faction_code);
     };
 
     /**
