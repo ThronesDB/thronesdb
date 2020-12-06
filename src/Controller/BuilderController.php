@@ -201,21 +201,24 @@ class BuilderController extends AbstractController
      * @param Request $request
      * @param DeckImportService $deckImportService
      * @param DeckManager $deckManager
-     * @return RedirectResponse|Response
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @param SessionInterface $session
+     * @param TranslatorInterface $translator
+     * @throws BadRequestHttpException
+     * @return RedirectResponse
      */
-    public function fileimportAction(Request $request, DeckImportService $deckImportService, DeckManager $deckManager)
-    {
+    public function fileimportAction(
+        Request $request,
+        DeckImportService $deckImportService,
+        DeckManager $deckManager,
+        SessionInterface $session,
+        TranslatorInterface $translator
+    ) {
         $uploadedFile = $request->files->get('upfile');
         if (!isset($uploadedFile)) {
             throw new BadRequestHttpException("No file");
         }
 
-        $origname = $uploadedFile->getClientOriginalName();
-        $origext = $uploadedFile->getClientOriginalExtension();
         $filename = $uploadedFile->getPathname();
-        $name = str_replace(".$origext", '', $origname);
 
         if (function_exists("finfo_open")) {
             // return mime type ala mimetype extension
@@ -229,33 +232,72 @@ class BuilderController extends AbstractController
             }
         }
 
-        $data = $deckImportService->parseTextImport(file_get_contents($filename));
+        $parsedData = $deckImportService->parseTextImport(file_get_contents($filename));
 
-        if (empty($data['faction'])) {
-            return $this->render(
-                'Default/error.html.twig',
-                [
-                    'error' => "Unable to recognize the Faction of the deck.",
-                ]
+        // Cancel import if number of given lists exceeds the number of available deck slots.
+        // No partial import of (bulk) uploads is supported.
+        /** @var UserInterface $user */
+        $user = $this->getUser();
+        $existingDecks = $deckManager->getByUser($user);
+        $numberSuccessfullyParsedDecks = count($parsedData['decks']);
+        $numberOfFailedParsedDecks = count($parsedData['errors']);
+        $errorMessages = array_unique($parsedData['errors']);
+        $numberOfDecksUploaded = $numberSuccessfullyParsedDecks + $numberOfFailedParsedDecks;
+
+        if ($user->getMaxNbDecks() < $numberOfDecksUploaded + count($existingDecks)) {
+            $session->getFlashBag()->set(
+                'error',
+                $translator->trans('decks.import.error.general')
+                . ' ' .
+                $translator->trans('decks.save.outOfSlots')
+            );
+            return $this->redirect($this->generateUrl('decks_list'));
+        }
+
+        // finally, import all the "good" decks(s)
+        foreach ($parsedData['decks'] as $data) {
+            $deck = new Deck();
+            $deck->setUuid(Uuid::uuid4());
+
+            $deckManager->save(
+                $this->getUser(),
+                $deck,
+                null,
+                $data['name'],
+                $data['faction'],
+                $data['description'],
+                null,
+                $data['content'],
+                null
             );
         }
 
-        $deck = new Deck();
-        $deck->setUuid(Uuid::uuid4());
-
-        $deckManager->save(
-            $this->getUser(),
-            $deck,
-            null,
-            $name,
-            $data['faction'],
-            $data['description'],
-            null,
-            $data['content'],
-            null
-        );
-
         $this->getDoctrine()->getManager()->flush();
+        if ($numberSuccessfullyParsedDecks) {
+            $session->getFlashBag()->set(
+                'notice',
+                $translator->transChoice(
+                    "decks.import.success",
+                    $numberOfDecksUploaded,
+                    [ '%success%' => $numberSuccessfullyParsedDecks, '%all%' => $numberOfDecksUploaded ]
+                )
+            );
+        }
+        if ($numberOfFailedParsedDecks) {
+            $session->getFlashBag()->set(
+                'error',
+                $translator->transChoice(
+                    "decks.import.failures",
+                    $numberOfDecksUploaded,
+                    [ '%failures%' => $numberOfFailedParsedDecks, '%all%' => $numberOfDecksUploaded ]
+                ) . " " .
+                $translator->transChoice(
+                    "decks.import.failureReasons",
+                    count($errorMessages),
+                    [ '%reasons%' => implode('", "', $errorMessages) ]
+                )
+            );
+        }
 
         return $this->redirect($this->generateUrl('decks_list'));
     }
@@ -350,11 +392,10 @@ class BuilderController extends AbstractController
      * @Route("/deck/save", name="deck_save", methods={"POST"})
      * @param Request $request
      * @param DeckManager $deckManager
+     * @param TranslatorInterface $translator
      * @return RedirectResponse|Response
-     * @throws ORMException
-     * @throws OptimisticLockException
      */
-    public function saveAction(Request $request, DeckManager $deckManager)
+    public function saveAction(Request $request, DeckManager $deckManager, TranslatorInterface $translator)
     {
 
         /* @var EntityManager $em*/
@@ -363,7 +404,7 @@ class BuilderController extends AbstractController
         $user = $this->getUser();
         if (count($user->getDecks()) > $user->getMaxNbDecks()) {
             return new Response(
-                'You have reached the maximum number of decks allowed. Delete some decks or increase your reputation.'
+                $translator->trans('decks.save.outOfSlots')
             );
         }
 
@@ -461,6 +502,45 @@ class BuilderController extends AbstractController
         $session->getFlashBag()->set('notice', "Deck deleted.");
 
         return $this->redirect($this->generateUrl('decks_list'));
+    }
+
+    /**
+     * @Route("/deck/download_list", name="deck_download_list", methods={"POST"})
+     * @param Request $request
+     * @param SessionInterface $session
+     * @return Response
+     */
+    public function downloadListAction(Request $request, SessionInterface $session)
+    {
+        /* @var $em EntityManager */
+        $em = $this->getDoctrine()->getManager();
+        $ids = explode('-', $request->get('ids'));
+        $decks = $em->getRepository(Deck::class)->findBy(['id' => $ids]);
+
+        $currentUserId = $this->getUser()->getId();
+        $decks = array_values(array_filter($decks, function (DeckInterface $deck) use ($currentUserId) {
+            return $currentUserId === $deck->getUser()->getId();
+        }));
+
+        $exports = [];
+        foreach ($decks as $deck) {
+            $content = $this->renderView('Export/default.txt.twig', [ "deck" => $deck->getTextExport() ]);
+            $exports[] = str_replace("\n", "\r\n", $content);
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/plain');
+        $response->headers->set(
+            'Content-Disposition',
+            $response->headers->makeDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                'decks.txt'
+            )
+        );
+
+        $response->setContent(implode("\r\n===\r\n", $exports));
+
+        return $response;
     }
 
     /**

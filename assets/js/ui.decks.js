@@ -63,6 +63,14 @@
         }, 500);
     };
 
+    ui.download_selected = function(ids)
+    {
+        var $form = $('#download-deck-list-form');
+        var $input = $('#download-deck-list-id');
+        $input.val(ids.join('-'));
+        $form.submit();
+    };
+
     ui.tag_remove_process = function tag_remove_process(event)
     {
         event.preventDefault();
@@ -187,6 +195,9 @@
             case 'btn-delete-selected':
                 ui.confirm_delete_all(ids);
                 break;
+            case 'btn-download-selected':
+                ui.download_selected(ids);
+                $(".selected-decks-dropdown-toggle").dropdown("toggle");
         }
         return false;
     };
