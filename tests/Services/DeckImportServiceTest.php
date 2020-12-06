@@ -111,6 +111,7 @@ class DeckImportServiceTest extends TestCase
                 "Watchers on the Wall",
                 "House Baratheon",
             ],
+            ["House Stark\nSea of Blood (Redesigns)", 1, 'Sea of Blood', "Redesigns", "House Stark"],
         ];
     }
 
@@ -164,6 +165,7 @@ class DeckImportServiceTest extends TestCase
             ["House Martell\n1 Burning on the Sand (TIMC)", 1, "Burning on the Sand", "TIMC", "House Martell"],
             ["House Martell\n1 Secret Schemes (TRW)", 1, "Secret Schemes", "TRW", "House Martell"],
             ["House Stark\n2 \"The Last of the Giants\" (WotW)", 2, '"The Last of the Giants"', "WotW", "House Stark"],
+            ["House Stark\nSea of Blood (R)", 1, 'Sea of Blood', "R", "House Stark"],
         ];
     }
 
