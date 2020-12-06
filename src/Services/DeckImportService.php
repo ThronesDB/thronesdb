@@ -39,6 +39,9 @@ class DeckImportService
     // <card name>
     const SINGLE_CARD_WITHOUT_PACK_INFO_REGEXP = '/^([^(]+)/';
 
+    // <card name> (<pack code|name>)
+    const SINGLE_CARD_WITH_PACK_INFO_REGEXP = '/^([^\(]+) \(([^)]+)/u';
+
     protected EntityManagerInterface $em;
 
     protected TranslatorInterface $translator;
@@ -150,6 +153,10 @@ class DeckImportService
             } elseif (preg_match(self::CARD_WITHOUT_PACK_INFO_ALT2_REGEXP, $line, $matches)) {
                 $quantity = intval($matches[2]);
                 $name = trim($matches[1]);
+            } elseif (preg_match(self::SINGLE_CARD_WITH_PACK_INFO_REGEXP, $line, $matches)) {
+                $quantity = 1;
+                $name = trim($matches[1]);
+                $packNameOrCode = trim($matches[2]);
             } elseif (preg_match(self::SINGLE_CARD_WITHOUT_PACK_INFO_REGEXP, $line, $matches)) {
                 $quantity = 1;
                 $name = trim($matches[1]);

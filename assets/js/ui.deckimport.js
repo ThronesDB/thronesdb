@@ -20,6 +20,9 @@
             } else if (name.match(/^(\d+)x? (.*)/)) {
                 qty = parseInt(RegExp.$1, 10);
                 name = RegExp.$2.trim();
+            } else if (name.match(/^([^(]+) \(([^)]+)\)/)) {
+                name = RegExp.$1.trim();
+                packName = RegExp.$2.trim();
             } else {
                 if (firstLine) {
                     $name.val(token);
