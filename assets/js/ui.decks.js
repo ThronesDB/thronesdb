@@ -168,12 +168,12 @@
 
     ui.handle_deck_selection_change = function handle_deck_selection_change()
     {
-        var checked = $('#decks').find('input[type=checkbox]:checked');
-        var button = $('#btn-group-selection button');
-        if (checked.size()) {
-            button.removeClass('btn-default').addClass('btn-primary')
+        var $checked = $('#decks').find('input[type=checkbox]:checked');
+        var $button = $('#btn-group-selection button');
+        if ($checked.length) {
+            $button.removeClass('btn-default').addClass('btn-primary')
         } else {
-            button.addClass('btn-default').removeClass('btn-primary')
+            $button.addClass('btn-default').removeClass('btn-primary')
         }
     }
 
@@ -219,23 +219,23 @@
      */
     ui.on_dom_loaded = function on_dom_loaded()
     {
-        $('#decks .select_all').on('click', function ()
+        $('.list-decks .toggle_all').on('click', function ()
         {
-            $('.list-decks-deck input[type="checkbox"]:not(:checked)').prop('checked', true);
+            $('.list-decks-deck input[type="checkbox"]').prop('checked', this.checked);
             ui.handle_deck_selection_change();
-            return false;
-        });
-
-        $('#decks .select_none').on('click', function ()
-        {
-            $('.list-decks-deck input[type="checkbox"]:checked').prop('checked', false);
-            ui.handle_deck_selection_change();
-            return false;
         });
 
         $('#decks').on('click', 'button.btn-delete-deck', ui.confirm_delete);
-        $('#decks').on('click', 'input[type=checkbox]', function (event)
+        $('#decks').on('click', 'input[type=checkbox]', function ()
         {
+            var $checked = $('#decks').find('input[type=checkbox]:checked');
+            var $all = $('#decks').find('input[type=checkbox]');
+            var $toggle = $('.list-decks .toggle_all');
+            if ($checked.length < $all.length) {
+                $toggle.prop('checked', false);
+            } else {
+                $toggle.prop('checked', true);
+            }
             ui.handle_deck_selection_change();
         });
 

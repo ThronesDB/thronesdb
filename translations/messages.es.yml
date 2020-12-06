@@ -47,8 +47,7 @@ forms:
   sort: Ordenar
 
 decks:
-  all: todo
-  none: ninguno
+  selectAll: seleccionar todo
   privatedecks: Mis mazos privados
   slotcount: "(%current%/%max% mazos)"
   version: Versión %version%
