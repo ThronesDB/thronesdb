@@ -4,6 +4,7 @@ Version: {{ deck.version }}
 {{ deck.faction.name }}
 {% for agenda in deck.agendas %}
 {{ agenda.card.name }}{% if agenda.card.isMultiple == true %} ({{ agenda.card.pack.name }}){% endif %}
+
 {% endfor %}
 
 {% set first_pack = deck.included_packs|first %}
