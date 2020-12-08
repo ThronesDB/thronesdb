@@ -164,7 +164,7 @@ decks:
     error:
       cannotFindFaction: Unable to find the faction of the deck.
       general: Import failed.
-    success: "{1} Deck successfully imported. | ]1,Inf] %success% out of %all% deck successfully imported."
+    success: "{1} Deck successfully imported. | ]1,Inf] %success% out of %all% decks successfully imported."
     failures: "{1} Failed to import deck. | ]1, Inf] Failed to import %failures% out of %all% decks."
     failureReasons: "{1} Reason: \"%reasons%\" | ]1, Inf] Reasons: \"%reasons%\""
   modals:
