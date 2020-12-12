@@ -51,6 +51,9 @@
             "migrations/.gitignore"
         ]
     },
+    "doctrine/reflection": {
+        "version": "1.2.2"
+    },
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
@@ -236,6 +239,9 @@
             "tests/bootstrap.php"
         ]
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.20.0"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -261,6 +267,9 @@
         "files": [
             "config/packages/security.yaml"
         ]
+    },
+    "symfony/string": {
+        "version": "v5.1.8"
     },
     "symfony/swiftmailer-bundle": {
         "version": "2.5",
