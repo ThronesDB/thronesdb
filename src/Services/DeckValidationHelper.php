@@ -46,14 +46,16 @@ class DeckValidationHelper
         foreach ($slots->getAgendas() as $agenda) {
             $code = $agenda->getCard()->getCode();
             switch ($code) {
-                case '05045': // The Wars To Come
+                case '05045': // "The Rains of Castamere"
                     $expectedPlotDeckSize = 12;
                     break;
-                case '10045': // "The Rains of Castamere"
+                case '10045': // The Wars To Come (SoD)
+                case '17151': // The Wars To Come (R)
                     $expectedPlotDeckSize = 10;
                     $expectedMaxDoublePlot = 2;
                     break;
-                case '13118': // Valyrian Steel
+                case '13118': // Valyrian Steel (BtRK)
+                case '17152': // Valyrian Steel (R)
                 case '16028': // Dark Wings, Dark Words
                     $expectedMinCardCount = 75;
                     break;
@@ -182,11 +184,18 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
-            case '13079': // Kingdom of Shadows
+            case '13079': // Kingdom of Shadows (BtRK)
+            case '17148': // Kingdom of Shadows (R)
                 $langKey = $this->translator->trans('card.keywords.shadow');
                 return $card->getType()->getCode() === 'character' && $card->hasShadowKeyword($langKey);
             case '13099': // The White Book
                 $trait = $this->translator->trans('card.traits.kingsguard');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
+            case '17150': // The Free Folk (R)
+                $trait = $this->translator->trans('card.traits.wildling');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
                     return $card->getType()->getCode() === 'character';
                 }
@@ -231,11 +240,28 @@ class DeckValidationHelper
                 return $this->validateTheWhiteBook($slots);
             case '13118':
                 return $this->validateValyrianSteel($slots);
+            case '17152':
+                return $this->validateRedesignedValyrianSteel($slots);
             case '16028':
                 return $this->validateDarkWingsDarkWords($slots);
+            case '17149':
+                return $this->validateRedesignedSeaOfBlood($slots);
+            case '17150':
+                return $this->validateRedesignedFreeFolk($slots);
             default:
                 return true;
         }
+    }
+
+    protected function validateRedesignedSeaOfBlood($slots): bool
+    {
+        $eventSlots = $slots->getDrawDeck()->filterByType('event');
+        foreach ($eventSlots as $slot) {
+            if ($slot->getCard()->getFaction()->getCode() === 'neutral') {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -400,6 +426,32 @@ class DeckValidationHelper
      * @param SlotCollectionInterface $slots
      * @return bool
      */
+    protected function validateRedesignedFreeFolk(SlotCollectionInterface $slots): bool
+    {
+        foreach ($slots->getPlotDeck()->getSlots() as $slot) {
+            /* @var CardInterface $card */
+            $card = $slot->getCard();
+            if ($card->getFaction()->getCode() !== 'neutral') {
+                return false;
+            }
+        }
+
+        foreach ($slots->getDrawDeck()->getSlots() as $slot) {
+            $trait = $this->translator->trans('card.traits.wildling');
+            $card = $slot->getCard();
+            if ($card->getFaction()->getCode() !== 'neutral'
+                && ! preg_match("/$trait\\./", $card->getTraits())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
     protected function validateValyrianSteel(SlotCollectionInterface $slots): bool
     {
         // Your deck cannot include more than 1 copy of each attachment (by title).
@@ -409,6 +461,30 @@ class DeckValidationHelper
         foreach ($nonAttachmentSlots as $slot) {
             $names[] = $slot->getCard()->getName();
         }
+
+        $attachmentsSlots = $slots->getDrawDeck()->filterByType('attachment');
+        /* @var SlotInterface $slot */
+        foreach ($attachmentsSlots as $slot) {
+            $name = $slot->getCard()->getName();
+            if (in_array($name, $names)) {
+                return false;
+            }
+            if (1 < $slot->getQuantity()) {
+                return false;
+            }
+            $names[] = $name;
+        }
+        return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateRedesignedValyrianSteel(SlotCollectionInterface $slots): bool
+    {
+        // Your deck cannot include more than 1 copy of each attachment.
+        $names = [];
 
         $attachmentsSlots = $slots->getDrawDeck()->filterByType('attachment');
         /* @var SlotInterface $slot */
