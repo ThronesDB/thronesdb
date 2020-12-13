@@ -89,4 +89,39 @@ interface RestrictionInterface
      * @return string
      */
     public function getVersion(): string;
+
+    /**
+     * @return array
+     */
+    public function getJoustRestrictedList(): array;
+
+    /**
+     * @return array
+     */
+    public function getJoustBannedList(): array;
+
+    /**
+     * @return array
+     */
+    public function getJoustRestrictedPods(): array;
+
+    /**
+     * @return array
+     */
+    public function getMeleeRestrictedList(): array;
+
+    /**
+     * @return array
+     */
+    public function getMeleeBannedList(): array;
+
+    /**
+     * @return array
+     */
+    public function getMeleeRestrictedPods(): array;
+
+    /**
+     * @return array
+     */
+    public function getReferencedCards(): array;
 }

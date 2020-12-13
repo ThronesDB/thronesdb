@@ -1,0 +1,50 @@
+{#
+    @file
+    Page template for displaying all restricted lists (RL).
+
+    Available variables:
+    - active_lists: a list of active RLs
+    - inactive_lists: a list of inactive RLs
+    - pagetitle: The page title
+    - pagedescription: The page description
+#}
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="main white container">
+
+        {% include 'alerts.html.twig' %}
+        <div class="alert alert-warning" role="alert">
+            <strong>Work in Progress!</strong>
+            The information on this page may be incomplete or even incorrect. Please see
+            <a href="{{ path('faq') }}">the F.A.Q.</a> for accurate information on restricted and banned lists.
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 restrictions-container">
+                {% if active_lists|length %}
+                    <div class="active-restrictions">
+                        <h1>Active Restricted Lists</h1>
+                        <p>The following lists of card restrictions are supported in the deck builder.</p>
+                        {% for list in active_lists %}
+                            {% include 'Restrictions/restrictedlist.html.twig' with {'list': list} %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if inactive_lists|length %}
+                    <div class="inactive-restrictions">
+                        <h1>Inactive Restricted Lists</h1>
+                        <p>The following lists of card restrictions are <em>not supported</em> in
+                           the deck builder and are listed here for reference only.</p>
+                        {% for list in inactive_lists %}
+                            {% include 'Restrictions/restrictedlist.html.twig' with {'list': list } %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
