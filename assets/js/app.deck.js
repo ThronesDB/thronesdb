@@ -25,8 +25,7 @@
         header_tpl = _.template('<h5><span class="icon icon-<%= code %>"></span> <%= name %> (<%= quantity %>)</h5>'),
         card_line_tpl = _.template('<span class="icon icon-<%= card.type_code %> fg-<%= card.faction_code %>"></span> <a href="<%= card.url %>" class="card card-tip" data-toggle="modal" data-remote="false" data-target="#cardModal" data-code="<%= card.code %>"><%= card.label %></a><%= labels %>'),
         card_line_label_tpl = _.template('<abbr class="legality <%= cls %>" title="<%= title %>" data-title="<%= title %>" data-keyword="<%= keyword %>"><%= label %></abbr>'),
-        layouts = {},
-        layout_data = {};
+        layouts = {};
 
     var factions = {
         '01198': 'baratheon',
@@ -914,10 +913,10 @@
         agendas.forEach(function (agenda) {
             if (agenda && agenda.code === '05045') {
                 expectedPlotDeckSize = 12;
-            } else if (agenda && agenda.code === '10045') {
+            } else if (agenda && ['10045', '17151'].indexOf(agenda.code) > -1) {
                 expectedPlotDeckSize = 10;
                 expectedMaxDoublePlot = 2;
-            } else if (agenda && ['13118', '16028'].indexOf(agenda.code) > -1) {
+            } else if (agenda && ['13118', '17152', '16028'].indexOf(agenda.code) > -1) {
                 expectedMinCardCount = 75;
             } else if (agenda && agenda.code === '16030') {
                 expectedMinCardCount = 100;
@@ -984,6 +983,21 @@
 
     deck.validate_agenda = function validate_agenda(agenda)
     {
+        var validate_redesigned_the_free_folk = function() {
+            var re = new RegExp(Translator.trans('card.traits.wildling') + '\\.');
+            var i, n;
+            var nonNeutralCards = deck.get_cards(null, {faction_code: { $ne: 'neutral' }});
+            for (i = 0, n = nonNeutralCards.length; i < n; i++) {
+                if (nonNeutralCards[i].type_code !== 'character' || ! re.test(nonNeutralCards[i].traits)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        var validate_redesigned_sea_of_blood = function() {
+            var neutralEvents = deck.get_cards(null, { type_code: 'event', faction_code: 'neutral' });
+            return !neutralEvents.length;
+        }
         var validate_the_white_book = function() {
             var i, n;
             var names = [];
@@ -1002,6 +1016,22 @@
             for (i = 0, n = notAttachments.length; i < n; i++) {
                 names.push(notAttachments[i].name);
             }
+
+            for (i = 0, n = attachments.length; i < n; i++) {
+                if (attachments[i].indeck > 1) {
+                    return false;
+                }
+                if (-1 !== names.indexOf(attachments[i].name)) {
+                    return false;
+                }
+                names.push(attachments[i].name);
+            }
+            return true;
+        };
+        var validate_redesigned_valyrian_steel = function() {
+            var i, n;
+            var names = [];
+            var attachments = deck.get_cards(null, {type_code: 'attachment'});
 
             for (i = 0, n = attachments.length; i < n; i++) {
                 if (attachments[i].indeck > 1) {
@@ -1097,12 +1127,18 @@
                     return false;
                 }
                 break;
+            case '17150':
+                return validate_redesigned_the_free_folk();
             case '13099':
                 return validate_the_white_book();
             case '13118':
                 return validate_valyrian_steel();
+            case '17152':
+                return validate_redesigned_valyrian_steel();
             case '16028':
                 return validate_dark_wings_dark_words();
+            case '17149':
+                return validate_redesigned_sea_of_blood();
         }
         return true;
     };
@@ -1228,12 +1264,15 @@
      */
     deck.can_include_card = function can_include_card(card)
     {
-        // neutral card => yes
-        if(card.faction_code === 'neutral')
-            return true;
+        var agendas = deck.get_agendas();
+        var agendaCodes = agendas.map(function(agenda) { return agenda.code });
+        // neutral card => yes, unless the agenda is redesigned "Sea of Blood" and the card is an event.
+        if(card.faction_code === 'neutral') {
+            return !(-1 !== agendaCodes.indexOf('17149') && card.type_code === 'event');
+        }
 
-        // in-house card => yes
-        if(card.faction_code === faction_code)
+        // in-house card => yes, unless agenda is redesigned "Free Folk".
+        if(card.faction_code === faction_code && (-1 === agendaCodes.indexOf('17150')))
             return true;
 
         // out-of-house and loyal => no
@@ -1241,7 +1280,7 @@
             return false;
 
         // agenda => yes
-        var agendas = deck.get_agendas();
+
         for(var i = 0; i < agendas.length; i++) {
             if(deck.card_allowed_by_agenda(agendas[i], card)) {
                 return true;
@@ -1269,10 +1308,15 @@
                 return card.faction_code === deck.get_minor_faction_code(agenda);
             case '09045':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.maester')) !== -1;
-            case '13079':
+            case '13079': // Kingdom of Shadows (BtRK)
+            case '17148': // Kingdom of Shadows (R)
                 return card.type_code === 'character' && card_has_shadow_keyword(card, Translator.trans('card.keywords.shadow'));
             case '13099':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.kingsguard')) !== -1;
+            case '17150':
+                return card.faction_code === 'neutral' ||
+                  (card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.wildling')) !== -1);
+
         }
     };
 })(app.deck = {}, jQuery);
