@@ -34,6 +34,18 @@ class Restriction implements RestrictionInterface
     protected DateTime $effectiveOn;
 
     /**
+     * @ORM\Column(name="title", type="string", length=50)
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 50
+     * )
+     */
+    protected string $title;
+
+    /**
      * @ORM\Column(name="issuer", type="string", length=50)
      *
      * @Assert\NotBlank()
@@ -98,6 +110,22 @@ class Restriction implements RestrictionInterface
     public function getCode(): string
     {
         return $this->code;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 
     /**

@@ -48,11 +48,12 @@ class ListRestrictionsCommand extends Command
         } else {
             $table = new Table($output);
             $table
-                ->setHeaders(['Code', 'Issuer', 'Version', 'Active', 'Date effective']);
+                ->setHeaders(['Code', 'Title', 'Issuer', 'Version', 'Active', 'Date effective']);
 
             foreach ($restrictions as $restriction) {
                 $table->addRow([
                     $restriction->getCode(),
+                    $restriction->getTitle(),
                     $restriction->getIssuer(),
                     $restriction->getVersion(),
                     $restriction->isActive() ? '<fg=green>yes</>' : '<fg=red>no</>',
