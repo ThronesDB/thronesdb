@@ -18,6 +18,16 @@ interface RestrictionInterface
     /**
      * @return string
      */
+    public function getTitle(): string;
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void;
+
+    /**
+     * @return string
+     */
     public function getCode(): string;
 
     /**

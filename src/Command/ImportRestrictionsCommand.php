@@ -23,6 +23,20 @@ class ImportRestrictionsCommand extends Command
 {
     const RESTRICTIONS_FILE_NAME = 'restricted-list.json';
 
+    const ISSUER_FFG = 'Fantasy Flight Games';
+
+    const ISSUER_CONCLAVE = 'The Conclave';
+
+    const ISSUER_DESIGN_TEAM = 'Redesigns';
+
+    const ISSUER_FFG_SHORTNAME = 'FFG';
+
+    protected array $faqIssuers = [
+        self::ISSUER_FFG,
+        self::ISSUER_CONCLAVE,
+        self::ISSUER_DESIGN_TEAM
+    ];
+
     protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
@@ -77,6 +91,7 @@ class ImportRestrictionsCommand extends Command
                 $restriction->setCode($code);
                 $restriction->setActive(false);
             }
+            $restriction->setTitle($this->createTitleFromIssuerAndVersion($issuer, $version));
             $restriction->setIssuer($issuer);
             $restriction->setEffectiveOn($effectiveOn);
             $restriction->setCardSet($cardSet);
@@ -172,5 +187,14 @@ class ImportRestrictionsCommand extends Command
         }
 
         return $rhett;
+    }
+
+    protected function createTitleFromIssuerAndVersion(string $issuer, string $version): string
+    {
+        $title = self::ISSUER_FFG === $issuer ? self::ISSUER_FFG_SHORTNAME : $issuer;
+        if (in_array($issuer, $this->faqIssuers)) {
+            $title .= ' FAQ';
+        }
+        return $title . ' v' . $version;
     }
 }
