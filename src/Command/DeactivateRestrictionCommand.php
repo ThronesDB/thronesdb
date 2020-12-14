@@ -47,9 +47,7 @@ class DeactivateRestrictionCommand extends Command
 
         foreach ($restrictions as $restriction) {
             $map[$restriction->getCode()] = $restriction;
-            $options[$restriction->getCode()] = $restriction->getIssuer()
-                . ' (Version: ' . $restriction->getVersion()  . ')'
-                . ', effective on ' . $restriction->getEffectiveOn()->format('Y-m-d');
+            $options[$restriction->getCode()] = $restriction->getTitle();
         }
 
         if (empty($options)) {
