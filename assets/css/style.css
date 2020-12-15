@@ -532,3 +532,51 @@ abbr.legality.banned {
 #rules div.example {
     padding-left: 3em;
 }
+
+/**** Restricted Lists ****/
+.restrictions-container .active-restrictions {
+    border-left: 3px solid green;
+    padding: 1rem;
+}
+
+.restrictions-container .inactive-restrictions {
+    border-left: 3px solid red;
+    padding: 1rem;
+
+}
+
+.restrictions-container .restricted-list {
+    border-bottom: 2px dotted grey;
+    padding-bottom: 2rem;
+}
+
+.restrictions-container .restricted-list h2 a {
+    display: none;
+}
+
+.restrictions-container .restricted-list h2:hover a {
+    display: inline;
+}
+
+.restrictions-container .pod {
+    border: 1px solid grey;
+    border-radius: .5rem;
+    margin-bottom: 1rem;
+}
+
+.restrictions-container .pod .pod-card {
+    padding: .5rem;
+}
+
+.restrictions-container .pod .restricted-card {
+    font-weight: bold;
+}
+
+.restrictions-container .pod .title {
+    background-color: lightblue;
+    border-bottom: 1px solid black;
+    font-weight: bold;
+    padding: .5rem;
+}
+
+

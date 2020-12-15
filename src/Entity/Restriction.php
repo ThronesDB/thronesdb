@@ -222,4 +222,76 @@ class Restriction implements RestrictionInterface
     {
         return $this->version;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function getJoustRestrictedList(): array
+    {
+        return $this->getContents()['joust']['restricted'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getJoustBannedList(): array
+    {
+        return $this->getContents()['joust']['banned'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getJoustRestrictedPods(): array
+    {
+        return $this->getContents()['joust']['restricted_pods'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMeleeRestrictedList(): array
+    {
+        return $this->getContents()['melee']['restricted'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMeleeBannedList(): array
+    {
+        return $this->getContents()['melee']['banned'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMeleeRestrictedPods(): array
+    {
+        return $this->getContents()['melee']['restricted_pods'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getReferencedCards() : array
+    {
+        $cardsInPods = array_map(function (array $pod) {
+            $rhett = [];
+            if (array_key_exists('restricted', $pod) && $pod['restricted']) {
+                $rhett[] = $pod['restricted'];
+            }
+            return array_merge($rhett, $pod['cards']);
+        },
+        array_merge($this->getJoustRestrictedPods(), $this->getMeleeRestrictedPods()));
+        return array_unique(
+            array_merge(
+                $this->getJoustRestrictedList(),
+                $this->getJoustBannedList(),
+                $this->getMeleeRestrictedList(),
+                $this->getMeleeBannedList(),
+                $cardsInPods
+            )
+        );
+    }
 }

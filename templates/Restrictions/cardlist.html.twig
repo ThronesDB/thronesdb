@@ -1,0 +1,15 @@
+{#
+    @file
+    Partial template for rendering a list of cards.
+
+    Available variables:
+      - list: a list of cards
+#}
+{% for card in list %}
+    <div class="col-md-4 col-sm-6">
+        <span class="icon icon-{{ card.type_code }} fg-{{ card.faction_code }}"></span>
+        <a href="{{ card.url }}" class="card-tip"
+           data-code="{{ card.code }}">{{ card.name }} ({{ card.pack_code }})</a>
+    </div>
+{% endfor %}
+<div class="clearfix visible"></div>
