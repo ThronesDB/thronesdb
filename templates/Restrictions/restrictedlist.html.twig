@@ -1,0 +1,47 @@
+{#
+@file
+    Partial template for rendering a restricted list.
+
+    Available variables:
+    - list: a restricted list object
+#}
+<div id="#{{ list.code }}" class="restricted-list">
+    <h2>{{ list.title }}
+        <a href="{{ path('restrictions') }}#{{ list.code }}">
+            <span class="fa fa-link" aria-hidden="true"></span>
+        </a>
+    </h2>
+    <p>
+        Issued by {{ list.issuer }}, effective on {{ list.effectiveOn | date("m/d/Y")}}.
+    </p>
+    {%if list.joustRestrictedList | length %}
+        <h3>Joust Restricted List</h3>
+        {% include 'Restrictions/restricteddescription.html.twig' %}
+        {% include 'Restrictions/cardlist.html.twig' with {'list': list.joustRestrictedList} %}
+    {% endif %}
+    {%if list.joustRestrictedPods | length %}
+        <h3>Joust Restricted Pods</h3>
+        {% include 'Restrictions/poddescription.html.twig' %}
+        {% include 'Restrictions/podlist.html.twig' with {'pods': list.joustRestrictedPods} %}
+    {% endif %}
+    {%if list.joustBannedList | length %}
+        <h3>Joust Banned List</h3>
+        <p>The following cards are not legal for competitive play in Joust.</p>
+        {% include 'Restrictions/cardlist.html.twig' with {'list': list.joustBannedList} %}
+    {% endif %}
+    {%if list.meleeRestrictedList | length %}
+        <h3>Melee Restricted List</h3>
+        {% include 'Restrictions/restricteddescription.html.twig' %}
+        {% include 'Restrictions/cardlist.html.twig' with {'list': list.meleeRestrictedList} %}
+    {% endif %}
+    {%if list.meleeRestrictedPods | length %}
+        <h3>Melee Restricted Pods</h3>
+        {% include 'Restrictions/poddescription.html.twig' %}
+        {% include 'Restrictions/podlist.html.twig' with {'pods': list.meleeRestrictedPods} %}
+    {% endif %}
+    {%if list.meleeBannedList | length %}
+        <h3>Melee Banned List</h3>
+        <p>The following cards are not legal for competitive play in Melee.</p>
+        {% include 'Restrictions/cardlist.html.twig' with {'list': list.meleeBannedList} %}
+    {% endif %}
+</div>

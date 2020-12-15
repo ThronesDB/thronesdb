@@ -31,6 +31,10 @@ class ImportRestrictionsCommand extends Command
 
     const ISSUER_FFG_SHORTNAME = 'FFG';
 
+    const FORMAT_JOUST = 'joust';
+
+    const FORMAT_MELEE = 'melee';
+
     protected array $faqIssuers = [
         self::ISSUER_FFG,
         self::ISSUER_CONCLAVE,
@@ -183,6 +187,10 @@ class ImportRestrictionsCommand extends Command
             $rhett[$name]['banned'] = $banned;
             if (array_key_exists('pods', $format)) {
                 $rhett[$name]['restricted_pods'] = $format['pods'];
+                for ($i = 0, $n = count($rhett[$name]['restricted_pods']); $i < $n; $i++) {
+                    $rhett[$name]['restricted_pods'][$i]['title']
+                        = (self::FORMAT_JOUST === $name ? 'P' : 'MP') . ($i + 1);
+                }
             }
         }
 
