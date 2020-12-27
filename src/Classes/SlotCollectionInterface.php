@@ -114,18 +114,6 @@ interface SlotCollectionInterface extends Countable, IteratorAggregate, ArrayAcc
     public function filterByTrait($trait);
 
     /**
-     * Checks Banned- and Restricted-List compliance for the Melee format.
-     * @return boolean
-     */
-    public function isLegalForMelee();
-
-    /**
-     * Checks Banned- and Restricted-List compliance for the Joust format.
-     * @return boolean
-     */
-    public function isLegalforJoust();
-
-    /**
      * Returns the collection of slots.
      * @return Collection
      */
