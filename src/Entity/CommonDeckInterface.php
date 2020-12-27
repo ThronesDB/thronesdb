@@ -106,16 +106,4 @@ interface CommonDeckInterface
      * @return array
      */
     public function getCycleOrderExport();
-
-    /**
-     * @return bool
-     * @see SlotCollectionInterface::isLegalForMelee()
-     */
-    public function isLegalForMelee();
-
-    /**
-     * @return bool
-     * @see SlotCollectionInterface::isLegalForJoust()
-     */
-    public function isLegalForJoust();
 }

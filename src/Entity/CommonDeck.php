@@ -35,8 +35,6 @@ abstract class CommonDeck implements CommonDeckInterface
             'agendas' => $agendas_code,
             'agendaurls' => $agenda_urls,
             'version' => $this->getVersion(),
-            'isLegalForJoust' => $this->isLegalForJoust(),
-            'isLegalForMelee' => $this->isLegalForMelee(),
         ];
     }
 
@@ -74,21 +72,5 @@ abstract class CommonDeck implements CommonDeckInterface
             'included_packs' => $slots->getIncludedPacks(),
             'slots_by_cycle_order' => $slots->getSlotsByCycleOrder()
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isLegalForMelee()
-    {
-        return $this->getSlots()->isLegalForMelee();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isLegalForJoust()
-    {
-        return $this->getSlots()->isLegalForJoust();
     }
 }

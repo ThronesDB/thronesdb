@@ -578,22 +578,21 @@
         }).join(', ');
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
 
-        var legalityContents = '<em>' + Translator.trans('tournamentLegality.title') +':</em> ';
+        var legalityContents = '<table class="tournament-legality-info"><tr><td>' + app.data.restricted_list_title + '</td><td>';
         if (is_joust_banned_list_compliant(cards) && is_joust_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
-        legalityContents += Translator.trans('tournamentLegality.joust') + '</span> | ';
-
+        legalityContents += Translator.trans('tournamentLegality.joust') + '</td><td>';
         if (is_melee_banned_list_compliant(cards) && is_melee_restricted_list_compliant(cards)) {
             legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
         } else {
             legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
         }
-        legalityContents += Translator.trans('tournamentLegality.melee') + '</span>';
+        legalityContents += Translator.trans('tournamentLegality.melee') + '</td></tr></table>';
 
-        var legalitySection = $('<div>' + legalityContents +'</div>');
+        var legalitySection = $('<div>' + legalityContents + '</div>');
         deck.update_layout_section(data, 'meta', legalitySection);
 
         if (warnings.length) {
