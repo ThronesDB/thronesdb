@@ -444,7 +444,7 @@ article.review .review-content {
     margin-left: 50px
 }
 article.review .review-text :first-child {
-    margin-top: 0px
+    margin-top: 0;
 }
 article.review .review-date {
     clear: both;
@@ -500,10 +500,24 @@ article.review .review-comment {
 }
 
 /**************** Tournament Legality indicators *******/
-.decklists .tournament-legality-info,
-#decks .tournament-legality-info {
+.tournament-legality-info {
     font-size: small;
 }
+
+.tournament-legality-info td {
+    border-right: 1px solid grey;
+    padding: 0 .5rem;
+}
+
+.tournament-legality-info td:first-child {
+    padding-left: 0;
+}
+
+.tournament-legality-info td:last-child {
+    border-right: 0;
+    padding-right: 0;
+}
+
 abbr.legality.rl-joust,
 abbr.legality.rl-melee {
     color: #639;

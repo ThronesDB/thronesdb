@@ -1,3 +1,17 @@
+{#
+@file
+    Page template for rendering a user's private list of decks.
+
+    Available variables:
+    - pagetitle
+    - decklists
+    - decklegality
+    - url
+    - type
+    - pages
+    - prevurl
+    - nexturl
+#}
 {% extends 'base.html.twig' %}
 {% import "macros.html.twig" as macros %}
 
@@ -119,24 +133,47 @@
                                         </span>
                                         {% if decklist.tournament %}
                                             <span class="text-success" style="margin-left:1em">
-            <span class="fas fa-certificate"></span> {{ decklist.tournament.description }}
-        </span>
+                                                <span class="fas fa-certificate"></span> {{ decklist.tournament.description }}
+                                            </span>
                                         {% endif %}
                                     </h5>
-                                    <div class="tournament-legality-info">
-                                        <em>{{ 'tournamentLegality.title' | trans }}:</em>
-                                        {% if decklist.isLegalForJoust %}
-                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'tournamentLegality.joust' | trans }}</span>
-                                        {% else %}
-                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'tournamentLegality.joust' | trans }}</span>
-                                        {% endif %}
-                                        |
-                                        {% if decklist.isLegalForMelee %}
-                                            <span class="text-success"><i class="fas fa-check"></i> {{ 'tournamentLegality.melee' | trans }}</span>
-                                        {% else %}
-                                            <span class="text-danger"><i class="fas fa-times"></i> {{ 'tournamentLegality.melee' | trans }}</span>
-                                        {% endif %}
-                                    </div>
+                                    {% if decklegality[decklist.id] %}
+                                        <table class="tournament-legality-info">
+                                            {% for legality in decklegality[decklist.id] %}
+                                                <tr>
+                                                    <td>
+                                                        {{ legality.title }}
+                                                    </td>
+                                                    <td>
+                                                        {% if legality.joust %}
+                                                            <span class="text-success">
+                                                            <i class="fas fa-check"></i>
+                                                            {{ 'tournamentLegality.joust' | trans }}
+                                                        </span>
+                                                        {% else %}
+                                                            <span class="text-danger">
+                                                            <i class="fas fa-times"></i>
+                                                            {{ 'tournamentLegality.joust' | trans }}
+                                                        </span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        {% if legality.melee %}
+                                                            <span class="text-success">
+                                                            <i class="fas fa-check"></i>
+                                                            {{ 'tournamentLegality.melee' | trans }}
+                                                        </span>
+                                                        {% else %}
+                                                            <span class="text-danger">
+                                                            <i class="fas fa-times"></i>
+                                                            {{ 'tournamentLegality.melee' | trans }}
+                                                        </span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    {% endif %}
                                 </article>
                             </td>
                         </tr>

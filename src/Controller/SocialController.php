@@ -11,6 +11,7 @@ use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Faction;
+use App\Entity\Restriction;
 use App\Entity\Tournament;
 use App\Entity\User;
 use App\Entity\UserInterface;
@@ -18,6 +19,7 @@ use App\Services\DeckValidationHelper;
 use App\Services\CardsData;
 use App\Services\DecklistFactory;
 use App\Services\DecklistManager;
+use App\Services\RestrictionsChecker;
 use App\Services\Texts;
 use DateTime;
 use Doctrine\DBAL\Connection;
@@ -592,6 +594,7 @@ class SocialController extends AbstractController
      * @param TranslatorInterface $translator
      * @param DecklistManager $decklistManager
      * @param CardsData $cardsData
+     * @param RestrictionsChecker $restrictionsChecker
      * @param int $cacheExpiration
      * @param string $type
      * @param int $page
@@ -602,6 +605,7 @@ class SocialController extends AbstractController
         TranslatorInterface $translator,
         DecklistManager $decklistManager,
         CardsData $cardsData,
+        RestrictionsChecker $restrictionsChecker,
         int $cacheExpiration,
         $type,
         $page = 1
@@ -662,12 +666,37 @@ class SocialController extends AbstractController
 
         $pagetitle = $translator->trans('decklist.list.titles.'.$type);
 
+        // check all decks against all active RLs
+        $restrictionsRepo = $this->getDoctrine()->getRepository(Restriction::class);
+        $activeRestrictions = $restrictionsRepo->findBy(['active' => true], ['effectiveOn' => 'DESC']);
+
+        $deckLegalityMap = [];
+
+        foreach ($activeRestrictions as $restriction) {
+            foreach ($paginator as $decklist) {
+                $decklistId = $decklist->getId();
+                if (! array_key_exists($decklistId, $deckLegalityMap)) {
+                    $deckLegalityMap[$decklistId] = [];
+                }
+                $restrictionCode = $restriction->getCode();
+                $restrictionTitle = $restriction->getTitle();
+                if (! array_key_exists($restrictionCode, $deckLegalityMap[$decklistId])) {
+                    $deckLegalityMap[$decklistId][$restrictionCode] = [
+                        'title' => $restrictionTitle,
+                        'joust' => $restrictionsChecker->isLegalForJoust($restriction, $decklist),
+                        'melee' => $restrictionsChecker->isLegalForMelee($restriction, $decklist),
+                    ];
+                }
+            }
+        }
+
         return $this->render(
             'Decklist/decklists.html.twig',
             array(
                 'pagetitle' => $pagetitle,
                 'pagedescription' => "Browse the collection of thousands of premade decks.",
                 'decklists' => $paginator,
+                'decklegality' => $deckLegalityMap,
                 'url' => $request->getRequestUri(),
                 'header' => $header,
                 'type' => $type,
@@ -1499,6 +1528,7 @@ class SocialController extends AbstractController
             array(
                 'pagetitle' => $translator->trans('decklist.list.titles.search'),
                 'decklists' => null,
+                'decklegality' => [],
                 'url' => $request->getRequestUri(),
                 'header' => $searchForm,
                 'type' => 'find',

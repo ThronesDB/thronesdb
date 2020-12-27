@@ -12,12 +12,14 @@ use App\Entity\Deckslot;
 use App\Entity\Faction;
 use App\Entity\FactionInterface;
 use App\Entity\Pack;
+use App\Entity\Restriction;
 use App\Entity\Tournament;
 use App\Entity\UserInterface;
 use App\Services\AgendaHelper;
 use App\Services\DeckImportService;
 use App\Services\DeckManager;
 use App\Services\Diff;
+use App\Services\RestrictionsChecker;
 use App\Services\Texts;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
@@ -739,11 +741,15 @@ class BuilderController extends AbstractController
     /**
      * @Route("/decks", name="decks_list", methods={"GET"})
      * @param DeckManager $deckManager
+     * @param RestrictionsChecker $restrictionsChecker
      * @param TranslatorInterface $translator
      * @return Response
      */
-    public function listAction(DeckManager $deckManager, TranslatorInterface $translator)
-    {
+    public function listAction(
+        DeckManager $deckManager,
+        RestrictionsChecker $restrictionsChecker,
+        TranslatorInterface $translator
+    ) {
         /* @var UserInterface $user */
         $user = $this->getUser();
 
@@ -754,13 +760,39 @@ class BuilderController extends AbstractController
             "SELECT t.id, t.description FROM tournament t ORDER BY t.description desc"
         )->fetchAll();
 
+
         if (count($decks)) {
+            // collect all deck tags
             $tags = [];
             foreach ($decks as $deck) {
                 /* @var DeckInterface $deck */
                 $tags[] = $deck->getTags();
             }
             $tags = array_unique($tags);
+
+            // check all decks against all active RLs
+            $restrictionsRepo = $this->getDoctrine()->getRepository(Restriction::class);
+            $activeRestrictions = $restrictionsRepo->findBy(['active' => true], ['effectiveOn' => 'DESC']);
+
+            $deckLegalityMap = [];
+
+            foreach ($activeRestrictions as $restriction) {
+                foreach ($decks as $deck) {
+                    $deckId = $deck->getId();
+                    if (! array_key_exists($deckId, $deckLegalityMap)) {
+                        $deckLegalityMap[$deckId] = [];
+                    }
+                    $restrictionCode = $restriction->getCode();
+                    $restrictionTitle = $restriction->getTitle();
+                    if (! array_key_exists($restrictionCode, $deckLegalityMap[$deckId])) {
+                        $deckLegalityMap[$deckId][$restrictionCode] = [
+                            'title' => $restrictionTitle,
+                            'joust' => $restrictionsChecker->isLegalForJoust($restriction, $deck),
+                            'melee' => $restrictionsChecker->isLegalForMelee($restriction, $deck),
+                        ];
+                    }
+                }
+            }
 
             return $this->render(
                 'Builder/decks.html.twig',
@@ -773,6 +805,7 @@ class BuilderController extends AbstractController
                     'nbdecks' => count($decks),
                     'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
                     'tournaments' => $tournaments,
+                    'decklegality' => $deckLegalityMap,
                 )
             );
         } else {
