@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-use App\Entity\DecklistslotInterface;
 use App\Entity\PackInterface;
 use App\Entity\SlotInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,24 +18,12 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     protected $slots;
 
     /**
-     * @var RestrictedListChecker
-     */
-    protected $restrictedListChecker;
-
-    /**
-     * @var BannedListChecker
-     */
-    protected $bannedListChecker;
-
-    /**
      * SlotCollectionDecorator constructor.
      * @param Collection $slots
      */
     public function __construct(Collection $slots)
     {
         $this->slots = $slots;
-        $this->restrictedListChecker = new RestrictedListChecker();
-        $this->bannedListChecker = new BannedListChecker();
     }
 
     /**
@@ -368,40 +355,6 @@ class SlotCollectionDecorator implements SlotCollectionInterface
         }
         ksort($arr);
         return $arr;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isLegalForMelee()
-    {
-        $slots = $this->getSlots()->getValues();
-        $cardCodes = [];
-        /**
-         * @var DecklistslotInterface $slot;
-         */
-        foreach ($slots as $slot) {
-            $cardCodes[] = $slot->getCard()->getCode();
-        }
-        return $this->bannedListChecker->isLegalForMelee($cardCodes)
-            && $this->restrictedListChecker->isLegalForMelee($cardCodes);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function isLegalForJoust()
-    {
-        $slots = $this->getSlots()->getValues();
-        $cardCodes = [];
-        /**
-         * @var DecklistslotInterface $slot;
-         */
-        foreach ($slots as $slot) {
-            $cardCodes[] = $slot->getCard()->getCode();
-        }
-        return $this->bannedListChecker->isLegalForJoust($cardCodes)
-            && $this->restrictedListChecker->isLegalForJoust($cardCodes);
     }
 
     /**
