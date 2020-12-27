@@ -231,6 +231,8 @@
         "16036", // The Gathering Storm (TTWDFL)
     ];
 
+    data.restricted_list_title = 'The Conclave FAQ v2.0';
+
     function onCollectionUpdate(updated) {
         database_changed = true;
     }

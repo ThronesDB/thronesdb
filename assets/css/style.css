@@ -502,6 +502,7 @@ article.review .review-comment {
 /**************** Tournament Legality indicators *******/
 .tournament-legality-info {
     font-size: small;
+    margin-top: .5rem;
 }
 
 .tournament-legality-info td {
