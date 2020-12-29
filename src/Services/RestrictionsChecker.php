@@ -122,19 +122,28 @@ class RestrictionsChecker
             return true;
         }
 
-        // a deck cannot include cards from pods if the pod's restricted card is part of the deck.
-        $isRestrictedInPod = false;
+
         foreach ($pods as $pod) {
-            $restricted = $pod['restricted'];
-            if (! in_array($restricted, $cardsInDeck)) {
-                continue;
-            }
-            if (array_intersect($pod['cards'], $cardsInDeck)) {
-                $isRestrictedInPod = true;
-                break;
+            if (array_key_exists('restricted', $pod)) {
+                // if a pod has a restricted card, then the deck cannot include cards
+                // from pods if the restricted-pod's restricted card is part of the deck.
+                $restricted = $pod['restricted'];
+                if (! in_array($restricted, $cardsInDeck)) {
+                    continue;
+                }
+                if (array_intersect($pod['cards'], $cardsInDeck)) {
+                    return true;
+                }
+            } else {
+                // a deck cannot include more than one card from each pod.
+                $podCardsInDeck = array_intersect($pod['cards'], $cardsInDeck);
+                if (1 < count($podCardsInDeck)) {
+                    return true;
+                }
             }
         }
-        return $isRestrictedInPod;
+
+        return false;
     }
 
     /**

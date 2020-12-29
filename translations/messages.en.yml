@@ -395,8 +395,10 @@ pag:
   cardscount: "{0} There is no cards | {1} One card | ]1,Inf] %count% cards"
 
 card:
-  podinfo_single: '%format% - If %restricted% is your chosen restricted card, you cannot include %card% in your deck.'
-  podinfo_multiple: '%format% - If %restricted% is your chosen restricted card, you cannot include the following cards in your deck: %cards%.'
+  podinfo_single: '%format% - If you deck includes %card% then it cannot include %other_card%.'
+  podinfo_multiple: '%format% - If you deck includes %card% then it cannot include any of the following cards: %other_cards%.'
+  restricted_podinfo_single: '%format% - If %restricted% is your chosen restricted card, you cannot include %card% in your deck.'
+  restricted_podinfo_multiple: '%format% - If %restricted% is your chosen restricted card, you cannot include the following cards in your deck: %cards%.'
   rl-joust:
     title: "This card is on the Joust Restricted List."
   rl-melee:
