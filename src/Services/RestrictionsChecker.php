@@ -124,9 +124,7 @@ class RestrictionsChecker
 
 
         foreach ($pods as $pod) {
-            // @todo clean this up once it's clear whether 'restricted' becomes optional or nullable [ST 2020/12/27]
-            // @link https://github.com/throneteki/throneteki-json-data/issues/95
-            if (array_key_exists('restricted', $pod) || ! empty($pod['restricted'])) {
+            if (array_key_exists('restricted', $pod)) {
                 // if a pod has a restricted card, then the deck cannot include cards
                 // from pods if the restricted-pod's restricted card is part of the deck.
                 $restricted = $pod['restricted'];
