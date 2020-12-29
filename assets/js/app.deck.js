@@ -42,10 +42,12 @@
         var map = {};
 
         _.each(pods_list, function (pod) {
-            if (! map.hasOwnProperty(pod.restricted)) {
-                map[pod.restricted] = [];
+            if (pod.restricted) {
+                if (! map.hasOwnProperty(pod.restricted)) {
+                    map[pod.restricted] = [];
+                }
+                map[pod.restricted].push(pod);
             }
-            map[pod.restricted].push(pod);
             _.each(pod.cards, function (card) {
                 if (! map.hasOwnProperty(card)) {
                     map[card] = [];
@@ -129,10 +131,17 @@
 
 
         for (i = 0, n = pods.length; i < n; i++) {
-            if (-1 !== codes.indexOf(pods[i].restricted)
-              && _.intersection(pods[i].cards, codes).length) {
-                is_valid = false;
-                break;
+            if (pods[i].restricted) {
+                if (-1 !== codes.indexOf(pods[i].restricted)
+                  && _.intersection(pods[i].cards, codes).length) {
+                    is_valid = false;
+                    break;
+                }
+            } else {
+                if (1 < _.intersection(pods[i].cards, codes).length) {
+                    is_valid = false;
+                    break;
+                }
             }
         }
         return is_valid;
@@ -1190,11 +1199,11 @@
         var cards;
         var formatCardTitle = function (card) {
             var rhett = '';
-            rhett += '&quot;' + card.name.replace(/"/g, '') + '&quot;';
+            rhett += card.name.replace(/"/g, '');
             if (card.is_multiple) {
                 rhett += ' (' + card.pack_code +')';
             }
-            return rhett;
+            return '&quot;' + rhett + '&quot;';
         }
         var isBannedInJoust = (-1 !== app.data.joust_banned_list.indexOf(card.code));
         var isBannedInMelee = (-1 !== app.data.melee_banned_list.indexOf(card.code));
@@ -1215,31 +1224,62 @@
         if (joust_pods_map.hasOwnProperty(card.code)) {
             pods = joust_pods_map[card.code];
             _.each(pods, function (pod) {
-                restricted = app.data.cards.findById(pod.restricted);
                 cards = app.data.cards.find({ code: { $in: pod.cards }});
-
-                if (1 === pod.cards.length) {
-                    labels.push({
-                        name: '[' + pod.name + ']',
-                        class: 'rl-pod',
-                        title: Translator.trans('card.podinfo_single', {
-                            restricted: formatCardTitle(restricted),
-                            card: formatCardTitle(cards[0]),
-                            format: Translator.trans('tournamentLegality.joust').toUpperCase()
-                        })
-                    });
+                if (pod.restricted) {
+                    restricted = app.data.cards.findById(pod.restricted);
+                    if (1 === pod.cards.length) {
+                        labels.push({
+                            name: '[' + pod.name + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.restricted_podinfo_single', {
+                                restricted: formatCardTitle(restricted),
+                                card: formatCardTitle(cards[0]),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            })
+                        });
+                    } else {
+                        labels.push({
+                            name: '[' + pod.name + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.restricted_podinfo_multiple', {
+                                restricted: formatCardTitle(restricted),
+                                cards: _.map(cards, function (card) {
+                                    return formatCardTitle(card);
+                                }).join(', '),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            }),
+                        });
+                    }
                 } else {
-                    labels.push({
-                        name: '[' + pod.name + ']',
-                        class: 'rl-pod',
-                        title: Translator.trans('card.podinfo_multiple', {
-                            restricted: formatCardTitle(restricted),
-                            cards: _.map(cards, function (card) {
-                                return formatCardTitle(card);
-                            }).join(', '),
-                            format: Translator.trans('tournamentLegality.joust').toUpperCase()
-                        }),
-                    });
+                    if (2 === pod.cards.length) {
+                        labels.push({
+                            name: '[' + pod.name + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.podinfo_single', {
+                                card: formatCardTitle(card),
+                                other_card: _.map(_.filter(cards, function(c) {
+                                      return card.code !== c.code;
+                                  }), function (card) {
+                                    return formatCardTitle(card);
+                                }).join(', '),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            }),
+                        });
+                    } else {
+                        labels.push({
+                            name: '[' + pod.name + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.podinfo_multiple', {
+                                card: formatCardTitle(card),
+                                other_cards: _.map(_.filter(cards, function(c) {
+                                        return card.code !== c.code;
+                                    }), function (card) {
+                                    return formatCardTitle(card);
+                                }).join(', '),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            }),
+                        });
+                    }
                 }
             });
         }
