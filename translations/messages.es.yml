@@ -393,8 +393,10 @@ pag:
   cardscount: "{0} No hay cartas | {1} Una carta | ]1,Inf] %count% cartas"
 
 card:
-  podinfo_single: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir %card% en tu mazo.'
-  podinfo_multiple: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir las siguientes cartas en tu mazo: %cards%.'
+  podinfo_single: '%format% - Si tu mazo incluye %card%, entonces no puede incluir %other_card%.'
+  podinfo_multiple: '%format% - Si tu mazo incluye %card%, entonces no puede incluir ninguna de las siguientes cartas: %other_cards%.'
+  restricted_podinfo_single: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir %card% en tu mazo.'
+  restricted_podinfo_multiple: '%format% - Si %restricted% es tu carta restringida elegida, no puedes incluir las siguientes cartas en tu mazo: %cards%.'
   rl-joust:
     title: "Su carta está en la la Lista Restringida Justa."
   rl-melee:

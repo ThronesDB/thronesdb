@@ -394,8 +394,10 @@ pag:
   cardscount: "{0} Keine Karten | {1} Eine Karte | ]1,Inf] %count% Karten"
 
 card:
-  podinfo_single: "%format% - Falls %restricted% Deine Eingeschränkte Karte ist, dann kannst Du %card% nicht in Dein Deck aufnehmen."
-  podinfo_multiple: '%format% - Falls %restricted% Deine Eingeschränkte Karte ist, dann kannst Du die folgenden Karten nicht in Dein Deck aufnehmen: %cards%.'
+  podinfo_single: '%format% - Wenn Dein Deck %card% enthält, dann kann es nicht %other_card% enthalten.'
+  podinfo_multiple: '%format% - Wenn Dein Deck %card% enthält, dann kann es keine der folgenden Karten enthalten: %other_cards%.'
+  restricted_podinfo_single: "%format% - Falls %restricted% Deine Eingeschränkte Karte ist, dann kannst Du %card% nicht in Dein Deck aufnehmen."
+  restricted_podinfo_multiple: '%format% - Falls %restricted% Deine Eingeschränkte Karte ist, dann kannst Du die folgenden Karten nicht in Dein Deck aufnehmen: %cards%.'
   rl-joust:
     title: "Diese Karte ist auf der Liste Eingeschränkter Karten für Tjost."
   rl-melee:
