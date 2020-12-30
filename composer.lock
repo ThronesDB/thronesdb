@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "79cff957d8723841ee23ef86ebd6edc6",
+    "content-hash": "25d9ef5e0bd85ade6a85db8d987f2f80",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -9866,7 +9866,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "jms/i18n-routing-bundle": 0,
-        "squizlabs/php_codesniffer": 0
+        "squizlabs/php_codesniffer": 0,
+        "symfony/browser-kit": 0
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -9881,5 +9882,5 @@
         "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
