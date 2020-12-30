@@ -9,12 +9,15 @@ use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
+use App\Entity\Restriction;
 use App\Services\CardsData;
 use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 use Nelmio\ApiDocBundle\Annotation\Operation;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @package App\Controller
@@ -599,6 +603,43 @@ class ApiController extends AbstractController
         }
 
         $response->setContent($content);
+        return $response;
+    }
+
+    /**
+     * @Route("/api/public/restrictions/", name="api_restrictions", methods={"GET"}, options={"i18n" = false})
+     *
+     * Get the description of all the restricted lists as an array of JSON objects.
+     *
+     * @Operation(
+     *     tags={"Public"},
+     *     summary="EXPERIMENTAL - DO NOT USE IN PRODUCTION. All the restricted lists.",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param int $cacheExpiration
+     * @param SerializerInterface $serializer
+     * @return Response
+     */
+    public function listRestrictions(Request $request, int $cacheExpiration, SerializerInterface $serializer): Response
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($cacheExpiration);
+        $response->headers->add(array(
+            'Access-Control-Allow-Origin' => '*',
+            'Content-Language' => $request->getLocale()
+        ));
+
+        $repo = $this->getDoctrine()->getRepository(Restriction::class);
+        $restrictions = $repo->findAll();
+        $json = $serializer->serialize($restrictions, 'json');
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($json);
         return $response;
     }
 }
