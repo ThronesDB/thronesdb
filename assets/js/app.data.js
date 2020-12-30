@@ -11,7 +11,8 @@
     data.db = database;
     var masters = {
         packs: database.collection('master_pack', {primaryKey: 'code'}),
-        cards: database.collection('master_card', {primaryKey: 'code'})
+        cards: database.collection('master_card', {primaryKey: 'code'}),
+        restrictions: database.collection('master_restriction', {primaryKey: 'code'})
     };
 
     var dfd;
@@ -247,37 +248,43 @@
      * @memberOf data
      */
     function load() {
-        masters.packs.load(function (err) {
+        masters.restrictions.load(function (err) {
             if (err) {
-                console.log('error when loading packs', err);
+                console.log('error when loading restrictions', err);
             }
-            masters.cards.load(function (err) {
+            masters.packs.load(function (err) {
                 if (err) {
-                    console.log('error when loading cards', err);
+                    console.log('error when loading packs', err);
                 }
+                masters.cards.load(function (err) {
+                    if (err) {
+                        console.log('error when loading cards', err);
+                    }
 
-                /*
-                 * data has been fetched from local store
-                 */
+                    /*
+                     * data has been fetched from local store
+                     */
 
-                /*
-                 * we set up insert and update listeners now
-                 * if we did it before, .load() would have called onInsert
-                 */
-                masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
-                masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    /*
+                     * we set up insert and update listeners now
+                     * if we did it before, .load() would have called onInsert
+                     */
+                    masters.restrictions.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
 
-                /*
-                 * if database is not empty, use it for now
-                 */
-                if (masters.packs.count() > 0 && masters.cards.count() > 0) {
-                    release();
-                }
+                    /*
+                     * if database is not empty, use it for now
+                     */
+                    if (masters.packs.count() > 0 && masters.cards.count() > 0) {
+                        release();
+                    }
 
-                /*
-                 * then we ask the server if new data is available
-                 */
-                query();
+                    /*
+                     * then we ask the server if new data is available
+                     */
+                    query();
+                });
             });
         });
     }
@@ -287,6 +294,9 @@
      * @memberOf data
      */
     function release() {
+        data.restrictions = database.collection('restriction', {primaryKey: 'code', changeTimestamp: false});
+        data.restrictions.setData(masters.restrictions.find());
+
         data.packs = database.collection('pack', {primaryKey: 'code', changeTimestamp: false});
         data.packs.setData(masters.packs.find());
 
@@ -304,10 +314,20 @@
      */
     function query() {
         dfd = {
+            restrictions: new $.Deferred(),
             packs: new $.Deferred(),
             cards: new $.Deferred()
         };
-        $.when(dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+        $.when(dfd.restrictions, dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+
+        $.ajax({
+            url: Routing.generate('api_restrictions'),
+            success: parse_restrictions,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('error when requesting restrictions', errorThrown);
+                dfd.restrictions.reject(false);
+            }
+        });
 
         $.ajax({
             url: Routing.generate('api_packs'),
@@ -335,6 +355,7 @@
      */
     function update_done() {
         if (database_changed && !locale_changed) {
+            console.log(database_changed);
             /*
              * we display a message informing the user that they can reload their page to use the updated data
              * except if we are on the front page, because data is not essential on the front page
@@ -356,8 +377,8 @@
      * deferred returns true if data has been loaded
      * @memberOf data
      */
-    function update_fail(packs_loaded, cards_loaded) {
-        if (packs_loaded === false || cards_loaded === false) {
+    function update_fail(restrictions_loaded, packs_loaded, cards_loaded) {
+        if (restrictions_loaded === false || packs_loaded === false || cards_loaded === false) {
             var message = Translator.trans('data_load_fail');
             app.ui.insert_alert_message('danger', message);
         } else {
@@ -398,6 +419,15 @@
                 deferred.resolve();
             }
         });
+    }
+
+    /**
+     * handles the response to the ajax query for restrictions data
+     * @memberOf data
+     */
+    function parse_restrictions(response, textStatus, jqXHR) {
+        var locale = jqXHR.getResponseHeader('Content-Language');
+        update_collection(response, masters.restrictions, locale, dfd.restrictions);
     }
 
     /**
