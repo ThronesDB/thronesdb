@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -95,6 +96,22 @@ class Restriction implements RestrictionInterface
      * )
      */
     protected string $version;
+
+    /**
+     * @var DateTime
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(name="date_update", type="datetime", nullable=false)
+     */
+    protected DateTime $dateUpdate;
+
+    /**
+     * @var DateTime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
+     */
+    protected DateTime $dateCreation;
 
     /**
      * @inheritdoc
@@ -221,6 +238,38 @@ class Restriction implements RestrictionInterface
     public function getVersion(): string
     {
         return $this->version;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDateUpdate(DateTime $dateUpdate): void
+    {
+        $this->dateUpdate = $dateUpdate;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDateUpdate(): DateTime
+    {
+        return $this->dateUpdate;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDateCreation(DateTime $dateCreation): void
+    {
+        $this->dateCreation = $dateCreation;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDateCreation(): DateTime
+    {
+        return $this->dateCreation;
     }
 
     /**
