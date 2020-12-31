@@ -16,8 +16,6 @@ use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
 use Nelmio\ApiDocBundle\Annotation\Operation;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
