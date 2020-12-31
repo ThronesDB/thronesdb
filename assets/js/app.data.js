@@ -269,9 +269,9 @@
                      * we set up insert and update listeners now
                      * if we did it before, .load() would have called onInsert
                      */
-                    masters.restrictions.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
                     masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
                     masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    masters.restrictions.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
 
                     /*
                      * if database is not empty, use it for now
@@ -355,7 +355,6 @@
      */
     function update_done() {
         if (database_changed && !locale_changed) {
-            console.log(database_changed);
             /*
              * we display a message informing the user that they can reload their page to use the updated data
              * except if we are on the front page, because data is not essential on the front page
@@ -398,8 +397,13 @@
     function update_collection(data, collection, locale, deferred) {
         // we update the database and Forerunner will tell us if the data is actually different
         data.forEach(function (row) {
-            if(collection.findById(row.code)) {
-                collection.update({code: row.code}, row);
+            var existingRow = collection.findById(row.code);
+            if(existingRow) {
+                // check last-updated timestamp here, if applicable, before updating.
+                // only update the record if the timestamp differs.
+                if (row.dateUpdate && row.dateUpdate !== existingRow.dateUpdate) {
+                    collection.update({code: row.code}, row);
+                }
             } else {
                 collection.insert(row);
             }
