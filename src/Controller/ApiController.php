@@ -637,6 +637,21 @@ class ApiController extends AbstractController
 
         $repo = $this->getDoctrine()->getRepository(Restriction::class);
         $restrictions = $repo->findAll();
+
+        // check the last-modified-since header
+
+        $lastModified = null;
+        /* @var PackInterface $pack */
+        foreach ($restrictions as $restriction) {
+            if (!$lastModified || $lastModified < $restriction->getDateUpdate()) {
+                $lastModified = $restriction->getDateUpdate();
+            }
+        }
+        $response->setLastModified($lastModified);
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
         $json = $serializer->serialize($restrictions, 'json');
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent($json);
