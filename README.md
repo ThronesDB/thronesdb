@@ -19,7 +19,9 @@ This guide assumes you know how to use the command-line and that your machine ha
 - run `php bin/console doctrine:database:create` to create the database
 - run `php bin/console doctrine:migrations:migrate` to create the database schema
 - run `php bin/console doctrine:fixtures:load --env=prod` to load default application data
-- run `php bin/console app:import:std ../throneteki-json-data` or whatever the path to the data repository is
+- run `php bin/console app:import:std ../throneteki-json-data` or whatever the path to the data repository is to load cards and packs data
+- run `php bin/console app:restrictions:import ../throneteki-json-data` or whatever the path to the data repository is to load restricted lists
+- run `php bin/console app:restrictions:activate` to activate any restricted lists that apply
 - run `php bin/console bazinga:js-translation:dump assets/js` to export translation files for the frontend
 - run `php bin/console fos:js-routing:dump --target=public/js/fos_js_routes.js` to export routes for the frontend
 - run `gulp` to build web assets

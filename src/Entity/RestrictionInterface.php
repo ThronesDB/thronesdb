@@ -91,6 +91,27 @@ interface RestrictionInterface
     public function getVersion(): string;
 
     /**
+     * @param DateTime $dateUpdate
+     */
+    public function setDateUpdate(DateTime $dateUpdate): void;
+
+    /**
+     * @return DateTime
+     */
+    public function getDateUpdate(): DateTime;
+
+    /**
+     * @param DateTime $dateCreation
+     */
+    public function setDateCreation(DateTime $dateCreation): void;
+
+    /**
+     * @return DateTime
+     */
+    public function getDateCreation(): DateTime;
+
+
+    /**
      * @return array
      */
     public function getJoustRestrictedList(): array;

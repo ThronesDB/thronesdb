@@ -622,6 +622,7 @@
             orderBy['name'] = 1;
         var cards = app.data.cards.find(query, {'$orderBy': orderBy});
         var divs = CardDivs[ Config['display-column'] - 1 ];
+        var rl = app.data.getActiveRestrictions();
 
         cards.forEach(function (card)
         {
@@ -630,12 +631,15 @@
             var unusable = !app.deck.can_include_card(card);
             if(!Config['show-unusable'] && unusable)
                 return;
-            if (Config['hide-banned-joust'] && -1 !== app.data.joust_banned_list.indexOf(card.code)) {
-                return;
+            if (rl) {
+                if (Config['hide-banned-joust'] && -1 !== rl.contents.joust.banned.indexOf(card.code)) {
+                    return;
+                }
+                if (Config['hide-banned-melee'] && -1 !== rl.contents.melee.banned.indexOf(card.code)) {
+                    return;
+                }
             }
-            if (Config['hide-banned-melee'] && -1 !== app.data.melee_banned_list.indexOf(card.code)) {
-                return;
-            }
+
             var row = divs[card.code];
             if(!row)
                 row = divs[card.code] = ui.build_row(card);

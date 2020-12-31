@@ -9,234 +9,23 @@
     var database = fdb.db('thronesdb');
 
     data.db = database;
+
     var masters = {
         packs: database.collection('master_pack', {primaryKey: 'code'}),
-        cards: database.collection('master_card', {primaryKey: 'code'})
+        cards: database.collection('master_card', {primaryKey: 'code'}),
+        restrictions: database.collection('master_restriction', {primaryKey: 'code'})
     };
 
     var dfd;
 
-    // Restricted/Banned Lists issued by The Conclave (v2.0)
-    data.joust_restricted_list = [
-    ];
-    data.joust_pods = [
-    ];
-    data.joust_banned_list = [
-        "01119", // Doran's Game (Core)
-        "02034", // Crown of Gold (TRtW)
-        "02065", // Halder (NMG)
-        "02091", // Raider from Pyke (CoW)
-        "02092", // Iron Mines (CoW)
-        "02102", // Ward (TS)
-        "03038", // To the Rose Banner! (WotN)
-        "04001", // The Dragon's Tail (AtSK)
-        "05010", // Taena Merryweather (LoCR)
-        "05049", // Littlefinger's Meddling (LoCR)
-        "06004", // All Men Are Fools (AMAF)
-        "06011", // Drowned Disciple (AMAF)
-        "06038", // Great Hall (GtR)
-        "06039", // "The Dornishman's Wife" (GtR)
-        "06040", // The Annals of Castle Black (GtR)
-        "06063", // Oldtown Informer (TRW)
-        "06098", // Flea Bottom (OR)
-        "07018", // Abandoned Stronghold (WotW)
-        "08019", // The Iron Bank (TAK)
-        "08080", // The King in the North (FotOG)
-        "08082", // I Am No One (TFM)
-        "09001", // Mace Tyrell (HoT)
-        "09037", // Qotho (HoT)
-        "09051", // Trade Routes (HoT)
-        "10017", // Dorne (SoD)
-        "10045", // The Wars To Come (SoD)
-        "10048", // Forced March (SoD)
-        "10050", // Breaking Ties (SoD)
-        "11012", // Nighttime Marauders (TSC)
-        "11021", // Wyman Manderly (TMoW)
-        "11033", // Hizdahr zo Loraq (TMoW)
-        "11034", // Meereen (TMoW)
-        "11051", // Drowned God Fanatic (SoKL)
-        "11061", // Meera Reed (MoD)
-        "11071", // Victarion Greyjoy (MoD)
-        "11076", // A Mission in Essos (MoD)
-        "11079", // The Free Folk (MoD)
-        "11081", // Bear Island Scout (IDP)
-        "11082", // Skagos (IDP)
-        "11085", // Three-Finger Hobb (IDP)
-        "11093", // Drogon (IDP)
-        "11114", // Gifts for the Widow (DitD)
-        "12002", // Euron Crow's Eye (KotI)
-        "12029", // Desert Raider (KotI)
-        "12045", // Sea of Blood (KotI)
-        "12046", // We Take Westeros! (KotI)
-        "12047", // Return to the Fields (KotI)
-        "13044", // Unexpected Guile (PoS)
-        "13079", // Kingdom of Shadows (BtRK)
-        "13085", // Yoren (TB)
-        "13086", // Bound for the Wall (TB)
-        "13103", // The Queen's Retinue (LMHR)
-        "13118", // Valyrian Steel (LMHR)
-        "14008", // Selyse Baratheon (FotS)
-        "15001", // Daenerys Targaryen (DotE)
-        "15017", // Womb of the World (DotE)
-        "15030", // The Red Keep (DotE)
-        "15033", // Clydas (DotE)
-        "15045", // Bribery (DotE)
-        "15050", // At the Palace of Sorrows (DotE)
-        "16001", // Ser Davos Seaworth (TTWDFL)
-        "16002", // Melisandre's Favor (TTWDFL)
-        "16003", // Wintertime Marauders (TTWDFL)
-        "16004", // Conquer (TTWDFL)
-        "16005", // Spider's Whisperer (TTWDFL)
-        "16006", // Wheels Within Wheels (TTWDFL)
-        "16007", // Prince's Loyalist (TTWDFL)
-        "16008", // You Murdered Her Children (TTWDFL)
-        "16009", // Samwell Tarly (TTWDFL)
-        "16010", // Old Bear Mormont (TTWDFL)
-        "16011", // Catelyn Stark (TTWDFL)
-        "16012", // Snow Castle (TTWDFL)
-        "16013", // Mad King Aerys (TTWDFL)
-        "16014", // The Hatchlings' Feast (TTWDFL)
-        "16015", // The Queen of Thorns (TTWDFL)
-        "16016", // Olenna's Study (TTWDFL)
-        "16017", // Littlefinger (TTWDFL)
-        "16018", // Vale Refugee (TTWDFL)
-        "16019", // High Ground (TTWDFL)
-        "16020", // King's Landing (TTWDFL)
-        "16021", // Harrenhal (TTWDFL)
-        "16022", // Sky Cell (TTWDFL)
-        "16023", // Heads on Pikes (TTWDFL)
-        "16024", // Narrow Escape (TTWDFL)
-        "16025", // Seductive Promise (TTWDFL)
-        "16026", // Westeros Bleeds (TTWDFL)
-        "16031", // Benjen's Cache (TTWDFL)
-        "16032", // Rioting (TTWDFL)
-        "16033", // Rule By Decree (TTWDFL)
-        "16034", // Search and Detain (TTWDFL)
-        "16035", // The Art of Seduction (TTWDFL)
-        "16036", // The Gathering Storm (TTWDFL)
-        "17147", // The Dragon's Tail (R)
-    ];
-    data.melee_restricted_list = [
-        "01001", // A Clash of Kings (Core)
-        "01013", // Heads on Spikes (Core)
-        "01043", // Superior Claim (Core)
-        "01078", // Great Kraken (Core)
-        "01146", // Robb Stark (Core)
-        "01162", // Khal Drogo (Core)
-        "02012", // Rise of the Kraken (TtB)
-        "02024", // Lady Sansa's Rose (TRtW)
-        "02060", // The Lord of the Crossing (TKP)
-        "03003", // Eddard Stark (WotN)
-        "04003", // Riverrun (AtSK)
-        "04118", // Relentless Assault (TC)
-        "05001", // Cersei Lannister (LoCR)
-        "07036", // Plaza of Pride (WotW)
-        "08013", // Nagga's Ribs (TAK)
-        "08014", // Daario Naharis (TAK)
-        "08098", // "The Song of the Seven" (TFM)
-        "08120", // You Win Or You Die (SAT)
-        "09028", // Corpse Lake (HoT)
-        "11039", // Trading With Qohor (TMoW)
-        "11054", // Queensguard (SoKL)
-        "13107", // Robert Baratheon (LMHR)
-        "17114", // Doran's Game (R)
-    ];
-    data.melee_banned_list = [
-        "01119", // Doran's Game (Core)
-        "02034", // Crown of Gold (TRtW)
-        "02065", // Halder (NMG)
-        "02091", // Raider from Pyke (CoW)
-        "02092", // Iron Mines (CoW)
-        "02102", // Ward (TS)
-        "03038", // To the Rose Banner! (WotN)
-        "04001", // The Dragon's Tail (AtSK)
-        "05010", // Taena Merryweather (LoCR)
-        "05049", // Littlefinger's Meddling (LoCR)
-        "06004", // All Men Are Fools (AMAF)
-        "06011", // Drowned Disciple (AMAF)
-        "06038", // Great Hall (GtR)
-        "06039", // "The Dornishman's Wife" (GtR)
-        "06040", // The Annals of Castle Black (GtR)
-        "06063", // Oldtown Informer (TRW)
-        "06098", // Flea Bottom (OR)
-        "07018", // Abandoned Stronghold (WotW)
-        "08019", // The Iron Bank (TAK)
-        "08080", // The King in the North (FotOG)
-        "08082", // I Am No One (TFM)
-        "09001", // Mace Tyrell (HoT)
-        "09037", // Qotho (HoT)
-        "09051", // Trade Routes (HoT)
-        "10017", // Dorne (SoD)
-        "10045", // The Wars To Come (SoD)
-        "10048", // Forced March (SoD)
-        "10050", // Breaking Ties (SoD)
-        "11012", // Nighttime Marauders (TSC)
-        "11021", // Wyman Manderly (TMoW)
-        "11033", // Hizdahr zo Loraq (TMoW)
-        "11034", // Meereen (TMoW)
-        "11051", // Drowned God Fanatic (SoKL)
-        "11061", // Meera Reed (MoD)
-        "11071", // Victarion Greyjoy (MoD)
-        "11076", // A Mission in Essos (MoD)
-        "11079", // The Free Folk (MoD)
-        "11081", // Bear Island Scout (IDP)
-        "11082", // Skagos (IDP)
-        "11085", // Three-Finger Hobb (IDP)
-        "11093", // Drogon (IDP)
-        "11114", // Gifts for the Widow (DitD)
-        "12002", // Euron Crow's Eye (KotI)
-        "12029", // Desert Raider (KotI)
-        "12045", // Sea of Blood (KotI)
-        "12046", // We Take Westeros! (KotI)
-        "12047", // Return to the Fields (KotI)
-        "13044", // Unexpected Guile (PoS)
-        "13079", // Kingdom of Shadows (BtRK)
-        "13085", // Yoren (TB)
-        "13086", // Bound for the Wall (TB)
-        "13103", // The Queen's Retinue (LMHR)
-        "13118", // Valyrian Steel (LMHR)
-        "14008", // Selyse Baratheon (FotS)
-        "15001", // Daenerys Targaryen (DotE)
-        "15017", // Womb of the World (DotE)
-        "15030", // The Red Keep (DotE)
-        "15033", // Clydas (DotE)
-        "15045", // Bribery (DotE)
-        "15050", // At the Palace of Sorrows (DotE)
-        "16001", // Ser Davos Seaworth (TTWDFL)
-        "16002", // Melisandre's Favor (TTWDFL)
-        "16003", // Wintertime Marauders (TTWDFL)
-        "16004", // Conquer (TTWDFL)
-        "16005", // Spider's Whisperer (TTWDFL)
-        "16006", // Wheels Within Wheels (TTWDFL)
-        "16007", // Prince's Loyalist (TTWDFL)
-        "16008", // You Murdered Her Children (TTWDFL)
-        "16009", // Samwell Tarly (TTWDFL)
-        "16010", // Old Bear Mormont (TTWDFL)
-        "16011", // Catelyn Stark (TTWDFL)
-        "16012", // Snow Castle (TTWDFL)
-        "16013", // Mad King Aerys (TTWDFL)
-        "16014", // The Hatchlings' Feast (TTWDFL)
-        "16015", // The Queen of Thorns (TTWDFL)
-        "16016", // Olenna's Study (TTWDFL)
-        "16017", // Littlefinger (TTWDFL)
-        "16018", // Vale Refugee (TTWDFL)
-        "16019", // High Ground (TTWDFL)
-        "16020", // King's Landing (TTWDFL)
-        "16021", // Harrenhal (TTWDFL)
-        "16022", // Sky Cell (TTWDFL)
-        "16023", // Heads on Pikes (TTWDFL)
-        "16024", // Narrow Escape (TTWDFL)
-        "16025", // Seductive Promise (TTWDFL)
-        "16026", // Westeros Bleeds (TTWDFL)
-        "16031", // Benjen's Cache (TTWDFL)
-        "16032", // Rioting (TTWDFL)
-        "16033", // Rule By Decree (TTWDFL)
-        "16034", // Search and Detain (TTWDFL)
-        "16035", // The Art of Seduction (TTWDFL)
-        "16036", // The Gathering Storm (TTWDFL)
-    ];
-
-    data.restricted_list_title = 'Redesigns FAQ 2.1';
+    /**
+     * Returns the active restricted list, or NULL if none could be found.
+     * @return {Object|null}
+     */
+    data.getActiveRestrictions = function() {
+        var restrictions = data.restrictions.find({ 'active' : true }, { $limit: 1, $orderBy: { 'effectiveOn': -1 }});
+        return restrictions.length ? restrictions[0] : null;
+    }
 
     function onCollectionUpdate(updated) {
         database_changed = true;
@@ -252,37 +41,43 @@
      * @memberOf data
      */
     function load() {
-        masters.packs.load(function (err) {
+        masters.restrictions.load(function (err) {
             if (err) {
-                console.log('error when loading packs', err);
+                console.log('error when loading restrictions', err);
             }
-            masters.cards.load(function (err) {
+            masters.packs.load(function (err) {
                 if (err) {
-                    console.log('error when loading cards', err);
+                    console.log('error when loading packs', err);
                 }
+                masters.cards.load(function (err) {
+                    if (err) {
+                        console.log('error when loading cards', err);
+                    }
 
-                /*
-                 * data has been fetched from local store
-                 */
+                    /*
+                     * data has been fetched from local store
+                     */
 
-                /*
-                 * we set up insert and update listeners now
-                 * if we did it before, .load() would have called onInsert
-                 */
-                masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
-                masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    /*
+                     * we set up insert and update listeners now
+                     * if we did it before, .load() would have called onInsert
+                     */
+                    masters.packs.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    masters.cards.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
+                    masters.restrictions.on("insert", onCollectionInsert).on("update", onCollectionUpdate);
 
-                /*
-                 * if database is not empty, use it for now
-                 */
-                if (masters.packs.count() > 0 && masters.cards.count() > 0) {
-                    release();
-                }
+                    /*
+                     * if database is not empty, use it for now
+                     */
+                    if (masters.packs.count() > 0 && masters.cards.count() > 0) {
+                        release();
+                    }
 
-                /*
-                 * then we ask the server if new data is available
-                 */
-                query();
+                    /*
+                     * then we ask the server if new data is available
+                     */
+                    query();
+                });
             });
         });
     }
@@ -292,6 +87,9 @@
      * @memberOf data
      */
     function release() {
+        data.restrictions = database.collection('restriction', {primaryKey: 'code', changeTimestamp: false});
+        data.restrictions.setData(masters.restrictions.find());
+
         data.packs = database.collection('pack', {primaryKey: 'code', changeTimestamp: false});
         data.packs.setData(masters.packs.find());
 
@@ -309,10 +107,20 @@
      */
     function query() {
         dfd = {
+            restrictions: new $.Deferred(),
             packs: new $.Deferred(),
             cards: new $.Deferred()
         };
-        $.when(dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+        $.when(dfd.restrictions, dfd.packs, dfd.cards).done(update_done).fail(update_fail);
+
+        $.ajax({
+            url: Routing.generate('api_restrictions'),
+            success: parse_restrictions,
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('error when requesting restrictions', errorThrown);
+                dfd.restrictions.reject(false);
+            }
+        });
 
         $.ajax({
             url: Routing.generate('api_packs'),
@@ -361,8 +169,8 @@
      * deferred returns true if data has been loaded
      * @memberOf data
      */
-    function update_fail(packs_loaded, cards_loaded) {
-        if (packs_loaded === false || cards_loaded === false) {
+    function update_fail(restrictions_loaded, packs_loaded, cards_loaded) {
+        if (restrictions_loaded === false || packs_loaded === false || cards_loaded === false) {
             var message = Translator.trans('data_load_fail');
             app.ui.insert_alert_message('danger', message);
         } else {
@@ -382,8 +190,13 @@
     function update_collection(data, collection, locale, deferred) {
         // we update the database and Forerunner will tell us if the data is actually different
         data.forEach(function (row) {
-            if(collection.findById(row.code)) {
-                collection.update({code: row.code}, row);
+            var existingRow = collection.findById(row.code);
+            if(existingRow) {
+                // check last-updated timestamp here, if applicable, before updating.
+                // only update the record if the timestamp differs.
+                if (row.dateUpdate && row.dateUpdate !== existingRow.dateUpdate) {
+                    collection.update({code: row.code}, row);
+                }
             } else {
                 collection.insert(row);
             }
@@ -403,6 +216,15 @@
                 deferred.resolve();
             }
         });
+    }
+
+    /**
+     * handles the response to the ajax query for restrictions data
+     * @memberOf data
+     */
+    function parse_restrictions(response, textStatus, jqXHR) {
+        var locale = jqXHR.getResponseHeader('Content-Language');
+        update_collection(response, masters.restrictions, locale, dfd.restrictions);
     }
 
     /**
