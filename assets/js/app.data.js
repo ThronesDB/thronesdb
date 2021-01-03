@@ -19,11 +19,16 @@
     var dfd;
 
     /**
-     * Returns the active restricted list, or NULL if none could be found.
      * @return {Object|null}
      */
-    data.getActiveRestrictions = function() {
-        var restrictions = data.restrictions.find({ 'active' : true }, { $limit: 1, $orderBy: { 'effectiveOn': -1 }});
+    data.getBestSelectedRestrictedList = function() {
+        var selectedRestrictionCode = app.config.get('restriction');
+        var restrictions;
+        if (selectedRestrictionCode) {
+            restrictions = data.restrictions.find({ 'active': true, 'code': selectedRestrictionCode });
+        } else {
+            restrictions = data.restrictions.find({ 'active': true }, { $limit: 1, $orderBy: { 'effectiveOn': -1 }});
+        }
         return restrictions.length ? restrictions[0] : null;
     }
 

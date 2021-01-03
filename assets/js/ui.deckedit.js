@@ -587,7 +587,7 @@
             orderBy['name'] = 1;
         var cards = app.data.cards.find(query, {'$orderBy': orderBy});
         var divs = CardDivs[ app.config.get('display-column') - 1 ];
-        var rl = app.data.getActiveRestrictions();
+        var rl = app.data.getBestSelectedRestrictedList();
 
         cards.forEach(function (card)
         {

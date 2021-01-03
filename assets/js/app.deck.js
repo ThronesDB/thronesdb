@@ -569,8 +569,7 @@
         var agendas = deck.get_agendas();
         var warnings = deck.get_warnings();
         var cards = deck.get_cards();
-        var rl = app.data.getActiveRestrictions();
-
+        var rl = app.data.getBestSelectedRestrictedList();
         deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/images/factions/' + deck.get_faction_code() + '.png" class="img-responsive">'));
         agendas.forEach(function (agenda) {
             deck.update_layout_section(data, 'images', $('<div><img src="' + agenda.image_url + '" class="img-responsive">'));
@@ -1219,7 +1218,7 @@
             return '&quot;' + rhett + '&quot;';
         }
 
-        var rl = app.data.getActiveRestrictions();
+        var rl = app.data.getBestSelectedRestrictedList();
         if (rl) {
             joustPodsMap = get_pods_map(rl.contents.joust.restricted_pods);
             isBannedInJoust = (-1 !== rl.contents.joust.banned.indexOf(card.code));
