@@ -6,42 +6,7 @@
     var DisplayColumnsTpl = '',
             SortKey = 'type_code',
             SortOrder = 1,
-            CardDivs = [[], [], []],
-            Config = null;
-
-    /**
-     * reads ui configuration from localStorage
-     * @memberOf ui
-     */
-    ui.read_config_from_storage = function read_config_from_storage()
-    {
-        if(localStorage) {
-            var stored = localStorage.getItem('ui.deck.config');
-            if(stored) {
-                Config = JSON.parse(stored);
-            }
-        }
-        Config = _.extend({
-            'show-unusable': false,
-            'show-only-deck': false,
-            'hide-banned-melee': false,
-            'hide-banned-joust': false,
-            'display-column': 1,
-            'core-set': 3,
-            'buttons-behavior': 'cumulative'
-        }, Config || {});
-    };
-
-    /**
-     * write ui configuration to localStorage
-     * @memberOf ui
-     */
-    ui.write_config_to_storage = function write_config_to_storage()
-    {
-        if(localStorage) {
-            localStorage.setItem('ui.deck.config', JSON.stringify(Config));
-        }
-    };
+            CardDivs = [[], [], []];
 
     /**
      * inits the state of config buttons
@@ -52,12 +17,12 @@
         // radio
         ['display-column', 'core-set', 'buttons-behavior'].forEach(function (radio)
         {
-            $('input[name=' + radio + '][value=' + Config[radio] + ']').prop('checked', true);
+            $('input[name=' + radio + '][value=' + app.config.get(radio) + ']').prop('checked', true);
         });
         // checkbox
         ['show-unusable', 'show-only-deck', 'hide-banned-melee', 'hide-banned-joust'].forEach(function (checkbox)
         {
-            if(Config[checkbox])
+            if(app.config.get(checkbox))
                 $('input[name=' + checkbox + ']').prop('checked', true);
         });
 
@@ -84,7 +49,7 @@
         {
             var max_qty = Math.min(3, record.deck_limit);
             if(record.pack_code === 'Core')
-                max_qty = Math.min(max_qty, record.quantity * Config['core-set']);
+                max_qty = Math.min(max_qty, record.quantity * app.config.get('core-set'));
             app.data.cards.updateById(record.code, {
                 maxqty: max_qty
             });
@@ -248,7 +213,8 @@
             }
             event.stopPropagation();
         } else {
-            if(!event.shiftKey && Config['buttons-behavior'] === 'exclusive' || event.shiftKey && Config['buttons-behavior'] === 'cumulative') {
+            if(!event.shiftKey && app.config.get('buttons-behavior') === 'exclusive'
+              || event.shiftKey && app.config.get('buttons-behavior') === 'cumulative') {
                 if(!event.altKey) {
                     uncheck_all_active.call(this);
                 } else {
@@ -297,13 +263,12 @@
                 var value = $(this).val();
                 if(!isNaN(parseInt(value, 10)))
                     value = parseInt(value, 10);
-                Config[name] = value;
+                app.config.set(name, value);
                 break;
             case 'checkbox':
-                Config[name] = $(this).prop('checked');
+                app.config.set(name, $(this).prop('checked'));
                 break;
         }
-        ui.write_config_to_storage();
         switch(name) {
             case 'buttons-behavior':
                 break;
@@ -524,7 +489,7 @@
      */
     ui.update_list_template = function update_list_template()
     {
-        switch(Config['display-column']) {
+        switch(app.config.get('display-column')) {
             case 1:
                 DisplayColumnsTpl = _.template(
                         '<tr>'
@@ -621,21 +586,21 @@
         if(SortKey !== 'name')
             orderBy['name'] = 1;
         var cards = app.data.cards.find(query, {'$orderBy': orderBy});
-        var divs = CardDivs[ Config['display-column'] - 1 ];
+        var divs = CardDivs[ app.config.get('display-column') - 1 ];
         var rl = app.data.getActiveRestrictions();
 
         cards.forEach(function (card)
         {
-            if(Config['show-only-deck'] && !card.indeck)
+            if(app.config.get('show-only-deck') && !card.indeck)
                 return;
             var unusable = !app.deck.can_include_card(card);
-            if(!Config['show-unusable'] && unusable)
+            if(!app.config.get('show-unusable') && unusable)
                 return;
             if (rl) {
-                if (Config['hide-banned-joust'] && -1 !== rl.contents.joust.banned.indexOf(card.code)) {
+                if (app.config.get('hide-banned-joust') && -1 !== rl.contents.joust.banned.indexOf(card.code)) {
                     return;
                 }
-                if (Config['hide-banned-melee'] && -1 !== rl.contents.melee.banned.indexOf(card.code)) {
+                if (app.config.get('hide-banned-melee') && -1 !== rl.contents.melee.banned.indexOf(card.code)) {
                     return;
                 }
             }
@@ -661,7 +626,7 @@
                 row.find('label').addClass("disabled").find('input[type=radio]').attr("disabled", true);
             }
 
-            if(Config['display-column'] > 1 && (counter % Config['display-column'] === 0)) {
+            if(app.config.get('display-column') > 1 && (counter % app.config.get('display-column') === 0)) {
                 container = $('<div class="row"></div>').appendTo($('#collection-grid'));
             }
 
@@ -778,7 +743,5 @@
         ui.setup_typeahead();
         app.deck_history && app.deck_history.setup('#history');
     };
-
-    ui.read_config_from_storage();
 
 })(app.ui, jQuery);
