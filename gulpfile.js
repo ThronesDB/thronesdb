@@ -51,6 +51,7 @@ function buildVendorJs (cb) {
 function buildAppJs (cb) {
   // aggregate the commonly used JS files into one "app.js" file
   src([
+    'assets/js/app.config.js',
     'assets/js/app.data.js',
     'assets/js/app.format.js',
     'assets/js/app.tip.js',
