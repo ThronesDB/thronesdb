@@ -100,6 +100,40 @@
     };
 
     /**
+     * builds selector component for restricted lists
+     * @memberOf ui
+     */
+    ui.build_restrictions_selector = function build_restrictions_selector() {
+        var $container = $('#restricted_lists');
+        var selectedRestriction;
+        var activeRestrictions = app.data.restrictions.find({
+            'active': true
+        }, {
+            $orderBy: {
+                'effectiveOn': -1
+            }
+        });
+
+        if (2 > activeRestrictions.length) {
+            return;
+        }
+
+        selectedRestriction = app.data.getBestSelectedRestrictedList();
+        $('<h4> ' + Translator.trans('restrictedLists') +  '</h4>').appendTo($container);
+        activeRestrictions.forEach(function(rl) {
+            var out = '<input name="restriction" type="radio" data-rl-code="' + rl.code + '"';
+            if (selectedRestriction.code === rl.code) {
+                out += ' checked="checked"';
+            }
+            out += '> ' + rl.title;
+            out += ' <a href="' + Routing.generate('restrictions') + '#' + rl.code +'" target="_blank">';
+            out += '<i class="fa fa-link" aria-hidden="true"></i>'
+            out += '</a>'
+            $('<div>' + out + '</div>').appendTo($container);
+        });
+    }
+
+    /**
      * builds the pack selector
      * @memberOf ui
      */
@@ -320,6 +354,16 @@
      * @memberOf ui
      * @param event
      */
+    ui.on_rl_change = function on_rl_change(event) {
+        const code = $(event.target).attr('data-rl-code');
+        app.config.set('restriction', code);
+        ui.on_deck_modified();
+    }
+
+    /**
+     * @memberOf ui
+     * @param event
+     */
     ui.on_modal_quantity_change = function on_modal_quantity_change(event)
     {
         var modal = $('#cardModal');
@@ -434,6 +478,7 @@
 
         $('#config-options').on('change', 'input', ui.on_config_change);
         $('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+        $('#restricted_lists').on('change', 'input[type=radio]',  ui.on_rl_change);
 
         $('#cardModal').on('keypress', function (event)
         {
@@ -737,6 +782,7 @@
         ui.build_faction_selector();
         ui.build_type_selector();
         ui.build_pack_selector();
+        ui.build_restrictions_selector();
         ui.init_selectors();
         ui.refresh_deck();
         ui.refresh_list();
