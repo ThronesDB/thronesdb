@@ -191,7 +191,7 @@
         return validate_against_banned_list(cards, rl.contents.melee.banned);
     }
 
-    var get_rl_indicators_for_card = function(card, rl) {
+    var get_rl_indicators_for_card = _.memoize(function(card, rl) {
         var labels = [];
         var pods;
         var restricted;
@@ -301,7 +301,9 @@
                 cls: label.class || ''
             });
         }).join(' ');
-    };
+    }, function(card, rl) {
+        return card.code + '||' + rl.code;
+    });
 
     /**
      * Creates a new line-item for a given card to a given DOM element.
