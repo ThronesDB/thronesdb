@@ -187,7 +187,7 @@
      * @param {Object} rl the restricted list
      * @return {boolean}
      */
-    var is_melee_banned_list_compliant = function(cards, rl) {
+    var is_melee_banned_list_compliant = function (cards, rl) {
         return validate_against_banned_list(cards, rl.contents.melee.banned);
     }
 
@@ -247,6 +247,28 @@
             deck.sort_type = localStorage.getItem('sort');
         }
     };
+
+    /**
+     * checks if the current deck/decklist is tournament legal in Joust for a given restricted list.
+     * @memberOf deck
+     * @param {Object} rl
+     * @return {boolean}
+     */
+    deck.isTournamentLegalInJoust = function isTournamentLegalInJoust(rl) {
+        var cards = deck.get_cards();
+        return is_joust_banned_list_compliant(cards, rl) && is_joust_restricted_list_compliant(cards, rl);
+    }
+
+    /**
+     * checks if the current deck/decklist is tournament legal in Joust for a given restricted list.
+     * @memberOf deck
+     * @param {Object} rl
+     * @return {boolean}
+     */
+    deck.isTournamentLegalInMelee = function isTournamentLegalInMelee(rl) {
+        var cards = deck.get_cards();
+        return is_melee_banned_list_compliant(cards, rl) && is_melee_restricted_list_compliant(cards, rl);
+    }
 
     /**
      * Sets the slots of the deck
@@ -568,8 +590,6 @@
         var problem = deck.get_problem();
         var agendas = deck.get_agendas();
         var warnings = deck.get_warnings();
-        var cards = deck.get_cards();
-        var rl = app.data.getBestSelectedRestrictedList();
         deck.update_layout_section(data, 'images', $('<div style="margin-bottom:10px"><img src="/images/factions/' + deck.get_faction_code() + '.png" class="img-responsive">'));
         agendas.forEach(function (agenda) {
             deck.update_layout_section(data, 'images', $('<div><img src="' + agenda.image_url + '" class="img-responsive">'));
@@ -593,25 +613,6 @@
             return pack.name + (pack.quantity > 1 ? ' (' + pack.quantity + ')' : '');
         }).join(', ');
         deck.update_layout_section(data, 'meta', $('<div>' + Translator.trans('decks.edit.meta.packs', {"packs": packs}) + '</div>'));
-
-        if (rl) {
-            var legalityContents = '<table class="tournament-legality-info"><tr><td>' + rl.title + '</td><td>';
-            if (is_joust_banned_list_compliant(cards, rl) && is_joust_restricted_list_compliant(cards, rl)) {
-                legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
-            } else {
-                legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
-            }
-            legalityContents += Translator.trans('tournamentLegality.joust') + '</td><td>';
-            if (is_melee_banned_list_compliant(cards, rl) && is_melee_restricted_list_compliant(cards, rl)) {
-                legalityContents += '<span class="text-success"><i class="fas fa-check"></i> ';
-            } else {
-                legalityContents += '<span class="text-danger"><i class="fas fa-times"></i> ';
-            }
-            legalityContents += Translator.trans('tournamentLegality.melee') + '</td></tr></table>';
-
-            var legalitySection = $('<div>' + legalityContents + '</div>');
-            deck.update_layout_section(data, 'meta', legalitySection);
-        }
 
         if (warnings.length) {
             warnings.forEach(function (warning) {

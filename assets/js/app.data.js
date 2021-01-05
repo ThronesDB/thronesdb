@@ -19,6 +19,15 @@
     var dfd;
 
     /**
+     * @param {String} code
+     * @return {Object|null}
+     */
+    data.findRestrictedList = function(code) {
+        var restrictions = data.restrictions.find({ 'code': code });
+        return restrictions.length ? restrictions[0] : null;
+    }
+
+    /**
      * @return {Object|null}
      */
     data.getBestSelectedRestrictedList = function() {

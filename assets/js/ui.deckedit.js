@@ -106,6 +106,7 @@
     ui.build_restrictions_selector = function build_restrictions_selector() {
         var $container = $('#restricted_lists');
         var selectedRestriction;
+        var out = '';
         var activeRestrictions = app.data.restrictions.find({
             'active': true
         }, {
@@ -114,23 +115,32 @@
             }
         });
 
-        if (2 > activeRestrictions.length) {
+        if (! activeRestrictions.length) {
             return;
         }
 
         selectedRestriction = app.data.getBestSelectedRestrictedList();
         $('<h4> ' + Translator.trans('restrictedLists') +  '</h4>').appendTo($container);
+        out += '<table class="tournament-legality-info">';
         activeRestrictions.forEach(function(rl) {
-            var out = '<input name="restriction" type="radio" data-rl-code="' + rl.code + '"';
-            if (selectedRestriction.code === rl.code) {
-                out += ' checked="checked"';
+            out += '<tr>';
+            if (1 < activeRestrictions.length) {
+                out += '<td><input name="restriction" type="radio" data-rl-code="' + rl.code + '"';
+                if (selectedRestriction.code === rl.code) {
+                    out += ' checked="checked"';
+                }
+                out += '></td>';
             }
-            out += '> ' + rl.title;
-            out += ' <a href="' + Routing.generate('restrictions') + '#' + rl.code +'" target="_blank">';
-            out += '<i class="fa fa-link" aria-hidden="true"></i>'
-            out += '</a>'
-            $('<div>' + out + '</div>').appendTo($container);
+
+            out += '<td>' + rl.title + '</td>';
+            out += '<td><span data-rl-joust="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
+            out += '<td>' + Translator.trans('tournamentLegality.joust') + '</td>';
+            out += '<td><span data-rl-melee="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
+            out += '<td>' + Translator.trans('tournamentLegality.melee') + '</td>';
+            out += '</tr>';
         });
+        out += '</table>';
+        $(out).appendTo($container);
     }
 
     /**
@@ -408,6 +418,7 @@
     ui.on_quantity_change = function on_quantity_change(card_code, quantity)
     {
         var update_all = app.deck.set_card_copies(card_code, quantity);
+        ui.refresh_rl_indicators();
         ui.refresh_deck();
 
         if(update_all) {
@@ -609,6 +620,43 @@
     };
 
     /**
+     * Refreshes the restricted list indicators for joust and melee.
+     * @memberOf ui
+     */
+    ui.refresh_rl_indicators = function refresh_rl_indicators() {
+        var refresh = function($elem, rl, isLegal) {
+            $elem.empty();
+            if (isLegal(rl)) {
+                $elem.addClass('text-success');
+                $elem.removeClass('text-danger');
+                $elem.html('<i class="fas fa-check"></i>')
+            } else {
+                $elem.addClass('text-danger');
+                $elem.removeClass('text-success');
+                $elem.html('<i class="fas fa-times"></i>')
+            }
+        };
+        $('[data-rl-joust]').each(function() {
+            var $elem = $(this);
+            var code = $elem.attr('data-rl-joust');
+            var rl = app.data.findRestrictedList(code);
+            if (!rl) {
+                return;
+            }
+            refresh($elem, rl, app.deck.isTournamentLegalInJoust);
+        });
+        $('[data-rl-melee]').each(function() {
+            var $elem = $(this);
+            var code = $elem.attr('data-rl-melee');
+            var rl = app.data.findRestrictedList(code);
+            if (!rl) {
+                return;
+            }
+            refresh($elem, rl, app.deck.isTournamentLegalInMelee);
+        });
+    };
+
+    /**
      * destroys and rebuilds the list of available cards
      * don't fire unless 250ms has passed since last invocation
      * @memberOf ui
@@ -687,6 +735,7 @@
     ui.on_deck_modified = function on_deck_modified()
     {
         ui.refresh_deck();
+        ui.refresh_rl_indicators();
         ui.refresh_list();
     };
 
@@ -785,6 +834,7 @@
         ui.build_restrictions_selector();
         ui.init_selectors();
         ui.refresh_deck();
+        ui.refresh_rl_indicators();
         ui.refresh_list();
         ui.setup_typeahead();
         app.deck_history && app.deck_history.setup('#history');
