@@ -132,11 +132,11 @@
                 out += '></td>';
             }
 
-            out += '<td>' + rl.title + '</td>';
-            out += '<td><span data-rl-joust="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
-            out += '<td>' + Translator.trans('tournamentLegality.joust') + '</td>';
-            out += '<td><span data-rl-melee="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
-            out += '<td>' + Translator.trans('tournamentLegality.melee') + '</td>';
+            out += '<td class="rl-title">' + rl.title + '</td>';
+            out += '<td class="rl-indicator"><span data-rl-joust="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
+            out += '<td class="joust-title">' + Translator.trans('tournamentLegality.joust') + '</td>';
+            out += '<td class="rl-indicator"><span data-rl-melee="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
+            out += '<td class="melee-title">' + Translator.trans('tournamentLegality.melee') + '</td>';
             out += '</tr>';
         });
         out += '</table>';

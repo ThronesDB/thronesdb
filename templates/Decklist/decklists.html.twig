@@ -141,34 +141,36 @@
                                         <table class="tournament-legality-info">
                                             {% for legality in decklegality[decklist.id] %}
                                                 <tr>
-                                                    <td>
+                                                    <td class="rl-title">
                                                         {{ legality.title }}
                                                     </td>
-                                                    <td>
+                                                    <td class="rl-indicator">
                                                         {% if legality.joust %}
                                                             <span class="text-success">
-                                                            <i class="fas fa-check"></i>
-                                                            {{ 'tournamentLegality.joust' | trans }}
-                                                        </span>
+                                                                <i class="fas fa-check"></i>
+                                                           </span>
                                                         {% else %}
                                                             <span class="text-danger">
-                                                            <i class="fas fa-times"></i>
-                                                            {{ 'tournamentLegality.joust' | trans }}
-                                                        </span>
+                                                                <i class="fas fa-times"></i>
+                                                            </span>
                                                         {% endif %}
                                                     </td>
-                                                    <td>
+                                                    <td class="joust-title">
+                                                        {{ 'tournamentLegality.joust' | trans }}
+                                                    </td>
+                                                    <td class="rl-indicator">
                                                         {% if legality.melee %}
                                                             <span class="text-success">
-                                                            <i class="fas fa-check"></i>
-                                                            {{ 'tournamentLegality.melee' | trans }}
-                                                        </span>
+                                                                <i class="fas fa-check"></i>
+                                                            </span>
                                                         {% else %}
                                                             <span class="text-danger">
-                                                            <i class="fas fa-times"></i>
-                                                            {{ 'tournamentLegality.melee' | trans }}
-                                                        </span>
+                                                                <i class="fas fa-times"></i>
+                                                            </span>
                                                         {% endif %}
+                                                    </td>
+                                                    <td class="melee-title">
+                                                        {{ 'tournamentLegality.melee' | trans }}
                                                     </td>
                                                 </tr>
                                             {% endfor %}
