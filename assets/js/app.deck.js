@@ -148,7 +148,7 @@
             }
         }
         return is_valid;
-    }
+    };
 
     /*
      * Checks if the current deck complies with the restricted list for joust.
@@ -190,6 +190,118 @@
     var is_melee_banned_list_compliant = function (cards, rl) {
         return validate_against_banned_list(cards, rl.contents.melee.banned);
     }
+
+    var get_rl_indicators_for_card = function(card, rl) {
+        var labels = [];
+        var pods;
+        var restricted;
+        var cards;
+        var isBannedInJoust = (-1 !== rl.contents.joust.banned.indexOf(card.code));
+        var isBannedInMelee = (-1 !== rl.contents.melee.banned.indexOf(card.code));
+        var joustPodsMap = get_pods_map(rl.contents.joust.restricted_pods);
+        var formatCardTitle = function (card) {
+            var rhett = '';
+            rhett += card.name.replace(/"/g, '');
+            if (card.is_multiple) {
+                rhett += ' (' + card.pack_code +')';
+            }
+            return '&quot;' + rhett + '&quot;';
+        }
+        // flag restricted cards
+        if (-1 !== rl.contents.joust.restricted.indexOf(card.code)) {
+            labels.push({ name: '[J]', class: "rl-joust", title: Translator.trans('card.rl-joust.title') });
+        }
+        if (-1 !== rl.contents.melee.restricted.indexOf(card.code)) {
+            labels.push({ name: '[M]', class: "rl-melee", title: Translator.trans('card.rl-melee.title') });
+        }
+
+        // flag banned cards
+        if (isBannedInJoust && isBannedInMelee) {
+            labels.push({ name: '[B]', class: "banned", title: Translator.trans('card.bl.title') });
+        } else if (isBannedInJoust) {
+            labels.push({ name: '[B-J]', class: "banned", title: Translator.trans('card.bl-joust.title') });
+        } else if (isBannedInMelee) {
+            labels.push({ name: '[B-M]', class: "banned", title: Translator.trans('card.bl-melee.title') });
+        }
+
+        // flag cards in pods
+        if (joustPodsMap.hasOwnProperty(card.code)) {
+            pods = joustPodsMap[card.code];
+            _.each(pods, function (pod) {
+                cards = app.data.cards.find({ code: { $in: pod.cards }});
+                if (pod.restricted) {
+                    restricted = app.data.cards.findById(pod.restricted);
+                    if (1 === pod.cards.length) {
+                        labels.push({
+                            name: '[' + pod.title + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.restricted_podinfo_single', {
+                                restricted: formatCardTitle(restricted),
+                                card: formatCardTitle(cards[0]),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            })
+                        });
+                    } else {
+                        labels.push({
+                            name: '[' + pod.title + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.restricted_podinfo_multiple', {
+                                restricted: formatCardTitle(restricted),
+                                cards: _.map(cards, function (card) {
+                                    return formatCardTitle(card);
+                                }).join(', '),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            }),
+                        });
+                    }
+                } else {
+                    if (2 === pod.cards.length) {
+                        labels.push({
+                            name: '[' + pod.title + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.podinfo_single', {
+                                card: formatCardTitle(card),
+                                other_card: _.map(_.filter(cards, function(c) {
+                                    return card.code !== c.code;
+                                }), function (card) {
+                                    return formatCardTitle(card);
+                                }).join(', '),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            }),
+                        });
+                    } else {
+                        labels.push({
+                            name: '[' + pod.title + ']',
+                            class: 'rl-pod',
+                            title: Translator.trans('card.podinfo_multiple', {
+                                card: formatCardTitle(card),
+                                other_cards: _.map(_.filter(cards, function(c) {
+                                    return card.code !== c.code;
+                                }), function (card) {
+                                    return formatCardTitle(card);
+                                }).join(', '),
+                                format: Translator.trans('tournamentLegality.joust').toUpperCase()
+                            }),
+                        });
+                    }
+                }
+            });
+        }
+
+
+        if (! labels.length) {
+            return '';
+        }
+
+        return ' ' + _.map(labels, function (label) {
+            return card_line_label_tpl({
+                label: label.name,
+                keyword: label.keyword || '',
+                title: label.title,
+                cls: label.class || ''
+            });
+        }).join(' ');
+    };
 
     /**
      * Creates a new line-item for a given card to a given DOM element.
@@ -1201,124 +1313,13 @@
         });
     };
 
-    deck.get_card_labels = function get_card_labels(card)
-    {
-        var labels = [];
-        var pods;
-        var restricted;
-        var cards;
-        var isBannedInJoust;
-        var isBannedInMelee;
-        var joustPodsMap;
-        var formatCardTitle = function (card) {
-            var rhett = '';
-            rhett += card.name.replace(/"/g, '');
-            if (card.is_multiple) {
-                rhett += ' (' + card.pack_code +')';
-            }
-            return '&quot;' + rhett + '&quot;';
-        }
+    deck.get_card_labels = function get_card_labels(card) {
 
         var rl = app.data.getBestSelectedRestrictedList();
         if (rl) {
-            joustPodsMap = get_pods_map(rl.contents.joust.restricted_pods);
-            isBannedInJoust = (-1 !== rl.contents.joust.banned.indexOf(card.code));
-            isBannedInMelee = (-1 !== rl.contents.melee.banned.indexOf(card.code));
-
-            // flag restricted cards
-            if (-1 !== rl.contents.joust.restricted.indexOf(card.code)) {
-                labels.push({ name: '[J]', class: "rl-joust", title: Translator.trans('card.rl-joust.title') });
-            }
-            if (-1 !== rl.contents.melee.restricted.indexOf(card.code)) {
-                labels.push({ name: '[M]', class: "rl-melee", title: Translator.trans('card.rl-melee.title') });
-            }
-
-            // flag banned cards
-            if (isBannedInJoust && isBannedInMelee) {
-                labels.push({ name: '[B]', class: "banned", title: Translator.trans('card.bl.title') });
-            } else if (isBannedInJoust) {
-                labels.push({ name: '[B-J]', class: "banned", title: Translator.trans('card.bl-joust.title') });
-            } else if (isBannedInMelee) {
-                labels.push({ name: '[B-M]', class: "banned", title: Translator.trans('card.bl-melee.title') });
-            }
-
-            // flag cards in pods
-            if (joustPodsMap.hasOwnProperty(card.code)) {
-                pods = joustPodsMap[card.code];
-                _.each(pods, function (pod) {
-                    cards = app.data.cards.find({ code: { $in: pod.cards }});
-                    if (pod.restricted) {
-                        restricted = app.data.cards.findById(pod.restricted);
-                        if (1 === pod.cards.length) {
-                            labels.push({
-                                name: '[' + pod.title + ']',
-                                class: 'rl-pod',
-                                title: Translator.trans('card.restricted_podinfo_single', {
-                                    restricted: formatCardTitle(restricted),
-                                    card: formatCardTitle(cards[0]),
-                                    format: Translator.trans('tournamentLegality.joust').toUpperCase()
-                                })
-                            });
-                        } else {
-                            labels.push({
-                                name: '[' + pod.title + ']',
-                                class: 'rl-pod',
-                                title: Translator.trans('card.restricted_podinfo_multiple', {
-                                    restricted: formatCardTitle(restricted),
-                                    cards: _.map(cards, function (card) {
-                                        return formatCardTitle(card);
-                                    }).join(', '),
-                                    format: Translator.trans('tournamentLegality.joust').toUpperCase()
-                                }),
-                            });
-                        }
-                    } else {
-                        if (2 === pod.cards.length) {
-                            labels.push({
-                                name: '[' + pod.title + ']',
-                                class: 'rl-pod',
-                                title: Translator.trans('card.podinfo_single', {
-                                    card: formatCardTitle(card),
-                                    other_card: _.map(_.filter(cards, function(c) {
-                                        return card.code !== c.code;
-                                    }), function (card) {
-                                        return formatCardTitle(card);
-                                    }).join(', '),
-                                    format: Translator.trans('tournamentLegality.joust').toUpperCase()
-                                }),
-                            });
-                        } else {
-                            labels.push({
-                                name: '[' + pod.title + ']',
-                                class: 'rl-pod',
-                                title: Translator.trans('card.podinfo_multiple', {
-                                    card: formatCardTitle(card),
-                                    other_cards: _.map(_.filter(cards, function(c) {
-                                        return card.code !== c.code;
-                                    }), function (card) {
-                                        return formatCardTitle(card);
-                                    }).join(', '),
-                                    format: Translator.trans('tournamentLegality.joust').toUpperCase()
-                                }),
-                            });
-                        }
-                    }
-                });
-            }
+            return get_rl_indicators_for_card(card, rl);
         }
-
-        if (! labels.length) {
-            return '';
-        }
-
-        return ' ' + _.map(labels, function (label) {
-            return card_line_label_tpl({
-                label: label.name,
-                keyword: label.keyword || '',
-                title: label.title,
-                cls: label.class || ''
-            });
-        }).join(' ');
+        return '';
     }
 
     /**

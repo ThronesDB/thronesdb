@@ -100,50 +100,6 @@
     };
 
     /**
-     * builds selector component for restricted lists
-     * @memberOf ui
-     */
-    ui.build_restrictions_selector = function build_restrictions_selector() {
-        var $container = $('#restricted_lists');
-        var selectedRestriction;
-        var out = '';
-        var activeRestrictions = app.data.restrictions.find({
-            'active': true
-        }, {
-            $orderBy: {
-                'effectiveOn': -1
-            }
-        });
-
-        if (! activeRestrictions.length) {
-            return;
-        }
-
-        selectedRestriction = app.data.getBestSelectedRestrictedList();
-        $('<h4> ' + Translator.trans('restrictedLists') +  '</h4>').appendTo($container);
-        out += '<table class="tournament-legality-info">';
-        activeRestrictions.forEach(function(rl) {
-            out += '<tr>';
-            if (1 < activeRestrictions.length) {
-                out += '<td><input name="restriction" type="radio" data-rl-code="' + rl.code + '"';
-                if (selectedRestriction.code === rl.code) {
-                    out += ' checked="checked"';
-                }
-                out += '></td>';
-            }
-
-            out += '<td class="rl-title">' + rl.title + '</td>';
-            out += '<td class="rl-indicator"><span data-rl-joust="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
-            out += '<td class="joust-title">' + Translator.trans('tournamentLegality.joust') + '</td>';
-            out += '<td class="rl-indicator"><span data-rl-melee="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
-            out += '<td class="melee-title">' + Translator.trans('tournamentLegality.melee') + '</td>';
-            out += '</tr>';
-        });
-        out += '</table>';
-        $(out).appendTo($container);
-    }
-
-    /**
      * builds the pack selector
      * @memberOf ui
      */
@@ -550,7 +506,7 @@
                 DisplayColumnsTpl = _.template(
                         '<tr>'
                         + '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-                        + '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.label %></a><%= labels %></td>'
+                        + '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.label %></a><span class="rl-labels"><%= labels %></span></td>'
                         + '<td class="cost"><%= card.cost %><%= card.income %></td>'
                         + '<td class="cost"><%= card.strength %><%= card.initiative %></td>'
                         + '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
@@ -564,7 +520,7 @@
                         + '<div class="media">'
                         + '<div class="media-left"><img class="media-object" src="<%= card.image_url %>" alt="<%= card.name %>"></div>'
                         + '<div class="media-body">'
-                        + '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
+                        + '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a><span class="rl-labels"><%= labels %></span></h4>'
                         + '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
                         + '</div>'
                         + '</div>'
@@ -577,7 +533,7 @@
                         + '<div class="media">'
                         + '<div class="media-left"><img class="media-object" src="<%= card.image_url %>" alt="<%= card.name %>"></div>'
                         + '<div class="media-body">'
-                        + '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h5>'
+                        + '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a><span class="rl-labels"><%= labels %></span></h5>'
                         + '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
                         + '</div>'
                         + '</div>'
@@ -715,6 +671,8 @@
                     }
             );
 
+            row.find('.rl-labels').html(app.deck.get_card_labels(card));
+
             if(unusable) {
                 row.find('label').addClass("disabled").find('input[type=radio]').attr("disabled", true);
             }
@@ -831,7 +789,7 @@
         ui.build_faction_selector();
         ui.build_type_selector();
         ui.build_pack_selector();
-        ui.build_restrictions_selector();
+        ui.build_restrictions_selector('#restricted_lists');
         ui.init_selectors();
         ui.refresh_deck();
         ui.refresh_rl_indicators();
