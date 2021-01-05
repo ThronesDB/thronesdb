@@ -43,7 +43,7 @@
      * @param {Array} pods a list of pods
      * @return {Object} the lookup map of pods, keyed by card codes
      */
-    var get_pods_map = _.memoize(function(pods) {
+    var get_pods_map = function(pods) {
         var map = {};
 
         _.each(pods, function (pod) {
@@ -61,7 +61,7 @@
             });
         })
         return map;
-    });
+    }
 
     /*
      * Checks a given card's text has the "Shadow" keyword.
