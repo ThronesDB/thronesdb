@@ -445,7 +445,7 @@
 
         $('#config-options').on('change', 'input', ui.on_config_change);
         $('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
-        $('#restricted_lists').on('change', 'input[type=radio]',  ui.on_rl_change);
+        $('#restricted_lists').on('change', 'input[type=radio]', ui.on_rl_change);
 
         $('#cardModal').on('keypress', function (event)
         {
@@ -573,43 +573,6 @@
     {
         CardDivs = [[], [], []];
         ui.refresh_list();
-    };
-
-    /**
-     * Refreshes the restricted list indicators for joust and melee.
-     * @memberOf ui
-     */
-    ui.refresh_rl_indicators = function refresh_rl_indicators() {
-        var refresh = function($elem, rl, isLegal) {
-            $elem.empty();
-            if (isLegal(rl)) {
-                $elem.addClass('text-success');
-                $elem.removeClass('text-danger');
-                $elem.html('<i class="fas fa-check"></i>')
-            } else {
-                $elem.addClass('text-danger');
-                $elem.removeClass('text-success');
-                $elem.html('<i class="fas fa-times"></i>')
-            }
-        };
-        $('[data-rl-joust]').each(function() {
-            var $elem = $(this);
-            var code = $elem.attr('data-rl-joust');
-            var rl = app.data.findRestrictedList(code);
-            if (!rl) {
-                return;
-            }
-            refresh($elem, rl, app.deck.isTournamentLegalInJoust);
-        });
-        $('[data-rl-melee]').each(function() {
-            var $elem = $(this);
-            var code = $elem.attr('data-rl-melee');
-            var rl = app.data.findRestrictedList(code);
-            if (!rl) {
-                return;
-            }
-            refresh($elem, rl, app.deck.isTournamentLegalInMelee);
-        });
     };
 
     /**
