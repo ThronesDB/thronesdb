@@ -2,6 +2,32 @@
 
 (function ui_decklist_edit(ui, $)
 {
+    /**
+     * sets up event handlers ; dataloaded not fired yet
+     * @memberOf ui
+     */
+    ui.setup_event_handlers = function setup_event_handlers()
+    {
+        $('#restricted_lists').on('change', 'input[type=radio]', ui.on_rl_change);
+    };
+
+    /**
+     * @memberOf ui
+     */
+    ui.refresh_deck = function refresh_deck()
+    {
+        app.deck.display('#decklist', {cols: 1});
+    };
+
+    /**
+     * @memberOf ui
+     * @param event
+     */
+    ui.on_rl_change = function on_rl_change(event) {
+        const code = $(event.target).attr('data-rl-code');
+        app.config.set('restriction', code);
+        ui.refresh_deck();
+    }
 
     /**
      * called when the DOM is loaded
@@ -9,6 +35,7 @@
      */
     ui.on_dom_loaded = function on_dom_loaded()
     {
+        ui.setup_event_handlers();
         $('#descriptionMd').markdown({
             autofocus: true,
             iconlibrary: 'fa',
@@ -157,7 +184,9 @@
     ui.on_all_loaded = function on_all_loaded()
     {
         app.textcomplete.setup('#descriptionMd');
-        app.deck.display('#decklist', {cols: 1});
+        ui.build_restrictions_selector('#restricted_lists');
+        ui.refresh_deck();
+        ui.refresh_rl_indicators();
     };
 
 
