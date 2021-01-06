@@ -7,7 +7,7 @@
 #}
 {% for pod in list.joustRestrictedPods %}
     <div class="pod">
-        <div class="title text-center"> Pod {{ loop.index }}</div>
+        <div class="title text-center"> Pod {{ pod.title }}</div>
         <div class="cards">
             {% if pod.restricted %}
                 <div class="pod-card restricted-card col-md-4 col-sm-6">
