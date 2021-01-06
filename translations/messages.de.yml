@@ -16,6 +16,7 @@ nav:
   rules: Regeln
   rulesreference: Referenzhandbuch
   faq: F.A.Q.
+  restrictions: Eingeschränkte und Verbotene Karten
   tournamentregulations: Turnierregeln
   advancedsearch: Erweiterte Suche
   cardsearch: Kartensuche
@@ -525,4 +526,3 @@ tournamentLegality:
   title: Turnierzulässigkeit
   joust: Tjost
   melee: Buhurt
-restrictedLists: Eingeschränkte Listen
