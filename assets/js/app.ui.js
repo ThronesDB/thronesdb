@@ -211,7 +211,7 @@
         }
 
         selectedRestriction = app.data.getBestSelectedRestrictedList();
-        $('<h4> ' + Translator.trans('restrictedLists') +  '</h4>').appendTo($container);
+        $('<h4> ' + Translator.trans('tournamentLegality.title') +  '</h4>').appendTo($container);
         out += '<table class="tournament-legality-info">';
         activeRestrictions.forEach(function(rl) {
             out += '<tr>';
