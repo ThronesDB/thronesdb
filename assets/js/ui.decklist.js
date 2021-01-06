@@ -16,7 +16,7 @@
         $('#btn-group-decklist button[id],a[id]').on('click', ui.do_action_decklist);
         $('#btn-compare').on('click', ui.compare_form);
         $('#btn-compare-submit').on('click', ui.compare_submit);
-
+        $('#restricted_lists').on('change', 'input[type=radio]', ui.on_rl_change);
     };
 
     ui.delete_form = function delete_form()
@@ -280,6 +280,16 @@
     };
 
     /**
+     * @memberOf ui
+     * @param event
+     */
+    ui.on_rl_change = function on_rl_change(event) {
+        const code = $(event.target).attr('data-rl-code');
+        app.config.set('restriction', code);
+        ui.refresh_deck();
+    }
+
+    /**
      * called when the DOM is loaded
      * @memberOf ui
      */
@@ -303,9 +313,10 @@
      */
     ui.on_all_loaded = function on_all_loaded()
     {
+        ui.build_restrictions_selector('#restricted_lists');
         ui.refresh_deck();
+        ui.refresh_rl_indicators();
         app.draw_simulator && app.draw_simulator.reset();
-
         app.user.loaded.done(function ()
         {
             ui.setup_comment_form();

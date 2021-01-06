@@ -83,7 +83,12 @@
     <div class="main white container">
         <div class="row">
             <div class="col-md-6">
-                <div id="deck-content" style="margin-bottom:10px"></div>
+                <div id="deck-content"></div>
+                <div id="deck-options">
+                    <div class="form-group">
+                        <div id="restricted_lists"></div>
+                    </div>
+                </div>
                 {% include 'Builder/deck-charts.html.twig' %}
                 {% include 'Builder/draw-simulator.html.twig' %}
                 {% include 'Decklist/table-predecessor.html.twig' %}
