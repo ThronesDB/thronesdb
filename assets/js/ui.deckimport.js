@@ -2,6 +2,35 @@
 
 (function ui_deckimport(ui, $)
 {
+
+    /**
+     * sets up event handlers ; dataloaded not fired yet
+     * @memberOf ui
+     */
+    ui.setup_event_handlers = function setup_event_handlers()
+    {
+        $('#content').change(ui.on_content_change);
+        $('#restricted_lists').on('change', 'input[type=radio]', ui.on_rl_change);
+    };
+
+    /**
+     * @memberOf ui
+     */
+    ui.refresh_deck = function refresh_deck()
+    {
+        app.deck.display('#deck');
+    };
+
+    /**
+     * @memberOf ui
+     * @param event
+     */
+    ui.on_rl_change = function on_rl_change(event) {
+        const code = $(event.target).attr('data-rl-code');
+        app.config.set('restriction', code);
+        ui.refresh_deck();
+    }
+
     ui.on_content_change = function on_content_change(event)
     {
         var text = $('#content').val(),
@@ -64,7 +93,7 @@
      */
     ui.on_dom_loaded = function on_dom_loaded()
     {
-        $('#content').change(ui.on_content_change);
+        ui.setup_event_handlers();
     };
 
     /**
@@ -81,7 +110,7 @@
      */
     ui.on_all_loaded = function on_all_loaded()
     {
+        ui.build_restrictions_selector('#restricted_lists');
+        ui.refresh_rl_indicators();
     };
-
-
 })(app.ui, jQuery);
