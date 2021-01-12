@@ -24,7 +24,7 @@
      * @param event
      */
     ui.on_rl_change = function on_rl_change(event) {
-        const code = $(event.target).attr('data-rl-code');
+        var code = $(event.target).attr('data-rl-code');
         app.config.set('restriction', code);
         ui.refresh_deck();
     }
