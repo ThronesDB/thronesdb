@@ -58,7 +58,7 @@
                 ui.export_agotcards(app.deck);
                 break;
         }
-        
+
         if (action_id !== 'btn-publish' &&
             action_id !== 'btn-clone' ) {
             event.preventDefault();
@@ -75,6 +75,7 @@
         $('#btn-group-deck').on({
             click: ui.do_action_deck
         }, 'button[id],a[id]');
+        $('#restricted_lists').on('change', 'input[type=radio]', ui.on_rl_change);
 
     };
 
@@ -87,6 +88,16 @@
         app.draw_simulator && app.draw_simulator.reset();
         app.deck_charts && app.deck_charts.setup();
     };
+
+    /**
+     * @memberOf ui
+     * @param event
+     */
+    ui.on_rl_change = function on_rl_change(event) {
+        var code = $(event.target).attr('data-rl-code');
+        app.config.set('restriction', code);
+        ui.refresh_deck();
+    }
 
     /**
      * called when the DOM is loaded
@@ -113,7 +124,9 @@
     ui.on_all_loaded = function on_all_loaded()
     {
         app.markdown && app.markdown.update(app.deck.get_description_md() || Translator.trans('decks.defaultemptydesc'), '#description');
+        ui.build_restrictions_selector('#restricted_lists');
         ui.refresh_deck();
+        ui.refresh_rl_indicators();
     };
 
 })(app.ui, jQuery);
