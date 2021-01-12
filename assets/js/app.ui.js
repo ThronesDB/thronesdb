@@ -187,6 +187,91 @@
         $('#exportModal').modal('show');
     };
 
+    /**
+     * builds selector component for restricted lists
+     * @memberOf ui
+     */
+    ui.build_restrictions_selector = function build_restrictions_selector(containerId) {
+        var $container = $(containerId);
+        if (! $container.length) {
+            return;
+        }
+        var selectedRestriction;
+        var out = '';
+        var activeRestrictions = app.data.restrictions.find({
+            'active': true
+        }, {
+            $orderBy: {
+                'effectiveOn': -1
+            }
+        });
+
+        if (! activeRestrictions.length) {
+            return;
+        }
+
+        selectedRestriction = app.data.getBestSelectedRestrictedList();
+        $('<h4> ' + Translator.trans('tournamentLegality.title') +  '</h4>').appendTo($container);
+        out += '<table class="tournament-legality-info">';
+        activeRestrictions.forEach(function(rl) {
+            out += '<tr>';
+            if (1 < activeRestrictions.length) {
+                out += '<td><input name="restriction" type="radio" data-rl-code="' + rl.code + '"';
+                if (selectedRestriction.code === rl.code) {
+                    out += ' checked="checked"';
+                }
+                out += '></td>';
+            }
+
+            out += '<td class="rl-title">' + rl.title + '</td>';
+            out += '<td class="rl-indicator"><span data-rl-joust="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
+            out += '<td class="joust-title">' + Translator.trans('tournamentLegality.joust') + '</td>';
+            out += '<td class="rl-indicator"><span data-rl-melee="' + rl.code + '"><i class="fas fa-spinner"></i></span></td>';
+            out += '<td class="melee-title">' + Translator.trans('tournamentLegality.melee') + '</td>';
+            out += '</tr>';
+        });
+        out += '</table>';
+        $(out).appendTo($container);
+    };
+
+    /**
+     * Refreshes the restricted list indicators for joust and melee.
+     * @memberOf ui
+     */
+    ui.refresh_rl_indicators = function refresh_rl_indicators() {
+        var refresh = function($elem, rl, isLegal) {
+            $elem.empty();
+            if (isLegal(rl)) {
+                $elem.addClass('text-success');
+                $elem.removeClass('text-danger');
+                $elem.html('<i class="fas fa-check"></i>')
+            } else {
+                $elem.addClass('text-danger');
+                $elem.removeClass('text-success');
+                $elem.html('<i class="fas fa-times"></i>')
+            }
+        };
+        $('[data-rl-joust]').each(function() {
+            var $elem = $(this);
+            var code = $elem.attr('data-rl-joust');
+            var rl = app.data.findRestrictedList(code);
+            if (!rl) {
+                return;
+            }
+            refresh($elem, rl, app.deck.isTournamentLegalInJoust);
+        });
+        $('[data-rl-melee]').each(function() {
+            var $elem = $(this);
+            var code = $elem.attr('data-rl-melee');
+            var rl = app.data.findRestrictedList(code);
+            if (!rl) {
+                return;
+            }
+            refresh($elem, rl, app.deck.isTournamentLegalInMelee);
+        });
+    };
+
+
     $(document).ready(function ()
     {
         $('[data-toggle="tooltip"]').tooltip();

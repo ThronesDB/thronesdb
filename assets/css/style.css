@@ -512,17 +512,21 @@ article.review .review-comment {
 }
 
 .tournament-legality-info td {
-    border-right: 1px solid grey;
     padding: 0 .5rem;
 }
 
-.tournament-legality-info td:first-child {
+.tournament-legality-info td.rl-title {
+    border-right: 1px solid grey;
     padding-left: 0;
 }
 
-.tournament-legality-info td:last-child {
-    border-right: 0;
+.tournament-legality-info td.rl-indicator,
+.tournament-legality-info td.melee-title {
     padding-right: 0;
+}
+
+.tournament-legality-info td.joust-title {
+    border-right: 1px solid grey;
 }
 
 abbr.legality.rl-joust,

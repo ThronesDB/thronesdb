@@ -320,6 +320,16 @@
      * @memberOf ui
      * @param event
      */
+    ui.on_rl_change = function on_rl_change(event) {
+        var code = $(event.target).attr('data-rl-code');
+        app.config.set('restriction', code);
+        ui.on_deck_modified();
+    }
+
+    /**
+     * @memberOf ui
+     * @param event
+     */
     ui.on_modal_quantity_change = function on_modal_quantity_change(event)
     {
         var modal = $('#cardModal');
@@ -364,6 +374,7 @@
     ui.on_quantity_change = function on_quantity_change(card_code, quantity)
     {
         var update_all = app.deck.set_card_copies(card_code, quantity);
+        ui.refresh_rl_indicators();
         ui.refresh_deck();
 
         if(update_all) {
@@ -434,6 +445,7 @@
 
         $('#config-options').on('change', 'input', ui.on_config_change);
         $('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+        $('#restricted_lists').on('change', 'input[type=radio]', ui.on_rl_change);
 
         $('#cardModal').on('keypress', function (event)
         {
@@ -494,7 +506,7 @@
                 DisplayColumnsTpl = _.template(
                         '<tr>'
                         + '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
-                        + '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.label %></a><%= labels %></td>'
+                        + '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.label %></a><span class="rl-labels"><%= labels %></span></td>'
                         + '<td class="cost"><%= card.cost %><%= card.income %></td>'
                         + '<td class="cost"><%= card.strength %><%= card.initiative %></td>'
                         + '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
@@ -508,7 +520,7 @@
                         + '<div class="media">'
                         + '<div class="media-left"><img class="media-object" src="<%= card.image_url %>" alt="<%= card.name %>"></div>'
                         + '<div class="media-body">'
-                        + '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h4>'
+                        + '<h4 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a><span class="rl-labels"><%= labels %></span></h4>'
                         + '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
                         + '</div>'
                         + '</div>'
@@ -521,7 +533,7 @@
                         + '<div class="media">'
                         + '<div class="media-left"><img class="media-object" src="<%= card.image_url %>" alt="<%= card.name %>"></div>'
                         + '<div class="media-body">'
-                        + '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a></h5>'
+                        + '<h5 class="media-heading"><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.name %></a><span class="rl-labels"><%= labels %></span></h5>'
                         + '<div class="btn-group" data-toggle="buttons"><%= radios %></div>'
                         + '</div>'
                         + '</div>'
@@ -587,7 +599,7 @@
             orderBy['name'] = 1;
         var cards = app.data.cards.find(query, {'$orderBy': orderBy});
         var divs = CardDivs[ app.config.get('display-column') - 1 ];
-        var rl = app.data.getActiveRestrictions();
+        var rl = app.data.getBestSelectedRestrictedList();
 
         cards.forEach(function (card)
         {
@@ -622,6 +634,8 @@
                     }
             );
 
+            row.find('.rl-labels').html(app.deck.get_card_labels(card));
+
             if(unusable) {
                 row.find('label').addClass("disabled").find('input[type=radio]').attr("disabled", true);
             }
@@ -642,6 +656,7 @@
     ui.on_deck_modified = function on_deck_modified()
     {
         ui.refresh_deck();
+        ui.refresh_rl_indicators();
         ui.refresh_list();
     };
 
@@ -737,8 +752,10 @@
         ui.build_faction_selector();
         ui.build_type_selector();
         ui.build_pack_selector();
+        ui.build_restrictions_selector('#restricted_lists');
         ui.init_selectors();
         ui.refresh_deck();
+        ui.refresh_rl_indicators();
         ui.refresh_list();
         ui.setup_typeahead();
         app.deck_history && app.deck_history.setup('#history');

@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 {% import "macros.html.twig" as macros %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/ui.deckinit.js') }}"></script>
+{% endblock %}
+
 {% block body %}
 
     <div class="main white container">
@@ -27,15 +32,16 @@
                 </div>
                 <div class="col-md-4">
                     <h2>{{ 'decks.build.choose.agenda' | trans }}</h2>
+                    <select id="restricted_lists" class="hidden"></select>
                     <ul class="list-group">
-                        <li class="list-group-item radio">
+                        <li class="list-group-item radio no-agenda">
                             <label>
                                 <input type="radio" name="agenda" value="" checked="checked">
                                 {{ 'decks.build.choose.noagenda' | trans }}
                             </label>
                         </li>
                         {% for agenda in agendas %}
-                            <li class="list-group-item radio">
+                            <li class="list-group-item radio hidden agenda" data-card-code="{{ agenda.code }}">
                                 <label>
                                     <input type="radio" name="agenda" value="{{ agenda.code }}">
                                     {{ macros.card_name_with_pack_no_link(agenda) }}
