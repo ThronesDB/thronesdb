@@ -200,6 +200,12 @@ ol {
     height: 70px;
 }
 
+/** Description panel **/
+div#description img,
+div#description-preview img {
+    max-width: 100%;
+}
+
 /********* LIST OF DECKS ************/
 
 .list-decks > thead > tr {
