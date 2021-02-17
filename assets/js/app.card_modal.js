@@ -26,7 +26,15 @@
     {
         var card = app.data.cards.findById(code),
                 modal = $('#cardModal');
+        var info = '<div class="card-faction">' + app.format.faction(card) + '</div>'
+          + '<div class="card-info">' + app.format.info(card) + '</div>'
+          + '<div class="card-traits">' + app.format.traits(card) + '</div>'
+          + '<div class="card-text border-' + card.faction_code + '">' + app.format.text(card) + '</div>'
+          + '<div class="card-pack">' + app.format.pack(card) + '</div>';
 
+        if (card.work_in_progress) {
+            info = '<div class="alert alert-danger">' +  Translator.trans('card.info.workInProgress')  + '</div>' + info;
+        }
         if(!card)
             return;
 
@@ -34,13 +42,7 @@
         modal.find('.card-modal-link').attr('href', card.url);
         modal.find('h3.modal-title').html(app.format.name(card));
         modal.find('.modal-image').html('<img class="img-responsive" src="' + card.image_url + '">');
-        modal.find('.modal-info').html(
-                '<div class="card-faction">' + app.format.faction(card) + '</div>'
-                + '<div class="card-info">' + app.format.info(card) + '</div>'
-                + '<div class="card-traits">' + app.format.traits(card) + '</div>'
-                + '<div class="card-text border-' + card.faction_code + '">' + app.format.text(card) + '</div>'
-                + '<div class="card-pack">' + app.format.pack(card) + '</div>'
-                );
+        modal.find('.modal-info').html(info);
 
         var qtyelt = modal.find('.modal-qty');
         if(qtyelt) {
