@@ -41,8 +41,6 @@ script:
   - ./bin/console lint:yaml config
   # this checks that the Twig template files contain no syntax errors
   - ./bin/console lint:twig src
-  # this checks that the application doesn't use dependencies with known security vulnerabilities
-  - ./bin/console security:check
   # this checks that Doctrine's mapping configurations are valid
   - ./bin/console doctrine:schema:validate --skip-sync -vvv --no-interaction
   # run unit tests
