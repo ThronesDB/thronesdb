@@ -463,6 +463,7 @@ card:
       strini: Fu.
       type: T.
       faction: F.
+    workInProgress: Esta tarjeta se considera "trabajo en progreso" y puede estar sujeta a modificaciones o eliminación sin previo aviso.
 
 challenges:
   military: Militar

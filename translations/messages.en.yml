@@ -464,6 +464,7 @@ card:
       strini: S.
       type: T.
       faction: F.
+    workInProgress: This card is considered "work in progress" and may be subject to modifications or removal without further notice.
 
 challenges:
   military: Military
