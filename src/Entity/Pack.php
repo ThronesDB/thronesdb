@@ -88,7 +88,7 @@ class Pack implements PackInterface
      *
      * @ORM\Column(name="work_in_progress", type="boolean", nullable=false, options={"default"=false})
      */
-    protected bool $workInProgress;
+    protected bool $workInProgress = false;
 
     /**
      * @var Collection
@@ -324,7 +324,8 @@ class Pack implements PackInterface
             'name' => $this->name,
             'position' => $this->position,
             'size' => $this->size,
-            'cgdb_id' => $this->cgdbId
+            'cgdb_id' => $this->cgdbId,
+            'work_in_progress' => $this->workInProgress
         ];
     }
 
