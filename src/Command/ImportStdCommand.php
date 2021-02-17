@@ -179,7 +179,7 @@ class ImportStdCommand extends Command
         $data['size'] = count($pack['cards']);
         $data['position'] = $map[$pack['code']]['position'];
         $data['cycle_code'] = $map[$pack['code']]['cycle'];
-        $data['work_in_progress'] = array_key_exists('work_in_progress', $pack) ? $pack['work_in_progress'] : false;
+        $data['work_in_progress'] = array_key_exists('workInProgress', $pack) ? $pack['workInProgress'] : false;
 
         $entity = $this->getEntityFromData(Pack::class, $data, [
             'name',
