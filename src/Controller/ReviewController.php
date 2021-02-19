@@ -62,6 +62,12 @@ class ReviewController extends AbstractController
         if (!$card) {
             throw new Exception("This card does not exist.");
         }
+
+        if ($card->getPack()->getWorkInProgress()) {
+            throw $this->createAccessDeniedException(
+                "This card is considered work-in-progress and cannot be reviewed."
+            );
+        }
         /*
           if(!$card->getPack()->getDateRelease())
           {
