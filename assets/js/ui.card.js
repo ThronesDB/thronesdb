@@ -12,7 +12,7 @@
     {
         var button = $('<button class="btn btn-default" id="review-button"><span class="glyphicon glyphicon-pencil"></span> ' + Translator.trans('card.reviews.edit') + '</a>');
         $('#review-' + review_id + ' .review-text').append(button);
-        $('input[name=review_id').val(review_id);
+        $('input[name=review_id]').val(review_id);
     };
 
     /**
