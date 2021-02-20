@@ -452,7 +452,7 @@ class SearchController extends AbstractController
         // reconstruction de la bonne chaine de recherche pour affichage
         $q = $cardsData->buildQueryFromConditions($conditions);
         if ($q && $rows = $cardsData->getSearchRows($conditions, $sort)) {
-            if (count($rows) == 1) {
+            if (count($rows) === 1 && ! $rows[0]->getPack()->getWorkInProgress()) {
                 $includeReviews = true;
             }
 

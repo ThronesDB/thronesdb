@@ -464,6 +464,7 @@ card:
       strini: S.
       type: T.
       faction: F.
+    workInProgress: Diese Karte gilt als "in Arbeit" und kann ohne weitere Ankündigung geändert oder entfernt werden.
 
 challenges:
   military: Militäreinsatz

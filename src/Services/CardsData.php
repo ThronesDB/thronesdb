@@ -594,6 +594,8 @@ class CardsData
             $cardinfo['ci'] = is_numeric($cardinfo['ci']) ? intval($cardinfo['ci']) : null;
         }
 
+        $cardinfo['work_in_progress'] = $card->getPack()->getWorkInProgress();
+
         return $cardinfo;
     }
 

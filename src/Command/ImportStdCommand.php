@@ -179,6 +179,7 @@ class ImportStdCommand extends Command
         $data['size'] = count($pack['cards']);
         $data['position'] = $map[$pack['code']]['position'];
         $data['cycle_code'] = $map[$pack['code']]['cycle'];
+        $data['work_in_progress'] = array_key_exists('workInProgress', $pack) ? $pack['workInProgress'] : false;
 
         $entity = $this->getEntityFromData(Pack::class, $data, [
             'name',
@@ -186,7 +187,8 @@ class ImportStdCommand extends Command
             'position',
             'size',
             'date_release',
-            'cgdb_id'
+            'cgdb_id',
+            'work_in_progress',
         ], [
             'cycle_code'
         ], [], $output);

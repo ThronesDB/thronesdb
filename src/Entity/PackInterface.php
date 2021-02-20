@@ -125,4 +125,8 @@ interface PackInterface extends Serializable
      * @return CycleInterface
      */
     public function getCycle();
+
+    public function setWorkInProgress(bool $workInProgress): void;
+
+    public function getWorkInProgress(): bool;
 }

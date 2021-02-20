@@ -4,16 +4,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/ui.card.js') }}"></script>
-    <script type="text/javascript">
-        {% if cards is not empty %}
-        app.user.params.card_id = {{ cards[0].id }};
-        {% endif %}
-    </script>
 {% endblock %}
 
 {% block main %}
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="row">
                 {% for card in cards %}
                     <div class="col-sm-7" style="margin-bottom:2em">
@@ -25,6 +20,7 @@
                                     </h3>
                                 </div>
                                 <div class="panel-body card-content">
+                                    {% include 'Search/card-work-in-progress.html.twig' %}
                                     {% include 'Search/card-faction.html.twig' %}
                                     {% include 'Search/card-info.html.twig' %}
                                     {% include 'Search/card-text.html.twig' %}

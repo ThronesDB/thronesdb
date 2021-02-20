@@ -84,6 +84,13 @@ class Pack implements PackInterface
     protected $cgdbId;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(name="work_in_progress", type="boolean", nullable=false, options={"default"=false})
+     */
+    protected bool $workInProgress = false;
+
+    /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Card", mappedBy="pack")
@@ -295,6 +302,16 @@ class Pack implements PackInterface
         return $this->cycle;
     }
 
+    public function getWorkInProgress(): bool
+    {
+        return $this->workInProgress;
+    }
+
+    public function setWorkInProgress(bool $workInProgress): void
+    {
+        $this->workInProgress = $workInProgress;
+    }
+
     /**
      * @inheritdoc
      */
@@ -307,7 +324,8 @@ class Pack implements PackInterface
             'name' => $this->name,
             'position' => $this->position,
             'size' => $this->size,
-            'cgdb_id' => $this->cgdbId
+            'cgdb_id' => $this->cgdbId,
+            'work_in_progress' => $this->workInProgress
         ];
     }
 
