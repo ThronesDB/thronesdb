@@ -34,10 +34,15 @@
         var selectedRestrictionCode = app.config.get('restriction');
         var restrictions;
         if (selectedRestrictionCode) {
-            restrictions = data.restrictions.find({ 'active': true, 'code': selectedRestrictionCode });
-        } else {
-            restrictions = data.restrictions.find({ 'active': true }, { $limit: 1, $orderBy: { 'effectiveOn': -1 }});
+            restrictions = data.restrictions.find({
+                'active': true,
+                'code': selectedRestrictionCode
+            });
+            if (restrictions.length) {
+                return restrictions[0];
+            }
         }
+        restrictions = data.restrictions.find({ 'active': true }, { $limit: 1, $orderBy: { 'effectiveOn': -1 }});
         return restrictions.length ? restrictions[0] : null;
     }
 

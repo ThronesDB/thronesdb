@@ -217,7 +217,7 @@
             out += '<tr>';
             if (1 < activeRestrictions.length) {
                 out += '<td><input name="restriction" type="radio" data-rl-code="' + rl.code + '"';
-                if (selectedRestriction.code === rl.code) {
+                if (selectedRestriction && selectedRestriction.code === rl.code) {
                     out += ' checked="checked"';
                 }
                 out += '></td>';
