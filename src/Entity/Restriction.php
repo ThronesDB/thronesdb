@@ -340,7 +340,7 @@ class Restriction implements RestrictionInterface
                 $this->getJoustBannedList(),
                 $this->getMeleeRestrictedList(),
                 $this->getMeleeBannedList(),
-                $cardsInPods
+                ...$cardsInPods
             )
         );
     }
