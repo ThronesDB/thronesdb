@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -339,8 +340,27 @@ class Restriction implements RestrictionInterface
                 $this->getJoustBannedList(),
                 $this->getMeleeRestrictedList(),
                 $this->getMeleeBannedList(),
-                $cardsInPods
+                ...$cardsInPods
             )
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'code' => $this->getCode(),
+            'title' => $this->getTitle(),
+            'effectiveOn' => $this->getEffectiveOn()->format('c'),
+            'issuer' => $this->getIssuer(),
+            'cardSet' => $this->getCardSet(),
+            'contents' => $this->getContents(),
+            'active' => $this->isActive(),
+            'version' => $this->getVersion(),
+            'dateUpdate' => $this->getDateUpdate()->format('c'),
+            'dateCreation' => $this->getDateCreation()->format('c'),
+        ];
     }
 }

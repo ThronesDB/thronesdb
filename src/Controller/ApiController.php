@@ -10,6 +10,7 @@ use App\Entity\DecklistInterface;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
 use App\Entity\Restriction;
+use App\Entity\RestrictionInterface;
 use App\Services\CardsData;
 use DateInterval;
 use DateTime;
@@ -639,7 +640,7 @@ class ApiController extends AbstractController
         // check the last-modified-since header
 
         $lastModified = null;
-        /* @var PackInterface $pack */
+        /* @var RestrictionInterface $restriction */
         foreach ($restrictions as $restriction) {
             if (!$lastModified || $lastModified < $restriction->getDateUpdate()) {
                 $lastModified = $restriction->getDateUpdate();
@@ -650,7 +651,7 @@ class ApiController extends AbstractController
             return $response;
         }
 
-        $json = $serializer->serialize($restrictions, 'json');
+        $json = json_encode($restrictions);
         $response->headers->set('Content-Type', 'application/json');
         $response->setContent($json);
         return $response;

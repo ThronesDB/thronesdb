@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use DateTime;
+use JsonSerializable;
 
 /**
  * Interface RestrictionInterface
  * @package App\Entity
  */
-interface RestrictionInterface
+interface RestrictionInterface extends JsonSerializable
 {
     /**
      * @param string $code

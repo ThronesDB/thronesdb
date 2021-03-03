@@ -24,7 +24,7 @@
     selectedRestriction = app.data.getBestSelectedRestrictedList();
     activeRestrictions.forEach(function(rl) {
       out += '<option value="' + rl.code + '"';
-      if (rl.code === selectedRestriction.code) {
+      if (selectedRestriction && rl.code === selectedRestriction.code) {
         out += ' selected="selected"';
       }
       out += '>'
