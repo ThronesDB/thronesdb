@@ -248,6 +248,10 @@ class DeckValidationHelper
                 return $this->validateRedesignedSeaOfBlood($slots);
             case '17150':
                 return $this->validateRedesignedFreeFolk($slots);
+            case '20051':
+                return $this->validateBloodyMummers($slots);
+            case '20052':
+                return $this->validateManyFacedGod($slots);
             default:
                 return true;
         }
@@ -528,5 +532,43 @@ class DeckValidationHelper
             $names[] = $name;
         }
         return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateBloodyMummers(SlotCollectionInterface  $slots): bool
+    {
+        $plotSlots = $slots->getPlotDeck();
+        $trait = $this->translator->trans('card.traits.kingdom');
+        /* @var SlotInterface $slot */
+        foreach ($plotSlots as $slot) {
+            if (preg_match("/$trait\\./", $slot->getCard()->getTraits())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param SlotCollectionInterface $slots
+     * @return bool
+     */
+    protected function validateManyFacedGod(SlotCollectionInterface $slots): bool
+    {
+        $characterSlots = $slots->getDrawDeck()->filterByType('character');
+        $traitlessCharactersCount = 0;
+        /* @var SlotInterface $slot */
+        foreach ($characterSlots as $slot) {
+            if (! $slot->getCard()->getTraits()) {
+                $traitlessCharactersCount += $slot->getQuantity();
+            }
+            if (3 <= $traitlessCharactersCount) {
+                return true;
+            }
+        }
+
+        return 3 <= $traitlessCharactersCount;
     }
 }
