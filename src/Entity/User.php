@@ -625,6 +625,6 @@ class User extends BaseUser implements UserInterface
      */
     public function getMaxNbDecks()
     {
-        return 2 * (100 + floor($this->reputation / 10));
+        return 2 * (100 + floor($this->reputation / 10)) + 100;
     }
 }
