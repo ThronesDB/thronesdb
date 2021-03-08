@@ -417,6 +417,7 @@ card:
     scheme: Scheme
     banner: Banner
     maester: Maester
+    kingdom: Kingdom
     kingsguard: Kingsguard
     wildling: Wildling
   reviews:
