@@ -1197,6 +1197,31 @@
             }
             return true;
         };
+        var validate_bloody_mummers = function() {
+            var plots = deck.get_cards(null, { type_code: 'plot' });
+            var re = new RegExp(Translator.trans('card.traits.kingdom') + '\\.');
+            var rhett = true;
+            plots.forEach(function(plot) {
+                if (re.test(plot.traits)) {
+                    rhett = false;
+                }
+            })
+            return rhett;
+        };
+        var validate_many_faced_god = function() {
+            var characters = deck.get_cards(null, { type_code: 'character' });
+            var traitlessCharacterCount = 0;
+            for (i = 0, n = characters.length; i < n; i++) {
+                if (! characters[i].traits) {
+                    traitlessCharacterCount += characters[i].indeck;
+                }
+                if (3 <= traitlessCharacterCount) {
+                    return true;
+                }
+            }
+            return 3 <= traitlessCharacterCount;
+        };
+
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -1259,8 +1284,6 @@
                     return false;
                 }
                 break;
-            case '17150':
-                return validate_redesigned_the_free_folk();
             case '13099':
                 return validate_the_white_book();
             case '13118':
@@ -1271,6 +1294,12 @@
                 return validate_dark_wings_dark_words();
             case '17149':
                 return validate_redesigned_sea_of_blood();
+            case '17150':
+                return validate_redesigned_the_free_folk();
+            case '20051':
+                return validate_bloody_mummers();
+            case '20052':
+                return validate_many_faced_god();
         }
         return true;
     };
