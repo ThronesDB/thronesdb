@@ -420,6 +420,7 @@ card:
     kingdom: Kingdom
     kingsguard: Kingsguard
     wildling: Wildling
+    fool: Fool
   reviews:
     title: Reviews
     none: No review yet for this card.
