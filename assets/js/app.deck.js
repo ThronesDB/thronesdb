@@ -1197,17 +1197,6 @@
             }
             return true;
         };
-        var validate_bloody_mummers = function() {
-            var plots = deck.get_cards(null, { type_code: 'plot' });
-            var re = new RegExp(Translator.trans('card.traits.kingdom') + '\\.');
-            var rhett = true;
-            plots.forEach(function(plot) {
-                if (re.test(plot.traits)) {
-                    rhett = false;
-                }
-            })
-            return rhett;
-        };
         var validate_many_faced_god = function() {
             var characters = deck.get_cards(null, { type_code: 'character' });
             var traitlessCharacterCount = 0;
@@ -1296,8 +1285,6 @@
                 return validate_redesigned_sea_of_blood();
             case '17150':
                 return validate_redesigned_the_free_folk();
-            case '20051':
-                return validate_bloody_mummers();
             case '20052':
                 return validate_many_faced_god();
         }
@@ -1411,7 +1398,8 @@
             case '17150':
                 return card.faction_code === 'neutral' ||
                   (card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.wildling')) !== -1);
-
+            case '20051':
+                return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.fool')) !== -1;
         }
     };
 })(app.deck = {}, jQuery);
