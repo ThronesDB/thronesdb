@@ -200,6 +200,12 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
+            case '20051': // Mummer's Farce
+                $trait = $this->translator->trans('card.traits.fool');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
         }
         return false;
     }
@@ -248,8 +254,6 @@ class DeckValidationHelper
                 return $this->validateRedesignedSeaOfBlood($slots);
             case '17150':
                 return $this->validateRedesignedFreeFolk($slots);
-            case '20051':
-                return $this->validateBloodyMummers($slots);
             case '20052':
                 return $this->validateManyFacedGod($slots);
             default:

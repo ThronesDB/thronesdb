@@ -419,6 +419,7 @@ card:
     kingdom: Reino
     kingsguard: Guardia Real
     wildling: Salvaje
+    fool: Bufón
   reviews:
     title: Reseñas
     none: Aún no hay reseñas para esta carta.
