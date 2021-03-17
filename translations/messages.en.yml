@@ -376,6 +376,7 @@ search:
   any: any
   yes: Yes
   no: No
+  none: none
   only: Only
   sort:
     name: Sort by Name

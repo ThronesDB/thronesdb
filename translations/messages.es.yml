@@ -375,6 +375,7 @@ search:
   any: cualquiera
   yes: Sí
   no: No
+  none: ninguno
   only: Sólo
   sort:
     name: Ordenar por nombre

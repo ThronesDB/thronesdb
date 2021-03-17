@@ -376,6 +376,7 @@ search:
   any: Beliebig
   yes: Ja
   no: Nein
+  none: keine
   only: Nur
   sort:
     name: Sortieren nach Name
