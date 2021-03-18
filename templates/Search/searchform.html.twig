@@ -157,6 +157,8 @@
                                     <div>
                                         <select class="form-control" name="k" id="k">
                                             <option value="">{{ 'search.any' | trans }}</option>
+                                            <option value="-">{{  'search.none' | trans }}</option>
+                                            <option disabled>&nbsp;</option>
                                             {% for trait in traits %}
                                                 <option value="{{ trait }}">{{ trait }}</option>
                                             {% endfor %}
