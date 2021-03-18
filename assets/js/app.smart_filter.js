@@ -96,19 +96,37 @@
     }
     function add_string_sf(key, operator, values)
     {
-        for(var j = 0; j < values.length; j++) {
-            values[j] = new RegExp(values[j], 'i');
+        var regExps = [];
+        var i, n
+        var $zeroTraitsSearch = (('traits' === key) && (1 === values.length) && ('-' === values[0].trim()));
+
+        for(i = 0, n = values.length; i < n; i++) {
+            regExps[i] = new RegExp(values[i], 'i');
         }
+
         switch(operator) {
             case ":":
-                SmartFilterQuery[key] = {
-                    '$in': values
-                };
+                if ($zeroTraitsSearch) {
+                    SmartFilterQuery[key] = {
+                        '$eq': ''
+                    };
+                } else {
+                    SmartFilterQuery[key] = {
+                        '$in': regExps
+                    };
+                }
+
                 break;
             case "!":
-                SmartFilterQuery[key] = {
-                    '$nin': values
-                };
+                if ($zeroTraitsSearch) {
+                    SmartFilterQuery[key] = {
+                        '$ne': ''
+                    };
+                } else {
+                    SmartFilterQuery[key] = {
+                        '$nin': regExps
+                    };
+                }
                 break;
         }
     }
