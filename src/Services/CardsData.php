@@ -404,30 +404,40 @@ class CardsData
                             foreach ($condition as $arg) {
                                 switch ($operator) {
                                     case ':':
-                                        $or[] = "((c.traits = ?$i) or (c.traits like ?"
-                                            . ($i + 1)
-                                            . ") or (c.traits like ?"
-                                            . ($i + 2)
-                                            . ") or (c.traits like ?"
-                                            . ($i + 3)
-                                            . "))";
-                                        $qb->setParameter($i++, "$arg.");
-                                        $qb->setParameter($i++, "$arg. %");
-                                        $qb->setParameter($i++, "%. $arg.");
-                                        $qb->setParameter($i++, "%. $arg. %");
+                                        if ('-' === $arg) {
+                                            $or[] = "(c.traits = ?$i)";
+                                            $qb->setParameter($i++, '');
+                                        } else {
+                                            $or[] = "((c.traits = ?$i) or (c.traits like ?"
+                                                . ($i + 1)
+                                                . ") or (c.traits like ?"
+                                                . ($i + 2)
+                                                . ") or (c.traits like ?"
+                                                . ($i + 3)
+                                                . "))";
+                                            $qb->setParameter($i++, "$arg.");
+                                            $qb->setParameter($i++, "$arg. %");
+                                            $qb->setParameter($i++, "%. $arg.");
+                                            $qb->setParameter($i++, "%. $arg. %");
+                                        }
                                         break;
                                     case '!':
-                                        $or[] = "(c.traits is null or ((c.traits != ?$i) and (c.traits not like ?"
-                                            . ($i + 1)
-                                            . ") and (c.traits not like ?"
-                                            . ($i + 2)
-                                            . ") and (c.traits not like ?"
-                                            . ($i + 3)
-                                            . ")))";
-                                        $qb->setParameter($i++, "$arg.");
-                                        $qb->setParameter($i++, "$arg. %");
-                                        $qb->setParameter($i++, "%. $arg.");
-                                        $qb->setParameter($i++, "%. $arg. %");
+                                        if ('-' === $arg) {
+                                            $or[] = "(c.traits <> ?$i)";
+                                            $qb->setParameter($i++, '');
+                                        } else {
+                                            $or[] = "(c.traits is null or ((c.traits != ?$i) and (c.traits not like ?"
+                                                . ($i + 1)
+                                                . ") and (c.traits not like ?"
+                                                . ($i + 2)
+                                                . ") and (c.traits not like ?"
+                                                . ($i + 3)
+                                                . ")))";
+                                            $qb->setParameter($i++, "$arg.");
+                                            $qb->setParameter($i++, "$arg. %");
+                                            $qb->setParameter($i++, "%. $arg.");
+                                            $qb->setParameter($i++, "%. $arg. %");
+                                        }
                                         break;
                                 }
                             }
