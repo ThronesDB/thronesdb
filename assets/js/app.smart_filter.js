@@ -97,8 +97,8 @@
     function add_string_sf(key, operator, values)
     {
         var regExps = [];
-        var i, n
-        var $zeroTraitsSearch = (('traits' === key) && (1 === values.length) && ('-' === values[0].trim()));
+        var i, n;
+        var zeroTraitsSearch = (('traits' === key) && (1 === values.length) && ('-' === values[0].trim()));
 
         for(i = 0, n = values.length; i < n; i++) {
             regExps[i] = new RegExp(values[i], 'i');
@@ -106,7 +106,7 @@
 
         switch(operator) {
             case ":":
-                if ($zeroTraitsSearch) {
+                if (zeroTraitsSearch) {
                     SmartFilterQuery[key] = {
                         '$eq': ''
                     };
@@ -118,7 +118,7 @@
 
                 break;
             case "!":
-                if ($zeroTraitsSearch) {
+                if (zeroTraitsSearch) {
                     SmartFilterQuery[key] = {
                         '$ne': ''
                     };
