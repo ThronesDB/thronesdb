@@ -1198,17 +1198,15 @@
             return true;
         };
         var validate_many_faced_god = function() {
-            var characters = deck.get_cards(null, { type_code: 'character' });
-            var traitlessCharacterCount = 0;
-            for (i = 0, n = characters.length; i < n; i++) {
-                if (! characters[i].traits) {
-                    traitlessCharacterCount += characters[i].indeck;
+            var plots = deck.get_cards(null, { type_code: 'plot' });
+            var re = new RegExp(Translator.trans('card.traits.kingdom') + '\\.');
+            var rhett = true;
+            plots.forEach(function(plot) {
+                if (re.test(plot.traits)) {
+                    rhett = false;
                 }
-                if (3 <= traitlessCharacterCount) {
-                    return true;
-                }
-            }
-            return 3 <= traitlessCharacterCount;
+            })
+            return rhett;
         };
 
         switch(agenda.code) {
