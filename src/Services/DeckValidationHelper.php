@@ -561,18 +561,14 @@ class DeckValidationHelper
      */
     protected function validateManyFacedGod(SlotCollectionInterface $slots): bool
     {
-        $characterSlots = $slots->getDrawDeck()->filterByType('character');
-        $traitlessCharactersCount = 0;
+        $plotSlots = $slots->getPlotDeck();
+        $trait = $this->translator->trans('card.traits.kingdom');
         /* @var SlotInterface $slot */
-        foreach ($characterSlots as $slot) {
-            if (! $slot->getCard()->getTraits()) {
-                $traitlessCharactersCount += $slot->getQuantity();
-            }
-            if (3 <= $traitlessCharactersCount) {
-                return true;
+        foreach ($plotSlots as $slot) {
+            if (preg_match("/$trait\\./", $slot->getCard()->getTraits())) {
+                return false;
             }
         }
-
-        return 3 <= $traitlessCharactersCount;
+        return true;
     }
 }
