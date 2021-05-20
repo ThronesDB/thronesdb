@@ -246,10 +246,12 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     {
         $drawDeck = [];
         foreach ($this->slots as $slot) {
-            if ($slot->getCard()->getType()->getCode() === 'character'
+            if (
+                $slot->getCard()->getType()->getCode() === 'character'
                 || $slot->getCard()->getType()->getCode() === 'location'
                 || $slot->getCard()->getType()->getCode() === 'attachment'
-                || $slot->getCard()->getType()->getCode() === 'event') {
+                || $slot->getCard()->getType()->getCode() === 'event'
+            ) {
                 $drawDeck[] = $slot;
             }
         }
@@ -363,7 +365,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
      * @param SlotInterface $s2
      * @return int
      */
-    protected function sortByCardCode(SlotInterface $s1, SlotInterface $s2) : int
+    protected function sortByCardCode(SlotInterface $s1, SlotInterface $s2): int
     {
         return intval($s1->getCard()->getCode(), 10) - intval($s2->getCard()->getCode(), 10);
     }
@@ -374,7 +376,7 @@ class SlotCollectionDecorator implements SlotCollectionInterface
      * @param SlotInterface $s2
      * @return int
      */
-    protected function sortByCardName(SlotInterface $s1, SlotInterface $s2) : int
+    protected function sortByCardName(SlotInterface $s1, SlotInterface $s2): int
     {
         return strcmp($s1->getCard()->getName(), $s2->getCard()->getName()) ?: $this->sortByCardCode($s1, $s2);
     }

@@ -47,6 +47,6 @@ trait LocaleAwareTemplating
             return (trim($fragment) !== '');
         }));
 
-        return "${controllerName}/". implode('.', $tokens);
+        return "${controllerName}/" . implode('.', $tokens);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services;
 
 use HTMLPurifier;
@@ -45,8 +44,8 @@ class Texts
 
         $string = preg_replace('/\s+/', ' ', $string);
 
-        while (strlen($token.$string) > 0 && strlen($response.$token) < $max_length) {
-            $response = $response.$token;
+        while (strlen($token . $string) > 0 && strlen($response . $token) < $max_length) {
+            $response = $response . $token;
             $matches = [];
 
             if (preg_match('/^(<.+?>)(.*)/', $string, $matches)) {

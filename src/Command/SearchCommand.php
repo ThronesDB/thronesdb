@@ -67,7 +67,7 @@ class SearchCommand extends Command
         $table->render();
 
         $output->writeln('');
-        $output->writeln(count($rows). " cards");
+        $output->writeln(count($rows) . " cards");
 
         return 0;
     }

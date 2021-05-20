@@ -98,7 +98,7 @@ class CardRepository extends EntityRepository
             ->andWhere('c.position = ?2');
 
         $qb->setParameter(1, $card->getPack()->getCode());
-        $qb->setParameter(2, $card->getPosition()+$position);
+        $qb->setParameter(2, $card->getPosition() + $position);
 
         return $qb->getQuery()->getOneOrNullResult();
     }

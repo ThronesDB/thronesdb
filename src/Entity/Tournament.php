@@ -87,7 +87,7 @@ class Tournament implements TournamentInterface
     /**
      * @inheritdoc
      */
-    public function isActive() : bool
+    public function isActive(): bool
     {
         return $this->active;
     }
@@ -95,7 +95,7 @@ class Tournament implements TournamentInterface
     /**
      * @inheritdoc
      */
-    public function setActive(bool $active) : void
+    public function setActive(bool $active): void
     {
         $this->active = $active;
     }

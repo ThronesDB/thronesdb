@@ -75,7 +75,7 @@ class DefaultController extends AbstractController
                 $counts = [];
                 foreach ($countByType as $code => $qty) {
                     $typeName = $typeNames[$code];
-                    $counts[] = $qty." ".$typeName."s";
+                    $counts[] = $qty . " " . $typeName . "s";
                 }
                 $array['count_by_type'] = join(' &bull; ', $counts);
 
@@ -99,8 +99,8 @@ class DefaultController extends AbstractController
             [
                 'pagetitle' => "${gameName} Deckbuilder",
                 'pagedescription' => "Build your deck for ${gameName} by ${publisherName}."
-                    ." Browse the cards and the thousand of decklists submitted by the community."
-                    ." Publish your own decks and get feedback.",
+                    . " Browse the cards and the thousand of decklists submitted by the community."
+                    . " Publish your own decks and get feedback.",
                 'decklists_by_faction' => $decklists_by_faction,
             ],
             $response

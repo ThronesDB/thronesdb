@@ -209,9 +209,9 @@ class SearchController extends AbstractController
         }
 
 
-        $meta = $pack->getName().", a set of cards for ${gameName}"
-                .($pack->getDateRelease() ? " published on ".$pack->getDateRelease()->format('Y/m/d') : "")
-                ." by ${publisherName}.";
+        $meta = $pack->getName() . ", a set of cards for ${gameName}"
+                . ($pack->getDateRelease() ? " published on " . $pack->getDateRelease()->format('Y/m/d') : "")
+                . " by ${publisherName}.";
 
         $key = array_search('pack', SearchController::$searchKeys);
 
@@ -220,7 +220,7 @@ class SearchController extends AbstractController
             array(
                 '_route' => $request->attributes->get('_route'),
                 '_route_params' => $request->attributes->get('_route_params'),
-                'q' => $key.':'.$pack_code,
+                'q' => $key . ':' . $pack_code,
                 'view' => $view,
                 'sort' => $sort,
                 'page' => $page,
@@ -260,7 +260,7 @@ class SearchController extends AbstractController
             throw $this->createNotFoundException('This cycle does not exist');
         }
 
-        $meta = $cycle->getName().", a cycle of datapack for ${gameName} published by ${publisherName}.";
+        $meta = $cycle->getName() . ", a cycle of datapack for ${gameName} published by ${publisherName}.";
 
         $key = array_search('cycle', SearchController::$searchKeys);
 
@@ -269,7 +269,7 @@ class SearchController extends AbstractController
             array(
                 '_route' => $request->attributes->get('_route'),
                 '_route_params' => $request->attributes->get('_route_params'),
-                'q' => $key.':'.$cycle->getPosition(),
+                'q' => $key . ':' . $cycle->getPosition(),
                 'view' => $view,
                 'sort' => $sort,
                 'page' => $page,
@@ -304,7 +304,7 @@ class SearchController extends AbstractController
                     if ($searchName == "faction" && count($val) == count($factions)) {
                         continue;
                     }
-                    $params[] = $key.":".implode("|", array_map(function ($s) {
+                    $params[] = $key . ":" . implode("|", array_map(function ($s) {
                         return strstr($s, " ") !== false ? "\"$s\"" : $s;
                     }, $val));
                 } else {
@@ -314,7 +314,7 @@ class SearchController extends AbstractController
                         if (!preg_match('/^[\p{L}\p{N}\_\-\&]+$/u', $val, $match)) {
                             $val = "\"$val\"";
                         }
-                        $op = $request->query->get($key."o");
+                        $op = $request->query->get($key . "o");
                         if (!in_array($op, $operators)) {
                             $op = ":";
                         }
@@ -330,7 +330,7 @@ class SearchController extends AbstractController
         if ($view != "list") {
             $find['view'] = $view;
         }
-        return $this->redirect($this->generateUrl('cards_find').'?'.http_build_query($find));
+        return $this->redirect($this->generateUrl('cards_find') . '?' . http_build_query($find));
     }
 
     /**
@@ -527,7 +527,7 @@ class SearchController extends AbstractController
                 );
 
                 $brokenlist = [];
-                for ($i=0; $i<count($cards); $i++) {
+                for ($i = 0; $i < count($cards); $i++) {
                     $val = $cards[$i][$sortfields[$sort]];
                     if ($sort == "name") {
                         $val = substr($val, 0, 1);
@@ -552,11 +552,11 @@ class SearchController extends AbstractController
         }
 
         // attention si $s="short", $cards est un tableau à 2 niveaux au lieu de 1 seul
-        return $this->render('Search/display-'.$view.'.html.twig', array(
+        return $this->render('Search/display-' . $view . '.html.twig', array(
             "view" => $view,
             "sort" => $sort,
             "cards" => $cards,
-            "first"=> $first,
+            "first" => $first,
             "last" => $last,
             "searchbar" => $searchbar,
             "pagination" => $pagination,
@@ -604,8 +604,8 @@ class SearchController extends AbstractController
                 ->generate('cards_find', array('q' => $q, 'view' => $v, 'sort' => $s, 'page' => $pi)),
             "ps" => $ps,
             "pi" => $pi,
-            "s" => $ps*($pi-1)+1,
-            "e" => min($ps*$pi, $total),
+            "s" => $ps * ($pi - 1) + 1,
+            "e" => min($ps * $pi, $total),
         ));
     }
 

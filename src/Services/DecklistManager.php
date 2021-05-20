@@ -316,7 +316,7 @@ class DecklistManager
 
         $number_of_pages = $this->getNumberOfPages();
         $pages = [];
-        for ($page = 1; $page <= $number_of_pages; $page ++) {
+        for ($page = 1; $page <= $number_of_pages; $page++) {
             $pages[] = array(
                 "numero" => $page,
                 "url" => $this->router->generate($route, ["page" => $page] + $params),

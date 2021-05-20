@@ -15,7 +15,7 @@ class DeckValidationHelper
 {
     protected AgendaHelper $agenda_helper;
 
-    protected TranslatorInterface  $translator;
+    protected TranslatorInterface $translator;
 
     /**
      * DeckValidationHelper constructor.
@@ -117,7 +117,7 @@ class DeckValidationHelper
             return '';
         }
 
-        return $this->translator->trans('decks.problems.'.$problem);
+        return $this->translator->trans('decks.problems.' . $problem);
     }
 
     /**
@@ -315,7 +315,7 @@ class DeckValidationHelper
      */
     protected function validateKings(SlotCollectionInterface $slots, CardInterface $agenda): bool
     {
-        $trait = $this->translator->trans('card.traits.'.($agenda->getCode() === '04037' ? 'winter' : 'summer'));
+        $trait = $this->translator->trans('card.traits.' . ($agenda->getCode() === '04037' ? 'winter' : 'summer'));
         $matchingTraitPlots = $slots->getPlotDeck()->filterByTrait($trait)->countCards();
         if ($matchingTraitPlots > 0) {
             return false;
@@ -447,8 +447,10 @@ class DeckValidationHelper
         foreach ($slots->getDrawDeck()->getSlots() as $slot) {
             $trait = $this->translator->trans('card.traits.wildling');
             $card = $slot->getCard();
-            if ($card->getFaction()->getCode() !== 'neutral'
-                && ! preg_match("/$trait\\./", $card->getTraits())) {
+            if (
+                $card->getFaction()->getCode() !== 'neutral'
+                && ! preg_match("/$trait\\./", $card->getTraits())
+            ) {
                 return false;
             }
         }
@@ -542,7 +544,7 @@ class DeckValidationHelper
      * @param SlotCollectionInterface $slots
      * @return bool
      */
-    protected function validateBloodyMummers(SlotCollectionInterface  $slots): bool
+    protected function validateBloodyMummers(SlotCollectionInterface $slots): bool
     {
         $plotSlots = $slots->getPlotDeck();
         $trait = $this->translator->trans('card.traits.kingdom');

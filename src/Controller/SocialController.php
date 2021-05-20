@@ -305,8 +305,10 @@ class SocialController extends AbstractController
             throw $this->createNotFoundException("Decklist not found");
         }
 
-        if (!$this->isGranted('ROLE_SUPER_ADMIN')
-            && $user->getId() !== $decklist->getUser()->getId()) {
+        if (
+            !$this->isGranted('ROLE_SUPER_ADMIN')
+            && $user->getId() !== $decklist->getUser()->getId()
+        ) {
             throw $this->createAccessDeniedException("Access denied");
         }
 
@@ -355,8 +357,10 @@ class SocialController extends AbstractController
             throw $this->createNotFoundException("Decklist not found");
         }
 
-        if (!$this->isGranted('ROLE_SUPER_ADMIN')
-            && $user->getId() !== $decklist->getUser()->getId()) {
+        if (
+            !$this->isGranted('ROLE_SUPER_ADMIN')
+            && $user->getId() !== $decklist->getUser()->getId()
+        ) {
             throw $this->createAccessDeniedException("Access denied");
         }
 
@@ -391,7 +395,7 @@ class SocialController extends AbstractController
             : null;
 
         $decklist->setName($name);
-        $decklist->setNameCanonical($texts->slugify($name).'-'.$decklist->getVersion());
+        $decklist->setNameCanonical($texts->slugify($name) . '-' . $decklist->getVersion());
         $decklist->setDescriptionMd($descriptionMd);
         $decklist->setDescriptionHtml($descriptionHtml);
         $decklist->setPrecedent($precedent);
@@ -559,7 +563,7 @@ class SocialController extends AbstractController
             'activeTournamentTiers' => $activeTournamentTiers,
             'inactiveTournamentTiers' => $inactiveTournamentTiers,
         );
-        $params['sort_'.$sort] = ' selected="selected"';
+        $params['sort_' . $sort] = ' selected="selected"';
         $params['factions'] = $this->getDoctrine()->getRepository(Faction::class)->findAllAndOrderByName();
         $params['faction_selected'] = $faction_code;
         $params['selectedTournament'] = $tournament;
@@ -664,7 +668,7 @@ class SocialController extends AbstractController
                 break;
         }
 
-        $pagetitle = $translator->trans('decklist.list.titles.'.$type);
+        $pagetitle = $translator->trans('decklist.list.titles.' . $type);
 
         // check all decks against all active RLs
         $restrictionsRepo = $this->getDoctrine()->getRepository(Restriction::class);
@@ -738,8 +742,10 @@ class SocialController extends AbstractController
         }
 
         $duplicate = $decklistRepo->findDuplicate($decklist);
-        if ($duplicate->getDateCreation() >= $decklist->getDateCreation()
-            || $duplicate->getId() === $decklist->getId()) {
+        if (
+            $duplicate->getDateCreation() >= $decklist->getDateCreation()
+            || $duplicate->getId() === $decklist->getId()
+        ) {
             $duplicate = null;
         }
 
@@ -860,8 +866,8 @@ class SocialController extends AbstractController
         if ($decklist && !empty($comment_text)) {
             $comment_text = preg_replace(
                 '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)'
-                .'(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))'
-                .'(?::\d+)?)(?:[^\s]*)?%iu',
+                . '(?:\.(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)*(?:\.[a-z\x{00a1}-\x{ffff}]{2,6}))'
+                . '(?::\d+)?)(?:[^\s]*)?%iu',
                 '[$1]($0)',
                 $comment_text
             );
@@ -932,7 +938,7 @@ class SocialController extends AbstractController
                             'decklist_name' => $decklist->getNameCanonical(),
                         ),
                     UrlGeneratorInterface::ABSOLUTE_URL
-                ).'#'.$comment->getId(),
+                ) . '#' . $comment->getId(),
                 'comment' => $comment_html,
                 'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL),
             );
@@ -987,7 +993,7 @@ class SocialController extends AbstractController
             return new Response(json_encode("You don't have permission to edit this comment."));
         }
 
-        $comment->setIsHidden((boolean)$hidden);
+        $comment->setIsHidden((bool)$hidden);
         $em->flush();
 
         return new Response(json_encode(true));
@@ -1175,7 +1181,7 @@ class SocialController extends AbstractController
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $texts->slugify($decklist->getName()).'.o8d'
+                $texts->slugify($decklist->getName()) . '.o8d'
             )
         );
 
@@ -1208,7 +1214,7 @@ class SocialController extends AbstractController
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $texts->slugify($decklist->getName()).'.txt'
+                $texts->slugify($decklist->getName()) . '.txt'
             )
         );
 
@@ -1243,7 +1249,7 @@ class SocialController extends AbstractController
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $texts->slugify($decklist->getName()).'.txt'
+                $texts->slugify($decklist->getName()) . '.txt'
             )
         );
 

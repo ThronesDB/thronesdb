@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RemoveUserCommand extends Command
 {
-    protected EntityManagerInterface  $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -46,7 +46,7 @@ class RemoveUserCommand extends Command
             return 0;
         }
 
-        $output->writeln("User ".$user->getUsername());
+        $output->writeln("User " . $user->getUsername());
 
         $decks = $this->entityManager->getRepository(Deck::class)->findBy([ 'user' => $user ]);
 
