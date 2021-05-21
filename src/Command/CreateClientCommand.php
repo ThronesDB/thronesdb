@@ -38,13 +38,7 @@ class CreateClientCommand extends Command
                 'redirect-uri',
                 InputArgument::REQUIRED,
                 'Sets redirect uri for client'
-            )
-            ->addArgument(
-                'client-name',
-                InputArgument::REQUIRED,
-                'Sets the displayed name of the client'
-            )
-            ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,7 +48,6 @@ class CreateClientCommand extends Command
         $client = $this->clientManager->createClient();
         $client->setRedirectUris($redirectUris);
         $client->setAllowedGrantTypes($input->getOption('grant-type'));
-        $client->setName($input->getArgument('client-name'));
         $this->clientManager->updateClient($client);
         $output->writeln(
             sprintf(
