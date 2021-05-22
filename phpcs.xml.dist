@@ -8,12 +8,14 @@
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
 
-    <rule ref="PSR2"/>
+    <rule ref="PSR12"/>
 
     <file>bin/</file>
     <file>config/</file>
     <file>public/</file>
     <file>src/</file>
     <file>tests/</file>
+
+    <exclude-pattern>tests/bootstrap.php</exclude-pattern>
 
 </ruleset>

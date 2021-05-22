@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Services;
@@ -285,7 +286,7 @@ class DeckImportServiceTest extends TestCase
      */
     public function testParseTextImportMultipleDecks(): void
     {
-        $text =<<<EOL
+        $text = <<<EOL
         Rightful Ruler Deck
         House Baratheon
         3x Stannis Baratheon
@@ -351,7 +352,7 @@ class DeckImportServiceTest extends TestCase
      */
     public function testParseTextImportFailsIfFactionCannotBeIdentified(): void
     {
-        $text =<<<EOL
+        $text = <<<EOL
         Some lines
         of 
         text.

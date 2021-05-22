@@ -47,7 +47,7 @@ class BuilderController extends AbstractController
      * @const EXCLUDED_AGENDAS Codes of agendas that should not be available for selection in the new deck wizard.
      * @todo Hardwiring those is good enough for now, rethink this if/as this list grows [ST 2019/04/04]
      */
-    const EXCLUDED_AGENDAS = [
+    protected const EXCLUDED_AGENDAS = [
         '00001', // The Power of Wealth (VDS)
         '00002', // Protectors of the Realm (VDS)
         '00003', // Treaty (VDS)
@@ -328,7 +328,7 @@ class BuilderController extends AbstractController
                 array(
                     'pagetitle' => "Error",
                     'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                        . ' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
                 )
             );
         }
@@ -369,7 +369,7 @@ class BuilderController extends AbstractController
                 array(
                     'pagetitle' => "Error",
                     'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                        . ' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
                 )
             );
         }
@@ -382,7 +382,7 @@ class BuilderController extends AbstractController
         return $this->forward(
             'App\Controller\BuilderController:saveAction',
             array(
-                'name' => $deck->getName().' (clone)',
+                'name' => $deck->getName() . ' (clone)',
                 'faction_code' => $deck->getFaction()->getCode(),
                 'content' => json_encode($content),
                 'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
@@ -427,10 +427,10 @@ class BuilderController extends AbstractController
         }
         $faction = $em->getRepository(Faction::class)->findOneBy(['code' => $faction_code]);
         if (!$faction) {
-            return new Response('Cannot import deck with unknown faction '.$faction_code);
+            return new Response('Cannot import deck with unknown faction ' . $faction_code);
         }
 
-        $cancel_edits = (boolean)filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
+        $cancel_edits = (bool)filter_var($request->get('cancel_edits'), FILTER_SANITIZE_NUMBER_INT);
         if ($cancel_edits) {
             if ($deck) {
                 $deckManager->revert($deck);
@@ -439,7 +439,7 @@ class BuilderController extends AbstractController
             return $this->redirect($this->generateUrl('decks_list'));
         }
 
-        $is_copy = (boolean)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
+        $is_copy = (bool)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
         if ($is_copy || !$id) {
             $deck = new Deck();
             $deck->setUuid(Uuid::uuid4());
@@ -648,7 +648,7 @@ class BuilderController extends AbstractController
                 array(
                     'pagetitle' => "Error",
                     'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                        . ' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
                 )
             );
         }
@@ -707,7 +707,7 @@ class BuilderController extends AbstractController
                 array(
                     'pagetitle' => "Error",
                     'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                        . ' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
                 )
             );
         }
@@ -719,7 +719,7 @@ class BuilderController extends AbstractController
                 array(
                     'pagetitle' => "Error",
                     'error' => 'You are not allowed to view this deck.'
-                        .' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
+                        . ' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
                 )
             );
         }
@@ -870,7 +870,7 @@ class BuilderController extends AbstractController
         /* @var DeckInterface $deck */
         $deck = $em->getRepository(Deck::class)->find($deck_id);
         if (!$deck) {
-            throw new BadRequestHttpException("Cannot find deck ".$deck_id);
+            throw new BadRequestHttpException("Cannot find deck " . $deck_id);
         }
         if ($user->getId() != $deck->getUser()->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this deck.");
@@ -879,7 +879,7 @@ class BuilderController extends AbstractController
         $diff = (array)json_decode($request->get('diff'));
         if (count($diff) != 2) {
             $logger->error("cannot use diff", $diff);
-            throw new BadRequestHttpException("Wrong content ".json_encode($diff));
+            throw new BadRequestHttpException("Wrong content " . json_encode($diff));
         }
 
         if (count($diff[0]) || count($diff[1])) {
@@ -915,7 +915,7 @@ class BuilderController extends AbstractController
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $texts->slugify($deck->getName()).'.o8d'
+                $texts->slugify($deck->getName()) . '.o8d'
             )
         );
 
@@ -945,7 +945,7 @@ class BuilderController extends AbstractController
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $texts->slugify($deck->getName()).'.txt'
+                $texts->slugify($deck->getName()) . '.txt'
             )
         );
 
@@ -975,7 +975,7 @@ class BuilderController extends AbstractController
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $texts->slugify($deck->getName()).'.txt'
+                $texts->slugify($deck->getName()) . '.txt'
             )
         );
 

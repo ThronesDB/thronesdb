@@ -58,7 +58,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('User/profile_public.html.twig', array(
-                'user'=> $user
+                'user' => $user
         ));
     }
 
@@ -172,14 +172,14 @@ class UserController extends AbstractController
 
                     $dbh = $this->getDoctrine()->getConnection();
 
-                    $content['is_liked'] = (boolean) $dbh->executeQuery("SELECT
+                    $content['is_liked'] = (bool) $dbh->executeQuery("SELECT
                         count(*)
                         from decklist d
                         join vote v on v.decklist_id=d.id
                         where v.user_id=?
                         and d.id=?", array($user_id, $decklist_id))->fetch(\PDO::FETCH_NUM)[0];
 
-                    $content['is_favorite'] = (boolean) $dbh->executeQuery("SELECT
+                    $content['is_favorite'] = (bool) $dbh->executeQuery("SELECT
                         count(*)
                         from decklist d
                         join favorite f on f.decklist_id=d.id

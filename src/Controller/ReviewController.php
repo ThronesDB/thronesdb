@@ -274,7 +274,7 @@ class ReviewController extends AbstractController
         $params = $request->query->all();
 
         $pages = [];
-        for ($page = 1; $page <= $nbpages; $page ++) {
+        for ($page = 1; $page <= $nbpages; $page++) {
             $pages[] = array(
                 "numero" => $page,
                 "url" => $this->generateUrl($route, $params + array(
@@ -357,7 +357,7 @@ class ReviewController extends AbstractController
         $params = $request->query->all();
 
         $pages = [];
-        for ($page = 1; $page <= $nbpages; $page ++) {
+        for ($page = 1; $page <= $nbpages; $page++) {
             $pages[] = array(
                 "numero" => $page,
                 "url" => $this->generateUrl($route, $params + array(

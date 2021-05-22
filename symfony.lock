@@ -11,13 +11,16 @@
             "config/routes/annotations.yaml"
         ]
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "2.0",
-            "ref": "368794356c1fb634e58b38ad2addb36933f2e73e"
+            "ref": "40631978d2c4adc9b11220b13eba539b727c36a8"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -39,12 +42,12 @@
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
-        "version": "2.2",
+        "version": "3.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "2.2",
-            "ref": "baaa439e3e3179e69e3da84b671f0a3e4a2f56ad"
+            "version": "3.1",
+            "ref": "ee609429c9ee23e22d6fa5728211768f51ed2818"
         },
         "files": [
             "config/packages/doctrine_migrations.yaml",
@@ -57,6 +60,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.4"
+    },
     "friendsofsymfony/jsrouting-bundle": {
         "version": "2.3",
         "recipe": {
@@ -67,6 +73,23 @@
         },
         "files": [
             "config/routes/fos_js_routing.yaml"
+        ]
+    },
+    "friendsofsymfony/oauth-server-bundle": {
+        "version": "1.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.6",
+            "ref": "7300db1277b1ba025cdc2791171d9bf3e7adcc42"
+        },
+        "files": [
+            "config/packages/fos_oauth_server.yaml",
+            "config/routes/fos_oauth_server.yaml",
+            "src/Entity/AccessToken.php",
+            "src/Entity/AuthCode.php",
+            "src/Entity/Client.php",
+            "src/Entity/RefreshToken.php"
         ]
     },
     "nelmio/api-doc-bundle": {
@@ -88,7 +111,7 @@
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "1.5",
-            "ref": "6388de23860284db9acce0a7a5d9d13153bcb571"
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
         },
         "files": [
             "config/packages/nelmio_cors.yaml"
@@ -140,12 +163,12 @@
         ]
     },
     "squizlabs/php_codesniffer": {
-        "version": "3.0",
+        "version": "3.6",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
-            "version": "3.0",
-            "ref": "0dc9cceda799fd3a08b96987e176a261028a3709"
+            "version": "3.6",
+            "ref": "1019e5c08d4821cb9b77f4891f8e9c31ff20ac6f"
         },
         "files": [
             "phpcs.xml.dist"

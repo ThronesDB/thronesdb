@@ -875,7 +875,7 @@ class Card implements CardInterface
         }
 
         foreach ($optionalFields as $optionalField) {
-            $getter = 'get'.$this->snakeToCamel($optionalField);
+            $getter = 'get' . $this->snakeToCamel($optionalField);
             $serialized[$optionalField] = $this->$getter();
             if (!isset($serialized[$optionalField]) || $serialized[$optionalField] === '') {
                 unset($serialized[$optionalField]);
@@ -883,13 +883,13 @@ class Card implements CardInterface
         }
 
         foreach ($mandatoryFields as $mandatoryField) {
-            $getter = 'get'.$this->snakeToCamel($mandatoryField);
+            $getter = 'get' . $this->snakeToCamel($mandatoryField);
             $serialized[$mandatoryField] = $this->$getter();
         }
 
         foreach ($externalFields as $externalField) {
-            $getter = 'get'.$this->snakeToCamel($externalField);
-            $serialized[$externalField.'_code'] = $this->$getter()->getCode();
+            $getter = 'get' . $this->snakeToCamel($externalField);
+            $serialized[$externalField . '_code'] = $this->$getter()->getCode();
         }
 
         ksort($serialized);

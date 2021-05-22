@@ -568,7 +568,7 @@ class CardsData
                     continue 2;
                     break;
                 case 'boolean':
-                    $value = (boolean) $value;
+                    $value = (bool) $value;
                     break;
             }
             $fieldName = ltrim(strtolower(preg_replace('/[A-Z]/', '_$0', $fieldName)), '_');
@@ -642,9 +642,10 @@ class CardsData
                 }
                 $etat = 2;
             } else {
-                if (preg_match('/^"([^"]*)"(.*)/u', $query, $match)
+                if (
+                    preg_match('/^"([^"]*)"(.*)/u', $query, $match)
                     // jeton "texte libre entre guillements"
-                        || preg_match('/^([\p{L}\p{N}\-\&]+)(.*)/u', $query, $match)
+                    || preg_match('/^([\p{L}\p{N}\-\&]+)(.*)/u', $query, $match)
                     // jeton "texte autorisé sans guillements"
                 ) {
                     if (($etat == 2 && count($cond) == 2) || $etat == 3) {

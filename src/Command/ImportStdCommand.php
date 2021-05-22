@@ -29,11 +29,11 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ImportStdCommand extends Command
 {
-    const PACKS_SUBDIRECTORY_NAME = 'packs';
+    protected const PACKS_SUBDIRECTORY_NAME = 'packs';
 
     protected array $collections = [];
 
-    protected EntityManagerInterface  $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
@@ -322,7 +322,7 @@ class ImportStdCommand extends Command
         $newTypedValue = $newJsonValue;
 
         // current value, by default the json, serialized value is the same as what's in the entity
-        $getter = 'get'.ucfirst($fieldName);
+        $getter = 'get' . ucfirst($fieldName);
         $currentJsonValue = $currentTypedValue = $entity->$getter();
 
         // if the field is a date, the default assumptions above are wrong
@@ -345,7 +345,7 @@ class ImportStdCommand extends Command
 
         $different = ($currentJsonValue !== $newJsonValue);
         if ($different) {
-            $setter = 'set'.ucfirst($fieldName);
+            $setter = 'set' . ucfirst($fieldName);
             $entity->$setter($newTypedValue);
             $output->writeln(
                 "Changing the <info>$fieldName</info> of <info>"
@@ -378,7 +378,7 @@ class ImportStdCommand extends Command
         $value = $data[$key];
 
         if (!key_exists($key, $metadata->fieldNames)) {
-            throw new Exception("Missing column [$key] in entity ".$entityName);
+            throw new Exception("Missing column [$key] in entity " . $entityName);
         }
         $fieldName = $metadata->fieldNames[$key];
 
@@ -404,7 +404,7 @@ class ImportStdCommand extends Command
         OutputInterface $output
     ) {
         if (!key_exists('code', $data)) {
-            throw new Exception("Missing key [code] in ".json_encode($data));
+            throw new Exception("Missing key [code] in " . json_encode($data));
         }
 
         $entity = $this->entityManager->getRepository($entityName)->findOneBy(['code' => $data['code']]);
@@ -425,23 +425,23 @@ class ImportStdCommand extends Command
             $foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
 
             if (!key_exists($key, $data)) {
-                throw new Exception("Missing key [$key] in ".json_encode($data));
+                throw new Exception("Missing key [$key] in " . json_encode($data));
             }
 
             $foreignCode = $data[$key];
             if (!key_exists($foreignEntityShortName, $this->collections)) {
-                throw new Exception("No collection for [$foreignEntityShortName] in ".json_encode($data));
+                throw new Exception("No collection for [$foreignEntityShortName] in " . json_encode($data));
             }
             if (!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
-                throw new Exception("Invalid code [$foreignCode] for key [$key] in ".json_encode($data));
+                throw new Exception("Invalid code [$foreignCode] for key [$key] in " . json_encode($data));
             }
             $foreignEntity = $this->collections[$foreignEntityShortName][$foreignCode];
 
-            $getter = 'get'.$foreignEntityShortName;
+            $getter = 'get' . $foreignEntityShortName;
             if (!$entity->$getter() || $entity->$getter()->getId() !== $foreignEntity->getId()) {
-                $setter = 'set'.$foreignEntityShortName;
+                $setter = 'set' . $foreignEntityShortName;
                 $entity->$setter($foreignEntity);
-                $output->writeln("Changing the <info>$key</info> of <info>".$entity . "</info>");
+                $output->writeln("Changing the <info>$key</info> of <info>" . $entity . "</info>");
             }
         }
 

@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DeleteDecklistCommand extends Command
 {
-    protected EntityManagerInterface  $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Command;
@@ -21,19 +22,19 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ImportRestrictionsCommand extends Command
 {
-    const RESTRICTIONS_FILE_NAME = 'restricted-list.json';
+    protected const RESTRICTIONS_FILE_NAME = 'restricted-list.json';
 
-    const ISSUER_FFG = 'Fantasy Flight Games';
+    protected const ISSUER_FFG = 'Fantasy Flight Games';
 
-    const ISSUER_CONCLAVE = 'The Conclave';
+    protected const ISSUER_CONCLAVE = 'The Conclave';
 
-    const ISSUER_DESIGN_TEAM = 'Redesigns';
+    protected const ISSUER_DESIGN_TEAM = 'Redesigns';
 
-    const ISSUER_FFG_SHORTNAME = 'FFG';
+    protected const ISSUER_FFG_SHORTNAME = 'FFG';
 
-    const FORMAT_JOUST = 'joust';
+    protected const FORMAT_JOUST = 'joust';
 
-    const FORMAT_MELEE = 'melee';
+    protected const FORMAT_MELEE = 'melee';
 
     protected array $faqIssuers = [
         self::ISSUER_FFG,
@@ -133,7 +134,7 @@ class ImportRestrictionsCommand extends Command
 
         if ($data === null) {
             throw new Exception(
-                "File [${$filepath}] contains incorrect JSON (error code ". json_last_error() . ".)"
+                "File [${$filepath}] contains incorrect JSON (error code " . json_last_error() . ".)"
             );
         }
 

@@ -19,28 +19,28 @@ class DeckImportService
 {
     // three equal signs (or more) in a row are used
     // to separate multiple decks in one upload
-    const DECKS_DELIMITER_REGEXP = '/[=]{3,}/';
+    protected const DECKS_DELIMITER_REGEXP = '/[=]{3,}/';
 
     // <quantity>x<card name> (<pack code|name>)
     // <quantity><card name> (<pack code|name>)
-    const CARD_WITH_PACK_INFO_REGEXP = '/^\s*(\d)x?([^(]+) \(([^)]+)/u';
+    protected const CARD_WITH_PACK_INFO_REGEXP = '/^\s*(\d)x?([^(]+) \(([^)]+)/u';
 
     // <quantity>x<card name>
     // <quantity><card name>
-    const CARD_WITHOUT_PACK_INFO_REGEXP = '/^\s*(\d)x?([\pLl\pLu\pN\-.\'!:" ]+)/u';
+    protected const CARD_WITHOUT_PACK_INFO_REGEXP = '/^\s*(\d)x?([\pLl\pLu\pN\-.\'!:" ]+)/u';
 
     // #<three digits> <quantity>x<card name>
     // #<three digits> <quantity><card name>
-    const CARD_WITHOUT_PACK_INFO_ALT1_REGEXP = '/^\s*#\d{3}\s(\d)x?([\pLl\pLu\pN\-.\'!: ]+)/u';
+    protected const CARD_WITHOUT_PACK_INFO_ALT1_REGEXP = '/^\s*#\d{3}\s(\d)x?([\pLl\pLu\pN\-.\'!: ]+)/u';
 
     // <card name>x<quantity>
-    const CARD_WITHOUT_PACK_INFO_ALT2_REGEXP = '/^([^(]+).*x(\d)/';
+    protected const CARD_WITHOUT_PACK_INFO_ALT2_REGEXP = '/^([^(]+).*x(\d)/';
 
     // <card name>
-    const SINGLE_CARD_WITHOUT_PACK_INFO_REGEXP = '/^([^(]+)/';
+    protected const SINGLE_CARD_WITHOUT_PACK_INFO_REGEXP = '/^([^(]+)/';
 
     // <card name> (<pack code|name>)
-    const SINGLE_CARD_WITH_PACK_INFO_REGEXP = '/^([^\(]+) \(([^)]+)/u';
+    protected const SINGLE_CARD_WITH_PACK_INFO_REGEXP = '/^([^\(]+) \(([^)]+)/u';
 
     protected EntityManagerInterface $em;
 

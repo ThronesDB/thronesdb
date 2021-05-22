@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use Symfony\Component\Config\FileLocator;
@@ -15,11 +16,6 @@ class DataimportFileLocator
      * @var string
      */
     protected $dir;
-
-    /**
-     * @var string Default data-files directory path.
-     */
-    const DATAIMPORT_FILE_DIR = '@IliosCoreBundle/Resources/dataimport';
 
     protected FileLocator $fileLocator;
 

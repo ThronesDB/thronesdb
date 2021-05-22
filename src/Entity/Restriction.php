@@ -214,7 +214,7 @@ class Restriction implements RestrictionInterface
      */
     public function setActive(bool $active): void
     {
-        $this->active =$active;
+        $this->active = $active;
     }
 
     /**
@@ -324,7 +324,7 @@ class Restriction implements RestrictionInterface
     /**
      * @inheritdoc
      */
-    public function getReferencedCards() : array
+    public function getReferencedCards(): array
     {
         $cardsInPods = array_map(function (array $pod) {
             $rhett = [];

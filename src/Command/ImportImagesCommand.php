@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ImportImagesCommand extends Command
 {
-    protected EntityManagerInterface  $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
