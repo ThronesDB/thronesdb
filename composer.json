@@ -45,7 +45,7 @@
     "symfony/templating": "4.4.*",
     "symfony/yaml": "4.4.*",
     "twig/twig": "^2.7.0",
-    "willdurand/js-translation-bundle": "^3.0.1"
+    "willdurand/js-translation-bundle": "^4.0.1"
   },
   "require-dev": {
     "beberlei/assert": "^3.2",
