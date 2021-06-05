@@ -321,23 +321,19 @@ class ApiController extends AbstractController
 
         $jsonp = $request->query->get('jsonp');
 
-        $list_cards = $this->getDoctrine()->getRepository(Card::class)->findAll();
-
+        $cardsRepo = $this->getDoctrine()->getRepository(Card::class);
         // check the last-modified-since header
-
-        $lastModified = null;
-        /* @var CardInterface $card */
-        foreach ($list_cards as $card) {
-            if (!$lastModified || $lastModified < $card->getDateUpdate()) {
-                $lastModified = $card->getDateUpdate();
+        $lastModifiedCard = $cardsRepo->findBy([], ['dateUpdate' => 'DESC'], 1);
+        if (count($lastModifiedCard)) {
+            $lastModified = $lastModifiedCard[0]->getDateUpdate();
+            $response->setLastModified($lastModified);
+            if ($response->isNotModified($request)) {
+                return $response;
             }
-        }
-        $response->setLastModified($lastModified);
-        if ($response->isNotModified($request)) {
-            return $response;
         }
 
         // build the response
+        $list_cards = $cardsRepo->findAll();
 
         $cards = array();
         /* @var CardInterface $card */
