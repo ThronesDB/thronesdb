@@ -11,7 +11,7 @@
     {
         var content;
         if(mode === 'text') {
-            var image = card.image_url ? '<div class="card-thumbnail card-thumbnail-' + (card.type_code === 'plot' ? 4 : 3) + 'x card-thumbnail-' + card.type_code + '" style="background-image:url(' + card.image_url + ')"></div>' : "";
+            var image = card.image_url ? '<div class="card-thumbnail card-thumbnail-' + (card.type_code === 'plot' ? 4 : 3) + 'x card-thumbnail-' + card.type_code + '" style="background-image:url(' + card.image_url + ')" data-code="' +  card.code +'"></div>' : "";
             var info = '<h4 class="card-name">' + app.format.name(card) + '</h4>';
             if (card.work_in_progress) {
                 info = info + '<div class="alert alert-danger">' +  Translator.trans('card.info.workInProgress')  + '</div>';
