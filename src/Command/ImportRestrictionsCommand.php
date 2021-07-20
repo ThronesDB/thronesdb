@@ -24,23 +24,9 @@ class ImportRestrictionsCommand extends Command
 {
     protected const RESTRICTIONS_FILE_NAME = 'restricted-list.json';
 
-    protected const ISSUER_FFG = 'Fantasy Flight Games';
-
-    protected const ISSUER_CONCLAVE = 'The Conclave';
-
-    protected const ISSUER_DESIGN_TEAM = 'Redesigns';
-
-    protected const ISSUER_FFG_SHORTNAME = 'FFG';
-
     protected const FORMAT_JOUST = 'joust';
 
     protected const FORMAT_MELEE = 'melee';
-
-    protected array $faqIssuers = [
-        self::ISSUER_FFG,
-        self::ISSUER_CONCLAVE,
-        self::ISSUER_DESIGN_TEAM
-    ];
 
     protected EntityManagerInterface $entityManager;
 
@@ -83,6 +69,7 @@ class ImportRestrictionsCommand extends Command
             $code = $item['code'];
             $issuer = $item['issuer'];
             $cardSet = $item['cardSet'];
+            $title = $item['name'];
             $effectiveOn = new DateTime($item['date']);
             $version = $item['version'];
             $contents = $this->buildContents($item);
@@ -96,7 +83,7 @@ class ImportRestrictionsCommand extends Command
                 $restriction->setCode($code);
                 $restriction->setActive(false);
             }
-            $restriction->setTitle($this->createTitleFromIssuerAndVersion($issuer, $version));
+            $restriction->setTitle($title);
             $restriction->setIssuer($issuer);
             $restriction->setEffectiveOn($effectiveOn);
             $restriction->setCardSet($cardSet);
@@ -196,14 +183,5 @@ class ImportRestrictionsCommand extends Command
         }
 
         return $rhett;
-    }
-
-    protected function createTitleFromIssuerAndVersion(string $issuer, string $version): string
-    {
-        $title = self::ISSUER_FFG === $issuer ? self::ISSUER_FFG_SHORTNAME : $issuer;
-        if (in_array($issuer, $this->faqIssuers)) {
-            $title .= ' FAQ';
-        }
-        return $title . ' v' . $version;
     }
 }
