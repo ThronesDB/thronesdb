@@ -85,7 +85,9 @@ class RestrictionsController extends AbstractController
                     ];
 
                     return array_search($a['faction_code'], $factions) <=> array_search($b['faction_code'], $factions)
-                        ?: array_search($a['type_code'], $types) <=> array_search($b['type_code'], $types);
+                        ?: array_search($a['type_code'], $types) <=> array_search($b['type_code'], $types)
+                        ?: $a['name'] <=> $b['name']
+                        ?: $a['code'] <=> $b['code'];
                 }
             );
 
