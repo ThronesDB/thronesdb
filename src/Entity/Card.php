@@ -728,14 +728,10 @@ class Card implements CardInterface
      */
     public function getCostIncome()
     {
-        $cost = $this->getCost();
-        $income = $this->getIncome();
-
-        if (is_null($income) && is_null($cost)) {
-            return "";
+        if ('plot' === $this->type->getCode()) {
+            return (int) $this->getIncome();
         }
-
-        return $cost ?? (string)$income;
+        return (int) $this->getCost();
     }
 
     /**

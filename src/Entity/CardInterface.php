@@ -298,7 +298,7 @@ interface CardInterface extends Serializable
     public function getFaction();
 
     /**
-     * @return string
+     * @return int
      */
     public function getCostIncome();
 
