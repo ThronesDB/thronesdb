@@ -199,6 +199,9 @@
             "config/bootstrap.php"
         ]
     },
+    "symfony/deprecation-contracts": {
+        "version": "v2.4.0"
+    },
     "symfony/flex": {
         "version": "1.0",
         "recipe": {
