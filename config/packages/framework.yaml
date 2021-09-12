@@ -1,3 +1,4 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     assets:
         json_manifest_path: "%kernel.project_dir%/public/manifest.json"
@@ -5,7 +6,7 @@ framework:
     translator: { fallbacks: ['%locale%'] }
     secret: '%env(APP_SECRET)%'
     form: ~
-    csrf_protection: ~
+    csrf_protection: true
     validation: { enable_annotations: true }
     #serializer: { enable_annotations: true }
     http_method_override: true
@@ -16,9 +17,10 @@ framework:
         # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id: session.handler.native_file
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
-        #cookie_samesite: lax
+        cookie_secure: auto
+        cookie_samesite: lax
     #esi: true
-    fragments: ~
+    fragments: true
     php_errors:
         log: true
     templating:
