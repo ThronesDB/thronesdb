@@ -90,7 +90,8 @@ class CardsData
             'terminal',
             'ambush',
             'bestow',
-            'shadow'
+            'shadow',
+            'assault',
         ];
 
         $locale = $this->request_stack->getCurrentRequest()

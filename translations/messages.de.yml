@@ -526,6 +526,9 @@ keyword:
   shadow:
     name: Schatten
     title: "Eine Karte mit Schatten (X) kann man für 2 Gold verdeckt im Schattenbereich ihres kontrollierenden Spielers aufmarschieren lassen. Jene Karte kann später gespielt werden (falls es sich um ein Ereignis handelt) oder offen ins Spiel geholt werden (falls es sich um einen Charakter, Ort oder eine Verstärkung handelt), indem der Spieler X Gold bezahlt."
+  assault:
+    name: Angriff
+    title: "When a player initiates a challenge and 1 or more characters with assault are declared as attackers, that player may choose one location controlled by the defending player with a printed cost lower than the highest printed cost among attacking characters with assault. Treat the chosen location as if its printed text box were blank (except for Traits) until the end of the challenge. If you win this challenge, kneel it."
 tournamentLegality:
   title: Turnierzulässigkeit
   joust: Tjost
