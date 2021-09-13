@@ -62,6 +62,9 @@ class DeckValidationHelper
                 case '16030': // The Long Voyage
                     $expectedMinCardCount = 100;
                     break;
+                case '21030': // Battle of the Trident
+                    $expectedPlotDeckSize = 10;
+                    break;
                 default:
                     // do nothing here
             }
@@ -256,6 +259,8 @@ class DeckValidationHelper
                 return $this->validateRedesignedFreeFolk($slots);
             case '20052':
                 return $this->validateManyFacedGod($slots);
+            case '21030':
+                return $this->validateBattleOfTheTrident($slots);
             default:
                 return true;
         }
@@ -568,6 +573,25 @@ class DeckValidationHelper
         /* @var SlotInterface $slot */
         foreach ($plotSlots as $slot) {
             if (preg_match("/$trait\\./", $slot->getCard()->getTraits())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function validateBattleOfTheTrident(SlotCollectionInterface $slots): bool
+    {
+        $plotSlots = $slots->getPlotDeck();
+        $edict = $this->translator->trans('card.traits.edict');
+        $siege = $this->translator->trans('card.traits.siege');
+        $war = $this->translator->trans('card.traits.war');
+        foreach ($plotSlots as $slot) {
+            $traits = $slot->getCard()->getTraits();
+            if (
+                ! preg_match("/$edict\\./", $traits)
+                && ! preg_match("/$siege\\./", $traits)
+                && ! preg_match("/$war\\./", $traits)
+            ) {
                 return false;
             }
         }

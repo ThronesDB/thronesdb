@@ -1052,6 +1052,8 @@
                 expectedMinCardCount = 75;
             } else if (agenda && agenda.code === '16030') {
                 expectedMinCardCount = 100;
+            } else if (agenda && agenda.code === '21030') {
+                expectedPlotDeckSize = 10;
             }
         });
         // exactly 7 plots
@@ -1209,6 +1211,20 @@
             return rhett;
         };
 
+        var validate_battle_of_the_trident = function() {
+            var plots = deck.get_cards(null, { type_code: 'plot' });
+            var reEdict = new RegExp(Translator.trans('card.traits.edict') + '\\.');
+            var reSiege = new RegExp(Translator.trans('card.traits.siege') + '\\.');
+            var reWar = new RegExp(Translator.trans('card.traits.war') + '\\.');
+            var rhett = true;
+            plots.forEach(function(plot) {
+                if (! reEdict.test(plot.traits) && ! reSiege.test(plot.traits) && !reWar.test(plot.traits)) {
+                    rhett = false;
+                }
+            });
+            return rhett;
+        }
+
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -1285,6 +1301,8 @@
                 return validate_redesigned_the_free_folk();
             case '20052':
                 return validate_many_faced_god();
+            case '21030':
+                return validate_battle_of_the_trident();
         }
         return true;
     };

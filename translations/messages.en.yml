@@ -422,6 +422,9 @@ card:
     kingsguard: Kingsguard
     wildling: Wildling
     fool: Fool
+    edict: Edict
+    siege: Siege
+    war: War
   reviews:
     title: Reviews
     none: No review yet for this card.
