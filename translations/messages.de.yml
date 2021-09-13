@@ -422,6 +422,9 @@ card:
     kingsguard: Königsgarde
     wildling: Wildling
     fool: Narr
+    edict: Erlass
+    siege: Belagerung
+    war: Krieg
   reviews:
     title: Karten-Rezensionen
     none: Noch keine Rezensionen dieser Karte.

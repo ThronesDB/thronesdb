@@ -421,6 +421,9 @@ card:
     kingsguard: Guardia Real
     wildling: Salvaje
     fool: Bufón
+    edict: Edicto
+    siege: Asedio
+    war: Guerra
   reviews:
     title: Reseñas
     none: Aún no hay reseñas para esta carta.
