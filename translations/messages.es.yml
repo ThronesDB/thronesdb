@@ -530,7 +530,7 @@ keyword:
     title: "A card with shadow (X) can be marshaled facedown into its controller’s shadows area for 2 gold. That card can later be played (if it is an event) or brought into play faceup (if it is a character, location, or attachment) by paying X gold."
   assault:
     name: Asalto
-    title: "When a player initiates a challenge and 1 or more characters with assault are declared as attackers, that player may choose one location controlled by the defending player with a printed cost lower than the highest printed cost among attacking characters with assault. Treat the chosen location as if its printed text box were blank (except for Traits) until the end of the challenge. If you win this challenge, kneel it."
+    title: "When a character with assault is declared as an attacker in a challenge, that character’s controller may choose a location with lower printed cost controlled by the defending player. The chosen location is considered to be targeted by assault. Until the end of the challenge, treat it as if its printed text box were blank (except for Traits). Unless otherwise stated by a card ability, only one location may be targeted using assault in each challenge. When a player wins a challenge in which they control 1 or more attacking characters with assault, any location that was targeted by assault in that challenge is knelt."
 tournamentLegality:
   title: Tournament Legality
   joust: Justa
