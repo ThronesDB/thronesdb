@@ -142,11 +142,61 @@
 
     <h3 id="Assault">Assault</h3>
 
-    <p>Assault is a keyword ability. When a player initiates a challenge and 1 or more characters with assault are
-        declared as attackers, that player may choose one location controlled by the defending player with a printed
-        cost lower than the highest printed cost among attacking characters with assault.
-        Treat the chosen location as if its printed text box were blank (except for Traits) until the end of the
-        challenge. If you win this challenge, kneel it.</p>
+    <p>Assault is a keyword ability. When a character with assault is declared as an attacker in a challenge,
+        that character’s controller may choose a location with lower printed cost controlled by the defending player.
+        The chosen location is considered to be targeted by assault. Until the end of the challenge,
+        treat it as if its printed text box were blank (except for <a href="#Traits">Traits</a>).
+        Unless otherwise stated by a card ability, only one location may be targeted using assault in each challenge.
+        When a player wins a challenge in which they control 1 or more attacking characters with assault,
+        any location that was targeted by assault in that challenge is knelt.</p>
+    <ul>
+        <li>The target for assault is chosen at the same time as targets for stealth are chosen,
+            before reactions to the challenge being initiated can be triggered.
+            If a challenge is redirected using the Crown Regent melee title,
+            the attacking player may choose a new target for assault.
+            The previously chosen target is not considered to have been targeted by assault and remains unaffected.</li>
+        <li>Once a challenge is initiated, a location targeted by assault will remain blanked for the duration
+            of the challenge (until step 4.2.6), even if the defending player wins the challenge,
+            or if any attacking character with assault is removed from the challenge or loses the assault keyword.
+            If a location that was targeted by assault leaves play during a challenge,
+            all effects of assault on that card expire.</li>
+        <li>When a player wins a challenge in which they control 1 or more attacking characters with assault,
+            any location that was targeted by assault in that challenge is knelt.
+            This happens immediately after the winner of the challenge is determined,
+            before any reactions (forced or otherwise) to winning or losing that challenge can be initiated.
+            For the location to be knelt, the only check that is made is whether there is a character with assault
+            participating on the attacking player’s side.
+            It does not matter whether that specific character targeted that location using assault
+            when the challenge was initiated.</li>
+        <li>If a location is kneeling, or if its printed text box is already treated as if it were blank,
+            that location is still an eligible target for assault.
+            A location that &quot;cannot be knelt by assault&quot; may still be targeted by assault,
+            but it will not be knelt if the attacking player wins the challenge.
+            A location that &quot;cannot be targeted by assault&quot; is not an eligible choice
+            when the assault target is chosen.</li>
+    </ul>
+
+    <p><em>An example of how assault may be used during a challenge:
+            Kristin initiates a challenge against Magnus and declares
+            <a href="{{ path('cards_zoom', { card_code: "02111" }) }}" target="_blank">Dagmer Cleftjaw (Westeros, 111)</a>
+            and <a href="{{ path('cards_zoom', { card_code: "21004" }) }}" target="_blank">The Iron Fleet (For the Realm, 4)</a>
+            as attackers.
+            Since The Iron Fleet has the assault keyword, Kristin chooses
+            <a href="{{ path('cards_zoom', { card_code: "01137" }) }}" target="_blank">The Wall (Core, 137)</a> as the target of assault.
+            The printed text box of The Wall is now treated as if it were blank,
+            so it no longer provides +1 STR to each <span class="icon icon-thenightswatch"></span> character Magnus controls.
+            Magnus determines that he cannot successfully defend the challenge.
+            He would like The Wall to remain standing so that he could trigger its Interrupt ability at the end of the phase.
+            He plays <a href="{{ path('cards_zoom', { card_code: "02099" }) }}" target="_blank">Nightmares (Westeros, 99)</a>
+            on The Iron Fleet, removing its assault keyword.
+            In order to kneel The Wall, Kristin knows that she needs to control a participating character
+            with assault at the point when the winner of the challenge is determined,
+            so she uses <a href="{{ path('cards_zoom', { card_code: "12016" }) }}" target="_blank">Silence (Kings of the Isles, 16)</a>
+            to put <a href="{{ path('cards_zoom', { card_code: "21005" }) }}" target="_blank">Foamdrinker (For the Realm, 5)</a>
+            into play from her hand.
+            Dagmer Cleftjaw now gains assault from Foamdrinker’s constant ability.
+            When Kristin wins the challenge, The Wall is knelt.
+        </em></p>
 
     <h3 id="Attachment_Cards">Attachment Cards</h3>
 
