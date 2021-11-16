@@ -152,6 +152,7 @@ decks:
       agotcards: AGoT.cards
       markdown: Markdown
       plaintext: einfacher Text
+      theironthrone: theironthrone.net
     sort:
       by_cardnumber: nach Kartennummer
       by_cost: nach Kosten/Goldwert
