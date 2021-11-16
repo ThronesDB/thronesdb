@@ -73,6 +73,9 @@
             case 'btn-export-agotcards':
                 ui.export_agotcards(app.deck);
                 break;
+            case 'btn-export-theironthrone':
+                ui.export_theironthrone(app.deck);
+                break;
         }
 
         event.preventDefault();

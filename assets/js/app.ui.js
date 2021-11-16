@@ -145,6 +145,34 @@
         return lines;
     }
 
+    function build_theironthrone(deck) {
+        var lines = [];
+        var agendas = deck.get_agendas();
+        var sortOrder = { "name": 1 };
+        var cardsInDrawDeck = [
+            deck.get_plot_deck(sortOrder),
+            deck.get_characters(sortOrder),
+            deck.get_attachments(sortOrder),
+            deck.get_locations(sortOrder),
+            deck.get_events(sortOrder)
+        ];
+
+        lines.push(deck.get_faction_name());
+        agendas.forEach(function(agenda) {
+            var title = agenda.name;
+            if (agenda.is_multiple) {
+                title = title + " (" + agenda.pack_code + ")";
+            }
+            lines.push(title);
+        });
+        cardsInDrawDeck.forEach(function(cards) {
+            cards.forEach(function(card) {
+                lines.push(card.indeck + "x " + card.name + " (" + card.pack_code + ")");
+            });
+        });
+        return lines;
+    }
+
     /**
      * called when the DOM is loaded
      * @memberOf ui
@@ -186,6 +214,13 @@
         $('#export-deck').html(build_agotcards(deck).join("\n"));
         $('#exportModal').modal('show');
     };
+
+    ui.export_theironthrone = function export_theironthrone(deck) {
+        $('#export-deck').html(build_theironthrone(deck).join("\n"));
+        $('#exportModal').modal('show');
+    };
+
+
 
     /**
      * builds selector component for restricted lists
