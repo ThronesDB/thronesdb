@@ -120,8 +120,12 @@
             // checked or unchecked ? checked by default
             var checked = true;
 
-            // if publication date is not yet available, or if it's in the future then uncheck pack
-            if(! record.available || Date.parse(record.available) > Date.now()) {
+            // if publication date is not yet available, or if it's in the future then uncheck pack, or if it's
+            // one of the variant/"special" products like Valyrian Draft Set (VDS).
+            if(! record.available
+              || Date.parse(record.available) > Date.now()
+              || ['VDS', 'VKm', 'VHotK'].includes(record.code)
+            ) {
                 checked = false;
             }
 
