@@ -44,9 +44,20 @@ class TagController extends AbstractController
             if ($this->getUser()->getId() != $deck->getUser()->getId()) {
                 continue;
             }
-            $tags = array_unique(array_values(array_merge(preg_split('/\s+/', $deck->getTags()), $list_tag)));
-            $response['tags'][$deck->getId()] = $tags;
+            $tags = array_unique(
+                array_values(
+                    array_merge(
+                        preg_split(
+                            '/\s+/',
+                            $deck->getTags()
+                        ),
+                        $list_tag
+                    )
+                )
+            );
+            array_filter($tags);
             $deck->setTags(implode(' ', $tags));
+            $response['tags'][$deck->getId()] = explode(' ', $deck->getTags());
         }
         $em->flush();
 
