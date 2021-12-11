@@ -141,7 +141,7 @@ class BuilderController extends AbstractController
                 )
             );
             $pack = $agenda->getPack();
-            $tags[] = $agendaHelper->getMinorFactionCode($agenda);
+            $tags[] = $agendaHelper->agendaToTag($agenda);
         }
 
         /** @var UserInterface $user */
