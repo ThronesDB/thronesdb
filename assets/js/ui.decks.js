@@ -132,6 +132,7 @@
             tags.push($(elt).data('tag'));
           }
         });
+        tags.sort();
         $('#tag_toggles').empty();
         _.uniq(tags).forEach(function (tag)
         {
