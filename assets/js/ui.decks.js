@@ -2,6 +2,8 @@
 
 (function ui_decks(ui, $)
 {
+    var tag_row_tpl = _.template('<span class="tag" data-tag="<%- tag %>"><%- tag %></span>');
+    var tag_button_tpl = _.template('<button type="button" class="btn btn-default btn-xs" data-toggle="button" data-tag="<%- tag %>"><%- tag %></button>');
 
     ui.decks = [];
 
@@ -27,7 +29,7 @@
         var div = elt.find('div.tags').empty();
         tags.forEach(function (tag)
         {
-            div.append($('<span class="tag">' + tag + '</span>'));
+            div.append($(tag_row_tpl({tag: tag})));
         });
 
         ui.update_tag_toggles();
@@ -47,7 +49,7 @@
     {
         event.preventDefault();
         var ids = $('#tag_add_ids').val().split(/,/);
-        var tags = $('#tag_add_tags').val().split(/\s+/);
+        var tags = $('#tag_add_tags').val().trim().split(/\s+/);
         if(!ids.length || !tags.length)
             return;
         ui.tag_process_any('tag_add', {ids: ids, tags: tags});
@@ -132,10 +134,11 @@
             tags.push($(elt).data('tag'));
           }
         });
+        tags.sort();
         $('#tag_toggles').empty();
         _.uniq(tags).forEach(function (tag)
         {
-            $('<button type="button" class="btn btn-default btn-xs" data-toggle="button" data-tag="' + tag + '">' + tag + '</button>').appendTo('#tag_toggles');
+            $(tag_button_tpl({tag: tag})).appendTo('#tag_toggles');
         });
     };
 
@@ -149,11 +152,11 @@
         });
         if(tags.length) {
             $('#decks tr').hide();
-            tags.forEach(function (tag)
-            {
-                $('#decks span[data-tag="' + tag + '"]').each(function (index, elt)
-                {
-                    $(elt).closest('tr').show();
+            tags.forEach(function (tag) {
+                $('#decks span.tag').each(function (index, elt) {
+                    if ($(elt).data('tag') === tag) {
+                        $(elt).closest('tr').show();
+                    }
                 });
             });
         } else {

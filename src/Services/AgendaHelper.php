@@ -57,4 +57,15 @@ class AgendaHelper
         }
         return null;
     }
+
+    /**
+     * @param CardInterface $agenda
+     * @return string
+     * @todo added here for convenience, this should probably be part of a generic string helper class. [ST 2021/12/11]
+     */
+    public function agendaToTag(CardInterface $agenda): string
+    {
+        $name = $agenda->getName();
+        return preg_replace('/[^a-zA-Z]/', '', strtolower($name));
+    }
 }
