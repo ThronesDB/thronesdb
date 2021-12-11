@@ -207,7 +207,7 @@
                                     </div>
                                 {% endif %}
                                 <div class="tags">
-                                    {% for tag in deck.tags|split(' ') %}
+                                    {% for tag in deck.tags|trim|split(' ')|sort %}
                                         <span class="tag" data-tag="{{ tag }}">{{ tag }}</span>
                                     {% endfor %}
                                 </div>
