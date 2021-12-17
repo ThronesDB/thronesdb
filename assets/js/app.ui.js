@@ -145,27 +145,17 @@
         return lines;
     }
 
-    function build_theironthrone(deck) {
+    function build_plotsanddrawdeckonly(deck) {
         var lines = [];
-        var agendas = deck.get_agendas();
         var sortOrder = { "name": 1 };
-        var cardsInDrawDeck = [
+        var allCards = [
             deck.get_plot_deck(sortOrder),
             deck.get_characters(sortOrder),
             deck.get_attachments(sortOrder),
             deck.get_locations(sortOrder),
             deck.get_events(sortOrder)
         ];
-
-        lines.push(deck.get_faction_name());
-        agendas.forEach(function(agenda) {
-            var title = agenda.name;
-            if (agenda.is_multiple) {
-                title = title + " (" + agenda.pack_code + ")";
-            }
-            lines.push(title);
-        });
-        cardsInDrawDeck.forEach(function(cards) {
+        allCards.forEach(function(cards) {
             cards.forEach(function(card) {
                 lines.push(card.indeck + "x " + card.name + " (" + card.pack_code + ")");
             });
@@ -215,8 +205,8 @@
         $('#exportModal').modal('show');
     };
 
-    ui.export_theironthrone = function export_theironthrone(deck) {
-        $('#export-deck').html(build_theironthrone(deck).join("\n"));
+    ui.export_plotsanddrawdeckonly = function export_plotsanddrawdeckonly(deck) {
+        $('#export-deck').html(build_plotsanddrawdeckonly(deck).join("\n"));
         $('#exportModal').modal('show');
     };
 

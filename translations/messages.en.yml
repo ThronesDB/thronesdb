@@ -152,7 +152,7 @@ decks:
       agotcards: AGoT.cards
       markdown: Markdown
       plaintext: Plain text
-      theironthrone: theironthrone.net
+      plotsanddrawdeckonly: Plots and draw deck only
     sort:
       by_cardnumber: by Card Number
       by_cost: by Cost/Gold
