@@ -145,6 +145,24 @@
         return lines;
     }
 
+    function build_plotsanddrawdeckonly(deck) {
+        var lines = [];
+        var sortOrder = { "name": 1 };
+        var allCards = [
+            deck.get_plot_deck(sortOrder),
+            deck.get_characters(sortOrder),
+            deck.get_attachments(sortOrder),
+            deck.get_locations(sortOrder),
+            deck.get_events(sortOrder)
+        ];
+        allCards.forEach(function(cards) {
+            cards.forEach(function(card) {
+                lines.push(card.indeck + "x " + card.name + " (" + card.pack_code + ")");
+            });
+        });
+        return lines;
+    }
+
     /**
      * called when the DOM is loaded
      * @memberOf ui
@@ -186,6 +204,13 @@
         $('#export-deck').html(build_agotcards(deck).join("\n"));
         $('#exportModal').modal('show');
     };
+
+    ui.export_plotsanddrawdeckonly = function export_plotsanddrawdeckonly(deck) {
+        $('#export-deck').html(build_plotsanddrawdeckonly(deck).join("\n"));
+        $('#exportModal').modal('show');
+    };
+
+
 
     /**
      * builds selector component for restricted lists

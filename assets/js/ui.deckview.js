@@ -57,6 +57,9 @@
             case 'btn-export-agotcards':
                 ui.export_agotcards(app.deck);
                 break;
+            case 'btn-export-plotsanddrawdeckonly':
+                ui.export_plotsanddrawdeckonly(app.deck);
+                break;
         }
 
         if (action_id !== 'btn-publish' &&
