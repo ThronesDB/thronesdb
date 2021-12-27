@@ -38,7 +38,7 @@ class RestrictionsController extends AbstractController
 
         $restrictionsRepo = $this->getDoctrine()->getRepository(Restriction::class);
         $cardsRepo = $this->getDoctrine()->getRepository(Card::class);
-        $restrictions = $restrictionsRepo->findBy([], ['effectiveOn' => 'DESC']);
+        $restrictions = $restrictionsRepo->findBy(['active' => true], ['effectiveOn' => 'DESC']);
 
         // get all card codes from all RLs
         $allCardCodes = [];
@@ -98,6 +98,7 @@ class RestrictionsController extends AbstractController
             return array_map(function (array $pod) use ($cardsMap, $extractAndSortList) {
                 $rhett = [
                     'title' => $pod['title'],
+                    'restricted' => null,
                 ];
                 if (array_key_exists('restricted', $pod) && $pod['restricted']) {
                     $rhett['restricted'] = $cardsMap[$pod['restricted']];
@@ -139,27 +140,12 @@ class RestrictionsController extends AbstractController
         );
 
 
-        // split RLs into active and inactive
-        // and populate them with full card info
-        $activeRestrictions = [];
-        $inactiveRestrictions = [];
-
-        foreach ($restrictions as $restriction) {
-            if ($restriction['active']) {
-                $activeRestrictions[] = $restriction;
-            } else {
-                $inactiveRestrictions[] = $restriction;
-            }
-        }
-
-
         $page = $this->renderView(
             'Restrictions/index.html.twig',
             [
                 "pagetitle" => $translator->trans("nav.restrictions"),
                 "pagedescription" => "Restricted and Banned Cards",
-                "inactive_lists" => $inactiveRestrictions,
-                "active_lists" => $activeRestrictions,
+                "restrictions" => $restrictions,
             ]
         );
         $response->setContent($page);

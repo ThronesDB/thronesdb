@@ -134,6 +134,9 @@
 
         $.ajax({
             url: Routing.generate('api_restrictions'),
+            data: {
+                'activeonly': true,
+            },
             success: parse_restrictions,
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log('error when requesting restrictions', errorThrown);
