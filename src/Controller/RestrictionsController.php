@@ -98,6 +98,7 @@ class RestrictionsController extends AbstractController
             return array_map(function (array $pod) use ($cardsMap, $extractAndSortList) {
                 $rhett = [
                     'title' => $pod['title'],
+                    'restricted' => null,
                 ];
                 if (array_key_exists('restricted', $pod) && $pod['restricted']) {
                     $rhett['restricted'] = $cardsMap[$pod['restricted']];
@@ -158,7 +159,7 @@ class RestrictionsController extends AbstractController
             [
                 "pagetitle" => $translator->trans("nav.restrictions"),
                 "pagedescription" => "Restricted and Banned Cards",
-                "inactive_lists" => $inactiveRestrictions,
+                "inactive_lists" => [],
                 "active_lists" => $activeRestrictions,
             ]
         );
