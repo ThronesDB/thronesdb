@@ -45,6 +45,7 @@ class ApiController extends AbstractController
      *         in="query",
      *         description="JSONP callback",
      *         required=false,
+     *         type="string",
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Response(
@@ -133,6 +134,7 @@ class ApiController extends AbstractController
      *         in="query",
      *         description="JSONP callback",
      *         required=false,
+     *         type="string",
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Response(
@@ -222,6 +224,7 @@ class ApiController extends AbstractController
      *         in="query",
      *         description="JSONP callback",
      *         required=false,
+     *         type="string",
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Response(
@@ -294,6 +297,7 @@ class ApiController extends AbstractController
      *         in="query",
      *         description="JSONP callback",
      *         required=false,
+     *         type="string",
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Response(
@@ -372,6 +376,7 @@ class ApiController extends AbstractController
      *         in="query",
      *         description="JSONP callback",
      *         required=false,
+     *         type="string",
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Response(
@@ -462,6 +467,7 @@ class ApiController extends AbstractController
      *         in="query",
      *         description="JSONP callback",
      *         required=false,
+     *         type="string",
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Response(
@@ -534,6 +540,7 @@ class ApiController extends AbstractController
      *         in="query",
      *         description="JSONP callback",
      *         required=false,
+     *         type="string",
      *         @SWG\Schema(type="string")
      *     ),
      *     @SWG\Response(
@@ -608,11 +615,19 @@ class ApiController extends AbstractController
      *
      * @Operation(
      *     tags={"Public"},
-     *     summary="EXPERIMENTAL - DO NOT USE IN PRODUCTION. All the restricted lists.",
+     *     summary="All the restricted lists.",
      *     @SWG\Response(
      *         response="200",
      *         description="Returned when successful"
-     *     )
+     *     ),
+     *     @SWG\Parameter(
+     *         name="activeonly",
+     *         in="query",
+     *         description="Pass TRUE to retrieve active RLs only",
+     *         required=false,
+     *         type="string",
+     *         @SWG\Schema(type="string")
+     *     ),
      * )
      *
      * @param Request $request
@@ -631,7 +646,12 @@ class ApiController extends AbstractController
         ));
 
         $repo = $this->getDoctrine()->getRepository(Restriction::class);
-        $restrictions = $repo->findAll();
+
+        $filters = [];
+        if ($request->query->getBoolean('activeonly')) {
+            $filters['active'] = true;
+        };
+        $restrictions = $repo->findBy($filters);
 
         // check the last-modified-since header
 
