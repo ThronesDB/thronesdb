@@ -203,6 +203,54 @@
              */
             release();
         }
+
+
+    }
+
+    /**
+     * updates restrictions collection from fetched data
+     * @memberOf data
+     */
+    function update_restrictions_collection(data, collection, deferred) {
+        var existingRestrictionCodes = collection.find().map(function (record) {
+            return record.code;
+        });
+        var importedRestrictionCodes = data.map(function (record) {
+            return record.code;
+        });
+        data.forEach(function (row) {
+            var existingRow = collection.findById(row.code);
+            if(existingRow) {
+                // check last-updated timestamp here, if applicable, before updating.
+                // only update the record if the timestamp differs.
+                if (row.dateUpdate && row.dateUpdate !== existingRow.dateUpdate) {
+                    collection.update({code: row.code}, row);
+                }
+            } else {
+                collection.insert(row);
+            }
+        });
+        // delete any restrictions on file that aren't in the import
+        var restrictionsToRemove = existingRestrictionCodes.filter(function (code) {
+            return -1 === importedRestrictionCodes.indexOf(code);
+        });
+
+        if (restrictionsToRemove.length) {
+            collection.remove({
+                code: {
+                    $in: restrictionsToRemove
+                }
+            });
+        }
+
+        collection.save(function (err) {
+            if (err) {
+                console.log('error when saving ' + collection.name(), err);
+                deferred.reject(true)
+            } else {
+                deferred.resolve();
+            }
+        });
     }
 
     /**
@@ -244,9 +292,8 @@
      * handles the response to the ajax query for restrictions data
      * @memberOf data
      */
-    function parse_restrictions(response, textStatus, jqXHR) {
-        var locale = jqXHR.getResponseHeader('Content-Language');
-        update_collection(response, masters.restrictions, locale, dfd.restrictions);
+    function parse_restrictions(response) {
+        update_restrictions_collection(response, masters.restrictions, dfd.restrictions);
     }
 
     /**
