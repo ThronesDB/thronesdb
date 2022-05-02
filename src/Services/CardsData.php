@@ -606,7 +606,7 @@ class CardsData
         }
 
         $cardinfo['work_in_progress'] = $card->getPack()->getWorkInProgress();
-        $cardinfo['dateUpdate'] = $card->getDateUpdate();
+        $cardinfo['dateUpdate'] = $card->getDateUpdate()->format('c');
         return $cardinfo;
     }
 

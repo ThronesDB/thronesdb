@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Cycle;
+use App\Entity\CycleInterface;
 use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Pack;
@@ -107,6 +108,7 @@ class ApiController extends AbstractController
                     array('pack_code' => $pack->getCode()),
                     UrlGeneratorInterface::ABSOLUTE_URL
                 ),
+                'dateUpdate' => $pack->getDateUpdate()->format('c'),
             );
         }
 
@@ -176,6 +178,7 @@ class ApiController extends AbstractController
 
         // build the response
         $data = [];
+        /* @var CycleInterface $cycle */
         foreach ($cycles as $cycle) {
             $packs = array_map(function (PackInterface $pack) {
                 return $pack->getCode();
@@ -189,7 +192,8 @@ class ApiController extends AbstractController
                     array('cycle_code' => $cycle->getCode()),
                     UrlGeneratorInterface::ABSOLUTE_URL
                 ),
-                'packs' => $packs
+                'packs' => $packs,
+                'dateUpdate' => $cycle->getDateUpdate()->format('c'),
             );
         }
 
