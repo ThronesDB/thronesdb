@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Classes\SlotCollectionInterface;
 use App\Entity\CardInterface;
 use App\Entity\CommonDeckInterface;
+use App\Entity\FactionInterface;
 use App\Entity\SlotInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -34,6 +35,7 @@ class DeckValidationHelper
      */
     public function findProblem(CommonDeckInterface $deck)
     {
+        $faction = $deck->getFaction();
         $slots = $deck->getSlots();
         $plotDeck = $slots->getPlotDeck();
         $plotDeckSize = $plotDeck->countCards();
@@ -101,7 +103,7 @@ class DeckValidationHelper
             return 'invalid_cards';
         }
         foreach ($slots->getAgendas() as $slot) {
-            $valid_agenda = $this->validateAgenda($slots, $slot->getCard());
+            $valid_agenda = $this->validateAgenda($slots, $slot->getCard(), $faction);
             if (!$valid_agenda) {
                 return 'agenda';
             }
@@ -213,13 +215,11 @@ class DeckValidationHelper
         return false;
     }
 
-    /**
-     * @param SlotCollectionInterface $slots
-     * @param CardInterface $agenda
-     * @return bool
-     */
-    protected function validateAgenda(SlotCollectionInterface $slots, CardInterface $agenda): bool
-    {
+    protected function validateAgenda(
+        SlotCollectionInterface $slots,
+        CardInterface $agenda,
+        FactionInterface $faction
+    ): bool {
         switch ($agenda->getCode()) {
             case '01198':
             case '01199':
@@ -261,6 +261,8 @@ class DeckValidationHelper
                 return $this->validateManyFacedGod($slots);
             case '21030':
                 return $this->validateBattleOfTheTrident($slots);
+            case '23040':
+                return $this->validateBannerOfTheFalcon($slots, $faction);
             default:
                 return true;
         }
@@ -392,6 +394,12 @@ class DeckValidationHelper
         }
 
         return true;
+    }
+
+    protected function validateBannerOfTheFalcon(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    {
+        $cardsInFaction = $slots->getDrawDeck()->filterByFaction($faction->getCode())->countCards();
+        return $cardsInFaction <= 12;
     }
 
     /**
