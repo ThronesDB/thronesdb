@@ -1,8 +1,13 @@
 {% extends 'base.html.twig' %}
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% block navbar %}{% endblock %}
-
+{% block navbar %}
+    <div class="navbar-header">
+        <span class="navbar-brand">
+            <span class="icon icon-power"></span> ThronesDB
+        </span>
+    </div>
+{% endblock %}
 {% block body %}
     <div class="container">
         {% include 'alerts.html.twig' %}
