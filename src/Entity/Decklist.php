@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
+use stdClass;
 
 /**
  * @ORM\Table(name="decklist")
@@ -678,6 +679,25 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
      */
     public function jsonSerialize()
     {
-        return parent::getArrayExport();
+        $slots = $this->getSlots();
+        $agendas = $slots->getAgendas();
+        $agendas_code = [];
+        foreach ($agendas as $agenda) {
+            $agendas_code[] = $agenda->getCard()->getCode();
+        }
+        $array = [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'date_creation' => $this->getDateCreation()->format('c'),
+            'date_update' => $this->getDateUpdate()->format('c'),
+            'description_md' => $this->getDescriptionMd(),
+            'user_id' => $this->getUser()->getId(),
+            'faction_code' => $this->getFaction()->getCode(),
+            'faction_name' => $this->getFaction()->getName(),
+            'slots' => $slots->getContent() ?: new stdClass(),
+            'agendas' => $agendas_code,
+            'version' => $this->getVersion(),
+        ];
+        return $array;
     }
 }

@@ -92,12 +92,6 @@ interface CommonDeckInterface
     public function setUser(UserInterface $user = null);
 
     /**
-     * Transforms the given object into an associative array.
-     * @return array
-     */
-    public function getArrayExport();
-
-    /**
      * @return array
      */
     public function getTextExport();

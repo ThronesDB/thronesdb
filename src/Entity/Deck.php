@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\UuidInterface;
+use stdClass;
 
 /**
  * @ORM\Table(name="deck")
@@ -578,7 +579,25 @@ class Deck extends CommonDeck implements DeckInterface
      */
     public function jsonSerialize()
     {
-        $array = parent::getArrayExport();
+        $slots = $this->getSlots();
+        $agendas = $slots->getAgendas();
+        $agendas_code = [];
+        foreach ($agendas as $agenda) {
+            $agendas_code[] = $agenda->getCard()->getCode();
+        }
+        $array = [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'date_creation' => $this->getDateCreation()->format('c'),
+            'date_update' => $this->getDateUpdate()->format('c'),
+            'description_md' => $this->getDescriptionMd(),
+            'user_id' => $this->getUser()->getId(),
+            'faction_code' => $this->getFaction()->getCode(),
+            'faction_name' => $this->getFaction()->getName(),
+            'slots' => $slots->getContent() ?: new stdClass(),
+            'agendas' => $agendas_code,
+            'version' => $this->getVersion(),
+        ];
         $array['problem'] = $this->getProblem();
         $array['tags'] = $this->getTags();
         $array['uuid'] = $this->getUuid();
