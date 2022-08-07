@@ -1,0 +1,48 @@
+{% extends "FOSOAuthServerBundle::layout.html.twig" %}
+{% block navbar %}
+    <div class="navbar-header">
+        <span class="navbar-brand">
+            <span class="icon icon-power"></span> ThronesDB
+        </span>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">ThronesDB Authorization</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            The application <strong>{{ client.name }}</strong> would like to connect to your account.
+                        </p>
+                        <p>
+                            If you agree, <strong>{{ client.name }}</strong> will be able to perform the following operations on
+                            your behalf:
+                        </p>
+                        <ul>
+                            <li><em>Read your ThronesDB user account details (id, username, email, reputation).</em></li>
+                            {% set scopes = app.request.get('scope') | default('') | trim | lower | split(' ') %}
+                            {%  if 'read_deck' in scopes %}
+                                <li><em>Read your private decks saved on ThronesDB.</em></li>
+                            {% endif %}
+                            {% if 'write_deck' in scopes %}
+                                <li><em>Modify a private deck or create a new one on ThronesDB.</em></li>
+                            {% endif %}
+                        </ul>
+                        <div class="form">
+                            {% block fos_oauth_server_content %}
+                                {% include "@FOSOAuthServerBundle/Authorize/authorize_content.html.twig" %}
+                            {% endblock fos_oauth_server_content %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

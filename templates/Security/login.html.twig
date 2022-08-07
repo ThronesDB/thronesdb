@@ -1,36 +1,41 @@
 {% extends 'base.html.twig' %}
+{% trans_default_domain 'FOSUserBundle' %}
 
-{% block navbar %}{% endblock %}
-
+{% block navbar %}
+    <div class="navbar-header">
+        <span class="navbar-brand">
+            <span class="icon icon-power"></span> ThronesDB
+        </span>
+    </div>
+{% endblock %}
 {% block body %}
     <div class="container">
-
         {% include 'alerts.html.twig' %}
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title" style="line-height:2em">Welcome on ThronesDB</h3>
+                        <h3 class="panel-title">Welcome on ThronesDB</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form">
                             <p>Please log in to proceed. Your password will remain confidential.</p>
                             <form id="login" class="vertical" action="{{ path('oauth_server_auth_login_check') }}"
                                   method="post">
-                                {% if(error) %}
-                                    <div class='form_error'>{{ error }}</div>
-                                {% endif %}
                                 <div class="form-group">
-                                    <label for="username">ThronesDB Username</label>
-                                    <p><input type="text" class="form-control" id="username" name="_username"/></p>
+                                    <label for="username">{{ 'security.login.username'|trans }}</label>
+                                    <input type="text" id="username" name="_username" class="form-control" required="required"/>
                                 </div>
+
                                 <div class="form-group">
-                                    <label for="password">ThronesDB Password</label>
-                                    <p><input type="password" class="form-control" id="password" name="_password"/></p>
+                                    <label for="password">{{ 'security.login.password'|trans }}</label>
+                                    <input type="password" id="password" name="_password" class="form-control" required="required"/>
                                 </div>
                                 <div>
-                                    <input type="submit" class="btn btn-primary" id="_submit" name="_submit"
-                                           value="Log In"/>
+                                    <input type="submit" class="btn btn-primary" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}"/>
                                 </div>
                             </form>
                         </div>

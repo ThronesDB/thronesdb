@@ -8,3 +8,5 @@ fos_oauth_server:
     auth_code_class: App\Entity\AuthCode
     service:
         user_provider: fos_user.user_provider.username
+        options:
+            supported_scopes: read_deck write_deck
