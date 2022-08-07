@@ -24,9 +24,14 @@
                             your behalf:
                         </p>
                         <ul>
-                            <li>Read your user account details (id, username, email, reputation)</li>
-                            <li>Read your decks saved on ThronesDB</li>
-                            <li>Modify a deck or create a new one on ThronesDB</li>
+                            <li><em>Read your ThronesDB user account details (id, username, email, reputation).</em></li>
+                            {% set scopes = app.request.get('scope') | default('') | trim | lower | split(' ') %}
+                            {%  if 'read_deck' in scopes %}
+                                <li><em>Read your private decks saved on ThronesDB.</em></li>
+                            {% endif %}
+                            {% if 'write_deck' in scopes %}
+                                <li><em>Modify a private deck or create a new one on ThronesDB.</em></li>
+                            {% endif %}
                         </ul>
                         <div class="form">
                             {% block fos_oauth_server_content %}
