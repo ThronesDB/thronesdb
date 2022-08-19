@@ -261,8 +261,6 @@ class DeckValidationHelper
                 return $this->validateManyFacedGod($slots);
             case '21030':
                 return $this->validateBattleOfTheTrident($slots);
-            case '23040':
-                return $this->validateBannerOfTheFalcon($slots, $faction);
             default:
                 return true;
         }
@@ -394,12 +392,6 @@ class DeckValidationHelper
         }
 
         return true;
-    }
-
-    protected function validateBannerOfTheFalcon(SlotCollectionInterface $slots, FactionInterface $faction): bool
-    {
-        $cardsInFaction = $slots->getDrawDeck()->filterByFaction($faction->getCode())->countCards();
-        return $cardsInFaction <= 12;
     }
 
     /**
