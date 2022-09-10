@@ -284,6 +284,14 @@ class Restriction implements RestrictionInterface
     /**
      * @inheritdoc
      */
+    public function getJoustUrl(): ?string
+    {
+        return $this->getContents()['joust']['url'];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getJoustBannedList(): array
     {
         return $this->getContents()['joust']['banned'];
@@ -303,6 +311,14 @@ class Restriction implements RestrictionInterface
     public function getMeleeRestrictedList(): array
     {
         return $this->getContents()['melee']['restricted'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMeleeUrl(): ?string
+    {
+        return $this->getContents()['melee']['url'];
     }
 
     /**

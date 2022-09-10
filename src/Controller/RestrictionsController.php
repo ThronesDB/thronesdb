@@ -119,6 +119,7 @@ class RestrictionsController extends AbstractController
                     'active' => $restriction->isActive(),
                     'issuer' => $restriction->getIssuer(),
                 ];
+                $rhett['joustUrl'] = $restriction->getJoustUrl();
                 $rhett['joustRestrictedList'] = $extractAndSortList($restriction->getJoustRestrictedList(), $cardsMap);
                 $rhett['joustRestrictedPods'] = $extractAndSortPods(
                     $restriction->getJoustRestrictedPods(),
@@ -126,6 +127,7 @@ class RestrictionsController extends AbstractController
                     $extractAndSortList
                 );
                 $rhett['joustBannedList'] = $extractAndSortList($restriction->getJoustBannedList(), $cardsMap);
+                $rhett['meleeUrl'] = $restriction->getMeleeUrl();
                 $rhett['meleeRestrictedList'] = $extractAndSortList($restriction->getMeleeRestrictedList(), $cardsMap);
                 $rhett['meleeRestrictedPods'] = $extractAndSortPods(
                     $restriction->getMeleeRestrictedPods(),

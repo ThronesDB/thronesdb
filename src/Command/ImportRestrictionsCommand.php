@@ -149,11 +149,13 @@ class ImportRestrictionsCommand extends Command
     {
         $rhett = [
             'joust' => [
+                'url' => null,
                 'banned' => [],
                 'restricted' => [],
                 'restricted_pods' => [],
             ],
             'melee' => [
+                'url' => null,
                 'banned' => [],
                 'restricted' => [],
                 'restricted_pods' => [],
@@ -164,6 +166,7 @@ class ImportRestrictionsCommand extends Command
 
         foreach ($data['formats'] as $format) {
             $name = $format['name'];
+            $rhett[$name]['url'] = array_key_exists('url', $format) ? $format['url'] : null;
             $restricted = $format['restricted'];
             sort($restricted);
             $rhett[$name]['restricted'] = $restricted;
