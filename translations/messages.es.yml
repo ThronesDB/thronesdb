@@ -255,6 +255,12 @@ decks:
       tooltip:
         header: "Coste %cost%"
         label: "# cartas"
+    character-cost:
+      title: Coste de Personajes
+      subtitle: Se ignoran los costes X
+      tooltip:
+        header: "Coste %cost%"
+        label: "# Personajes"
   history:
     timeremaining: Tiempo restante
     columns:
