@@ -550,7 +550,7 @@
      * @memberOf deck
      * @param {object} sort
      */
-    deck.get_attachments = function get_plot_deck(sort)
+    deck.get_attachments = function get_attachments(sort)
     {
         return deck.get_cards(sort, {
             type_code: 'attachment'
@@ -561,7 +561,7 @@
      * @memberOf deck
      * @param {object} sort
      */
-    deck.get_characters = function get_plot_deck(sort)
+    deck.get_characters = function get_characters(sort)
     {
         return deck.get_cards(sort, {
             type_code: 'character'
@@ -572,7 +572,7 @@
      * @memberOf deck
      * @param {object} sort
      */
-    deck.get_events = function get_plot_deck(sort)
+    deck.get_events = function get_events(sort)
     {
         return deck.get_cards(sort, {
             type_code: 'event'
@@ -583,7 +583,7 @@
      * @memberOf deck
      * @param {object} sort
      */
-    deck.get_locations = function get_plot_deck(sort)
+    deck.get_locations = function get_locations(sort)
     {
         return deck.get_cards(sort, {
             type_code: 'location'

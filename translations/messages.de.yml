@@ -256,6 +256,12 @@ decks:
       tooltip:
         header: "Kosten %cost%"
         label: "# Karten"
+    character-cost:
+      title: Kosten der Charaktere
+      subtitle: Ausgenommen Karten mit Kosten X
+      tooltip:
+        header: "Kosten %cost%"
+        label: "# Charaktere"
   history:
     timeremaining: Verbleibende Zeit
     columns:

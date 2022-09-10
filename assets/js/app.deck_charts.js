@@ -290,11 +290,68 @@
         });
     }
 
+    deck_charts.chart_character_cost = function chart_character_cost()
+    {
+
+        var data = [];
+
+        var draw_deck = app.deck.get_characters();
+        draw_deck.forEach(function (card)
+        {
+            if(card.cost !== null && card.cost !== 'X' && card.cost !== '-') {
+                data[card.cost] = data[card.cost] || 0;
+                data[card.cost] += card.indeck;
+            }
+        })
+        data = _.flatten(data).map(function (value)
+        {
+            return value || 0;
+        });
+
+        $("#deck-chart-character-cost").highcharts({
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: Translator.trans("decks.charts.character-cost.title")
+            },
+            subtitle: {
+                text: Translator.trans("decks.charts.character-cost.subtitle")
+            },
+            xAxis: {
+                allowDecimals: false,
+                tickInterval: 1,
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                allowDecimals: false,
+                tickInterval: 1,
+                title: null,
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size: 10px">' + Translator.trans('decks.charts.character-cost.tooltip.header', {cost: '{point.key}'}) + '</span><br/>'
+            },
+            series: [{
+                animation: false,
+                name: Translator.trans('decks.charts.character-cost.tooltip.label'),
+                showInLegend: false,
+                data: data
+            }]
+        });
+    }
+
     deck_charts.setup = function setup(options)
     {
         deck_charts.chart_faction();
         deck_charts.chart_icon();
         deck_charts.chart_strength();
+        deck_charts.chart_character_cost();
         deck_charts.chart_cost();
     }
 
