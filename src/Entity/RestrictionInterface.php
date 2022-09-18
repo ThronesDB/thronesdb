@@ -123,6 +123,11 @@ interface RestrictionInterface extends JsonSerializable
     public function getJoustBannedList(): array;
 
     /**
+     * @return string|null
+     */
+    public function getJoustUrl(): ?string;
+
+    /**
      * @return array
      */
     public function getJoustRestrictedPods(): array;
@@ -131,6 +136,11 @@ interface RestrictionInterface extends JsonSerializable
      * @return array
      */
     public function getMeleeRestrictedList(): array;
+
+    /**
+     * @return string|null
+     */
+    public function getMeleeUrl(): ?string;
 
     /**
      * @return array
