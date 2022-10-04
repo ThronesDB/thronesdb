@@ -497,6 +497,45 @@ article.review .review-comment {
     .col-print-10{width:83%; float:left;}
     .col-print-11{width:92%; float:left;}
     .col-print-12{width:100%; float:left;}
+	.icon::after {
+	    font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	}
+
+	.icon.fg-tyrell::after {
+	    content: "(Tyrell)";
+	}
+
+	.icon.fg-targaryen::after {
+	    content: "(Targaryen)";
+	}
+
+	.icon.fg-neutral::after {
+	    content: "(Neutral)";
+	}
+
+	.icon.fg-greyjoy::after {
+	    content: "(Greyjoy)";
+	}
+
+	.icon.fg-lannister::after {
+	    content: "(Lannister)";
+	}
+
+	.icon.fg-thenightswatch::after {
+	    content: "(The Night's Watch)";
+	}
+
+	.icon.fg-martell::after {
+	    content: "(Martell)";
+	}
+
+	.icon.fg-stark::after {
+	    content: "(Stark)";
+	}
+
+    .icon.fg-baratheon::after {
+        content: "(Baratheon)";
+    }
 }
 
 /*************** DECK(LIST) COMPARE *****************/
