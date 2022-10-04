@@ -533,6 +533,9 @@ article.review .review-comment {
 	    content: "(Stark)";
 	}
 
+    .icon.fg-baratheon::after {
+        content: "(Baratheon)";
+    }
 }
 
 /*************** DECK(LIST) COMPARE *****************/
