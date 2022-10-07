@@ -536,6 +536,9 @@ article.review .review-comment {
     .icon.fg-baratheon::after {
         content: "(Baratheon)";
     }
+	#deck-content .deck-content {
+		column-count:2;
+	}
 }
 
 /*************** DECK(LIST) COMPARE *****************/
