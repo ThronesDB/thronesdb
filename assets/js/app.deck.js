@@ -1225,6 +1225,17 @@
             return rhett;
         }
 
+        var validate_banner_of_the_falcon = function() {
+            return deck.get_nb_cards(deck.get_cards(
+              null,
+              {
+                  type_code: {
+                      $in: ['character', 'attachment', 'location', 'event']
+                  },
+                  traits: new RegExp(Translator.trans('card.traits.housearryn') + '\\.')
+              })) >= 12;
+        }
+
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -1303,6 +1314,8 @@
                 return validate_many_faced_god();
             case '21030':
                 return validate_battle_of_the_trident();
+            case '23040':
+                return validate_banner_of_the_falcon();
         }
         return true;
     };
