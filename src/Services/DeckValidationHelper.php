@@ -261,9 +261,22 @@ class DeckValidationHelper
                 return $this->validateManyFacedGod($slots);
             case '21030':
                 return $this->validateBattleOfTheTrident($slots);
+            case '23040':
+                return $this->validateBannerOfTheFalcon($slots);
             default:
                 return true;
         }
+    }
+
+    protected function validateBannerOfTheFalcon($slots): bool
+    {
+        $trait = $this->translator->trans('card.traits.housearryn');
+        $matchingFactionPlots = $slots->getDrawDeck()->filterByTrait($trait)->countCards();
+        if ($matchingFactionPlots < 12) {
+            return false;
+        }
+
+        return true;
     }
 
     protected function validateRedesignedSeaOfBlood($slots): bool
