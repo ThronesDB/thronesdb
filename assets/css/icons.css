@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'thronesdb';
-  src:  url('fonts/thronesdb.eot?pg0qpl');
-  src:  url('fonts/thronesdb.eot?pg0qpl#iefix') format('embedded-opentype'),
-    url('fonts/thronesdb.ttf?pg0qpl') format('truetype'),
-    url('fonts/thronesdb.woff?pg0qpl') format('woff'),
-    url('fonts/thronesdb.svg?pg0qpl#thronesdb') format('svg');
+  src:  url('../fonts/thronesdb.eot?pg0qpl');
+  src:  url('../fonts/thronesdb.eot?pg0qpl#iefix') format('embedded-opentype'),
+    url('../fonts/thronesdb.ttf?pg0qpl') format('truetype'),
+    url('../fonts/thronesdb.woff?pg0qpl') format('woff'),
+    url('../fonts/thronesdb.svg?pg0qpl#thronesdb') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
