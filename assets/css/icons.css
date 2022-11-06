@@ -10,7 +10,7 @@
   font-display: block;
 }
 
-.icon {
+[class^="icon-"], [class*=" icon-"], .icon {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'thronesdb' !important;
   speak: never;
