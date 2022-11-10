@@ -165,7 +165,7 @@ class Deck extends CommonDeck implements DeckInterface
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="deckChildren")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_deck_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="parent_deck_id", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
     protected $parentDeck;
