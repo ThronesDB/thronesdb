@@ -24,9 +24,12 @@ use App\Services\Texts;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -35,6 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -360,6 +364,7 @@ class BuilderController extends AbstractController
      */
     public function cloneAction($deck_uuid)
     {
+        /** @var DeckInterface $deck */
         $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
@@ -385,7 +390,7 @@ class BuilderController extends AbstractController
                 'name' => $deck->getName() . ' (clone)',
                 'faction_code' => $deck->getFaction()->getCode(),
                 'content' => json_encode($content),
-                'deck_id' => $deck->getParent() ? $deck->getParent()->getId() : null,
+                'parent_deck_id' => $deck->getId(),
             )
         );
     }
@@ -440,9 +445,20 @@ class BuilderController extends AbstractController
         }
 
         $is_copy = (bool)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
+
         if ($is_copy || !$id) {
             $deck = new Deck();
             $deck->setUuid(Uuid::uuid4());
+            $parent_deck_id = filter_var($request->get('parent_deck_id'), FILTER_SANITIZE_NUMBER_INT);
+
+            if ($parent_deck_id) {
+                /* @var DeckInterface $parentDeck */
+                $parentDeck = $em->getRepository(Deck::class)->find($parent_deck_id);
+                if (!$parentDeck) {
+                    throw new UnauthorizedHttpException("Parent deck not found.");
+                }
+                $deck->setParentDeck($parentDeck);
+            }
         }
 
         $content = (array)json_decode($request->get('content'));
@@ -982,5 +998,159 @@ class BuilderController extends AbstractController
         $response->setContent($content);
 
         return $response;
+    }
+
+    /**
+     * @Route("/decks/bulkclone", name="decks_bulkclone", methods={"POST", "GET"})
+     * @param Request $request
+     * @param TranslatorInterface $translator
+     * @param DeckManager $deckManager
+     * @return Response|RedirectResponse
+     * @throws Exception
+     */
+    public function bulkCloneDeckAction(
+        Request $request,
+        TranslatorInterface $translator,
+        DeckManager $deckManager
+    ): Response {
+
+        /* @var EntityManager $em*/
+        $em = $this->getDoctrine()->getManager();
+
+        $generateForm = function () {
+            return $this->createFormBuilder([])
+                ->add('decks', TextareaType::class, [
+                    'help' => "Put your list of deck URLs in here. One deck per line. <br>"
+                        . "You may also provide a new deck name, which must be separated from the URL by <code>|</code>"
+                        . ".<br><br>Example: " .
+                        "<code>https://thronesdb.com/deck/view/XXXXXXXXX-XXXX-XXXX-XXXX-000000000001|New name</code>",
+                    'help_html' => true,
+                    'label' => 'Deck URLs',
+                    'attr' => ['rows' => 15],
+                ])
+                ->add('send', SubmitType::class, [
+                    'attr' => ['class' => 'btn-primary'],
+                    'label' => 'Clone Decks',
+                ])
+                ->getForm();
+        };
+
+        $form = $generateForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            if (empty($data) || empty($data['decks'])) {
+                $this->addFlash('error', 'Empty input. Please provide at least one deck URL.');
+                return $this->render('Builder/bulkclone.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            $lines = array_map('trim', explode(PHP_EOL, $data['decks']));
+            $lines = array_values(array_filter($lines));
+            $lines = array_map('strtolower', $lines);
+            $lines = array_unique($lines);
+
+            if (empty($lines)) {
+                $this->addFlash('error', 'Empty input. Please provide at least one deck URL.');
+                return $this->render('Builder/bulkclone.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            $totalDecksToClone = count($lines);
+
+            /* @var UserInterface $user */
+            $user = $this->getUser();
+            $availableDeckSlots = $user->getMaxNbDecks();
+            $numDecks = count($user->getDecks()) + $totalDecksToClone;
+            if ($numDecks > $availableDeckSlots) {
+                $this->addFlash('error', $translator->trans('decks.save.outOfSlots'));
+                return $this->render('Builder/bulkclone.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            $errors = [];
+            $successes = [];
+            $reUuid4 = '/[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/';
+
+            $deckRepo = $em->getRepository(Deck::class);
+
+            foreach ($lines as $line) {
+                $clean = [];
+                $items = explode('|', $line, 2);
+                $hasName = (2 === count($items));
+                $clean['url'] = filter_var($items['0'], FILTER_SANITIZE_URL);
+                $clean['name'] = $hasName
+                    ? filter_var($items[1], FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES)
+                    : '';
+
+                if (!preg_match($reUuid4, $clean['url'], $matches)) {
+                    $errors[] = "${clean['url']} is no a valid deck URL.";
+                    continue;
+                }
+                /* @var DeckInterface $deck */
+                $deck = $deckRepo->findOneBy(['uuid' => $matches[0]]);
+                if (!$deck) {
+                    $errors[] = "Cannot find deck at ${clean['url']}.";
+                    continue;
+                }
+                $owner = $deck->getUser();
+                if (!$owner->getIsShareDecks() && $owner->getId() !== $user->getId()) {
+                    $errors[] = "${clean['url']} cannot be accessed because deck-sharing is not enabled by its owner.";
+                    continue;
+                }
+
+                $content = [];
+                foreach ($deck->getSlots() as $slot) {
+                    $content[$slot->getCard()->getCode()] = $slot->getQuantity();
+                }
+                $newDeck = new Deck();
+                $newDeck->setUuid(Uuid::uuid4());
+                $newDeck->setParentDeck($deck);
+
+                $deckManager->save(
+                    $user,
+                    $newDeck,
+                    null,
+                    $hasName ? $clean['name'] : $deck->getName() . ' (Clone)',
+                    $deck->getFaction(),
+                    '',
+                    $deck->getTags(),
+                    $content,
+                    null,
+                );
+
+                $newDeckUrl = $this->generateUrl(
+                    'deck_view',
+                    ['deck_uuid' => $newDeck->getUuid()->toString()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
+                $successes[] = "<a href=\"${clean['url']}\" target=\"_blank\">${clean['url']}</a> has been successfully cloned to "
+                    . "<a href=\"${newDeckUrl}\" target=\"_blank\">${newDeckUrl}"
+                    . ($hasName ? " (${clean['name']})" : '')
+                    . "</a>.";
+            }
+
+            $em->flush();
+
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error);
+            }
+
+            foreach ($successes as $success) {
+                $this->addFlash('notice', $success);
+            }
+
+            return $this->redirect($this->generateUrl('decks_bulkclone'));
+        }
+
+        return $this->render('Builder/bulkclone.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
