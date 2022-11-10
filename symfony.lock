@@ -92,6 +92,12 @@
             "src/Entity/RefreshToken.php"
         ]
     },
+    "friendsofsymfony/user-bundle": {
+        "version": "v2.1.2"
+    },
+    "jms/i18n-routing-bundle": {
+        "version": "3.1.0"
+    },
     "nelmio/api-doc-bundle": {
         "version": "3.0",
         "recipe": {

@@ -1,0 +1,28 @@
+{#
+@file
+    Page template for rendering a user's private list of decks.
+
+    Available variables:
+    - pagetitle
+    - pagedescription
+    - decks
+    - tags
+    - nbmax
+    - nbdecks
+    - cannotcreate
+    - tournaments
+    - decklegality
+#}
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% block body %}
+    <div class="main white container">
+        {% include 'alerts.html.twig' %}
+        <h1>Bulk Deck Cloning</h1>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

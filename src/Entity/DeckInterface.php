@@ -54,6 +54,21 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     public function getChildren();
 
     /**
+     * @param DeckInterface $child
+     */
+    public function addDeckChild(DeckInterface $child);
+
+    /**
+     * @param DecklistInterface $child
+     */
+    public function removeDeckChild(DeckInterface $child);
+
+    /**
+     * @return Collection
+     */
+    public function getDeckChildren();
+
+    /**
      * @param DeckchangeInterface $change
      */
     public function addChange(DeckchangeInterface $change);
@@ -87,6 +102,16 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
      * @return DecklistInterface
      */
     public function getParent();
+
+    /**
+     * @param DeckInterface|null $parent
+     */
+    public function setParentDeck(DeckInterface $parent = null);
+
+    /**
+     * @return DeckInterface
+     */
+    public function getParentDeck();
 
     /**
      * @param int $majorVersion
