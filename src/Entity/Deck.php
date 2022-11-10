@@ -159,6 +159,24 @@ class Deck extends CommonDeck implements DeckInterface
      */
     protected $parent;
 
+
+    /**
+     * @var DeckInterface
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="deckChildren")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent_deck_id", referencedColumnName="id")
+     * })
+     */
+    protected $parentDeck;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Deck", mappedBy="parentDeck")
+     */
+    protected $deckChildren;
+
     /**
      * Constructor
      */
@@ -167,6 +185,7 @@ class Deck extends CommonDeck implements DeckInterface
         $this->slots = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->changes = new ArrayCollection();
+        $this->deckChildren = new ArrayCollection();
         $this->minorVersion = 0;
         $this->majorVersion = 0;
     }
@@ -333,6 +352,30 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
+    public function addDeckChild(DeckInterface $child)
+    {
+        $this->deckChildren->add($child);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeDeckChild(DeckInterface $child)
+    {
+        $this->deckChildren->removeElement($child);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDeckChildren()
+    {
+        return $this->deckChildren;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function addChange(DeckchangeInterface $change)
     {
         $this->changes->add($change);
@@ -416,6 +459,22 @@ class Deck extends CommonDeck implements DeckInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setParentDeck(DeckInterface $parent = null)
+    {
+        $this->parentDeck = $parent;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getParentDeck()
+    {
+        return $this->parentDeck;
     }
 
     /**
