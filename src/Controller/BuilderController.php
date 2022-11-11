@@ -1017,25 +1017,21 @@ class BuilderController extends AbstractController
         /* @var EntityManager $em*/
         $em = $this->getDoctrine()->getManager();
 
-        $generateForm = function () {
-            return $this->createFormBuilder([])
-                ->add('decks', TextareaType::class, [
-                    'help' => "Put your list of deck URLs in here. One deck per line. <br>"
-                        . "You may also provide a new deck name, which must be separated from the URL by <code>|</code>"
-                        . ".<br><br>Example: " .
-                        "<code>https://thronesdb.com/deck/view/XXXXXXXXX-XXXX-XXXX-XXXX-000000000001|New name</code>",
-                    'help_html' => true,
-                    'label' => 'Deck URLs',
-                    'attr' => ['rows' => 15],
-                ])
-                ->add('send', SubmitType::class, [
-                    'attr' => ['class' => 'btn-primary'],
-                    'label' => 'Clone Decks',
-                ])
-                ->getForm();
-        };
-
-        $form = $generateForm();
+        $form = $this->createFormBuilder([])
+            ->add('decks', TextareaType::class, [
+                'help' => "Put your list of deck URLs in here. One deck per line. <br>"
+                    . "You may also provide a new deck name, which must be separated from the URL by <code>|</code>"
+                    . ".<br><br>Example: " .
+                    "<code>https://thronesdb.com/deck/view/XXXXXXXXX-XXXX-XXXX-XXXX-000000000001|New name</code>",
+                'help_html' => true,
+                'label' => 'Deck URLs',
+                'attr' => ['rows' => 15],
+            ])
+            ->add('send', SubmitType::class, [
+                'attr' => ['class' => 'btn-primary'],
+                'label' => 'Clone Decks',
+            ])
+            ->getForm();
 
         $form->handleRequest($request);
 
@@ -1050,7 +1046,6 @@ class BuilderController extends AbstractController
 
             $lines = array_map('trim', explode(PHP_EOL, $data['decks']));
             $lines = array_values(array_filter($lines));
-            $lines = array_map('strtolower', $lines);
             $lines = array_unique($lines);
 
             if (empty($lines)) {
@@ -1130,7 +1125,8 @@ class BuilderController extends AbstractController
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
-                $successes[] = "<a href=\"${clean['url']}\" target=\"_blank\">${clean['url']}</a> has been successfully cloned to "
+                $successes[] = "<a href=\"${clean['url']}\" target=\"_blank\">${clean['url']}</a> "
+                    . 'has been successfully cloned to '
                     . "<a href=\"${newDeckUrl}\" target=\"_blank\">${newDeckUrl}"
                     . ($hasName ? " (${clean['name']})" : '')
                     . "</a>.";
