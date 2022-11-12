@@ -1046,7 +1046,6 @@ class BuilderController extends AbstractController
 
             $lines = array_map('trim', explode(PHP_EOL, $data['decks']));
             $lines = array_values(array_filter($lines));
-            $lines = array_unique($lines);
 
             if (empty($lines)) {
                 $this->addFlash('error', 'Empty input. Please provide at least one deck URL.');
@@ -1074,7 +1073,9 @@ class BuilderController extends AbstractController
 
             $deckRepo = $em->getRepository(Deck::class);
 
+            $i = 0;
             foreach ($lines as $line) {
+                $i++;
                 $clean = [];
                 $items = explode('|', $line, 2);
                 $hasName = (2 === count($items));
@@ -1084,18 +1085,23 @@ class BuilderController extends AbstractController
                     : '';
 
                 if (!preg_match($reUuid4, $clean['url'], $matches)) {
-                    $errors[] = "${clean['url']} is no a valid deck URL.";
+                    $errors[] = "[line ${i}] ${clean['url']}"
+                        . ($hasName ? " (${clean['name']})" : '')
+                        . ' is no a valid deck URL.';
                     continue;
                 }
                 /* @var DeckInterface $deck */
                 $deck = $deckRepo->findOneBy(['uuid' => $matches[0]]);
                 if (!$deck) {
-                    $errors[] = "Cannot find deck at ${clean['url']}.";
+                    $errors[] = "[line ${i}] Cannot find deck at ${clean['url']}"
+                    . ($hasName ? " (${clean['name']})" : '') . '.';
                     continue;
                 }
                 $owner = $deck->getUser();
                 if (!$owner->getIsShareDecks() && $owner->getId() !== $user->getId()) {
-                    $errors[] = "${clean['url']} cannot be accessed because deck-sharing is not enabled by its owner.";
+                    $errors[] = "[line ${i}] ${clean['url']}"
+                        . ($hasName ? " (${clean['name']})" : '')
+                        . ' cannot be accessed because deck-sharing is not enabled by its owner.';
                     continue;
                 }
 
