@@ -1087,7 +1087,7 @@ class BuilderController extends AbstractController
                 if (!preg_match($reUuid4, $clean['url'], $matches)) {
                     $errors[] = "[line ${i}] ${clean['url']}"
                         . ($hasName ? " (${clean['name']})" : '')
-                        . ' is no a valid deck URL.';
+                        . ' is not a valid deck URL.';
                     continue;
                 }
                 /* @var DeckInterface $deck */
