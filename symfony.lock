@@ -15,12 +15,12 @@
         "version": "v0.5.3"
     },
     "doctrine/doctrine-bundle": {
-        "version": "2.0",
+        "version": "2.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "2.0",
-            "ref": "40631978d2c4adc9b11220b13eba539b727c36a8"
+            "ref": "504332892aa02429a7c04206fd3bd5d8609514fd"
         },
         "files": [
             "config/packages/doctrine.yaml",
@@ -30,12 +30,12 @@
         ]
     },
     "doctrine/doctrine-fixtures-bundle": {
-        "version": "3.0",
+        "version": "3.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "3.0",
-            "ref": "e5b542d4ef47d8a003c91beb35650c76907f7e53"
+            "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
         },
         "files": [
             "src/DataFixtures/AppFixtures.php"
@@ -45,9 +45,9 @@
         "version": "3.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "3.1",
-            "ref": "ee609429c9ee23e22d6fa5728211768f51ed2818"
+            "ref": "1d01ec03c6ecbd67c3375c5478c9a423ae5d6a33"
         },
         "files": [
             "config/packages/doctrine_migrations.yaml",
@@ -184,12 +184,12 @@
         ]
     },
     "stof/doctrine-extensions-bundle": {
-        "version": "1.2",
+        "version": "1.7",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
+            "branch": "main",
             "version": "1.2",
-            "ref": "6c1ceb662f8997085f739cd089bfbef67f245983"
+            "ref": "e805aba9eff5372e2d149a9ff56566769e22819d"
         },
         "files": [
             "config/packages/stof_doctrine_extensions.yaml"
@@ -212,12 +212,12 @@
         "version": "v2.4.0"
     },
     "symfony/flex": {
-        "version": "1.0",
+        "version": "1.19",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "1.0",
-            "ref": "c0eeb50665f0f77226616b6038a9b06c03752d8e"
+            "ref": "146251ae39e06a95be0fe3d13c807bcf3938b172"
         },
         "files": [
             ".env"
@@ -227,9 +227,9 @@
         "version": "4.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "4.4",
-            "ref": "5918a9e19931369d8a8c508c6c8135b541f4c9de"
+            "ref": "24eb45d1355810154890460e6a05c0ca27318fe7"
         },
         "files": [
             "config/bootstrap.php",
@@ -251,9 +251,9 @@
         "version": "3.7",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "3.7",
-            "ref": "a7bace7dbc5a7ed5608dbe2165e0774c87175fe6"
+            "branch": "main",
+            "version": "3.3",
+            "ref": "2120e71a370db3a494b8afcc42d7cfb2cff6f910"
         },
         "files": [
             "config/packages/dev/monolog.yaml",
@@ -263,12 +263,12 @@
         ]
     },
     "symfony/phpunit-bridge": {
-        "version": "4.3",
+        "version": "4.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "4.3",
-            "ref": "6d0e35f749d5f4bfe1f011762875275cd3f9874f"
+            "ref": "0e1b186400de9d4ab83363138b4eb0072c99b2ab"
         },
         "files": [
             ".env.test",
@@ -316,12 +316,12 @@
         "version": "v5.1.8"
     },
     "symfony/swiftmailer-bundle": {
-        "version": "2.5",
+        "version": "3.5",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "2.5",
-            "ref": "ae4d22af30bbd484506bc1817c5a3ef72c855b93"
+            "ref": "f0b2fccdca2dfd97dc2fd5ad216d5e27c4f895ac"
         },
         "files": [
             "config/packages/dev/swiftmailer.yaml",
