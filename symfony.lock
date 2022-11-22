@@ -15,12 +15,12 @@
         "version": "v0.5.3"
     },
     "doctrine/doctrine-bundle": {
-        "version": "2.0",
+        "version": "2.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "2.0",
-            "ref": "40631978d2c4adc9b11220b13eba539b727c36a8"
+            "ref": "504332892aa02429a7c04206fd3bd5d8609514fd"
         },
         "files": [
             "config/packages/doctrine.yaml",
