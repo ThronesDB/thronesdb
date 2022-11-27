@@ -362,20 +362,28 @@ class BuilderController extends AbstractController
      * @param string $deck_uuid
      * @return Response
      */
-    public function cloneAction($deck_uuid)
+    public function cloneAction($deck_uuid, DeckManager $deckManager, TranslatorInterface $translator)
     {
-        /** @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
+        $em = $this->getDoctrine()->getManager();
+        /* @var DeckInterface $deck */
+        $deck = $em->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
-        $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
-        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+        $user = $this->getUser();
+        $isOwner = $user->getId() === $deck->getUser()->getId();
+        if (!$deck->getUser()->getIsShareDecks() && !$isOwner) {
             return $this->render(
                 'Default/error.html.twig',
                 array(
                     'pagetitle' => "Error",
-                    'error' => 'You are not allowed to view this deck.'
+                    'error' => 'You are not allowed to access this deck.'
                         . ' To get access, you can ask the deck owner to enable "Share your decks" on their account.',
                 )
+            );
+        }
+
+        if (count($user->getDecks()) > $user->getMaxNbDecks()) {
+            return new Response(
+                $translator->trans('decks.save.outOfSlots')
             );
         }
 
@@ -383,16 +391,23 @@ class BuilderController extends AbstractController
         foreach ($deck->getSlots() as $slot) {
             $content[$slot->getCard()->getCode()] = $slot->getQuantity();
         }
+        $newDeck = new Deck();
+        $newDeck->setParentDeck($deck);
+        $newDeck->setUuid(Uuid::uuid4());
 
-        return $this->forward(
-            'App\Controller\BuilderController:saveAction',
-            array(
-                'name' => $deck->getName() . ' (clone)',
-                'faction_code' => $deck->getFaction()->getCode(),
-                'content' => json_encode($content),
-                'parent_deck_id' => $deck->getId(),
-            )
+        $deckManager->save(
+            $this->getUser(),
+            $newDeck,
+            null,
+            $deck->getName() . ' (clone)',
+            $deck->getFaction(),
+            $deck->getDescriptionMd(),
+            false,
+            $content,
+            null,
         );
+        $em->flush();
+        return $this->redirect($this->generateUrl('decks_list'));
     }
 
     /**
@@ -1119,7 +1134,7 @@ class BuilderController extends AbstractController
                     null,
                     $hasName ? $clean['name'] : $deck->getName() . ' (Clone)',
                     $deck->getFaction(),
-                    '',
+                    $deck->getDescriptionMd(),
                     $deck->getTags(),
                     $content,
                     null,
