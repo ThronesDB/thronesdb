@@ -12,5 +12,6 @@ twig:
         deck_validation_helper: '@App\Services\DeckValidationHelper'
         google_analytics_tracking_code: '%google_analytics_tracking_code%'
         allow_search_engine_tracking: '%allow_search_engine_tracking%'
+        design_team_discord_url: '%design_team_discord_url%'
     form_themes:
         - 'bootstrap_3_layout.html.twig'

@@ -15,6 +15,7 @@ parameters:
     publisher_name: "%env(string:APP_PUBLISHER_NAME)%"
     google_analytics_tracking_code: "%env(string:APP_GOOGLE_ANALYTICS_TRACKING_CODE)%"
     allow_search_engine_tracking: "%env(bool:APP_ALLOW_SEARCH_ENGINE_TRACKING)%"
+    design_team_discord_url: "%env(string:APP_DESIGN_TEAM_DISCORD_URL)%"
     locale: en
     locale_names:
         en: English

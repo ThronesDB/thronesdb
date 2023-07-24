@@ -7,6 +7,7 @@ userby: Von %user%
 seemore:
   faction: Mehr von dieser Fraktion
 noimage: Kein Bild
+design_team_call_to_action: "Möchtest Du dem Designteam bei den neuesten Karten helfen? <a href=\"%url%\">Klicke hier</a>, um ihrem Discord beizutreten und mehr zu erfahren!</a>"
 
 nav:
   mydecks: Meine Decks
