@@ -7,6 +7,7 @@ userby: por %user%
 seemore:
   faction: Más de esta facción
 noimage: Sin imagen
+design_team_call_to_action: "¿Interesado en ayudar al equipo de diseño con las últimas tarjetas? <a href=\"%url%\">¡Haz clic aquí</a> para unirte a su Discord y obtener más información!</a>"
 
 nav:
   mydecks: Mis mazos

@@ -1,5 +1,11 @@
 {% if card.work_in_progress %}
     <div class="alert alert-danger" role="alert">
         {{ "card.info.workInProgress" | trans }}
+        {% if design_team_discord_url %}
+            <br>
+            <small>
+                {{ "design_team_call_to_action" | trans({"%url%": design_team_discord_url }) | raw }}
+            </small>
+        {%  endif %}
     </div>
 {% endif %}

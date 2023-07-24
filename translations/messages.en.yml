@@ -7,6 +7,7 @@ userby: by %user%
 seemore:
   faction: More in this faction
 noimage: No image
+design_team_call_to_action: "Interested in helping the design team with the latest cards? <a href=\"%url%\">Click here</a> to join their Discord and find out more!</a>"
 
 nav:
   mydecks: My decks
@@ -479,7 +480,6 @@ card:
       type: T.
       faction: F.
     workInProgress: This card is considered "work in progress" and may be subject to modifications or removal without further notice.
-
 challenges:
   military: Military
   intrigue: Intrigue
