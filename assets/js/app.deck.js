@@ -1236,6 +1236,48 @@
               })) >= 12;
         }
 
+        var validate_the_gift_of_mercy = function() {
+            var plots = deck.get_cards(null, { type_code: 'plot' });
+            var reOmen = new RegExp(Translator.trans('card.traits.omen') + '\\.');
+            var rhett = true;
+            plots.forEach(function(plot) {
+                if (reOmen.test(plot.traits)) {
+                    rhett = false;
+                }
+
+            });
+            return rhett;
+        }
+
+        var validate_the_gold_price = function() {
+            return 8 <= deck.get_nb_cards(deck.get_cards(
+              null,
+              {
+                  type_code: {
+                      $in: ['character', 'attachment', 'location', 'event']
+                  },
+                  text: new RegExp('\s*([+-][0-9]+) ' + Translator.trans('card.info.income') + '\.\s*')
+              }));
+        }
+
+        var validate_uniting_the_realm = function() {
+            var factions = {};
+            return deck.get_cards().every(function(card) {
+                var faction = card.faction_code;
+                var name = card.name;
+                if ('neutral' === faction) {
+                    return true;
+                }
+                if (!factions.hasOwnProperty(faction)) {
+                    factions[faction] = [];
+                }
+                if (!factions[faction].includes(name)) {
+                    factions[faction].push(name);
+                }
+                return factions[faction].length <= 3;
+            });
+        }
+
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -1316,6 +1358,12 @@
                 return validate_battle_of_the_trident();
             case '23040':
                 return validate_banner_of_the_falcon();
+            case '25618':
+                return validate_the_gift_of_mercy();
+            case '25619':
+                return validate_the_gold_price();
+            case '25620':
+                return validate_uniting_the_realm();
         }
         return true;
     };
@@ -1429,6 +1477,8 @@
                   (card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.wildling')) !== -1);
             case '20051':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.fool')) !== -1;
+            case '25620':
+                return card.faction_code === 'neutral' || ['character', 'attachment', 'location'].includes(card.type_code);
         }
     };
 })(app.deck = {}, jQuery);
