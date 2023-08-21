@@ -427,6 +427,7 @@ card:
     scheme: Scheme
     banner: Banner
     maester: Maester
+    omen: Omen
     kingdom: Kingdom
     kingsguard: Kingsguard
     wildling: Wildling
@@ -434,6 +435,7 @@ card:
     edict: Edict
     siege: Siege
     war: War
+
   reviews:
     title: Reviews
     none: No review yet for this card.

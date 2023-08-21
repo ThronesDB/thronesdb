@@ -166,9 +166,9 @@
         var i;
 
         // special case:
-        // for "The Conclave", "Kingdom of Shadows", "The Free Folk", "The White Book", and "Mummer's Farce"
-        // pre-select all factions.
-        if (agendas.length && -1 !== ["09045", "13079", "17148", "13099", "17150", "20051"].indexOf(agendas[0]['code'])) {
+        // for "The Conclave", "Kingdom of Shadows", "The Free Folk", "The White Book",
+        // "Mummer's Farce", and "Uniting the Realm" pre-select all factions.
+        if (agendas.length && -1 !== ["09045", "13079", "17148", "13099", "17150", "20051", "25620"].indexOf(agendas[0]['code'])) {
             faction_codes = app.deck.get_all_faction_codes();
         } else {
             faction_codes = app.deck.get_minor_faction_codes();

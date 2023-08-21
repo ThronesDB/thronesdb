@@ -211,6 +211,8 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
+            case '25620': // Uniting the Realm
+                return in_array($card->getType()->getCode(), ['character', 'attachment', 'location']);
         }
         return false;
     }
@@ -263,6 +265,12 @@ class DeckValidationHelper
                 return $this->validateBattleOfTheTrident($slots);
             case '23040':
                 return $this->validateBannerOfTheFalcon($slots);
+            case '25618':
+                return $this->validateTheGiftOfMercy($slots);
+            case '25619':
+                return $this->validateTheGoldPrice($slots);
+            case '25620':
+                return $this->validateUnitingTheRealm($slots);
             default:
                 return true;
         }
@@ -605,6 +613,62 @@ class DeckValidationHelper
                 && ! preg_match("/$siege\\./", $traits)
                 && ! preg_match("/$war\\./", $traits)
             ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function validateTheGoldPrice(SlotCollectionInterface $slots): bool
+    {
+        $drawDeckSlots = $slots->getDrawDeck();
+        $income = $this->translator->trans('card.info.income');
+        $re = "/\s*([+-]\d+) $income\.\s*/";
+        $n = 0;
+        foreach ($drawDeckSlots as $slot) {
+            $text = $slot->getCard()->getText();
+            $quantity = $slot->getQuantity();
+            if (preg_match($re, $text)) {
+                $n = $n + $quantity;
+            }
+            if ($n >= 8) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected function validateUnitingTheRealm(SlotCollectionInterface $slots): bool
+    {
+        $drawDeckSlots = $slots->getDrawDeck();
+        $factions = [];
+        foreach ($drawDeckSlots as $slot) {
+            $card = $slot->getCard();
+            $faction = $card->getFaction()->getCode();
+            $name = $card->getName();
+            if ('neutral' === $faction) {
+                continue;
+            }
+            if (! array_key_exists($faction, $factions)) {
+                $factions[$faction] = [];
+            }
+            if (! in_array($name, $factions[$faction])) {
+                $factions[$faction][] = $name;
+            }
+            if (count($factions[$faction]) > 3) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function validateTheGiftOfMercy(SlotCollectionInterface $slots): bool
+    {
+        $plotDeckSlots = $slots->getPlotDeck();
+        $omen = $this->translator->trans('card.traits.omen');
+        foreach ($plotDeckSlots as $slot) {
+            $traits = $slot->getCard()->getTraits();
+            if (preg_match("/$omen\\./", $traits)) {
                 return false;
             }
         }
