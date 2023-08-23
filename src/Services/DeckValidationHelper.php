@@ -267,8 +267,8 @@ class DeckValidationHelper
                 return $this->validateBannerOfTheFalcon($slots);
             case '25618':
                 return $this->validateTheGiftOfMercy($slots);
-            case '25619':
-                return $this->validateTheGoldPrice($slots);
+//            case '25619':
+//                return $this->validateTheGoldPrice($slots);
             case '25620':
                 return $this->validateUnitingTheRealm($slots);
             default:
