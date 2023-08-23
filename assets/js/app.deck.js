@@ -1360,8 +1360,8 @@
                 return validate_banner_of_the_falcon();
             case '25618':
                 return validate_the_gift_of_mercy();
-            case '25619':
-                return validate_the_gold_price();
+            // case '25619':
+            //     return validate_the_gold_price();
             case '25620':
                 return validate_uniting_the_realm();
         }
