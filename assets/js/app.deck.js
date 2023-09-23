@@ -168,7 +168,8 @@
      * @return {boolean}
      */
     var is_melee_restricted_list_compliant = function(cards, rl) {
-        return validate_deck_against_restricted_list(cards, rl.contents.melee.restricted);
+        return validate_deck_against_restricted_list(cards, rl.contents.melee.restricted)
+          && validate_deck_against_pods(cards, rl.contents.melee.restricted_pods);
     };
 
     /*
