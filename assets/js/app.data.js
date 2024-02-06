@@ -272,6 +272,12 @@
             }
         });
 
+        // delete rows that aren't in the payload
+        var codes = data.map(function(value) {
+            return value.code;
+        });
+        collection.remove({ code: { $nin: codes } });
+
         // we update the locale
         if (locale !== collection.metaData().locale) {
             locale_changed = true;
