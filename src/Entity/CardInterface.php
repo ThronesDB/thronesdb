@@ -260,7 +260,7 @@ interface CardInterface extends Serializable
     /**
      * @return bool
      */
-    public function isErrataed(): bool;
+    public function getErrataed(): bool;
 
     /**
      * @param ReviewInterface $review

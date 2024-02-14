@@ -659,18 +659,12 @@ class Card implements CardInterface
         return $this->octgnId;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setErrataed(bool $errataed): void
     {
         $this->errataed = $errataed;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function isErrataed(): bool
+    public function getErrataed(): bool
     {
         return $this->errataed;
     }
