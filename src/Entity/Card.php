@@ -853,6 +853,7 @@ class Card implements CardInterface
             'is_unique',
             'is_multiple',
             'octgn_id',
+            'errataed',
         ];
 
         $optionalFields = [
