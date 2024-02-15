@@ -475,6 +475,8 @@ card:
     plotlimit: Strategiestapel-Limit
     quantity: Anzahl
     illustrator: Illustrator/in
+    errataed_short: Druckfehler.
+    errataed_long: Der Originaldruck dieser Karte ist fehlerhaft. Weitere Informationen finden Sie in den <a href='%url%'>FAQ</a>.
     short:
       costgold: K.
       strini: S.
