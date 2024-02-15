@@ -253,6 +253,16 @@ interface CardInterface extends Serializable
     public function getOctgnId();
 
     /**
+     * @param bool $octgnId
+     */
+    public function setErrataed(bool $errataed): void;
+
+    /**
+     * @return bool
+     */
+    public function getErrataed(): bool;
+
+    /**
      * @param ReviewInterface $review
      */
     public function addReview(ReviewInterface $review);

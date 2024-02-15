@@ -24,14 +24,21 @@
                                     {% include 'Search/card-faction.html.twig' %}
                                     {% include 'Search/card-info.html.twig' %}
                                     {% include 'Search/card-text.html.twig' %}
+                                    {% if card.errataed %}
+                                        {%  include 'Search/card-errata-short.html.twig' %}
+                                    {% endif %}
                                     {% include 'Search/card-flavor.html.twig' %}
                                     {% include 'Search/card-illustrator.html.twig' %}
                                     {% include 'Search/card-pack.html.twig' %}
                                 </div>
                             </div>
+                            {% if card.errataed %}
+                                {%  include 'Search/card-errata-long.html.twig' %}
+                            {% endif %}
                             <p>Link:
                                 <a href="{{ path('decklists_list',{type:'find',_locale:app.request.locale,'cards[]':card.code}) }}">Decklists</a>
                             </p>
+
                         </div>
                     </div>
                     <div class="col-sm-5" style="margin-bottom:2em">

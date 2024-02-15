@@ -215,6 +215,13 @@ class Card implements CardInterface
     protected $imageUrl;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="errataed", type="boolean", nullable=false)
+     */
+    protected bool $errataed;
+
+    /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Review", mappedBy="card")
@@ -263,6 +270,7 @@ class Card implements CardInterface
         $this->isIntrigue = false;
         $this->isPower = false;
         $this->isMultiple = false;
+        $this->errataed = false;
 
         $this->reviews = new ArrayCollection();
     }
@@ -651,6 +659,16 @@ class Card implements CardInterface
         return $this->octgnId;
     }
 
+    public function setErrataed(bool $errataed): void
+    {
+        $this->errataed = $errataed;
+    }
+
+    public function getErrataed(): bool
+    {
+        return $this->errataed;
+    }
+
     /**
      * @inheritdoc
      */
@@ -835,6 +853,7 @@ class Card implements CardInterface
             'is_unique',
             'is_multiple',
             'octgn_id',
+            'errataed',
         ];
 
         $optionalFields = [

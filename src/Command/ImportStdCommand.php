@@ -230,10 +230,7 @@ class ImportStdCommand extends Command
                     $data['position'] = $position;
                     $data['quantity'] = $item['quantity'];
                     $data['text'] = $item['text'];
-                    // @todo Replace this stop-gap solution and import errata properly. [ST 2020/04/12]
-                    if (array_key_exists('errata', $item) && $item['errata']) {
-                        $data['text'] .= "\n<em>Errata'd.</em>";
-                    }
+                    $data['errataed'] = array_key_exists('errata', $item) && !empty($item['errata']);
                     if (array_key_exists('imageUrl', $item)) {
                         $data['image_url'] = $item['imageUrl'];
                     }
@@ -285,7 +282,8 @@ class ImportStdCommand extends Command
                             'flavor',
                             'is_loyal',
                             'is_unique',
-                            'is_multiple'
+                            'is_multiple',
+                            'errataed',
                         ],
                         [
                             'faction_code',

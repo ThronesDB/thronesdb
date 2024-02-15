@@ -474,6 +474,8 @@ card:
     plotlimit: Límite por mazo
     quantity: Cantidad
     illustrator: Ilustrador
+    errataed_short: Fe de erratas.
+    errataed_long: Esta tarjeta ha sido erratada de su impresión original. Consulte las <a href='%url%'>Preguntas frecuentes</a> para obtener más detalles.
     short:
       costgold: C.
       strini: Fu.

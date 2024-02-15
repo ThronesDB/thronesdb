@@ -476,6 +476,8 @@ card:
     plotlimit: Plot deck limit
     quantity: Quantity
     illustrator: Illustrator
+    errataed_short: Errata'ed.
+    errataed_long: This card has been errata'ed from its original print. Please see the <a href='%url%'>FAQ</a> for details.
     short:
       costgold: C.
       strini: S.
