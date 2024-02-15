@@ -12,6 +12,14 @@ body {
     border-bottom: none;
 }
 
+.card-errata-long {
+    font-weight: bold;
+}
+
+.card-errata-short {
+    font-style: italic;
+}
+
 .card-name {
     font-family: 'Julius Sans One', sans-serif;
     font-weight: 700;
