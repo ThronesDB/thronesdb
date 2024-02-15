@@ -29,8 +29,13 @@
         var info = '<div class="card-faction">' + app.format.faction(card) + '</div>'
           + '<div class="card-info">' + app.format.info(card) + '</div>'
           + '<div class="card-traits">' + app.format.traits(card) + '</div>'
-          + '<div class="card-text border-' + card.faction_code + '">' + app.format.text(card) + '</div>'
-          + '<div class="card-pack">' + app.format.pack(card) + '</div>';
+          + '<div class="card-text border-' + card.faction_code + '">' + app.format.text(card) + '</div>';
+
+        if (card.errataed) {
+            info += '<div class="card-errata-short">' +  Translator.trans('card.info.errataed_short')  + '</div>';
+        }
+
+        info += '<div class="card-pack">' + app.format.pack(card) + '</div>';
 
         if (card.work_in_progress) {
             info = '<div class="alert alert-danger">' +  Translator.trans('card.info.workInProgress')  + '</div>' + info;
