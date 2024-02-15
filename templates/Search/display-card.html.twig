@@ -29,9 +29,15 @@
                                     {% include 'Search/card-pack.html.twig' %}
                                 </div>
                             </div>
+                            {% if card.errataed %}
+                                <p>
+                                    <strong>{{ "card.info.errataed_long" | trans({"%url%":  path("faq", {"_fragment": "Card_Errata"})}) | raw }}</strong>
+                                </p>
+                            {% endif %}
                             <p>Link:
                                 <a href="{{ path('decklists_list',{type:'find',_locale:app.request.locale,'cards[]':card.code}) }}">Decklists</a>
                             </p>
+
                         </div>
                     </div>
                     <div class="col-sm-5" style="margin-bottom:2em">
