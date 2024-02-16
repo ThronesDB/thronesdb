@@ -34,3 +34,4 @@
 
 #ignore output dir of HTMLPurifier
 /src/URI
+.DS_Store
