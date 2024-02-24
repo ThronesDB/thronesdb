@@ -660,4 +660,53 @@ abbr.legality.banned {
     padding: .5rem;
 }
 
+/** Search Syntax Page **/
+
+/* Panel list control panel */
+.panel-list .row {
+    margin: 0 0 16px 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+.panel-list .panel-search {
+    flex-grow: 0;
+    order: 1;
+    width: 100%;
+    padding-top: 12px;
+}
+.panel-list .show-all, .panel-list .hide-all {
+    flex: auto;
+    flex-grow: 2;
+}
+.panel-list .hide-all {
+    margin-left: 12px;
+}
+.panel-dropdown, .panel-dropdown button, .panel-dropdown .dropdown-menu {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .panel-list .row > * {
+        margin: 0;
+    }
+    .panel-list .hide-all, .panel-list .show-all {
+        flex: none;
+    }
+    .panel-list .panel-search {
+        flex-grow: 1;
+        order: 0;
+        width: unset;
+        padding: 0;
+    }
+    .panel-list .panel-search:not(:first-child) { /* when surrounded by buttons */
+        padding: 0 12px;
+    }
+    .panel-dropdown {
+        padding-left: 12px;
+    }
+    .panel-dropdown, .panel-dropdown button, .panel-dropdown .dropdown-menu {
+        width: unset;
+    }
+}
+
 

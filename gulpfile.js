@@ -89,7 +89,8 @@ function copyPageSpecificJs (cb) {
     'assets/js/ui.decks.js',
     'assets/js/ui.decklist_edit.js',
     'assets/js/ui.decklist.js',
-    'assets/js/ui.decklist_search.js'
+    'assets/js/ui.decklist_search.js',
+    'assets/js/panels.js'
   ], { base: 'assets' })
     .pipe(dest('public'))
     .pipe(rev())
