@@ -75,12 +75,18 @@
                         <li class="dropdown hidden-xs hidden-lg">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-expanded="false"><span class="fas fa-search"></span></a>
-                            <div class="dropdown-menu">
-                                <form action="{{ path('cards_find') }}">
-                                    <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}"
-                                           class="form-control smart-filter-help" name="q">
-                                </form>
-                            </div>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <form action="{{ path('cards_find') }}">
+                                        <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}"
+                                               class="form-control smart-filter-help" name="q">
+                                    </form>
+                                </li>
+                                <li><a href="">{{ 'nav.syntax' | trans }}</a></li>
+                            </ul>
+                        </li>
+                        <li class="hidden-xs hidden-sm hidden-md hidden-lg">
+                            <a href="{{ path('syntax') }}">{{ 'nav.syntax' | trans }}</a>
                         </li>
                         <li id="login">
                             <a href="#" class="disabled"><span class="fas fa-user"></span></a>
@@ -108,9 +114,16 @@
                     </ul>
                     <form class="navbar-form navbar-right visible-lg-block visible-xs-block external"
                           action="{{ path('cards_find') }}">
-                        <div class="form-group">
+                        <div class="input-group">
                             <input type="text" placeholder="{{ 'nav.cardsearch' | trans }}"
                                    class="form-control smart-filter-help" name="q">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-info"><span class="fas fa-search"></span></button>
+                            </span>
+                            <span class="input-group-btn">
+                                <a class="btn btn-link" href="{{ path('syntax') }}">{{ 'nav.syntax' | trans }}</a>
+                            </span>
+
                         </div>
                     </form>
                 </div><!--/.navbar-collapse -->
