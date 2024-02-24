@@ -150,6 +150,30 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/syntax", name="syntax", methods={"GET"})
+     * @param int $cacheExpiration
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
+    public function syntaxAction(int $cacheExpiration, TranslatorInterface $translator): Response
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($cacheExpiration);
+
+        $page = $this->renderView(
+            'Default/syntax.html.twig',
+            [
+                "pagetitle" => $translator->trans("nav.syntax"),
+                "pagedescription" => "ThronesDB Search Syntax documentation",
+            ]
+        );
+        $response->setContent($page);
+
+        return $response;
+    }
+
+    /**
      * @Route("/tournamentregulations", name="tournamentregulations", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
