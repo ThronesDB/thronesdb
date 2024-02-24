@@ -1,420 +1,650 @@
-{% extends '/layout.html.twig' %}
-
-{% block title %}ThronesDB Search Syntax{% endblock %}
+{% extends 'base.html.twig' %}
+{% import "macros.html.twig" as macros %}
 
 {% block body %}
-{% include '/Scripts/api.html.twig' %}
-{% include '/Scripts/panels.html.twig' %}
-<div class="container">
-
-  <h1>{{ block('title') }}</h1>
-
-  <ul>
-    <li>a search query is a series of one or more <b>conditions</b> separated by one or more spaces:</li>
-    <ul>
-      <li><code>condition1 condition2 condition3</code> – <em>gets all cards that meet the requirements of all three conditions</em></li>
-    </ul>
-    <li>each <b>condition</b> must be some or all of the name of a card, the ID code for a card, or a criteria search:</li>
-    <ul>
-      <li><code>viper</code> – <em>gets all cards with "viper" in their name</em></li>
-      <li><code>01109</code> – <em>gets the card with code "01109"</em></li>
-      <li><code>x:win</code> – <em>gets all cards with "win" in their ability text (see below for the full list of accepted criteria)</em></li>
-    </ul>
-    <li>additionally you can combine <b>conditions</b> with a pipe (<code>|</code>) which acts as an "or" (logical) operator:</li>
-    <ul>
-      <li><code>viper|01109|x:win</code> – <em>gets any card with "viper" in its name, the code "01109", or with "win" in its text</em></li>
-    </ul>
-    <li>Note that <b>conditions</b> containing spaces must be surrounded with quotation marks:</li>
-    <ul>
-      <li><code>"red viper"|01109|x:"win a challenge"</code></li>
-    </ul>
-  </ul>
-
-  <hr>
-
-  <h2>Syntax</h2>
-  <p>This is an overview of the available operands and operators you can use to search for cards.</p>
-
-  <div class="panel-parent">
-    <div class="syntax-panel">
-      <h3 class="header">Accepted operands</h3>
-      <h4 class="subheader">You can use these to search for cards with specific properties. Note that if you do not use any operand you can search by title (or its part) by default.</h4>
-      <div class="body row">
+  <div class="main white container" id="syntax">
+    {% include 'alerts.html.twig' %}
+    <div class="row">
+      <div class="col-md-12">
+        <div class="page-header">
+          <h1>ThronesDB Search Syntax</h1>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
         <ul>
-          <!-- <li><code>b</code> – apply restricted list <em>(not available in deckbuilding)</em></li> -->
-          <li><code>x</code> – text</li>
-          <li><code>a</code> – flavor</li>
-          <li><code>f</code> – faction</li>
-          <li><code>l</code> – is loyal</li>
-          <li><code>m</code> – has military icon</li>
-          <li><code>g</code> – has intrigue icon</li>
-          <li><code>p</code> – has power icon</li>
-          <li><code>s</code> – strength</li>
-          <li><code>t</code> – card type</li>
-          <li><code>k</code> – traits</li>
-          <li><code>u</code> – is unique</li>
-          <li><code>o</code> – cost</li>
-          <li><code>n</code> – income</li>
-          <li><code>v</code> – initiative</li>
-          <li><code>b</code> – claim</li>
-          <li><code>h</code> – reserve</li>
-          <li><code>i</code> – illustrator</li>
-          <li><code>d</code> – designer</li>
-          <li><code>e</code> – pack code</li>
-          <li><code>c</code> – cycle number</li>
-          <li><code>y</code> – quantity</li>
+          <li>a search query is a series of one or more <b>conditions</b> separated by one or more spaces:
+            <ul>
+              <li><code>condition1 condition2 condition3</code> – <em>gets all cards that meet the requirements of all three conditions</em></li>
+            </ul>
+          </li>
+          <li>each <b>condition</b> must be some or all of the name of a card, the ID code for a card, or a criteria search:
+            <ul>
+              <li><code>viper</code> – <em>gets all cards with "viper" in their name</em></li>
+              <li><code>01109</code> – <em>gets the card with code "01109"</em></li>
+              <li><code>x:win</code> – <em>gets all cards with "win" in their ability text (see below for the full list of accepted criteria)</em></li>
+            </ul>
+          </li>
+          <li>additionally you can combine <b>conditions</b> with a pipe (<code>|</code>) which acts as an "or" (logical) operator:
+            <ul>
+              <li><code>viper|01109|x:win</code> – <em>gets any card with "viper" in its name, the code "01109", or with "win" in its text</em></li>
+            </ul>
+          </li>
+          <li>Note that <b>conditions</b> containing spaces must be surrounded with quotation marks:
+            <ul>
+              <li><code>"red viper"|01109|x:"win a challenge"</code></li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Syntax</h2>
+        <p>This is an overview of the available operands and operators you can use to search for cards.</p>
+        <div class="panel-parent">
+          <div class="syntax-panel">
+            <h3 class="header">Accepted operands</h3>
+            <h4 class="subheader">You can use these to search for cards with specific properties. Note that if you do not use any operand you can search by title (or its part) by default.</h4>
+            <div class="body row">
+              <ul>
+                <!-- <li><code>b</code> – apply restricted list <em>(not available in deckbuilding)</em></li> -->
+                <li><code>x</code> – text</li>
+                <li><code>a</code> – flavor</li>
+                <li><code>f</code> – faction</li>
+                <li><code>l</code> – is loyal</li>
+                <li><code>m</code> – has military icon</li>
+                <li><code>g</code> – has intrigue icon</li>
+                <li><code>p</code> – has power icon</li>
+                <li><code>s</code> – strength</li>
+                <li><code>t</code> – card type</li>
+                <li><code>k</code> – traits</li>
+                <li><code>u</code> – is unique</li>
+                <li><code>o</code> – cost</li>
+                <li><code>n</code> – income</li>
+                <li><code>v</code> – initiative</li>
+                <li><code>b</code> – claim</li>
+                <li><code>h</code> – reserve</li>
+                <li><code>i</code> – illustrator</li>
+                <li><code>d</code> – designer</li>
+                <li><code>e</code> – pack code</li>
+                <li><code>c</code> – cycle number</li>
+                <li><code>y</code> – quantity</li>
+              </ul>
+            </div>
+          </div>
+          <div class="syntax-panel">
+            <h3 class="header">Accepted operators</h3>
+            <h4 class="subheader">These specify whether you want to find cards that match your search query or don't match it</h4>
+            <div class="body row">
+              <ul>
+                <li><code>:</code> – equals</li>
+                <li><code>!</code> – different from</li>
+                <li><code>&lt;</code> – less than (numeric values only); "-" value (e.g. in card's cost) is handled as &lt;0</li>
+                <li><code>&gt;</code> – more than (numeric values only); "x" value (e.g. in card's cost) is handled as "infinite" cost</li>
+              </ul>
+            </div>
+          </div>
+          <div class="syntax-panel">
+            <h3 class="header">Some examples</h3>
+            <div class="body row">
+              <ul>
+                <li><code>Stark</code> <!--or <code>q:test</code>--> searches for cards "Stark" in their title</li>
+                <!--<li><code>q:a q!b</code> searches for cards with "a" in their title but not "b"</li>-->
+                <li><code>t:event</code> searches for all Events</li>
+                <li><code>t:event k:song</code> searches for every Event that has the trait Song</li>
+                <li><code>x:"win a challenge"</code> searches for all cards with the text "win a challenge"</li>
+                <li><code>t:location|attachment f:neutral</code> searches for all Neutral cards that are Locations or Events</li>
+                <li><code>f:tyrell|martell o&lt;2</code> searches for all Tyrell or Martell cards with cost less than 2</li>
+                <li><code>t:attachment k!condition|title|"The Seven"</code> searches for all Attachments that are not Condition, Title or The Seven</li>
+                <li><code>f:lannister l:0</code> searches for all Lannister non-loyal cards</li>
+                <li><code>x:"win a [power] challenge"</code> returns all the cards with "win a POWER challenge" text where POWER is icon (same works for faction icons)</li>
+                <li><code>t:plot k!kingdom|edict n>5</code> searches for all Plots that are neither Kingdom nor Edict and have income greater than 5</li>
+                <li><code>t:plot k:Scheme x:"When Revealed"</code> searches for all Scheme Plot cards with When Revealed effect</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <h2>Operands</h2>
+        <p>This section goes into further detail on each operand.</p>
 
-    <div class="syntax-panel">
-      <h3 class="header">Accepted operators</h3>
-      <h4 class="subheader">These specify whether you want to find cards that match your search query or don't match it</h4>
-      <div class="body row">
-        <ul>
-          <li><code>:</code> – equals</li>
-          <li><code>!</code> – different from</li>
-          <li><code>&lt;</code> – less than (numeric values only); "-" value (e.g. in card's cost) is handled as &lt;0</li>
-          <li><code>&gt;</code> – more than (numeric values only); "x" value (e.g. in card's cost) is handled as "infinite" cost</li>
-        </ul>
-      </div>
-    </div>
+        <div class="panel-parent">
+          <div class="syntax-panel">
+            <h3 class="header">Text (<code>x</code>)</h3>
+            <h4 class="subheader">Searching based on card's text</h4>
+            <div class="body row">
+              <p>This operand searches for a substring in a card's text.</p>
+              <p>It is possible to include Faction and Challenge icons in search using square brackets e.g. [martell], [power], etc..</p>
+              <ul>
+                <li><code>x:"take control"</code> – gets all cards with "take control in it"</li>
+                <li><code>x:"interrupt:" x:killed</code> – gets cards with Interrupt to being killed</li>
+                <li><code>x:king x!attacking|kingdom|kings</code> – gets (mostly) cards that interact with King trait</li>
+              </ul>
+            </div>
+          </div>
+          <div class="syntax-panel">
+            <h3 class="header">Flavor (<code>a</code>)</h3>
+            <h4 class="subheader">Searching based card's flavor text</h4>
+            <div class="body row">
+              <p>This operand searches for a substring in a card's flavor text.</p>
+              <ul>
+                <li><code>a:"always tells"</code> – gets all cards with "always tells" text</li>
+                <li><code>a:"tywin lannister"</code> – gets all cards where Tywin Lannister is author or is mentioned in text</li>
+                <li><code>a:night a!knight|"night's"</code> – gets all cards mentioning Night in their text (excluding Knight and Night's)</li>
+              </ul>
+            </div>
+          </div>
 
-    <div class="syntax-panel">
-      <h3 class="header">Some examples</h3>
-      <div class="body row">
-        <ul>
-          <li><code>Stark</code> <!--or <code>q:test</code>--> searches for cards "Stark" in their title</li>
-          <!--<li><code>q:a q!b</code> searches for cards with "a" in their title but not "b"</li>-->
-          <li><code>t:event</code> searches for all Events</li>
-          <li><code>t:event k:song</code> searches for every Event that has the trait Song</li>
-          <li><code>x:"win a challenge"</code> searches for all cards with the text "win a challenge"</li>
-          <li><code>t:location|attachment f:neutral</code> searches for all Neutral cards that are Locations or Events</li>
-          <li><code>f:tyrell|martell o&lt;2</code> searches for all Tyrell or Martell cards with cost less than 2</li>
-          <li><code>t:attachment k!condition|title|"The Seven"</code> searches for all Attachments that are not Condition, Title or The Seven</li>
-          <li><code>f:lannister l:0</code> searches for all Lannister non-loyal cards</li>
-          <li><code>x:"win a [power] challenge"</code> returns all the cards with "win a POWER challenge" text where POWER is icon (same works for faction icons)</li>
-          <li><code>t:plot k!kingdom|edict n>5</code> searches for all Plots that are neither Kingdom nor Edict and have income greater than 5</li>
-          <li><code>t:plot k:Scheme x:"When Revealed"</code> searches for all Scheme Plot cards with When Revealed effect</li>        
-        </ul>
+          <div class="syntax-panel">
+            <h3 class="header">Faction (<code>f</code>)</h3>
+            <h4 class="subheader">Searching based on faction</h4>
+            <div class="body row">
+              <p>This operand searches for a card's faction.</p>
+              <p>Neutral cards can be searched using <b>"neutral"</b> string.</p>
+              <p>Note that you have to use <b>"thenightswatch"</b> string instead of "The Night's Watch".</p>
+              <ul>
+                <li><code>f:"thenightswatch"</code> – gets all The Night's Watch cards</li>
+                <li><code>f:neutral|martell</code> – gets all Neutral and Martell cards</li>
+                <li><code>f!neutral|martell|thenightswatch</code> – gets all cards that are not from Neutral, Martell and The Night's Watch factions</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Loyalty (<code>l</code>)</h3>
+            <h4 class="subheader">Searching based on whether the card is loyal or not</h4>
+            <div class="body row">
+              <p>This operand searches for cards based on their loyalty (usually useful in combination with faction).</p>
+              <p>It works as a "flag" (the card either loyal or not).</p>
+              <ul>
+                <li><code>l:1</code> – gets all loyal cards</li>
+                <li><code>l:0</code> – gets all non-loyal cards</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Military Icon (<code>m</code>)</h3>
+            <h4 class="subheader">Searching based on whether the card has Military icon or not</h4>
+            <div class="body row">
+              <p>This operand searches for cards that either have or do not have Military icon.</p>
+              <p>It works as a "flag" (the card either has or has not the icon).</p>
+              <ul>
+                <li><code>m:1</code> – gets all cards having given icon</li>
+                <li><code>m:0</code> – gets all cards not having given icon</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Intrigue Icon (<code>g</code>)</h3>
+            <h4 class="subheader">Searching based on whether the card has Intrigue icon or not</h4>
+            <div class="body row">
+              <p>This operand searches for cards that either have or do not have Intrigue icon.</p>
+              <p>It works as a "flag" (the card either has or has not the icon).</p>
+              <ul>
+                <li><code>g:1</code> – gets all cards having given icon</li>
+                <li><code>g:0</code> – gets all cards not having given icon</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Power Icon (<code>p</code>)</h3>
+            <h4 class="subheader">Searching based on whether the card has Power icon or not</h4>
+            <div class="body row">
+              <p>This operand searches for cards that either have or do not have Power icon.</p>
+              <p>It works as a "flag" (the card either has or has not the icon).</p>
+              <ul>
+                <li><code>p:1</code> – gets all cards having given icon</li>
+                <li><code>p:0</code> – gets all cards not having given icon</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Strength (<code>s</code>)</h3>
+            <h4 class="subheader">Searching based on card's Strength</h4>
+            <div class="body row">
+              <p>This operand searches for cards based on their Strength.</p>
+              <p>Using this operand will filter out cards that do not have any strength (in other words it filters out all card types but characters).</p>
+              <ul>
+                <li><code>s:5</code> – gets all cards with Strength 5</li>
+                <li><code>s&gt;5</code> – gets all cards with Strength more than 5</li>
+                <li><code>s!1</code> – gets all cards with Strength not equal 1</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Card Type (<code>t</code>)</h3>
+            <h4 class="subheader">Searching based on card type</h4>
+            <div class="body row">
+              <p>This operand searches for a specific card type.</p>
+              <ul>
+                <li><code>t:character</code> – gets all Character cards</li>
+                <li><code>t!character</code> – gets all Non-character cards</li>
+                <li><code>t:location|attachment</code> – gets all Location and Attachment cards</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Traits (<code>k</code>)</h3>
+            <h4 class="subheader">Searching based on card's traits</h4>
+            <div class="body row">
+              <p>This operand searches for a specific trait(s).</p>
+              <ul>
+                <li><code>k:army k:knight</code> – gets all cards that have both Army and Knight traits</li>
+                <li><code>k:lord|knight</code> – gets all cards that have either Lord or Knight trait (or both)</li>
+                <li><code>k:army k!knight</code> – gets all cards that have Army trait, but do not have Knight trait</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Unique card (<code>u</code>)</h3>
+            <h4 class="subheader">Searching based on whether the card is Unique or not</h4>
+            <div class="body row">
+              <p>This operand searches filters the unique and non unique cards.</p>
+              <p>It works as a "flag" (the card either is or is not unique).</p>
+              <ul>
+                <li><code>u:1</code> – gets all Unique cards</li>
+                <li><code>u:0</code> – gets all Non-Unique cards</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Cost (<code>o</code>)</h3>
+            <h4 class="subheader">Searching based on card's cost</h4>
+            <div class="body row">
+              <p>This operand searches for given card's cost.</p>
+              <p>You can search for "-" and "x" cost as well (either directly or indirectly, see examples).</p>
+              <p>Cost "-" is considered to be lower then 0 and "x" is considered to be greater than any real number.</p>
+              <p>Using this operand will automatically filter out cards that do not have any cost by default (e.g. agendas, plots, titles).</p>
+              <ul>
+                <li><code>o:8</code> – gets all 8-cost cards</li>
+                <li><code>o&gt;5</code> – gets all cards that cost more than 5 (including "x")</li>
+                <li><code>o&lt;1 </code> – gets all events that cost less than 1 (including "-")</li>
+                <li><code>o:-</code> – gets all "-"-cost cards</li>
+                <li><code>o:x</code> – gets all "x"-cost cards</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Income currently does not work with "x value"-->
+          <div class="syntax-panel">
+            <h3 class="header">Income (<code>n</code>)</h3>
+            <h4 class="subheader">Searching based on card's income</h4>
+            <div class="body row">
+              <p>This operand searches for given card's income.</p>
+              <p>You can search "x" income as well (either directly or indirectly, see examples).</p>
+              <p>Cost "x" is considered to be greater than any real number.</p>
+              <p>Using this operand will automatically filter out cards that do not have any income by default (e.g. events, characters, locations).</p>
+              <ul>
+                <li><code>n:10</code> – gets all income 10 cards</li>
+                <li><code>n&gt;6</code> – gets all cards that have income more than 6 (including "x")</li>
+                <li><code>n&lt;2 </code> – gets all events that have income less than 2</li>
+                <li><code>n:x</code> – gets all income "x" cards</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Initiative (<code>v</code>)</h3>
+            <h4 class="subheader">Searching based on card's initiative</h4>
+            <div class="body row">
+              <p>This operand searches for given card's initiative.</p>
+              <p>Using this operand will automatically filter out cards that do not have any initiative by default (e.g. events, characters, locations).</p>
+              <ul>
+                <li><code>v:2</code> – gets all cards with initiative 2 </li>
+                <li><code>v&gt;6</code> – gets all cards with initiative more than 6</li>
+                <li><code>v&lt;2 </code> – gets all cards with initiative less than 2</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Claim (<code>b</code>)</h3>
+            <h4 class="subheader">Searching based on card's claim</h4>
+            <div class="body row">
+              <p>This operand searches for given card's claim.</p>
+              <p>Using this operand will automatically filter out cards that do not have any claim by default (e.g. events, characters, locations).</p>
+              <ul>
+                <li><code>b!2</code> – gets all cards with claim not 2 </li>
+                <li><code>b&gt;1</code> – gets all cards with claim more than 1</li>
+                <li><code>b&lt;1 </code> – gets all cards with claim less than 1</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Reserve (<code>h</code>)</h3>
+            <h4 class="subheader">Searching based on card's reserve</h4>
+            <div class="body row">
+              <p>This operand searches for given card's reserve.</p>
+              <p>Using this operand will automatically filter out cards that do not have any reserve by default (e.g. events, characters, locations).</p>
+              <ul>
+                <li><code>h!0</code> – gets all cards with reserve not 0 </li>
+                <li><code>h&gt;6</code> – gets all cards with reserve more than 6</li>
+                <li><code>h&lt;5 </code> – gets all cards with reserve less than 5</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Illustrator (<code>i</code>)</h3>
+            <h4 class="subheader">Searching based on illustrator</h4>
+            <div class="body row">
+              <p>This operand searches for cards illustrated by a given artist.</p>
+              <ul>
+                <li><code>i:"Kate Burmak"</code> – gets all cards illustrated by Kate Burmak</li>
+                <li><code>i!"Kate Burmak"</code> – gets all cards not illustrated by Kate Burmak</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Designer (<code>d</code>)</h3>
+            <h4 class="subheader">Searching based on designer</h4>
+            <div class="body row">
+              <p>This operand searches for cards with "Card Design By..." text on them.</p>
+              <ul>
+                <li><code>d:"2003 World Champion"</code> – gets all cards designed by 2003 World Champion</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Pack Code (<code>e</code>)</h3>
+            <h4 class="subheader">Searching based on pack code</h4>
+            <div class="body row">
+              <p>This operand searches for cards released in specific pack(s) (using the pack code rather than full name).</p>
+              <ul>
+                <li><code>e:atg|cos</code> – gets all cards from At the Gates and City of Secrets packs</li>
+                <li><code>e!vds</code> – exclude Valyrian Draft Set cards from the search</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Cycle Number (<code>c</code>)</h3>
+            <h4 class="subheader">Searching based on cycle number</h4>
+            <div class="body row">
+              <p>This operand searches for cards released in specific cycle(s) (using the cycle number you can see on the cards page next to the pack name).</p>
+              <ul>
+                <li><code>c:18</code> – gets all cards from cycle 18 (Redesigns)</li>
+                <li><code>c:3</code> – gets all cards from cycle 3 (Westeros Cycle)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Quantity printed in set (<code>y</code>)</h3>
+            <h4 class="subheader">Searching based on the quantity of each card printed in its set</h4>
+            <div class="body row">
+              <p>This operand finds all cards that were printed in a given quantity in any set they were released in.</p>
+              <p>For most cards this value is 3.</p>
+              <ul>
+                <li><code>y:3</code> – gets all cards that were printed in a group of 3 copies</li>
+                <li><code>y!3</code> – gets all cards that were not printed in a group of 3 copies</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+{% endblock %}
+{% block javascripts %}
+  <script type="text/javascript">
+    // the following code has been copied from NRDB's codebase (https://NetrunnerDB/netrunnerdb)
+    // and modified to work with ThronesDB
 
-  <hr>
-
-  <h2>Operands</h2>
-  <p>This section goes into further detail on each operand.</p>
-
-  <div class="panel-parent">
-    <div class="syntax-panel">
-      <h3 class="header">Text (<code>x</code>)</h3>
-      <h4 class="subheader">Searching based on card's text</h4>
-      <div class="body row">
-        <p>This operand searches for a substring in a card's text.</p>
-        <p>It is possible to include Faction and Challenge icons in search using square brackets e.g. [martell], [power], etc..</p>
-        <ul>
-          <li><code>x:"take control"</code> – gets all cards with "take control in it"</li>
-          <li><code>x:"interrupt:" x:killed</code> – gets cards with Interrupt to being killed</li>
-          <li><code>x:king x!attacking|kingdom|kings</code> – gets (mostly) cards that interact with King trait</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Flavor (<code>a</code>)</h3>
-      <h4 class="subheader">Searching based card's flavor text</h4>
-      <div class="body row">
-        <p>This operand searches for a substring in a card's flavor text.</p>
-        <ul>
-          <li><code>a:"always tells"</code> – gets all cards with "always tells" text</li>
-          <li><code>a:"tywin lannister"</code> – gets all cards where Tywin Lannister is author or is mentioned in text</li>
-          <li><code>a:night a!knight|"night's"</code> – gets all cards mentioning Night in their text (excluding Knight and Night's)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Faction (<code>f</code>)</h3>
-      <h4 class="subheader">Searching based on faction</h4>
-      <div class="body row">
-        <p>This operand searches for a card's faction.</p>
-        <p>Neutral cards can be searched using <b>"neutral"</b> string.</p>
-        <p>Note that you have to use <b>"thenightswatch"</b> string instead of "The Night's Watch".</p>
-        <ul>
-          <li><code>f:"thenightswatch"</code> – gets all The Night's Watch cards</li>
-          <li><code>f:neutral|martell</code> – gets all Neutral and Martell cards</li>
-          <li><code>f!neutral|martell|thenightswatch</code> – gets all cards that are not from Neutral, Martell and The Night's Watch factions</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Loyalty (<code>l</code>)</h3>
-      <h4 class="subheader">Searching based on whether the card is loyal or not</h4>
-      <div class="body row">
-        <p>This operand searches for cards based on their loyalty (usually useful in combination with faction).</p>
-        <p>It works as a "flag" (the card either loyal or not).</p>
-        <ul>
-          <li><code>l:1</code> – gets all loyal cards</li>
-          <li><code>l:0</code> – gets all non-loyal cards</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Military Icon (<code>m</code>)</h3>
-      <h4 class="subheader">Searching based on whether the card has Military icon or not</h4>
-      <div class="body row">
-        <p>This operand searches for cards that either have or do not have Military icon.</p>
-        <p>It works as a "flag" (the card either has or has not the icon).</p>
-        <ul>
-          <li><code>m:1</code> – gets all cards having given icon</li>
-          <li><code>m:0</code> – gets all cards not having given icon</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Intrigue Icon (<code>g</code>)</h3>
-      <h4 class="subheader">Searching based on whether the card has Intrigue icon or not</h4>
-      <div class="body row">
-        <p>This operand searches for cards that either have or do not have Intrigue icon.</p>
-        <p>It works as a "flag" (the card either has or has not the icon).</p>
-        <ul>
-          <li><code>g:1</code> – gets all cards having given icon</li>
-          <li><code>g:0</code> – gets all cards not having given icon</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Power Icon (<code>p</code>)</h3>
-      <h4 class="subheader">Searching based on whether the card has Power icon or not</h4>
-      <div class="body row">
-        <p>This operand searches for cards that either have or do not have Power icon.</p>
-        <p>It works as a "flag" (the card either has or has not the icon).</p>
-        <ul>
-          <li><code>p:1</code> – gets all cards having given icon</li>
-          <li><code>p:0</code> – gets all cards not having given icon</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Strength (<code>s</code>)</h3>
-      <h4 class="subheader">Searching based on card's Strength</h4>
-      <div class="body row">
-        <p>This operand searches for cards based on their Strength.</p>
-        <p>Using this operand will filter out cards that do not have any strength (in other words it filters out all card types but characters).</p>
-        <ul>
-          <li><code>s:5</code> – gets all cards with Strength 5</li>
-          <li><code>s&gt;5</code> – gets all cards with Strength more than 5</li>
-          <li><code>s!1</code> – gets all cards with Strength not equal 1</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Card Type (<code>t</code>)</h3>
-      <h4 class="subheader">Searching based on card type</h4>
-      <div class="body row">
-        <p>This operand searches for a specific card type.</p>
-        <ul>
-          <li><code>t:character</code> – gets all Character cards</li>
-          <li><code>t!character</code> – gets all Non-character cards</li>
-          <li><code>t:location|attachment</code> – gets all Location and Attachment cards</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Traits (<code>k</code>)</h3>
-      <h4 class="subheader">Searching based on card's traits</h4>
-      <div class="body row">
-        <p>This operand searches for a specific trait(s).</p>
-        <ul>
-          <li><code>k:army k:knight</code> – gets all cards that have both Army and Knight traits</li>
-          <li><code>k:lord|knight</code> – gets all cards that have either Lord or Knight trait (or both)</li>
-          <li><code>k:army k!knight</code> – gets all cards that have Army trait, but do not have Knight trait</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Unique card (<code>u</code>)</h3>
-      <h4 class="subheader">Searching based on whether the card is Unique or not</h4>
-      <div class="body row">
-        <p>This operand searches filters the unique and non unique cards.</p>
-        <p>It works as a "flag" (the card either is or is not unique).</p>
-        <ul>
-          <li><code>u:1</code> – gets all Unique cards</li>
-          <li><code>u:0</code> – gets all Non-Unique cards</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Cost (<code>o</code>)</h3>
-      <h4 class="subheader">Searching based on card's cost</h4>
-      <div class="body row">
-        <p>This operand searches for given card's cost.</p>
-        <p>You can search for "-" and "x" cost as well (either directly or indirectly, see examples).</p>
-        <p>Cost "-" is considered to be lower then 0 and "x" is considered to be greater than any real number.</p>
-        <p>Using this operand will automatically filter out cards that do not have any cost by default (e.g. agendas, plots, titles).</p>
-        <ul>
-          <li><code>o:8</code> – gets all 8-cost cards</li>
-          <li><code>o&gt;5</code> – gets all cards that cost more than 5 (including "x")</li>
-          <li><code>o&lt;1 </code> – gets all events that cost less than 1 (including "-")</li>
-          <li><code>o:-</code> – gets all "-"-cost cards</li>
-          <li><code>o:x</code> – gets all "x"-cost cards</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Income currently does not work with "x value"-->
-    <div class="syntax-panel">
-      <h3 class="header">Income (<code>n</code>)</h3>
-      <h4 class="subheader">Searching based on card's income</h4>
-      <div class="body row">
-        <p>This operand searches for given card's income.</p>
-        <p>You can search "x" income as well (either directly or indirectly, see examples).</p>
-        <p>Cost "x" is considered to be greater than any real number.</p>
-        <p>Using this operand will automatically filter out cards that do not have any income by default (e.g. events, characters, locations).</p>
-        <ul>
-          <li><code>n:10</code> – gets all income 10 cards</li>
-          <li><code>n&gt;6</code> – gets all cards that have income more than 6 (including "x")</li>
-          <li><code>n&lt;2 </code> – gets all events that have income less than 2</li>
-          <li><code>n:x</code> – gets all income "x" cards</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Initiative (<code>v</code>)</h3>
-      <h4 class="subheader">Searching based on card's initiative</h4>
-      <div class="body row">
-        <p>This operand searches for given card's initiative.</p>
-        <p>Using this operand will automatically filter out cards that do not have any initiative by default (e.g. events, characters, locations).</p>
-        <ul>
-          <li><code>v:2</code> – gets all cards with initiative 2 </li>
-          <li><code>v&gt;6</code> – gets all cards with initiative more than 6</li>
-          <li><code>v&lt;2 </code> – gets all cards with initiative less than 2</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Claim (<code>b</code>)</h3>
-      <h4 class="subheader">Searching based on card's claim</h4>
-      <div class="body row">
-        <p>This operand searches for given card's claim.</p>
-        <p>Using this operand will automatically filter out cards that do not have any claim by default (e.g. events, characters, locations).</p>
-        <ul>
-          <li><code>b!2</code> – gets all cards with claim not 2 </li>
-          <li><code>b&gt;1</code> – gets all cards with claim more than 1</li>
-          <li><code>b&lt;1 </code> – gets all cards with claim less than 1</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Reserve (<code>h</code>)</h3>
-      <h4 class="subheader">Searching based on card's reserve</h4>
-      <div class="body row">
-        <p>This operand searches for given card's reserve.</p>
-        <p>Using this operand will automatically filter out cards that do not have any reserve by default (e.g. events, characters, locations).</p>
-        <ul>
-          <li><code>h!0</code> – gets all cards with reserve not 0 </li>
-          <li><code>h&gt;6</code> – gets all cards with reserve more than 6</li>
-          <li><code>h&lt;5 </code> – gets all cards with reserve less than 5</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Illustrator (<code>i</code>)</h3>
-      <h4 class="subheader">Searching based on illustrator</h4>
-      <div class="body row">
-        <p>This operand searches for cards illustrated by a given artist.</p>
-        <ul>
-          <li><code>i:"Kate Burmak"</code> – gets all cards illustrated by Kate Burmak</li>
-          <li><code>i!"Kate Burmak"</code> – gets all cards not illustrated by Kate Burmak</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Designer (<code>d</code>)</h3>
-      <h4 class="subheader">Searching based on designer</h4>
-      <div class="body row">
-        <p>This operand searches for cards with "Card Design By..." text on them.</p>
-        <ul>
-          <li><code>d:"2003 World Champion"</code> – gets all cards designed by 2003 World Champion</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Pack Code (<code>e</code>)</h3>
-      <h4 class="subheader">Searching based on pack code</h4>
-      <div class="body row">
-        <p>This operand searches for cards released in specific pack(s) (using the pack code rather than full name).</p>
-        <ul>
-          <li><code>e:atg|cos</code> – gets all cards from At the Gates and City of Secrets packs</li>
-          <li><code>e!vds</code> – exclude Valyrian Draft Set cards from the search</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Cycle Number (<code>c</code>)</h3>
-      <h4 class="subheader">Searching based on cycle number</h4>
-      <div class="body row">
-        <p>This operand searches for cards released in specific cycle(s) (using the cycle number you can see on the cards page next to the pack name).</p>
-        <ul>
-          <li><code>c:18</code> – gets all cards from cycle 18 (Redesigns)</li>
-          <li><code>c:3</code> – gets all cards from cycle 3 (Westeros Cycle)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="syntax-panel">
-      <h3 class="header">Quantity printed in set (<code>y</code>)</h3>
-      <h4 class="subheader">Searching based on the quantity of each card printed in its set</h4>
-      <div class="body row">
-        <p>This operand finds all cards that were printed in a given quantity in any set they were released in.</p>
-        <p>For most cards this value is 3.</p>
-        <ul>
-          <li><code>y:3</code> – gets all cards that were printed in a group of 3 copies</li>
-          <li><code>y!3</code> – gets all cards that were not printed in a group of 3 copies</li>
-        </ul>
-      </div>
-    </div>
-
-<script>
-async function buildSyntaxView() {
-
-  // Rebuild each section with dynamic panels
-  $('.panel-parent').each(function(i) {
-    const panelList = new PanelList($(this), null, false, ...(i == 1 ? ["search", "toggle"] : [])); // The first one doesn't need toggles or searching
-
-    // Replace the static panels with dynamic ones
-    $(this).find('.syntax-panel').each(function(j) {
-      const panel = panelList.createPanel(`syntax-panel-${i}-${j}`, false);
-      panel.addHeader($(this).find('.header').html());
-      const subheader = $(this).find('.subheader').html();
-      if (subheader) {
-        panel.addSubheader(subheader);
+    /* An object representing the general purpose panels used across nrdb
+     * Assumes there will be at most one header, subheader, and body
+     * Attempting to add more will result in unintended duplication of content
+     * Hidden attributes:
+     * - exclusiveShow: bool - if true, hide all sibling panels when this is shown
+     */
+    class Panel {
+      static instances = new Map();
+      static get(id) {
+        return Panel.instances.get(id);
       }
-      panel.addBody().addBodyContent($(this).find('.body').html());
-      $(this).remove();
-    });
-  });
 
-}
+      constructor(parent, id, visible=true) {
+        this.parent = parent;
+        this.id = id;
+        this.visible = visible;
+        this.jqRef = parent.append(`<div id="${id}" class="panel panel-default"></div>`).find(`#${id}`);
+        Panel.instances.set(id, this);
+      }
 
-// Create the syntax view on load
-buildSyntaxView();
-</script>
+      addHeader(name) {
+        this.title = name;
+        this.header = this.jqRef.append(`<div class="header panel-heading" style="display: flex;"></div>`).find(`.header`);
+        this.header.append(`<h3 style="margin: 15px 0 10px 0">${name}</h3>`)
+                .append(`<button class="btn btn-secondary" style="margin-left:auto; margin-top: auto; margin-bottom: auto;">${this.visible ? 'Hide' : 'Show'}</button>`);
+        this.button = this.header.find('button');
+        const caller = this;
+        this.button.on('click', function() {caller.toggle(250);});
+        return this;
+      }
+
+      addSubheader(content) {
+        this.subtitle = content;
+        this.subheader = this.jqRef.append(`<div class="subheader panel-heading" ${this.visible ? '' : 'style="display: none;"'}>${content}</div>`).find('.subheader');
+        return this;
+      }
+
+      addBody() {
+        this.body = this.jqRef.append(`<div class="panel-body" ${this.visible ? '' : 'style="display: none;"'}>`).find('.panel-body');
+        return this;
+      }
+      addBodyContent(content) {
+        this.body.append(content);
+        return this;
+      }
+
+      show(duration=0) {
+        if (this.onShowFunc) {
+          this.onShowFunc();
+          this.onShowFunc = null;
+        }
+        if (this.exclusiveShow) {
+          this.parent.find('.panel').each(function() {
+            Panel.get($(this).attr('id')).hide(duration);
+          });
+        }
+        this.visible = true;
+        this.button.html('Hide');
+        this.subheader?.show(duration);
+        this.body?.show(duration);
+      }
+      hide(duration=0) {
+        this.visible = false;
+        this.button.html('Show');
+        this.subheader?.hide(duration);
+        this.body?.hide(duration);
+      }
+      toggle(duration=0) {
+        if (this.visible) {
+          this.hide(duration);
+        } else {
+          this.show(duration);
+        }
+      }
+
+      // Provides the panel a function to run the next time show() is called
+      // Assumes the panel is currently hidden
+      set onShow(f) {
+        this.onShowFunc = f;
+      }
+    }
+
+    // A container of panels
+    // id is optional
+    // controls specifies which controls to generate:
+    // - "toggle" - the show/hide all buttons
+    // - "search" - the search bar
+    // - "sort" - the sort dropdown
+    class PanelList {
+      constructor(parent, id=null, exclusiveShow=false, ...controls) {
+        this.panelList = parent.append(`<div ${id ? `id="${id}"` : ''} class="panel-list"></div>`).find('.panel-list');
+        this.panels = new Map();
+        this.exclusiveShow = exclusiveShow;
+        if (controls.length > 0) {
+          // Create control panel
+          this.row = this.panelList.append('<p class="row"></p>').find('.row');
+
+          // Get flags
+          const toggle = controls.includes("toggle");
+          const search = controls.includes("search");
+          const sort = controls.includes("sort");
+
+          // Add controls
+          if (toggle) { this.row.append('<button class="show-all btn btn-secondary">Show all</button>'); }
+          if (search) { this.row.append('<div class="panel-search"><input type="text" class="form-control" placeholder="Search..." aria-label="Search"></input></div>'); }
+          if (toggle) { this.row.append('<button class="hide-all col-md-1 col-sm-2 btn btn-secondary">Hide all</button>'); }
+          if (sort) {
+            this.row.append('<div class="panel-dropdown dropdown"><button class="dropdown-toggle btn" data-toggle="dropdown" role="button" aria-expanded="false">Sort <span class="caret"></span></button><ul class="dropdown-menu dropdown-menu-right" role="menu"></ul></div>');
+            this.sortDropdown = this.row.find('.dropdown-menu');
+          }
+
+          // Enable event handling
+          if (toggle) {
+            const panelList = this.panelList;
+            this.panelList.find('.show-all').on('click', function (event) {
+              const panels = panelList.find('.panel').each(function() {
+                Panel.get($(this).attr('id')).show();
+              });
+            });
+            this.panelList.find('.hide-all').on('click', function (event) {
+              const panels = panelList.find('.panel').each(function() {
+                Panel.get($(this).attr('id')).hide();
+              });
+            });
+          }
+          if (search) {
+            const panelList = this.panelList;
+            const inputField = this.panelList.find('.panel-search input');
+            inputField.on('keyup', function() {
+              const query = inputField.val().trim().toLowerCase();
+              panelList.find('.panel').each(function() {
+                if ($(this).find('.header').text().toLowerCase().includes(query)) {
+                  $(this).show();
+                } else {
+                  $(this).hide();
+                }
+              });
+            });
+          }
+        }
+      }
+
+      // Generate a Panel
+      // Expects the same arguments as Panel.constructor, excluding parent
+      createPanel(...args) {
+        const panel = new Panel(this.panelList, ...args);
+        panel.exclusiveShow = this.exclusiveShow;
+        this.panels.set(panel.id, panel);
+        return panel;
+      }
+
+      // Adds a sort option that sorts panels by passing them to valueFunc
+      static sortCount = 0;
+      addSortOption(desc, valueFunc, order="descending") {
+        const id = `sort-${PanelList.sortCount++}`;
+        const ascending = order == "ascending";
+        const caller = this;
+        this.sortDropdown.append(`<li><a href="#" onClick="return false;" id="${id}">${desc}</a></li>`);
+        this.sortDropdown.find(`#${id}`).on('click', function(event) {
+          event.stopPropagation();
+          caller.sortDropdown.dropdown("toggle");
+          $(caller.panelList.find('.panel').toArray().sort(function(a,b) {
+            const valA = valueFunc(caller.panels.get($(a).attr('id')));
+            const valB = valueFunc(caller.panels.get($(b).attr('id')));
+            const comp = ascending ? valA > valB : valA < valB;
+            return (valA == valB) ? 0 : comp ? 1 : -1;
+          })).each(function() {console.log($(this).find('h3').html());}).appendTo(caller.panelList);
+        });
+      }
+    }
+
+    (function buildSyntaxView($) {
+      // Rebuild each section with dynamic panels
+      $('.panel-parent').each(function(i) {
+          const panelList = new PanelList($(this), null, false, ...(i == 1 ? ["search", "toggle"] : [])); // The first one doesn't need toggles or searching
+
+        // Replace the static panels with dynamic ones
+        $(this).find('.syntax-panel').each(function(j) {
+          const panel = panelList.createPanel(`syntax-panel-${i}-${j}`, false);
+          panel.addHeader($(this).find('.header').html());
+          const subheader = $(this).find('.subheader').html();
+
+          if (subheader) {
+            panel.addSubheader(subheader);
+          }
+
+          panel.addBody().addBodyContent($(this).find('.body').html());
+          $(this).remove();
+        });
+      });
+    })(jQuery);
+  </script>
+
+  <style>
+    /* Panel list control panel */
+    .panel-list .row {
+      margin: 0 0 16px 0;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .panel-list .panel-search {
+      flex-grow: 0;
+      order: 1;
+      width: 100%;
+      padding-top: 12px;
+    }
+    .panel-list .show-all, .panel-list .hide-all {
+      flex: auto;
+      flex-grow: 2;
+    }
+    .panel-list .hide-all {
+      margin-left: 12px;
+    }
+    .panel-dropdown, .panel-dropdown button, .panel-dropdown .dropdown-menu {
+      width: 100%;
+    }
+
+    @media (min-width: 768px) {
+      .panel-list .row > * {
+        margin: 0;
+      }
+      .panel-list .hide-all, .panel-list .show-all {
+        flex: none;
+      }
+      .panel-list .panel-search {
+        flex-grow: 1;
+        order: 0;
+        width: unset;
+        padding: 0;
+      }
+      .panel-list .panel-search:not(:first-child) { /* when surrounded by buttons */
+        padding: 0 12px;
+      }
+      .panel-dropdown {
+        padding-left: 12px;
+      }
+      .panel-dropdown, .panel-dropdown button, .panel-dropdown .dropdown-menu {
+        width: unset;
+      }
+    }
+
+  </style>
 {% endblock %}
