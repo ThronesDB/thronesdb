@@ -8,6 +8,7 @@
         <meta name="robots" content="noindex">
     {% endif %}
     <meta name="mobile-web-app-capable" content="yes">
+    {% block meta %}{% endblock %}
     <link rel="icon" sizes="192x192" href="/icon-192.png"/>
     <link rel="apple-touch-icon" sizes="120x120" href="/icon-120.png"/>
     {% set _route = app.request.attributes.get('_route') %}
