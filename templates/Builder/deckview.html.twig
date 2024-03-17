@@ -1,5 +1,14 @@
 {% extends 'base.html.twig' %}
 {% import "macros.html.twig" as macros %}
+{% block meta %}
+    {{ parent() }}
+    <meta name="deck-faction" content="{{ deck.faction.name }}">
+    <meta name="deck-name" content="{{ deck.name }}">
+    <meta name="deck-version" content="{{ deck.version }}">
+    {% for agenda in deck.slots.agendas %}
+        <meta name="deck-agenda" content="{{ agenda.card.name }}">
+    {% endfor %}
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
