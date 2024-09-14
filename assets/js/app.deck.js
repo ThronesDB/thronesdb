@@ -1250,17 +1250,6 @@
             return rhett;
         }
 
-        var validate_the_gold_price = function() {
-            return 8 <= deck.get_nb_cards(deck.get_cards(
-              null,
-              {
-                  type_code: {
-                      $in: ['character', 'attachment', 'location', 'event']
-                  },
-                  text: new RegExp('\s*([+-][0-9]+) ' + Translator.trans('card.info.income') + '\.\s*')
-              }));
-        }
-
         var validate_uniting_the_realm = function() {
             var factions = {};
             return deck.get_cards().every(function(card) {
@@ -1359,10 +1348,8 @@
                 return validate_battle_of_the_trident();
             case '23040':
                 return validate_banner_of_the_falcon();
-            case '25618':
+            case '25080':
                 return validate_the_gift_of_mercy();
-            // case '25619':
-            //     return validate_the_gold_price();
             case '25620':
                 return validate_uniting_the_realm();
         }

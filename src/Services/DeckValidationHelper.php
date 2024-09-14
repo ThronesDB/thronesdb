@@ -265,10 +265,8 @@ class DeckValidationHelper
                 return $this->validateBattleOfTheTrident($slots);
             case '23040':
                 return $this->validateBannerOfTheFalcon($slots);
-            case '25618':
+            case '25080':
                 return $this->validateTheGiftOfMercy($slots);
-//            case '25619':
-//                return $this->validateTheGoldPrice($slots);
             case '25620':
                 return $this->validateUnitingTheRealm($slots);
             default:
@@ -617,25 +615,6 @@ class DeckValidationHelper
             }
         }
         return true;
-    }
-
-    protected function validateTheGoldPrice(SlotCollectionInterface $slots): bool
-    {
-        $drawDeckSlots = $slots->getDrawDeck();
-        $income = $this->translator->trans('card.info.income');
-        $re = "/\s*([+-]\d+) $income\.\s*/";
-        $n = 0;
-        foreach ($drawDeckSlots as $slot) {
-            $text = $slot->getCard()->getText();
-            $quantity = $slot->getQuantity();
-            if (preg_match($re, $text)) {
-                $n = $n + $quantity;
-            }
-            if ($n >= 8) {
-                return true;
-            }
-        }
-        return false;
     }
 
     protected function validateUnitingTheRealm(SlotCollectionInterface $slots): bool
