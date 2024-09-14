@@ -265,7 +265,7 @@ class DeckValidationHelper
                 return $this->validateBattleOfTheTrident($slots);
             case '23040':
                 return $this->validateBannerOfTheFalcon($slots);
-            case '25618':
+            case '25080':
                 return $this->validateTheGiftOfMercy($slots);
             case '25620':
                 return $this->validateUnitingTheRealm($slots);
