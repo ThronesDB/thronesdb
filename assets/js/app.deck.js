@@ -1350,7 +1350,7 @@
                 return validate_banner_of_the_falcon();
             case '25080':
                 return validate_the_gift_of_mercy();
-            case '25620':
+            case '25120':
                 return validate_uniting_the_realm();
         }
         return true;
@@ -1465,7 +1465,7 @@
                   (card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.wildling')) !== -1);
             case '20051':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.fool')) !== -1;
-            case '25620':
+            case '25120':
                 return card.faction_code === 'neutral' || ['character', 'attachment', 'location'].includes(card.type_code);
         }
     };
