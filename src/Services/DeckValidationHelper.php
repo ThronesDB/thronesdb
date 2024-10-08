@@ -211,7 +211,7 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
-            case '25620': // Uniting the Realm
+            case '25120': // Uniting the Realm
                 return in_array($card->getType()->getCode(), ['character', 'attachment', 'location']);
         }
         return false;
@@ -267,7 +267,7 @@ class DeckValidationHelper
                 return $this->validateBannerOfTheFalcon($slots);
             case '25080':
                 return $this->validateTheGiftOfMercy($slots);
-            case '25620':
+            case '25120':
                 return $this->validateUnitingTheRealm($slots);
             default:
                 return true;
