@@ -1252,7 +1252,7 @@
 
         var validate_uniting_the_realm = function() {
             var factions = {};
-            return deck.get_cards().every(function(card) {
+            return deck.get_draw_deck().every(function(card) {
                 var faction = card.faction_code;
                 var name = card.name;
                 if ('neutral' === faction) {
@@ -1466,7 +1466,7 @@
             case '20051':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.fool')) !== -1;
             case '25120':
-                return card.faction_code === 'neutral' || ['character', 'attachment', 'location'].includes(card.type_code);
+                return card.faction_code === 'neutral' || ['character', 'attachment', 'location'].includes(card.type_code)
         }
     };
 })(app.deck = {}, jQuery);
