@@ -436,6 +436,9 @@ card:
     edict: Erlass
     siege: Belagerung
     war: Krieg
+    smallCouncil: "Kleiner Rat"
+    warship: Kriegsschiff
+    weapon: Waffe
   reviews:
     title: Karten-Rezensionen
     none: Noch keine Rezensionen dieser Karte.

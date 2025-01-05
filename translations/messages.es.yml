@@ -435,6 +435,9 @@ card:
     edict: Edicto
     siege: Asedio
     war: Guerra
+    smallCouncil: "Consejo Privado"
+    warship: "Barco de guerra"
+    weapon: Arma
   reviews:
     title: Reseñas
     none: Aún no hay reseñas para esta carta.

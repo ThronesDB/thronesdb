@@ -59,6 +59,7 @@ class DeckValidationHelper
                 case '13118': // Valyrian Steel (BtRK)
                 case '17152': // Valyrian Steel (R)
                 case '16028': // Dark Wings, Dark Words
+                case '26620': // Trading with Braavos
                     $expectedMinCardCount = 75;
                     break;
                 case '16030': // The Long Voyage
@@ -213,6 +214,24 @@ class DeckValidationHelper
                 return false;
             case '25120': // Uniting the Realm
                 return in_array($card->getType()->getCode(), ['character', 'attachment', 'location']);
+            case '26618': // Armed to the Teeth
+                $trait = $this->translator->trans('card.traits.weapon');
+                if ('attachment' === $card->getType()->getCode()) {
+                    return preg_match("/$trait\\./", $card->getTraits());
+                }
+                return true;
+            case '26619': // The Small Council
+                $trait = $this->translator->trans('card.traits.smallCouncil');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
+            case '26620': // Trading with Braavos
+                $trait = $this->translator->trans('card.traits.warship');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'location';
+                }
+                return false;
         }
         return false;
     }
@@ -269,6 +288,12 @@ class DeckValidationHelper
                 return $this->validateTheGiftOfMercy($slots);
             case '25120':
                 return $this->validateUnitingTheRealm($slots);
+            case '26618':
+                return $this->validateArmedToTheTeeth($slots);
+            case '26619':
+                return $this->validateTheSmallCouncil($slots);
+            case '26620':
+                return $this->validateTradingWithBraavos($slots);
             default:
                 return true;
         }
@@ -650,6 +675,51 @@ class DeckValidationHelper
             if (preg_match("/$omen\\./", $traits)) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    protected function validateArmedToTheTeeth(SlotCollectionInterface $slots): bool
+    {
+        // Your deck cannot include non-Weapon attachments.
+        $trait = $this->translator->trans('card.traits.weapon');
+        $slots = $slots->getDrawDeck()->filterByType('attachment');
+        foreach ($slots as $slot) {
+            $traits = $slot->getCard()->getTraits();
+            if (!preg_match("/$trait\\./", $traits)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function validateTheSmallCouncil(SlotCollectionInterface $slots): bool
+    {
+        // You must include at least 7 different Small Council characters in your deck.
+        $trait = $this->translator->trans('card.traits.smallCouncil');
+        $slots = $slots->getDrawDeck()->filterByType('character')->filterByTrait($trait);
+        $names = [];
+        foreach ($slots as $slot) {
+            $names[] = $slot->getCard()->getName();
+        }
+        return count(array_unique($names)) >= 7;
+    }
+
+    protected function validateTradingWithBraavos(SlotCollectionInterface $slots): bool
+    {
+        // Your deck cannot include more than 1 copy of each Warship location.
+        $names = [];
+        $trait = $this->translator->trans('card.traits.warship');
+        $slots = $slots->filterByType('location')->filterByTrait($trait);
+        foreach ($slots as $slot) {
+            $name = $slot->getCard()->getName();
+            if (in_array($name, $names)) {
+                return false;
+            }
+            if (1 < $slot->getQuantity()) {
+                return false;
+            }
+            $names[] = $name;
         }
         return true;
     }
