@@ -1049,7 +1049,7 @@
             } else if (agenda && ['10045', '17151'].indexOf(agenda.code) > -1) {
                 expectedPlotDeckSize = 10;
                 expectedMaxDoublePlot = 2;
-            } else if (agenda && ['13118', '17152', '16028'].indexOf(agenda.code) > -1) {
+            } else if (agenda && ['13118', '17152', '16028', '26620'].indexOf(agenda.code) > -1) {
                 expectedMinCardCount = 75;
             } else if (agenda && agenda.code === '16030') {
                 expectedMinCardCount = 100;
@@ -1268,6 +1268,47 @@
             });
         }
 
+        var validate_armed_to_the_teeth = function() {
+            var reWeapon = new RegExp(Translator.trans('card.traits.weapon') + '\\.');
+            return !deck.get_cards(null, { type_code: 'attachment' }).some(function(attachment) {
+                return !reWeapon.test(attachment.traits);
+            });
+        }
+
+        var validate_the_small_council = function() {
+            var smallCouncilCharacters = deck.get_cards(
+                null,
+                {
+                    type_code: 'character',
+                    traits: new RegExp(Translator.trans('card.traits.smallCouncil') + '\\.')
+                }
+            );
+            return (smallCouncilCharacters.length >= 7);
+        }
+
+        var validate_trading_with_braavos = function() {
+            var i, n;
+            var names = [];
+            var warships = deck.get_cards(
+                null,
+                {
+                    type_code: 'location',
+                    traits: new RegExp(Translator.trans('card.traits.warship') + '\\.')
+                }
+            );
+
+            for (i = 0, n = warships.length; i < n; i++) {
+                if (warships[i].indeck > 1) {
+                    return false;
+                }
+                if (-1 !== names.indexOf(warships[i].name)) {
+                    return false;
+                }
+                names.push(warships[i].name);
+            }
+            return true;
+        }
+
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -1352,6 +1393,12 @@
                 return validate_the_gift_of_mercy();
             case '25120':
                 return validate_uniting_the_realm();
+            case '26618':
+                return validate_armed_to_the_teeth();
+            case '26619':
+                return validate_the_small_council();
+            case '26620':
+                return validate_trading_with_braavos();
         }
         return true;
     };
@@ -1467,6 +1514,10 @@
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.fool')) !== -1;
             case '25120':
                 return card.faction_code === 'neutral' || ['character', 'attachment', 'location'].includes(card.type_code)
+            case '26619':
+                return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.smallCouncil')) !== -1;
+            case '26620':
+                return card.type_code === 'location' && card.traits.indexOf(Translator.trans('card.traits.warship')) !== -1;
         }
     };
 })(app.deck = {}, jQuery);
