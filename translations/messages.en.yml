@@ -436,7 +436,9 @@ card:
     edict: Edict
     siege: Siege
     war: War
-
+    smallCouncil: "Small Council"
+    warship: Warship
+    weapon: Weapon
   reviews:
     title: Reviews
     none: No review yet for this card.
