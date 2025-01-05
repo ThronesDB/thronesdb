@@ -709,10 +709,6 @@ class DeckValidationHelper
     {
         // Your deck cannot include more than 1 copy of each Warship location.
         $names = [];
-        $nonLocationSlots = $slots->getDrawDeck()->excludeByType('location');
-        foreach ($nonLocationSlots as $slot) {
-            $names[] = $slot->getCard()->getName();
-        }
         $trait = $this->translator->trans('card.traits.warship');
         $slots = $slots->filterByType('location')->filterByTrait($trait);
         foreach ($slots as $slot) {
