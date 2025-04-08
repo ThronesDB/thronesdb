@@ -1293,7 +1293,7 @@
                 null,
                 {
                     type_code: 'location',
-                    traits: new RegExp(Translator.trans('card.traits.warship') + '\\.')
+                    is_unique: true,
                 }
             );
 
