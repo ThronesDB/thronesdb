@@ -1049,7 +1049,7 @@
             } else if (agenda && ['10045', '17151'].indexOf(agenda.code) > -1) {
                 expectedPlotDeckSize = 10;
                 expectedMaxDoublePlot = 2;
-            } else if (agenda && ['13118', '17152', '16028', '26620'].indexOf(agenda.code) > -1) {
+            } else if (agenda && ['13118', '17152', '16028'].indexOf(agenda.code) > -1) {
                 expectedMinCardCount = 75;
             } else if (agenda && agenda.code === '16030') {
                 expectedMinCardCount = 100;
@@ -1293,7 +1293,7 @@
                 null,
                 {
                     type_code: 'location',
-                    traits: new RegExp(Translator.trans('card.traits.warship') + '\\.')
+                    is_unique: true,
                 }
             );
 

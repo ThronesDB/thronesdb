@@ -315,6 +315,22 @@ class SlotCollectionDecorator implements SlotCollectionInterface
     }
 
     /**
+     * Returns as sub-collection of cards in this collection, filtered by card uniqueness (by title).
+     * @param bool $uniqueOrNot TRUE to include cards that are uniques only, FALSE to include non-uniques only.
+     * @return SlotCollectionDecorator
+     */
+    public function filterByUniqueness(bool $uniqueOrNot = true): SlotCollectionDecorator
+    {
+        $slots = [];
+        foreach ($this->slots as $slot) {
+            if ($slot->getCard()->getIsUnique() === $uniqueOrNot) {
+                $slots[] = $slot;
+            }
+        }
+        return new SlotCollectionDecorator(new ArrayCollection($slots));
+    }
+
+    /**
      * @inheritdoc
      */
     public function getCopiesAndDeckLimit()
