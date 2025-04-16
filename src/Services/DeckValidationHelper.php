@@ -59,6 +59,8 @@ class DeckValidationHelper
                 case '13118': // Valyrian Steel (BtRK)
                 case '17152': // Valyrian Steel (R)
                 case '16028': // Dark Wings, Dark Words
+                    $expectedMinCardCount = 75;
+                    break;
                 case '16030': // The Long Voyage
                     $expectedMinCardCount = 100;
                     break;
