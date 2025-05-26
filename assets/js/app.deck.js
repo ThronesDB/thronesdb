@@ -471,17 +471,6 @@
      * @memberOf deck
      * @returns boolean
      */
-    deck.is_the_kings_voice = function is_the_kings_voice()
-    {
-        return !(_.isUndefined(_.find(deck.get_agendas(), function (card) {
-            return card.code === '00030';
-        })));
-    };
-
-    /**
-     * @memberOf deck
-     * @returns boolean
-     */
     deck.is_rains_of_castamere = function is_rains_of_castamere() {
         return !(_.isUndefined(_.find(deck.get_agendas(), function(card) {
             return card.code === '05045';
@@ -918,7 +907,7 @@
             // card-specific rules
             switch(card.type_code) {
                 case 'agenda':
-                    if (deck.is_the_kings_voice()) {
+                    if (deck.is_unsupported_agenda(card.type_code)) {
                         break;
                     }
 
@@ -1024,13 +1013,35 @@
     {
         var warnings = [];
         var agendas = deck.get_agendas();
-        var unsupportedAgendas = ['00030'];
-        agendas.forEach(function (agenda) {
-            if (unsupportedAgendas.includes(agenda.code)) {
+        agendas.every(function (agenda) {
+            if (deck.is_unsupported_agenda(agenda.code)) {
                 warnings.push(Translator.trans('decks.warnings.unsupported_agenda', {agenda: agenda.name}));
+                return false;
             }
+            return true;
         });
         return warnings;
+    };
+
+    deck.get_unsupported_agendas = function get_unsupported_agendas()
+    {
+        return [
+            '00030', // The King's Voice (VHotK)
+            '00357', // Sealing the Pact (ToJ)
+            '00358', // Three Heads of the Dragon (ToJ)
+            '00359', // Shadowbinders of Assai (ToJ)
+            '00360', // The Iron Bank of Braavos (ToJ)
+            '00361', // Join Forces (ToJ)
+            '00362', // Desperate Hope (ToJ)
+            '00363', // Crossroads Inkeeper (ToJ)
+        ];
+    };
+
+    deck.is_unsupported_agenda = function is_unsupported_agenda()
+    {
+        return !(_.isUndefined(_.find(deck.get_agendas(), function (card) {
+               return deck.get_unsupported_agendas().includes(card.code);
+        })));
     };
 
     /**

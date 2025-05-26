@@ -124,7 +124,7 @@
             // one of the variant/"special" products like Valyrian Draft Set (VDS).
             if(! record.available
               || Date.parse(record.available) > Date.now()
-              || ['VDS', 'VKm', 'VHotK'].includes(record.code)
+              || ['VDS', 'VKm', 'VHotK', 'ToJ'].includes(record.code)
             ) {
                 checked = false;
             }
