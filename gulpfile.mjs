@@ -1,19 +1,22 @@
 import { dest, series, src } from 'gulp'
 import concat from 'gulp-concat'
-import { deleteSync } from 'del'
+import { deleteAsync } from 'del'
 import rev from 'gulp-rev'
 
-export function clean (cb) {
-  deleteSync('public/css/*.css')
-  deleteSync('public/css/*.png')
-  deleteSync('public/js/*.js')
-  deleteSync('public/js/translations')
-  deleteSync('public/manifest.json')
-  cb()
+export function clean () {
+  return Promise.all(
+      [
+        deleteAsync('public/css/*.css'),
+        deleteAsync('public/css/*.png'),
+        deleteAsync('public/js/*.js'),
+        deleteAsync('public/js/translations'),
+        deleteAsync('public/manifest.json'),
+      ],
+  );
 }
 
-export function buildCss (cb) {
-  src([
+export function buildCss () {
+  return src([
     'assets/css/bootstrap.css',
     'assets/css/style.css',
     'assets/css/icons.css',
@@ -24,16 +27,14 @@ export function buildCss (cb) {
     .pipe(dest('public'))
     .pipe(rev.manifest('public/manifest.json', { base: 'public' }))
     .pipe(dest('public'))
-  cb()
 }
 
-export function copyLanguagesImage (cb) {
-  src('assets/css/languages.png').pipe(dest('public/css'))
-  cb()
+export function copyLanguagesImage () {
+  return src('assets/css/languages.png').pipe(dest('public/css'))
 }
 
-export function buildVendorJs (cb) {
-  src([
+export function buildVendorJs () {
+  return src([
     'assets/js/bootstrap.js',
     'assets/js/bootstrap-markdown.de.js',
     'assets/js/bootstrap-markdown.es.js',
@@ -45,12 +46,11 @@ export function buildVendorJs (cb) {
     .pipe(dest('public'))
     .pipe(rev.manifest('public/manifest.json', { base: 'public', merge: true }))
     .pipe(dest('public'))
-  cb()
 }
 
-export function buildAppJs (cb) {
+export function buildAppJs () {
   // aggregate the commonly used JS files into one "app.js" file
-  src([
+  return src([
     'assets/js/app.config.js',
     'assets/js/app.data.js',
     'assets/js/app.format.js',
@@ -75,12 +75,11 @@ export function buildAppJs (cb) {
     .pipe(dest('public'))
     .pipe(rev.manifest('public/manifest.json', { base: 'public', merge: true }))
     .pipe(dest('public'))
-  cb()
 }
 
-export function copyPageSpecificJs (cb) {
+export function copyPageSpecificJs () {
   // these are page-specific, just copy them over to the public directory.
-  src([
+  return src([
     'assets/js/ui.card.js',
     'assets/js/ui.deckimport.js',
     'assets/js/ui.deckinit.js',
@@ -97,12 +96,11 @@ export function copyPageSpecificJs (cb) {
     .pipe(dest('public'))
     .pipe(rev.manifest('public/manifest.json', { base: 'public', merge: true }))
     .pipe(dest('public'))
-  cb()
 }
 
-export function buildTranslationsJs (cb) {
+export function buildTranslationsJs () {
   // @todo add a check here to see if translations files have been generated. [ST 2020/06/15]
-  src([
+  return src([
     'assets/js/translations/config.js',
     'assets/js/translations/**/*.js'
   ], { base: 'assets' })
@@ -112,7 +110,6 @@ export function buildTranslationsJs (cb) {
     .pipe(dest('public'))
     .pipe(rev.manifest('public/manifest.json', { base: 'public', merge: true }))
     .pipe(dest('public'))
-  cb()
 }
 
 const build = series(
