@@ -219,7 +219,7 @@ class DeckValidationHelper
                     return preg_match("/$trait\\./", $card->getTraits());
                 }
                 return true;
-            case '26619': // The Small Council
+            case '26040': // The Small Council
                 $trait = $this->translator->trans('card.traits.smallCouncil');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
                     return $card->getType()->getCode() === 'character';
@@ -289,7 +289,7 @@ class DeckValidationHelper
                 return $this->validateUnitingTheRealm($slots);
             case '26618':
                 return $this->validateArmedToTheTeeth($slots);
-            case '26619':
+            case '26040':
                 return $this->validateTheSmallCouncil($slots);
             case '26620':
                 return $this->validateTradingWithBraavos($slots);
