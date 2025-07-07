@@ -31,9 +31,9 @@
               <li><code>f:baratheon|lannister k:lord|lady</code> – <em>gets all Baratheon or Lannister cards with the Lord or Lady trait</em></li>
             </ul>
           </li>
-          <li>Note that <b>conditions</b> containing spaces must be surrounded with quotation marks:
+          <li>Note that <b>conditions</b> containing spaces or special characters must be surrounded with quotation marks:
             <ul>
-              <li><code>"x:"win a challenge"</code> – <em>gets all cards with &quot;win a challenge&quot; in their text</em></li>
+              <li><code>"x:"win a challenge"</code> – <em>gets all cards with "win a challenge" in their text</em></li>
             </ul>
           </li>
         </ul>
@@ -100,7 +100,8 @@
                 <li><code>f:tyrell|martell o&lt;2</code> searches for all Tyrell or Martell cards with cost less than 2</li>
                 <li><code>t:attachment k!condition|title|"The Seven"</code> searches for all Attachments that are not Condition, Title or The Seven</li>
                 <li><code>f:lannister l:0</code> searches for all Lannister non-loyal cards</li>
-                <li><code>x:"win a [power] challenge"</code> returns all the cards with "win a POWER challenge" text where POWER is icon (same works for faction icons)</li>
+                <li><code>x:"win a [power] challenge"</code> searches for all the cards with "win a POWER challenge" text where POWER is icon (same works for faction icons)</li>
+                <li><code>x:"&lt;i&gt;King&lt;/i&gt;"|"&lt;i&gt;Queen&lt;/i&gt;"</code> searches for all the cards that refer to the King or Queen trait in their text (regardless of the cards' actual traits)</li>
                 <li><code>t:plot k!kingdom|edict n>5</code> searches for all Plots that are neither Kingdom nor Edict and have income greater than 5</li>
                 <li><code>t:plot k:Scheme x:"When Revealed"</code> searches for all Scheme Plot cards with When Revealed effect</li>
               </ul>
@@ -117,11 +118,14 @@
             <h4 class="subheader">Searching based on card's text</h4>
             <div class="body row">
               <p>This operand searches for a substring in a card's text.</p>
-              <p>It is possible to include Faction and Challenge icons in search using square brackets e.g. [martell], [power], etc..</p>
+              <p>It is possible to include Faction and Challenge icons in search using square brackets e.g. [martell], [power]</p>
+              <p>It is possible to specify a search word as a trait reference using double quotes enclosed HTML <code>i</code> tag, e.g. "&lt;i&gt;King&lt;/i&gt;"</p>
               <ul>
                 <li><code>x:"take control"</code> – gets all cards with "take control in it"</li>
                 <li><code>x:"interrupt:" x:killed</code> – gets cards with Interrupt to being killed</li>
-                <li><code>x:king x!attacking|kingdom|kings</code> – gets (mostly) cards that interact with King trait</li>
+                <li><code>x:king</code> – gets cards that interact with the King trait, but also cards that mention attac<em>king</em></li>
+                <li><code>x:"&lt;i&gt;King&lt;/i&gt;"</code> – gets cards that interact with the King trait</li>
+                <li><code>x:"attacking &lt;i&gt;King&lt;/i&gt;"</code> – gets cards that refer to an attacking King</li>
               </ul>
             </div>
           </div>
