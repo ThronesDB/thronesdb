@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 
 class CoreExceptionListener
 {
-
     /**
      * Handles security related exceptions.
      *

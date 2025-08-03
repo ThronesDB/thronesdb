@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Decklistslot implements DecklistslotInterface
 {
-
     /**
      * @var int
      *

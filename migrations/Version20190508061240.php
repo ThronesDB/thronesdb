@@ -12,7 +12,7 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190508061240 extends AbstractMigration
 {
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Renames the "Draft" cycle to "Variants".';
     }
@@ -20,7 +20,7 @@ final class Version20190508061240 extends AbstractMigration
     /**
      * @inheritdoc
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->abortIf(
             $this->connection->getDatabasePlatform()->getName() !== 'mysql',
@@ -33,7 +33,7 @@ final class Version20190508061240 extends AbstractMigration
     /**
      * @inheritdoc
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->abortIf(
             $this->connection->getDatabasePlatform()->getName() !== 'mysql',
