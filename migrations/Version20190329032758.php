@@ -15,7 +15,7 @@ final class Version20190329032758 extends AbstractMigration
     /**
      * @inheritDoc
      */
-    public function getDescription() : string
+    public function getDescription(): string
     {
         return 'Initial schema setup.';
     }
@@ -23,7 +23,7 @@ final class Version20190329032758 extends AbstractMigration
     /**
      * @inheritDoc
      */
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
@@ -95,7 +95,7 @@ final class Version20190329032758 extends AbstractMigration
     /**
      * @inheritDoc
      */
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         $this->throwIrreversibleMigrationException('Initial migration, cannot be reverted.');
     }

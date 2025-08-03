@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
  */
 class CardTest extends TestCase
 {
-
     public function hasShadowKeywordProvider()
     {
         return [
