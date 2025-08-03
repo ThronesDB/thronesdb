@@ -31,7 +31,9 @@ export function buildCss() {
 }
 
 export function copyLanguagesImage() {
-  return src("assets/css/languages.png").pipe(dest("public/css"));
+  return src("assets/css/languages.png", { encoding: false }).pipe(
+    dest("public/css"),
+  );
 }
 
 export function buildVendorJs() {
