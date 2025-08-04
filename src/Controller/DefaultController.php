@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\BannerAlert;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\DecklistInterface;
@@ -59,6 +60,9 @@ class DefaultController extends AbstractController
             ->getRepository(Faction::class)
             ->findBy(['isPrimary' => true], ['code' => 'ASC']);
 
+        $alerts = $this->getDoctrine()->getRepository(BannerAlert::class)
+            ->findBy(['active' => true], ['id' => 'DESC']);
+
         foreach ($factions as $faction) {
             $array = [];
             $array['faction'] = $faction;
@@ -102,6 +106,7 @@ class DefaultController extends AbstractController
                     . " Browse the cards and the thousand of decklists submitted by the community."
                     . " Publish your own decks and get feedback.",
                 'decklists_by_faction' => $decklists_by_faction,
+                'banner_alerts' => $alerts,
             ],
             $response
         );
