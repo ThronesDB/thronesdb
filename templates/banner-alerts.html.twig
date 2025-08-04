@@ -1,0 +1,3 @@
+{% for alert in banner_alerts %}
+    <div class="alert alert-{% if alert.level == 1 %}warning{% else %}info{% endif %}" role="alert">{{ alert.description | raw }}</div>
+{% endfor %}
