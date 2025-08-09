@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\BannerAlert;
 use App\Entity\Card;
 use App\Entity\Deck;
 use App\Entity\Deckchange;
@@ -786,6 +787,9 @@ class BuilderController extends AbstractController
 
         $decks = $deckManager->getByUser($user);
 
+        $alerts = $this->getDoctrine()->getRepository(BannerAlert::class)
+            ->findBy(['active' => true], ['id' => 'DESC']);
+
         /* @todo refactor this out, use DQL not raw SQL [ST 2019/04/04] */
         $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
             "SELECT t.id, t.description FROM tournament t ORDER BY t.description desc"
@@ -837,6 +841,7 @@ class BuilderController extends AbstractController
                     'cannotcreate' => $user->getMaxNbDecks() <= count($decks),
                     'tournaments' => $tournaments,
                     'decklegality' => $deckLegalityMap,
+                    'banner_alerts' => $alerts,
                 )
             );
         } else {
