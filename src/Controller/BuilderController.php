@@ -58,6 +58,13 @@ class BuilderController extends AbstractController
         '00003', // Treaty (VDS)
         '00004', // Uniting the Seven Kingdoms (VDS)
         "00030", // The King's Voice (VHotK)
+        "00357", // Sealing the Pact (ToJ)
+        "00358", // Three Heads of the Dragon (ToJ)
+        "00359", // Shadowbinders of Assai (ToJ)
+        "00360", // The Iron Bank of Braavos (ToJ)
+        "00361", // Join Forces (ToJ)
+        "00362", // Desperate Hope (ToJ)
+        "00363", // Crossroads Inkeeper (ToJ)
     ];
 
     /**
