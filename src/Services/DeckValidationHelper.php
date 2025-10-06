@@ -225,7 +225,7 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
-            case '26620': // Trading with Braavos
+            case '26080': // Trading with Braavos
                 $trait = $this->translator->trans('card.traits.warship');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
                     return $card->getType()->getCode() === 'location';
@@ -291,7 +291,7 @@ class DeckValidationHelper
                 return $this->validateArmedToTheTeeth($slots);
             case '26040':
                 return $this->validateTheSmallCouncil($slots);
-            case '26620':
+            case '26080':
                 return $this->validateTradingWithBraavos($slots);
             default:
                 return true;

@@ -1397,7 +1397,7 @@
                 return validate_armed_to_the_teeth();
             case '26040':
                 return validate_the_small_council();
-            case '26620':
+            case '26080':
                 return validate_trading_with_braavos();
         }
         return true;
@@ -1516,7 +1516,7 @@
                 return card.faction_code === 'neutral' || ['character', 'attachment', 'location'].includes(card.type_code)
             case '26040':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.smallCouncil')) !== -1;
-            case '26620':
+            case '26080':
                 return card.type_code === 'location' && card.traits.indexOf(Translator.trans('card.traits.warship')) !== -1;
         }
     };
