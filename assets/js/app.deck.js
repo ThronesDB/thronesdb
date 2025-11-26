@@ -471,17 +471,6 @@
      * @memberOf deck
      * @returns boolean
      */
-    deck.is_the_kings_voice = function is_the_kings_voice()
-    {
-        return !(_.isUndefined(_.find(deck.get_agendas(), function (card) {
-            return card.code === '00030';
-        })));
-    };
-
-    /**
-     * @memberOf deck
-     * @returns boolean
-     */
     deck.is_rains_of_castamere = function is_rains_of_castamere() {
         return !(_.isUndefined(_.find(deck.get_agendas(), function(card) {
             return card.code === '05045';
@@ -918,7 +907,7 @@
             // card-specific rules
             switch(card.type_code) {
                 case 'agenda':
-                    if (deck.is_the_kings_voice()) {
+                    if (deck.is_unsupported_agenda(card.type_code)) {
                         break;
                     }
 
@@ -1024,13 +1013,34 @@
     {
         var warnings = [];
         var agendas = deck.get_agendas();
-        var unsupportedAgendas = ['00030'];
-        agendas.forEach(function (agenda) {
-            if (unsupportedAgendas.includes(agenda.code)) {
+        agendas.every(function (agenda) {
+            if (deck.is_unsupported_agenda(agenda.code)) {
                 warnings.push(Translator.trans('decks.warnings.unsupported_agenda', {agenda: agenda.name}));
+                return false;
             }
+            return true;
         });
         return warnings;
+    };
+
+    deck.get_unsupported_agendas = function get_unsupported_agendas()
+    {
+        return [
+            '00030', // The King's Voice (VHotK)
+            '00362', // Sealing the Pact (ToJ)
+            '00363', // Unknown and Unknowable (ToJ)
+            '00364', // Pass Beneath a Shadow (ToJ)
+            '00365', // Seeking Fortunes (ToJ)
+            '00366', // Join Forces (ToJ)
+            '00367', // Desperate Hope (ToJ)
+        ];
+    };
+
+    deck.is_unsupported_agenda = function is_unsupported_agenda()
+    {
+        return !(_.isUndefined(_.find(deck.get_agendas(), function (card) {
+               return deck.get_unsupported_agendas().includes(card.code);
+        })));
     };
 
     /**

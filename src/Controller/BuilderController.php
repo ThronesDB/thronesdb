@@ -58,6 +58,12 @@ class BuilderController extends AbstractController
         '00003', // Treaty (VDS)
         '00004', // Uniting the Seven Kingdoms (VDS)
         "00030", // The King's Voice (VHotK)
+        '00362', // Sealing the Pact (ToJ)
+        '00363', // Unknown and Unknowable (ToJ)
+        '00364', // Pass Beneath a Shadow (ToJ)
+        '00365', // Seeking Fortunes (ToJ)
+        '00366', // Join Forces (ToJ)
+        '00367', // Desperate Hope (ToJ)
     ];
 
     /**
