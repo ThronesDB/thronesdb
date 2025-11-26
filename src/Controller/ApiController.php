@@ -523,7 +523,6 @@ class ApiController extends AbstractController
         $response->setContent($content);
         return $response;
     }
-
     /**
      * Get the description of all the decklists published at a given date, as an array of JSON objects.
      *
@@ -613,6 +612,56 @@ class ApiController extends AbstractController
     }
 
     /**
+     * Get all published decklists.
+     *
+     * @Route(
+     *     "/api/public/decklists",
+     *     name="api_decklists",
+     *     methods={"GET"},
+     *     options={"i18n" = false}
+     * )
+     *
+     * @Operation(
+     *     tags={"Public"},
+     *     summary="All the Decklists",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param int $cacheExpiration
+     * @return Response
+     */
+    public function listDecklists(Request $request, int $cacheExpiration): Response
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($cacheExpiration);
+        $response->headers->add(array('Access-Control-Allow-Origin' => '*'));
+
+        $decklists = $this->getDoctrine()->getRepository(Decklist::class)->findAll();
+        $lastModified = null;
+        /* @var DecklistInterface $decklist */
+        foreach ($decklists as $decklist) {
+            if (!$lastModified || $lastModified < $decklist->getDateUpdate()) {
+                $lastModified = $decklist->getDateUpdate();
+            }
+        }
+        $response->setLastModified($lastModified);
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $content = json_encode($decklists);
+        //$content = json_encode(array_slice($decklists, 0, 1000));
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($content);
+        return $response;
+    }
+
+    /**
      * @Route("/api/public/restrictions/", name="api_restrictions", methods={"GET"}, options={"i18n" = false})
      *
      * Get the description of all the restricted lists as an array of JSON objects.
@@ -658,7 +707,6 @@ class ApiController extends AbstractController
         $restrictions = $repo->findBy($filters);
 
         // check the last-modified-since header
-
         $lastModified = null;
         /* @var RestrictionInterface $restriction */
         foreach ($restrictions as $restriction) {
