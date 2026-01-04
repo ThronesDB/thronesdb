@@ -5,7 +5,7 @@ fos_user:
     user_class: App\Entity\User
     registration:
         confirmation:
-            enabled: false
+            enabled: true
     from_email:
         address: "%email_sender_address%"
         sender_name: "%email_sender_name%"
