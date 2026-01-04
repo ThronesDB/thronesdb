@@ -100,6 +100,58 @@ class Oauth2Controller extends AbstractController
 
 
     /**
+     * Get one deck by its UUID.
+     *
+     * @Route(
+     *     "/api/oauth2/deck/load/{uuid}",
+     *     name="api_oauth2_load_deck_by_uuid",
+     *     methods={"GET"},
+     *     requirements={"uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"},
+     *     options={"i18n" = false}
+     * )
+     *
+     * @Operation(
+     *     tags={"Protected"},
+     *     summary="Get one deck by its UUID",
+     *     @SWG\Response(
+     *         response="200",
+     *         description="Returned when successful"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @param string  $uuid
+     * @return Response
+     */
+    public function loadDeckByUuidAction(Request $request, string $uuid): Response
+    {
+        /* @var DeckInterface $deck */
+        $deck = $this->getDoctrine()->getRepository(Deck::class)->findOneBy(['uuid' => $uuid]);
+        if (!$deck) {
+            throw $this->createNotFoundException("Deck not found.");
+        }
+
+        $is_owner = $this->getUser() && ($this->getUser()->getId() === $deck->getUser()->getId());
+        if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
+            throw $this->createAccessDeniedException("Access denied to this object.");
+        }
+
+        $response = new Response();
+        $response->headers->add(['Access-Control-Allow-Origin' => '*']);
+        $response->setLastModified($deck->getDateUpdate());
+        if ($response->isNotModified($request)) {
+            return $response;
+        }
+
+        $content = json_encode($deck);
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent($content);
+
+        return $response;
+    }
+
+    /**
      * Get the description of one Deck of the authenticated user
      *
      * @Route(
