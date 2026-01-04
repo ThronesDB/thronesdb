@@ -139,6 +139,16 @@ class User extends BaseUser implements UserInterface
     /**
      * @var Collection
      *
+     * @ORM\OneToMany(targetEntity="App\Entity\Reviewcomment", mappedBy="user")
+     * @ORM\OrderBy({
+     *     "dateCreation"="DESC"
+     * })
+     */
+    protected $reviewcomments;
+
+    /**
+     * @var Collection
+     *
      * @ORM\OneToMany(targetEntity="App\Entity\Review", mappedBy="user")
      * @ORM\OrderBy({
      *     "dateCreation"="DESC"
@@ -470,6 +480,30 @@ class User extends BaseUser implements UserInterface
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addReviewcomment(ReviewcommentInterface $comment)
+    {
+        $this->reviewcomments->add($comment);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeReviewcomment(ReviewcommentInterface $comment)
+    {
+        $this->reviewcomments->removeElement($comment);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getReviewcomments()
+    {
+        return $this->reviewcomments;
     }
 
     /**

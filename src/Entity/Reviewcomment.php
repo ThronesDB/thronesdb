@@ -48,7 +48,7 @@ class Reviewcomment implements ReviewcommentInterface
     /**
      * @var UserInterface
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reviewcomments")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * })
