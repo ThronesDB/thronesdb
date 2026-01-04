@@ -183,6 +183,21 @@ interface UserInterface extends SymfonyUserInterface
     public function getComments();
 
     /**
+     * @param ReviewcommentInterface $comment
+     */
+    public function addReviewcomment(ReviewcommentInterface $comment);
+
+    /**
+     * @param ReviewcommentInterface $comment
+     */
+    public function removeReviewcomment(ReviewcommentInterface $comment);
+
+    /**
+     * @return Collection
+     */
+    public function getReviewcomments();
+
+    /**
      * @param ReviewInterface $review
      */
     public function addReview(ReviewInterface $review);

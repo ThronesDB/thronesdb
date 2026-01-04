@@ -10,7 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="user")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User extends BaseUser implements UserInterface
 {
@@ -135,6 +135,16 @@ class User extends BaseUser implements UserInterface
      * })
      */
     protected $comments;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Reviewcomment", mappedBy="user")
+     * @ORM\OrderBy({
+     *     "dateCreation"="DESC"
+     * })
+     */
+    protected $reviewcomments;
 
     /**
      * @var Collection
@@ -470,6 +480,30 @@ class User extends BaseUser implements UserInterface
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function addReviewcomment(ReviewcommentInterface $comment)
+    {
+        $this->reviewcomments->add($comment);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function removeReviewcomment(ReviewcommentInterface $comment)
+    {
+        $this->reviewcomments->removeElement($comment);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getReviewcomments()
+    {
+        return $this->reviewcomments;
     }
 
     /**
