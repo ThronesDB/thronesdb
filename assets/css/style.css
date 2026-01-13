@@ -47,6 +47,10 @@ body {
 .card-flavor cite {
     white-space: nowrap;
 }
+
+.card-rarity {
+    padding-top: 5px;
+}
 .card-flavor cite::before {
     /* en dash followed by non-breaking zero-width space */
     content: "\2013\FEFF";
@@ -708,5 +712,3 @@ abbr.legality.banned {
         width: unset;
     }
 }
-
-

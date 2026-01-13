@@ -36,6 +36,9 @@
         }
 
         info += '<div class="card-pack">' + app.format.pack(card) + '</div>';
+        if (card.rarity_code) {
+            info += '<div class="card-code">' + Translator.trans('card.info.rarity') + ': ' + Translator.trans('rarity.' + card.rarity_code) + '</div>'
+        }
 
         if (card.work_in_progress) {
             info = '<div class="alert alert-danger">' +  Translator.trans('card.info.workInProgress')  + '</div>' + info;

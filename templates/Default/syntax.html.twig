@@ -72,6 +72,7 @@
                 <li><code>e</code> – pack code</li>
                 <li><code>c</code> – cycle number</li>
                 <li><code>y</code> – quantity</li>
+                <li><code>r</code> – rarity</li>
               </ul>
             </div>
           </div>
@@ -399,6 +400,23 @@
               </ul>
             </div>
           </div>
+
+          <div class="syntax-panel">
+            <h3 class="header">Rarity (<code>r</code>)</h3>
+            <h4 class="subheader">Searching based on card rarity</h4>
+            <div class="body row">
+              <p>This operand finds all cards with a given rarity.</p>
+              <p>
+                Acceptable values are <code>common</code>, <code>uncommon</code>, <code>rare</code>, <code>mythic</code>, and <code>special</code>.
+                Please note that only cards in Draft packs may have a rarity value.
+              </p>
+              <ul>
+                <li><code>r:ucommon</code> – gets all cards of <code>uncommon</code> rarity.</li>
+                <li><code>r!uncommon</code> – gets all cards not of <code>uncommon</code> rarity.</li>
+              </ul>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

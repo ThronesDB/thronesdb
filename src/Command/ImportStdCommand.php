@@ -7,6 +7,7 @@ use App\Entity\CardInterface;
 use App\Entity\Cycle;
 use App\Entity\Faction;
 use App\Entity\Pack;
+use App\Entity\Rarity;
 use App\Entity\Type;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -66,9 +67,10 @@ class ImportStdCommand extends Command
         /* @var $helper QuestionHelper */
         $helper = $this->getHelper('question');
 
-        // load factions and card types
+        // load factions, card types, and rarities
         $this->collections['Faction'] = $this->loadCollection(Faction::class);
         $this->collections['Type'] = $this->loadCollection(Type::class);
+        $this->collections['Rarity'] = $this->loadCollection(Rarity::class);
 
         // cycles
         $output->writeln("Importing Cycles...");
@@ -190,7 +192,7 @@ class ImportStdCommand extends Command
             'cgdb_id',
             'work_in_progress',
         ], [
-            'cycle_code'
+            'cycle_code' => true,
         ], [], $output);
         if ($entity) {
             $result[] = $entity;
@@ -236,6 +238,7 @@ class ImportStdCommand extends Command
                     }
                     $data['traits'] = $item['traits'] ? implode('. ', $item['traits']) . '.' : '';
                     $data['type_code'] = $item['type'];
+                    $data['rarity_code'] = array_key_exists('rarity', $item) ? $item['rarity'] : null;
                     $data['strength'] = null;
                     if (array_key_exists('strength', $item)) {
                         $data['strength'] = $this->convertXValue($item['strength']);
@@ -286,9 +289,10 @@ class ImportStdCommand extends Command
                             'errataed',
                         ],
                         [
-                            'faction_code',
-                            'pack_code',
-                            'type_code'
+                            'faction_code' => true,
+                            'pack_code' => true,
+                            'type_code' => true,
+                            'rarity_code' => false,
                         ],
                         $optionalProps,
                         $output
@@ -419,7 +423,7 @@ class ImportStdCommand extends Command
             $this->copyKeyToEntity($entity, $entityName, $data, $key, $output, false);
         }
 
-        foreach ($foreignKeys as $key) {
+        foreach ($foreignKeys as $key => $isMandatory) {
             $foreignEntityShortName = ucfirst(str_replace('_code', '', $key));
 
             if (!key_exists($key, $data)) {
@@ -427,16 +431,26 @@ class ImportStdCommand extends Command
             }
 
             $foreignCode = $data[$key];
-            if (!key_exists($foreignEntityShortName, $this->collections)) {
-                throw new Exception("No collection for [$foreignEntityShortName] in " . json_encode($data));
-            }
-            if (!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
-                throw new Exception("Invalid code [$foreignCode] for key [$key] in " . json_encode($data));
-            }
-            $foreignEntity = $this->collections[$foreignEntityShortName][$foreignCode];
-
             $getter = 'get' . $foreignEntityShortName;
-            if (!$entity->$getter() || $entity->$getter()->getId() !== $foreignEntity->getId()) {
+            $currentId = $entity->$getter() ? $entity->$getter()->getId() : null;
+            $newId = null;
+            $foreignEntity = null;
+            if (null === $foreignCode) {
+                if ($isMandatory) {
+                    throw new Exception("Missing value for [$foreignEntityShortName] in " . json_encode($data));
+                }
+            } else {
+                if (!key_exists($foreignEntityShortName, $this->collections)) {
+                    throw new Exception("No collection for [$foreignEntityShortName] in " . json_encode($data));
+                }
+                if (!key_exists($foreignCode, $this->collections[$foreignEntityShortName])) {
+                    throw new Exception("Invalid code [$foreignCode] for key [$key] in " . json_encode($data));
+                }
+                $foreignEntity = $this->collections[$foreignEntityShortName][$foreignCode];
+                $newId = $foreignEntity->getId();
+            }
+
+            if ($currentId !== $newId) {
                 $setter = 'set' . $foreignEntityShortName;
                 $entity->$setter($foreignEntity);
                 $output->writeln("Changing the <info>$key</info> of <info>" . $entity . "</info>");

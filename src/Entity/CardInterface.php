@@ -277,6 +277,17 @@ interface CardInterface extends Serializable
      */
     public function getReviews();
 
+
+    /**
+     * @param RarityInterface|null $rarity
+     */
+    public function setRarity(?RarityInterface $rarity): void;
+
+    /**
+     * @return RarityInterface|null
+     */
+    public function getRarity(): ?RarityInterface;
+
     /**
      * @param PackInterface $pack
      */
