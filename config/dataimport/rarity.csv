@@ -1,0 +1,6 @@
+`id`,`code`,`name`
+1,common,Common
+2,uncommon,Uncommon
+3,rare,Rare
+4,mythic,Mythic
+5,special,Special

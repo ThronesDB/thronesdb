@@ -327,7 +327,7 @@
                     <fieldset>
                         <legend>{{ 'search.other' | trans }}</legend>
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>{{ 'search.previews' | trans }}</label>
                                     <div class="btn-group btn-group-justified" data-toggle="buttons">
@@ -343,13 +343,24 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label for="i">{{ 'card.info.illustrator' | trans }}</label>
                                     <div>
                                         <select class="form-control" name="i" id="i">
                                             <option value="">{{ 'search.any' | trans }}</option>{% for illustrator in illustrators %}
                                             <option value="{{ illustrator }}">{{ illustrator }}</option>{% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="i">{{ 'card.info.rarity' | trans }}</label>
+                                    <div>
+                                        <select class="form-control" name="r" id="r">
+                                            <option value="">{{ 'search.any' | trans }}</option>{% for rarity in rarities %}
+                                            <option value="{{ rarity.code }}">{{ ('rarity.' ~ rarity.code) | trans }}</option>{% endfor %}
                                         </select>
                                     </div>
                                 </div>
