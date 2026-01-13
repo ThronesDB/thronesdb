@@ -1,0 +1,3 @@
+{% if card.rarity_code %}
+    <div class="card-rarity">{{ 'card.info.rarity' | trans }}: {{ ('rarity.' ~ card.rarity_code) | trans }}</div>
+{% endif %}

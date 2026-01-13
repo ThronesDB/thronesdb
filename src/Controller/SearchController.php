@@ -8,6 +8,7 @@ use App\Entity\Cycle;
 use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
+use App\Entity\Rarity;
 use App\Entity\Type;
 use App\Services\CardsData;
 use DateTime;
@@ -47,13 +48,13 @@ class SearchController extends AbstractController
             'n' => 'income',
             'o' => 'cost',
             'p' => 'isPower',
-            'r' => 'date_release',
             's' => 'strength',
             't' => 'type',
             'u' => 'isUnique',
             'v' => 'initiative',
             'x' => 'text',
             'y' => 'quantity',
+            'r' => 'rarity',
     );
 
     /**
@@ -69,7 +70,6 @@ class SearchController extends AbstractController
         'i' => 'string',
         'd' => 'string',
         'k' => 'string',
-        'r' => 'string',
         'x' => 'string',
         'b' => 'integer',
         'c' => 'integer',
@@ -84,6 +84,7 @@ class SearchController extends AbstractController
         'm' => 'boolean',
         'p' => 'boolean',
         'u' => 'boolean',
+        'r' => 'code',
     );
 
     /**
@@ -106,7 +107,7 @@ class SearchController extends AbstractController
         $cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
         $types = $this->getDoctrine()->getRepository(Type::class)->findAll();
         $factions = $this->getDoctrine()->getRepository(Faction::class)->findAllAndOrderByName();
-
+        $rarity = $this->getDoctrine()->getRepository(Rarity::class)->findAll();
         $list_traits = $this->getDoctrine()->getRepository(Card::class)->findTraits();
         $traits = [];
         foreach ($list_traits as $card) {
@@ -134,6 +135,7 @@ class SearchController extends AbstractController
                 "factions" => $factions,
                 "traits" => $traits,
                 "illustrators" => $illustrators,
+                "rarities" => $rarity,
         ), $response);
     }
 
