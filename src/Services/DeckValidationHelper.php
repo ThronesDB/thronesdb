@@ -231,6 +231,12 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'location';
                 }
                 return false;
+            case '27619': // Sentinels of the Realm
+                $trait = $this->translator->trans('card.traits.guard');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
         }
         return false;
     }
@@ -293,6 +299,10 @@ class DeckValidationHelper
                 return $this->validateTheSmallCouncil($slots);
             case '26080':
                 return $this->validateTradingWithBraavos($slots);
+            case '27618':
+                return $this->validateSightOfTheThreeEyedCrow($slots);
+            case '27620':
+                return $this->validateStreetsOfKingsLanding($slots);
             default:
                 return true;
         }
@@ -592,23 +602,6 @@ class DeckValidationHelper
      * @param SlotCollectionInterface $slots
      * @return bool
      */
-    protected function validateBloodyMummers(SlotCollectionInterface $slots): bool
-    {
-        $plotSlots = $slots->getPlotDeck();
-        $trait = $this->translator->trans('card.traits.kingdom');
-        /* @var SlotInterface $slot */
-        foreach ($plotSlots as $slot) {
-            if (preg_match("/$trait\\./", $slot->getCard()->getTraits())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @param SlotCollectionInterface $slots
-     * @return bool
-     */
     protected function validateManyFacedGod(SlotCollectionInterface $slots): bool
     {
         $plotSlots = $slots->getPlotDeck();
@@ -720,6 +713,34 @@ class DeckValidationHelper
             }
             $names[] = $name;
         }
+        return true;
+    }
+
+    public function validateSightOfTheThreeEyedCrow(SlotCollectionInterface $slots): bool
+    {
+        // Your deck cannot include more than 1 copy of each card (by title).
+        $names = [];
+        foreach ($slots as $slot) {
+            $name = $slot->getCard()->getName();
+            if (in_array($name, $names)) {
+                return false;
+            }
+            if (1 < $slot->getQuantity()) {
+                return false;
+            }
+            $names[] = $name;
+        }
+        return true;
+    }
+
+    public function validateStreetsOfKingsLanding(SlotCollectionInterface $slots): bool
+    {
+        $trait = $this->translator->trans('card.traits.kingslanding');
+        $matchingFactionPlots = $slots->getDrawDeck()->filterByType('location')->filterByTrait($trait)->countCards();
+        if ($matchingFactionPlots < 12) {
+            return false;
+        }
+
         return true;
     }
 }

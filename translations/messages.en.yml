@@ -427,10 +427,12 @@ card:
     winter: Winter
     scheme: Scheme
     banner: Banner
+    guard: Guard
     maester: Maester
     omen: Omen
     kingdom: Kingdom
     kingsguard: Kingsguard
+    kingslanding: King's Landing
     wildling: Wildling
     fool: Fool
     edict: Edict

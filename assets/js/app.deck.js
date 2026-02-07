@@ -1319,6 +1319,32 @@
             return true;
         }
 
+        var validate_sight_of_the_three_eyed_crow = function() {
+            var i, n;
+            var names = [];
+            var cards = deck.get_draw_deck(null);
+
+            for (i = 0, n = cards.length; i < n; i++) {
+                if (cards[i].indeck > 1) {
+                    return false;
+                }
+                if (-1 !== names.indexOf(cards[i].name)) {
+                    return false;
+                }
+                names.push(cards[i].name);
+            }
+            return true;
+        };
+
+        var validate_streets_of_kings_landing = function() {
+            return deck.get_nb_cards(deck.get_cards(
+                null,
+                {
+                    type_code: 'location',
+                    traits: new RegExp(Translator.trans('card.traits.kingslanding') + '\\.')
+                })) >= 12;
+        }
+
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -1409,6 +1435,10 @@
                 return validate_the_small_council();
             case '26080':
                 return validate_trading_with_braavos();
+            case '27618':
+                return validate_sight_of_the_three_eyed_crow();
+            case '27620':
+                return validate_streets_of_kings_landing();
         }
         return true;
     };
@@ -1528,6 +1558,8 @@
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.smallCouncil')) !== -1;
             case '26080':
                 return card.type_code === 'location' && card.traits.indexOf(Translator.trans('card.traits.warship')) !== -1;
+            case '27619':
+                return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.guard')) !== -1;
         }
     };
 })(app.deck = {}, jQuery);
