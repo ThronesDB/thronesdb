@@ -1429,7 +1429,7 @@
                 return validate_the_gift_of_mercy();
             case '25120':
                 return validate_uniting_the_realm();
-            case '26618':
+            case '26120':
                 return validate_armed_to_the_teeth();
             case '26040':
                 return validate_the_small_council();

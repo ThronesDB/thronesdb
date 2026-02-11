@@ -213,7 +213,7 @@ class DeckValidationHelper
                 return false;
             case '25120': // Uniting the Realm
                 return in_array($card->getType()->getCode(), ['character', 'attachment', 'location']);
-            case '26618': // Armed to the Teeth
+            case '26120': // Armed to the Teeth
                 $trait = $this->translator->trans('card.traits.weapon');
                 if ('attachment' === $card->getType()->getCode()) {
                     return preg_match("/$trait\\./", $card->getTraits());
@@ -293,7 +293,7 @@ class DeckValidationHelper
                 return $this->validateTheGiftOfMercy($slots);
             case '25120':
                 return $this->validateUnitingTheRealm($slots);
-            case '26618':
+            case '26120':
                 return $this->validateArmedToTheTeeth($slots);
             case '26040':
                 return $this->validateTheSmallCouncil($slots);
