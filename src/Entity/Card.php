@@ -232,6 +232,16 @@ class Card implements CardInterface
     protected $reviews;
 
     /**
+     * @var RarityInterface|null
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Rarity", inversedBy="cards")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="rarity_id", referencedColumnName="id", nullable=true)
+     * })
+     */
+    protected ?RarityInterface $rarity = null;
+
+    /**
      * @var Pack
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Pack", inversedBy="cards")
@@ -696,6 +706,22 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
+    public function getRarity(): ?RarityInterface
+    {
+        return $this->rarity;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setRarity(?RarityInterface $rarity): void
+    {
+        $this->rarity = $rarity;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function setPack(PackInterface $pack = null)
     {
         $this->pack = $pack;
@@ -867,6 +893,7 @@ class Card implements CardInterface
             'faction',
             'pack',
             'type',
+            'rarity',
         ];
 
         switch ($this->type->getCode()) {
@@ -908,7 +935,8 @@ class Card implements CardInterface
 
         foreach ($externalFields as $externalField) {
             $getter = 'get' . $this->snakeToCamel($externalField);
-            $serialized[$externalField . '_code'] = $this->$getter()->getCode();
+            $externalEntity = $this->$getter();
+            $serialized[$externalField . '_code'] = $externalEntity ? $externalEntity->getCode() : null;
         }
 
         ksort($serialized);

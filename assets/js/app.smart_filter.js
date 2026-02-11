@@ -18,6 +18,7 @@
         n: [add_integer_sf, 'income', Translator.trans('decks.smartfilter.filters.income')],
         o: [add_integer_sf, 'cost', Translator.trans('decks.smartfilter.filters.cost')],
         p: [add_boolean_sf, 'is_power', Translator.trans('decks.smartfilter.filters.is_power')],
+        r: [add_string_sf, 'rarity_code', Translator.trans('decks.smartfilter.filters.rarity')],
         s: [add_integer_sf, 'strength', Translator.trans('decks.smartfilter.filters.strength')],
         t: [add_string_sf, 'type_code', Translator.trans('decks.smartfilter.filters.type_code')],
         u: [add_boolean_sf, 'is_unique', Translator.trans('decks.smartfilter.filters.is_unique')],

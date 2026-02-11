@@ -222,6 +222,7 @@ decks:
       is_intrigue: Intrigenspiel-Symbol
       reserve: Reservewert
       illustrator: Illustrator/in
+      rarity: Seltenheit
       traits: Merkmale
       is_loyal: Loyalität
       is_military: Militäreinsatz-Symbol
@@ -481,6 +482,7 @@ card:
     plotlimit: Strategiestapel-Limit
     quantity: Anzahl
     illustrator: Illustrator/in
+    rarity: Seltenheit
     errataed_short: Druckfehler.
     errataed_long: Der Originaldruck dieser Karte ist fehlerhaft. Weitere Informationen finden Sie in den <a href='%url%'>FAQ</a>.
     short:
