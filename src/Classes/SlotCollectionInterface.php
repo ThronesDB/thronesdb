@@ -93,6 +93,13 @@ interface SlotCollectionInterface extends Countable, IteratorAggregate, ArrayAcc
     public function filterByFaction($faction_code);
 
     /**
+     * Returns only any cards that don't match the given faction.
+     * @param string $faction_code
+     * @return SlotCollectionDecorator
+     */
+    public function excludeByFaction($faction_code);
+
+    /**
      * Returns only cards that match the given type.
      * @param string $type_code
      * @return SlotCollectionDecorator

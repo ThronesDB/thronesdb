@@ -67,6 +67,14 @@ class DeckValidationHelper
                 case '21030': // Battle of the Trident
                     $expectedPlotDeckSize = 10;
                     break;
+                case '00362': // Sealing the Pact
+                case '00363': // Unknown and Unknowable
+                case '00364': // Pass Beneath the Shadow
+                case '00365': // Seeking Fortunes
+                case '00366': // Join Forces
+                case '00367': // Desperate Hope
+                    $expectedMinCardCount = 40;
+                    break;
                 default:
                     // do nothing here
             }
@@ -237,6 +245,13 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
+            case '00362': // Sealing the Pact
+            case '00363': // Unknown and Unknowable
+            case '00364': // Pass Beneath the Shadow
+            case '00365': // Seeking Fortunes
+            case '00366': // Join Forces
+            case '00367': // Desperate Hope
+                return $card->getPack()->getCode() === 'ToJ';
         }
         return false;
     }
@@ -303,6 +318,14 @@ class DeckValidationHelper
                 return $this->validateSightOfTheThreeEyedCrow($slots);
             case '27620':
                 return $this->validateStreetsOfKingsLanding($slots);
+            case '00362': // Sealing the Pact
+                return $this->validateSealingThePact($slots, $faction);
+            case '00363': // Unknown and Unknowable
+                return $this->validateUnknownAndUnknowable($slots, $faction);
+            case '00364': // Pass Beneath the Shadow
+            case '00365': // Seeking Fortunes
+            case '00366': // Join Forces
+            case '00367': // Desperate Hope
             default:
                 return true;
         }
@@ -741,6 +764,38 @@ class DeckValidationHelper
             return false;
         }
 
+        return true;
+    }
+
+    public function validateSealingThePact(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    {
+        $outOfFactionCards = $slots->excludeByFaction($faction->getCode())->excludeByFaction('neutral');
+
+        $minorFactions = [];
+        foreach ($outOfFactionCards->getSlots() as $slot) {
+            $minorFactions[] = $slot->getCard()->getFaction()->getCode();
+        }
+        $minorFactions = array_unique($minorFactions);
+
+        return count($minorFactions) <= 1;
+    }
+
+    public function validateUnknownAndUnknowable(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    {
+        $outOfFactionCards = $slots->excludeByFaction($faction->getCode())->excludeByFaction('neutral');
+
+        $minorFactions = [];
+        foreach ($outOfFactionCards->getSlots() as $slot) {
+            $minorFactions[] = $slot->getCard()->getFaction()->getCode();
+        }
+        $minorFactions = array_unique($minorFactions);
+
+        return count($minorFactions) <= 2;
+    }
+
+    public function validatePassBeneathTheShadow(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    {
+        // TODO
         return true;
     }
 }
