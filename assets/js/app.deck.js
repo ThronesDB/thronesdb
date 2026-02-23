@@ -627,6 +627,12 @@
         {
             nb_packs[card.pack_code] = Math.max(nb_packs[card.pack_code] || 0, card.indeck / card.quantity);
         });
+
+        // for draft packs, do not calculate pack number
+        ['ToJ', 'VDS'].forEach(function(pack_code){
+            nb_packs[pack_code] = 1;
+        });
+
         var pack_codes = _.uniq(_.pluck(cards, 'pack_code'));
         var packs = app.data.packs.find({
             'code': {
