@@ -28,6 +28,9 @@
             }
 
             info += '<div class="card-pack">' + app.format.pack(card) + '</div>';
+            if (card.rarity_code) {
+                info += '<div class="card-code">' + Translator.trans('card.info.rarity') + ': ' + Translator.trans('rarity.' + card.rarity_code) + '</div>'
+            }
             content = image + info;
         } else {
             content = card.image_url ? '<img src="' + card.image_url + '">' : "";

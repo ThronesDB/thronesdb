@@ -222,6 +222,7 @@ decks:
       is_intrigue: Icono de intriga
       reserve: Valor de reserva
       illustrator: Ilustrador
+      rarity: Raridad
       traits: Rasgos
       is_loyal: Lealtad
       is_military: Icono militar
@@ -480,6 +481,7 @@ card:
     plotlimit: Límite por mazo
     quantity: Cantidad
     illustrator: Ilustrador
+    rarity: Raridad
     errataed_short: Fe de erratas.
     errataed_long: Esta tarjeta ha sido erratada de su impresión original. Consulte las <a href='%url%'>Preguntas frecuentes</a> para obtener más detalles.
     short:

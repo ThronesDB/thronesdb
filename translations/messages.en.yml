@@ -222,6 +222,7 @@ decks:
       is_intrigue: Intrigue icon
       reserve: Reserve value
       illustrator: Illustrator
+      rarity: Rarity
       traits: Traits
       is_loyal: Loyalty
       is_military: Military icon
@@ -481,6 +482,7 @@ card:
     plotlimit: Plot deck limit
     quantity: Quantity
     illustrator: Illustrator
+    rarity: Rarity
     errataed_short: Errata'ed.
     errataed_long: This card has been errata'ed from its original print. Please see the <a href='%url%'>FAQ</a> for details.
     short:
@@ -514,6 +516,13 @@ icon:
   event: Event
   agenda: Agenda
   neutral: Neutral
+
+rarity:
+  common: Common
+  uncommon: Uncommon
+  rare: Rare
+  mythic: Mythic
+  special: Special
 
 keyword:
   renown:

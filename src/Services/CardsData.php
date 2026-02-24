@@ -222,7 +222,8 @@ class CardsData
                 ->leftJoin('c.pack', 'p')
                 ->leftJoin('p.cycle', 'y')
                 ->leftJoin('c.type', 't')
-                ->leftJoin('c.faction', 'f');
+                ->leftJoin('c.faction', 'f')
+                ->leftJoin('c.rarity', 'r');
         $qb2 = null;
         $qb3 = null;
 
@@ -332,7 +333,7 @@ class CardsData
                             }
                             $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
                             break;
-                        default: // type and faction
+                        default: // type, faction, or rarity
                             $or = [];
                             foreach ($condition as $arg) {
                                 switch ($operator) {
@@ -474,14 +475,14 @@ class CardsData
                             }
                             $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
                             break;
-                        case 'r': // release
+                        case 'r': // Rarity
                             $or = [];
                             foreach ($condition as $arg) {
                                 switch ($operator) {
-                                    case '<':
+                                    case ':':
                                             $or[] = "(p.dateRelease <= ?$i)";
                                         break;
-                                    case '>':
+                                    case '!':
                                             $or[] = "(p.dateRelease > ?$i or p.dateRelease IS NULL)";
                                         break;
                                 }
