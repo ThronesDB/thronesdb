@@ -52,11 +52,19 @@
         var qtyelt = modal.find('.modal-qty');
         if(qtyelt) {
 
-            var qty = '';
-            for(var i = 0; i <= card.maxqty; i++) {
-                qty += '<label class="btn btn-default"><input type="radio" name="qty" value="' + i + '">' + i + '</label>';
+            var qtyHtml = '';
+            if(card.maxqty > 3) {
+                qtyHtml = '<select class="qty-select form-control">';
+                for(var i = 0; i <= card.maxqty; i++) {
+                    qtyHtml += '<option value="' + i + '"' + (i === card.indeck ? ' selected' : '') + '>' + i + '</option>';
+                }
+                qtyHtml += '</select>';
+            } else {
+                for(var i = 0; i <= card.maxqty; i++) {
+                    qtyHtml += '<label class="btn btn-default"><input type="radio" name="qty" value="' + i + '">' + i + '</label>';
+                }
             }
-            qtyelt.html(qty);
+            qtyelt.html(qtyHtml);
 
             qtyelt.find('label').each(function (index, element)
             {
