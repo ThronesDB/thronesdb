@@ -146,7 +146,7 @@ class DeckValidationHelper
         if ($card->getFaction()->getCode() === $deck->getFaction()->getCode()) {
             return true;
         }
-        if ($card->getIsLoyal()) {
+        if ($card->getIsLoyal() && $card->getPack()->getCode() !== 'ToJ') {
             return false;
         }
         foreach ($deck->getSlots()->getAgendas() as $slot) {
@@ -200,7 +200,7 @@ class DeckValidationHelper
             case '13079': // Kingdom of Shadows (BtRK)
             case '17148': // Kingdom of Shadows (R)
                 $langKey = $this->translator->trans('card.keywords.shadow');
-                return $card->getType()->getCode() === 'character' && $card->hasShadowKeyword($langKey);
+                return $card->getType()->getCode() === 'character' && $card->hasKeyword($langKey);
             case '13099': // The White Book
                 $trait = $this->translator->trans('card.traits.kingsguard');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
@@ -247,11 +247,15 @@ class DeckValidationHelper
                 return false;
             case '00362': // Sealing the Pact
             case '00363': // Unknown and Unknowable
-            case '00364': // Pass Beneath the Shadow
-            case '00365': // Seeking Fortunes
             case '00366': // Join Forces
             case '00367': // Desperate Hope
                 return $card->getPack()->getCode() === 'ToJ';
+            case '00364': // Pass Beneath the Shadow
+                $langKey = $this->translator->trans('card.keywords.shadow');
+                return $card->getPack()->getCode() === 'ToJ' && $card->hasKeyword($langKey);
+            case '00365': // Seeking Fortunes
+                $langKey = $this->translator->trans('keyword.bestow.name');
+                return $card->getPack()->getCode() === 'ToJ' && $card->hasKeyword($langKey);
         }
         return false;
     }
@@ -322,9 +326,10 @@ class DeckValidationHelper
                 return $this->validateSealingThePact($slots, $faction);
             case '00363': // Unknown and Unknowable
                 return $this->validateUnknownAndUnknowable($slots, $faction);
+            case '00366': // Join Forces
+                return $this->validateJoinForces($slots, $faction);
             case '00364': // Pass Beneath the Shadow
             case '00365': // Seeking Fortunes
-            case '00366': // Join Forces
             case '00367': // Desperate Hope
             default:
                 return true;
@@ -793,9 +798,26 @@ class DeckValidationHelper
         return count($minorFactions) <= 2;
     }
 
-    public function validatePassBeneathTheShadow(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    public function validateJoinForces(SlotCollectionInterface $slots, FactionInterface $faction): bool
     {
-        // TODO
-        return true;
+        $outOfFactionCards = $slots->excludeByFaction($faction->getCode())->excludeByFaction('neutral');
+
+        $commonTraits = [];
+        foreach ($outOfFactionCards->getSlots() as $slot) {
+            $traits = $slot->getCard()->getTraits();
+            $traits = array_filter(
+        array_map('trim', explode('.', $traits))
+            );
+            if (!$commonTraits) {
+                $commonTraits = $traits;
+            } else {
+                $commonTraits = array_intersect($commonTraits, $traits);
+                if (!$commonTraits) {
+                    return false;
+                }
+            }
+        }
+
+        return count($commonTraits) > 0;
     }
 }

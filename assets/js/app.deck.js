@@ -64,14 +64,14 @@
     }
 
     /*
-     * Checks a given card's text has the "Shadow" keyword.
+     * Checks a given card's text has the given keyword.
      * @param {Object} card
-     * @param {String} shadow The i18n'ed word "Shadow".
+     * @param {String} keyword The i18n'ed word for a keyword.
      * @returns {boolean}
      */
-    var card_has_shadow_keyword = function(card, shadow) {
-        // "Shadow (<cost>).", with <cost> being either digits or the letter "X"
-        var regex = new RegExp(shadow + ' \\(([0-9]+|X)\\)\\.');
+    var card_has_keyword = function(card, keyword) {
+        // "Keyword (<cost>).", with <cost> being either digits or the letter "X"
+        var regex = new RegExp(keyword + ' \\(([0-9]+|X)\\)\\.');
         var text = card.text || '';
         // check if first line in the card text has that keyword.
         var textLines = text.split("\n");
@@ -1033,12 +1033,6 @@
     {
         return [
             '00030', // The King's Voice (VHotK)
-            '00362', // Sealing the Pact (ToJ)
-            '00363', // Unknown and Unknowable (ToJ)
-            '00364', // Pass Beneath a Shadow (ToJ)
-            '00365', // Seeking Fortunes (ToJ)
-            '00366', // Join Forces (ToJ)
-            '00367', // Desperate Hope (ToJ)
         ];
     };
 
@@ -1071,6 +1065,8 @@
                 expectedMinCardCount = 100;
             } else if (agenda && agenda.code === '21030') {
                 expectedPlotDeckSize = 10;
+            } else if (agenda && ['00362', '00363', '00364', '00365', '00366', '00367'].indexOf(agenda.code) > -1) {
+                expectedMinCardCount = 40;
             }
         });
         // exactly 7 plots
@@ -1351,6 +1347,56 @@
                 })) >= 12;
         }
 
+        var validate_sealing_the_pact = function() {
+            var outOfFactionCards = deck.get_cards(
+                null,
+                {faction_code: {$nin: [deck.get_faction_code(), 'neutral']}},
+            );
+            var minorFactions = [];
+            outOfFactionCards.forEach(function(card) {
+                if (!minorFactions.includes(card.faction_code)) {
+                    minorFactions.push(card.faction_code);
+                }
+            });
+            return minorFactions.length <= 1;
+        }
+
+        var validate_unknown_and_unknowable = function() {
+            var outOfFactionCards = deck.get_cards(
+                null,
+                {faction_code: {$nin: [deck.get_faction_code(), 'neutral']}},
+            );
+            var minorFactions = [];
+            outOfFactionCards.forEach(function(card) {
+                if (!minorFactions.includes(card.faction_code)) {
+                    minorFactions.push(card.faction_code);
+                }
+            });
+            return minorFactions.length <= 2;
+        }
+
+        var validate_join_forces = function() {
+            var outOfFactionCards = deck.get_cards(
+                null,
+                {faction_code: {$nin: [deck.get_faction_code(), 'neutral']}},
+            );
+            var commonTraits = [];
+            outOfFactionCards.forEach(function(card) {
+                var traits = card.traits.split('.')
+                    .map(function(trait) { return trait.trim(); })
+                    .filter(function(trait) { return trait.length > 0; });
+                if (commonTraits.length === 0) {
+                    commonTraits = traits;
+                } else {
+                    commonTraits = _.intersection(commonTraits, traits);
+                    if (commonTraits.length === 0) {
+                        return;
+                    }
+                }
+            });
+            return commonTraits.length > 0;
+        }
+
         switch(agenda.code) {
             case '01027':
                 if(deck.get_nb_cards(deck.get_cards(null, {type_code: {$in: ['character', 'attachment', 'location', 'event']}, faction_code: 'neutral'})) > 15) {
@@ -1445,6 +1491,12 @@
                 return validate_sight_of_the_three_eyed_crow();
             case '27620':
                 return validate_streets_of_kings_landing();
+            case '00362':
+                return validate_sealing_the_pact();
+            case '00363':
+                return validate_unknown_and_unknowable();
+            case '00366':
+                return validate_join_forces();
         }
         return true;
     };
@@ -1516,7 +1568,7 @@
             return true;
 
         // out-of-house and loyal => no
-        if(card.is_loyal)
+        if(card.is_loyal && card.pack_code !== 'ToJ')
             return false;
 
         // agenda => yes
@@ -1550,7 +1602,7 @@
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.maester')) !== -1;
             case '13079': // Kingdom of Shadows (BtRK)
             case '17148': // Kingdom of Shadows (R)
-                return card.type_code === 'character' && card_has_shadow_keyword(card, Translator.trans('card.keywords.shadow'));
+                return card.type_code === 'character' && card_has_keyword(card, Translator.trans('card.keywords.shadow'));
             case '13099':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.kingsguard')) !== -1;
             case '17150':
@@ -1566,6 +1618,15 @@
                 return card.type_code === 'location' && card.traits.indexOf(Translator.trans('card.traits.warship')) !== -1;
             case '27619':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.guard')) !== -1;
+            case '00362': // Sealing the Pact
+            case '00363': // Unknown and Unknowable
+            case '00366': // Join Forces
+            case '00367': // Desperate Hope
+                return card.pack_code === 'ToJ';
+            case '00364': // Pass Beneath the Shadow
+                return card.pack_code === 'ToJ' && card_has_keyword(card, Translator.trans('card.keywords.shadow'));
+            case '00365': // Seeking Fortunes
+                return card.pack_code === 'ToJ' && card_has_keyword(card, Translator.trans('keyword.bestow.name'));
         }
     };
 })(app.deck = {}, jQuery);
