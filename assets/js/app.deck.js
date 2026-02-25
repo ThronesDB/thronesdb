@@ -1558,6 +1558,23 @@
     {
         var agendas = deck.get_agendas();
         var agendaCodes = agendas.map(function(agenda) { return agenda.code });
+
+        // non-ToJ cards with a ToJ agenda => no
+        var tojAgendaCodes = ['00362', '00363', '00364', '00365', '00366', '00367'];
+        if(card.pack_code !== 'ToJ' && agendaCodes.some(function(code) { return tojAgendaCodes.includes(code) })) {
+            return false;
+        }
+
+        // variant draw deck cards with a non-variant agenda => no
+        var variantAgendaCodes = ['00001', '00002', '00003', '00004', '00030'];
+        var variantPackCodes = ['VDS', 'ToJ'];
+        if (variantPackCodes.includes(card.pack_code) && agendaCodes.every(
+            function(code) {
+                return !variantAgendaCodes.includes(code) && !tojAgendaCodes.includes(code);
+            })) {
+            return false;
+        }
+
         // neutral card => yes, unless the agenda is redesigned "Sea of Blood" and the card is an event.
         if(card.faction_code === 'neutral') {
             return !(-1 !== agendaCodes.indexOf('17149') && card.type_code === 'event');
