@@ -155,6 +155,27 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @Route("/draft", name="draft", methods={"GET"})
+     * @param int $cacheExpiration
+     * @param TranslatorInterface $translator
+     * @return Response
+     */
+    public function draftAction(int $cacheExpiration, TranslatorInterface $translator)
+    {
+        $response = new Response();
+        $response->setPublic();
+        $response->setMaxAge($cacheExpiration);
+
+        $page = $this->renderView(
+            'Default/draft.html.twig',
+            array("pagetitle" => $translator->trans("nav.draft"), "pagedescription" => "Draft F.A.Q")
+        );
+        $response->setContent($page);
+
+        return $response;
+    }
+
+    /**
      * @Route("/syntax", name="syntax", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
