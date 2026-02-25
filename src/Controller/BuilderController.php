@@ -85,7 +85,7 @@ class BuilderController extends AbstractController
         $agendas = $em->getRepository(Card::class)->getAgendasForNewDeckWizard(self::VARIANT_AGENDAS);
         $variantAgendas = [];
         if (count(self::VARIANT_AGENDAS)) {
-            $variantAgendas = $em->getRepository(Card::class)->findBy(['code' => self::VARIANT_AGENDAS]);
+            $variantAgendas = $em->getRepository(Card::class)->getVariantAgendasForNewDeckWizard(self::VARIANT_AGENDAS);
         }
 
         return $this->render(
