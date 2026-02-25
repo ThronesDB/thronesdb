@@ -79,6 +79,9 @@ decks:
       agenda: "New deck: %faction%, %agenda%"
     errors:
       nofaction: A faction is required.
+    mode:
+      constructed: Constructed
+      variant: Variant
   edit:
     unsaved: This deck has unsaved changes. Please save the deck or cancel the changes before making further edits.
     refresh: Refresh all application data

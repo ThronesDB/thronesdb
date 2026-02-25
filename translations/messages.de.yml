@@ -79,6 +79,9 @@ decks:
       agenda: "Neue Deckliste: %faction%, %agenda%"
     errors:
       nofaction: Es muss Fraktion ausgewählt sein.
+    mode:
+      constructed: Constructed
+      variant: Variante
   edit:
     unsaved: Diese Deckliste enthält nicht gespeicherte Änderungen. Bitte speichere oder verwerfe diese, bevor du weitere Änderungen vornimmst.
     refresh: Die Daten neu laden
