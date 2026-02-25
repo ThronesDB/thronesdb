@@ -848,10 +848,10 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function hasShadowKeyword($shadow): bool
+    public function hasKeyword($keyword): bool
     {
-        // "Shadow (<cost>).", with <cost> being either digits or the letter "X"
-        $regex = "/${shadow} \\(([0-9]+|X)\\)\\./";
+        // "Keyword (<cost>).", with <cost> being either digits or the letter "X"
+        $regex = "/${keyword} \\(([0-9]+|X)\\)\\./";
         // check if first line in the card text has that keyword.
         $textLines = explode("\n", $this->getText());
 

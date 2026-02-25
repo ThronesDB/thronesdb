@@ -32,6 +32,16 @@
                 </div>
                 <div class="col-md-4">
                     <h2>{{ 'decks.build.choose.agenda' | trans }}</h2>
+                    <div class="btn-group btn-group-sm" data-toggle="buttons" id="build-mode">
+                        <label class="btn btn-default active">
+                            <input type="radio" name="build_mode" value="constructed" autocomplete="off" checked>
+                            {{ 'decks.build.mode.constructed' | trans }}
+                        </label>
+                        <label class="btn btn-default">
+                            <input type="radio" name="build_mode" value="variant" autocomplete="off">
+                            {{ 'decks.build.mode.variant' | trans }}
+                        </label>
+                    </div>
                     <select id="restricted_lists" class="hidden"></select>
                     <ul class="list-group">
                         <li class="list-group-item radio no-agenda">
@@ -41,7 +51,15 @@
                             </label>
                         </li>
                         {% for agenda in agendas %}
-                            <li class="list-group-item radio hidden agenda" data-card-code="{{ agenda.code }}">
+                            <li class="list-group-item radio hidden agenda constructed" data-card-code="{{ agenda.code }}">
+                                <label>
+                                    <input type="radio" name="agenda" value="{{ agenda.code }}">
+                                    {{ macros.card_name_with_pack_no_link(agenda) }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                        {% for agenda in variantAgendas %}
+                            <li class="list-group-item radio hidden agenda variant" data-card-code="{{ agenda.code }}">
                                 <label>
                                     <input type="radio" name="agenda" value="{{ agenda.code }}">
                                     {{ macros.card_name_with_pack_no_link(agenda) }}
