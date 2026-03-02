@@ -1,0 +1,503 @@
+{% extends 'base.html.twig' %}
+{% import "macros.html.twig" as macros %}
+
+{% block body %}
+    <div class="main white container" id="faq">
+        {% include 'alerts.html.twig' %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1 id="FAQ">Tower of Joy Draft Rules and Frequently Asked Questions v1.0, 25/12/2025</h1>
+                    <p>This document contains the draft rules, card clarification, errata, rule clarifications, 
+                        frequently asked questions, and quick reference material for the <em>Tower of Joy Draft</em>
+                        variant format for <em>A Game of Thrones: The Card Game</em>.
+                        The most recent version of this document is considered a supplement to the
+                        <em>A Game of Thrones: The Card Game</em> Tournament Regulations and the
+                        <em>A Game of Thrones: The Card Game</em> Rules Reference.
+                        All changes and additions to this document since the previous version are marked in
+                        <span class="new">red (<s>strikethrough</s> for removals)</span>.
+                    </p>
+                    <p><strong>New content (v1.0): Initial version</strong></p>
+                    <p>
+                        <em>(A PDF version of this document can be found
+                            <a href="https://agot.cards/wp-content/uploads/2026/02/Tower-of-Joy-FAQ-v1.0.pdf"
+                               title="PDF version of this FAQ" target="_blank">here</a>).
+                        </em>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <ul data-toc="#faq-content" data-toc-headings="h2,h3,h4,h5"></ul>
+            </div>
+            <div class="col-md-9" id="faq-content">
+                <h2 id="Draft_Format_Rules">Draft Format Rules</h2>
+
+                <p>This section contains the rules for the Tower of Joy Draft format.</p>
+                <p>
+                    Draft is an alternative game mode in which each player starts with an
+                    identical set of starter cards and a number of randomized card packs. 
+                    Players then pick additional cards from the draft packs to build a deck.
+                </p>
+
+                <h3 id="Prerequisites">Prerequisites</h3>
+
+                <p>
+                    To play a Tower of Joy Draft, each player needs 1 Draft Starter,
+                    4 Draft Packs, and a full set of 8 faction cards.
+                </p>
+
+                <p>
+                    The Tower of Joy Draft Starter contains a fixed set of cards that
+                    are available to each participating player and can be reused
+                    between draft events.
+                </p>
+
+                <p>
+                    The Draft Starter contains the following cards (<em>Tower of Joy 262-281</em>):
+                    <ul>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00362" }) }}">Sealing the Pact</a>/<a href="{{ path('cards_zoom', { card_code: "00363" }) }}">Unknown and Unknowable</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00364" }) }}">Pass Beneath the Shadow</a>/<a href="{{ path('cards_zoom', { card_code: "00365" }) }}">Seeking Fortunes</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00366" }) }}">Join Forces</a>/<a href="{{ path('cards_zoom', { card_code: "00367" }) }}">Desperate Hope</a>
+                        <li>3x <a href="{{ path('cards_zoom', { card_code: "00368" }) }}">Faceless Man</a>
+                        <li>3x <a href="{{ path('cards_zoom', { card_code: "00369" }) }}">Pentoshi Trader</a>
+                        <li>3x <a href="{{ path('cards_zoom', { card_code: "00370" }) }}">Holdfast Village</a>
+                        <li>3x <a href="{{ path('cards_zoom', { card_code: "00371" }) }}">Market Square</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00372" }) }}">Feast or Famine</a>*
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00373" }) }}">The Pale Mare</a>*
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00374" }) }}">City Fair</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00375" }) }}">Manning the City Walls</a>*
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00376" }) }}">Razed to the Ground</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00377" }) }}">Bitter Accusation</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00378" }) }}">Royal Decree</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00379" }) }}">Jousting Contest</a>*
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00380" }) }}">Biting Cold</a>
+                        <li>1x <a href="{{ path('cards_zoom', { card_code: "00381" }) }}">Secrets of Oldtown</a>
+                    </ul>
+                    * These cards are slightly modified from their original prints. See
+                    “Modified Cards”
+                </p>
+
+                <h3 id="Setup">Setup</h3>
+
+                <p>
+                    Players are arranged in pods of 5-8 players. The Tower of Joy
+                    Draft format is designed for pods of 8 players. When splitting
+                    uneven numbers, keep in mind that larger pods mean more
+                    cards to pick from during draft. For less than 5 players,
+                    alternative draft formats such as Winston draft or Pick-2 draft
+                    are recommended.
+                </p>
+
+                <p>
+                    Make yourself familiar with the Draft Starter to have an idea of
+                    the agendas and starter cards available. Then set the Draft
+                    Starter and faction cards aside for now.
+                </p>
+
+                <h3 id="Draft_Process">Draft Process</h3>
+
+                <ol>
+                    <li>Each player opens the first Draft Pack and looks at the cards inside.
+                    <li>Each player picks 1 card from the Draft Pack and sets it aside in a personal face-down pile. 
+                        Each of these piles is called that player's Draft Pool.
+                    <li>Each player passes the remaining cards from their Draft Pack to the next player to their left face-down.
+                        The next player may pick up and look at those cards after they have passed their own pack.
+                    <li>After each player has picked a card and passed their pack, repeat these steps of picking and passing until
+                        there are no remaining cards from the first pack.
+                    <li>Between packs, each player may review their Draft Pool and Starter.
+                    <li>For the next draft round, each player opens the second Draft Pack. 
+                        Repeat the previous steps to draft the pack, this time passing remaining cards
+                        to the next player on the right instead.
+                    <li>Repeat for the third and fourth Draft Pack, passing once more to the left
+                        and finally to the right again until all the packs are exhausted.
+                </ol>
+
+                <h3 id="Deckbuilding">Deckbuilding</h3>
+
+                <p>
+                    After drafting all the cards from the Draft Packs, each player
+                    builds a draw deck of <strong>at least 40 cards</strong> and a plot deck of </strong>exactly 
+                    7 plot cards</strong> from their combined Draft Pool and Draft Starter.
+                </p>
+
+                <p>
+                    For deckbuilding in the Tower of Joy Draft format, <strong>faction
+                    loyalty is ignored.</strong> This means that as long as your faction card
+                    or agenda allows including cards from a given faction, you may
+                    include both loyal and non-loyal cards from that faction in your
+                    draw deck and/or plot deck.
+                </p>
+
+                <p>
+                    <strong>Draw deck limits are ignored as well.</strong> You may include any
+                    number of copies of each card you draft in your draw deck.
+                </p>
+
+                <p>
+                    <strong>Plot deck limits still apply.</strong> This means you may include a
+                    second copy of a single card in your plot deck, but only if it does
+                    not have “Plot deck limit: 1”. (Plots from the Draft Starter implicitly
+                    have a limit of 1 since you cannot draft additional copies)
+                </p>
+
+                <h3 id="Playing_with_Drafted_Decks">Playing with Drafted Decks</h3>
+
+                <p>
+                    Finally, play a tournament using the drafted decks. The
+                    conventional win conditions apply: a player wins when reaching
+                    a power total of 15, or when each of their opponents have been
+                    eliminated by having no cards left in their draw deck.
+                </p>
+
+                <p>
+                    Between games, each player may <strong>freely adjust their draw deck
+                    and plot deck</strong> using cards from their Draft Starter and Draft
+                    Pool. Even <strong>switching factions or agendas is allowed</strong>, as long as
+                    the deck stays legal according to their faction/agenda
+                    combination.
+                </p>
+
+                <h2 id="Modified_Cards">Modified Cards</h2>
+
+                <p>
+                    The Tower of Joy Draft Set contains a subset of cards that are
+                    slightly modified variants of the original card.
+                </p>
+
+                <p>
+                    <center>
+                        <a href="{{ path('cards_zoom', { card_code: "00269" }) }}"><img src="https://throneteki.ams3.cdn.digitaloceanspaces.com/packs/ToJ/169R_Randyll_Tarly.png" alt="Randyll Tarly (ToJ 269)"></a>
+                    </center>
+                </p>
+
+                <p>
+                    Modified cards are specific to the draft format and have the
+                    <strong>“Draft format only”</strong> designation. The modified portion of these
+                    cards’ text boxes is <span style="color: #d74110">colored orange</span> to be obvious at a glance.
+                    The only exception to this rule is <a href="{{ path('cards_zoom', { card_code: "00379" }) }}">Jousting Contest</a> (ToJ 279) from the
+                    Draft Starter, where the changes are limited to the income,
+                    initiative, and reserve values while the text box is the same as
+                    <a href="{{ path('cards_zoom', { card_code: "01014" }) }}">Jousting Contest</a> (Core Set 14).
+                </p>
+
+                <p>
+                    For the purposes of Tower of Joy Draft, the original versions of
+                    these cards are ignored and the modified versions are the only
+                    variants that exist.
+                </p>
+
+                <h2 id="Card_Rarity">Card Rarity</h2>
+
+                <p>
+                    The Tower of Joy Draft Set contains the following rarities from most common to most rare:
+                    <ul>
+                        <li>common (C)
+                        <li>uncommon (U)
+                        <li>rare (R)
+                        <li>hidden (H)
+                    </ul>
+                </p>
+
+                <p>
+                    Each Tower of Joy Draft Pack contains 15 cards of the following rarities:
+                    <ul>
+                        <li>7 common cards
+                        <li>5 uncommon cards
+                        <li>2 rare cards
+                        <li>1 foil card of any rarity (hidden rares only appear in this slot)
+                    </ul>
+                </p>
+
+                <p>
+                    Each card’s rarity is noted on the bottom right, next to the set
+                    number (e.g. “R148” for <a href="{{ path('cards_zoom', { card_code: "00248" }) }}">Magister Illyrio</a> (ToJ 148)
+                    meaning this is a rare card).
+                </p>
+
+                <p>
+                    <strong><span color="#990000">IMPORTANT INFORMATION: Tower of Joy Draft Packs
+                    distributed at Stahleck 2025 have faulty rarity collation
+                    due to errors on the printer’s side.</span></strong> These packs frequently
+                    consist of 14 rare or 14 common cards + 1 foil; rarely contain
+                    uncommon cards; and often include repeat copies of the same
+                    foil cards within packs in the same display.
+                </p>
+                
+                <p>
+                    <strong>To verify that you are playing with packs of the correct
+                    composition, check the front of your Draft Packs for the
+                    line “2026 Edition”.</strong> If your Draft Packs don’t have this line,
+                    they are faulty and are ineligible for draft unless all players are
+                    aware, all are playing with faulty packs, and the TO explicitly
+                    allows using these packs.
+                </p>
+
+                <h2 id="Card_Legality">Card Legality</h2>
+
+                <p>
+                    Only cards from Tower of Joy Draft Starters and drafted cards
+                    from Tower of Joy Draft Packs are legal to use during draft
+                    format deckbuilding.
+                </p>
+
+                <p>
+                    Cards from the Tower of Joy Draft Set that are <strong>identical reprints</strong>
+                    of cards from other sets and do not have the “Draft format only”
+                    designation are legal to use in other formats according to those
+                    formats’ rules. This includes foil cards.
+                </p>
+
+                <p>
+                    Unique, “Draft format only” characters without modifications
+                    may be chosen as your Hand of the King in the <em>Hand of the King</em>
+                    variant format when played at the Tourney of Stahleck.
+                </p>
+
+                <h2 id="Frequently_Asked_Questions">Frequently Asked Questions</h3>
+
+                <p>
+                    This section provides answers to a number of common
+                    questions that are asked about the Tower of Joy Draft format and
+                    cards from the Draft Set. The entries are presented in a
+                    “question and answer” format, with the newest questions at the
+                    end of the list.
+                </p>
+
+                <h3 id="FAQ_1">General Questions</h3>
+
+                <p><em>What do I need for drafting?</em></p>
+
+                <p>
+                    Each player needs one Tower of Joy Draft Starter and four
+                    Tower of Joy Draft Packs. The Draft Starter is reusable between
+                    events whereas new Draft Packs are needed for each draft.
+                </p>
+
+                <p><em>Does loyalty matter for deckbuilding?</em></p>
+
+                <p>
+                    No, all agendas provided in the Tower of Joy Draft Starter allow
+                    you to include cards independent of loyalty.
+                </p>
+
+                <p><em>Do card limits apply to deckbuilding?</em></p>
+
+                <p>
+                    Card limits only apply to the plot deck. Your draw deck may
+                    include any number of copies of each card you draft. Your plot
+                    deck must include exactly 7 cards, of which one may be
+                    included twice unless it has "plot deck limit: 1" or is part of
+                    the Draft Starter.
+                </p>
+
+                <p><em>Can I use cards from Tower of Joy Draft Packs in my constructed decks?</em></p>
+
+                <p>
+                    Yes. You may use drafted cards, including foils, for constructed
+                    formats IF they are also legal in that format anyway. Any card
+                    with the "Draft format only" designation is NOT legal in GOT
+                    Standard by default. One exception is the <em>Hand of the King</em>
+                    variant format when played at the Tourney of Stahleck: here you
+                    may use a unique, non-modified, draft format only character
+                    from the Tower of Joy draft packs as your Hand of the King.
+                </p>
+
+                <p><em>Can a player lose the game by having no cards left in their draw deck?</em></p>
+
+                <p>Yes.</p>
+
+                <p><em>How many cards should my draft deck include?</em></p>
+
+                <p>
+                    The draw deck must have at least 40 cards.
+                    The plot deck must have exactly 7 cards.
+                </p>
+
+                <h3 id="FAQ_2">Card Questions</h3>
+
+                <h4 id="FAQ_3"><a href="{{ path('cards_zoom', { card_code: "00301" }) }}">All Men Must Die</a> (ToJ 201)</h4>
+
+                <p><em>Is this just Valar Morghulis?</em></p>
+
+                <p>Yes.</p>
+
+                <p><em>Can I use it in my constructed decks instead of Valar Morghulis?</em></p>
+
+                <p>Ask your Tournament Organizer.</p>
+
+                <h4 id="FAQ_4"><a href="{{ path('cards_zoom', { card_code: "00332" }) }}">City of Ice</a> (ToJ 232)</h4>
+
+                <p><em>Does City of Ice do anything if I don't have a City plot in my used pile?</em></p>
+
+                <p>
+                    Without a <em><strong>City</strong></em> plot, City of Ice's <strong>Reaction</strong>
+                    has a "Limit 0", so it cannot be triggered.
+                </p>
+
+                <h4 id="FAQ_5"><a href="{{ path('cards_zoom', { card_code: "00357" }) }}">Face Mask</a> (ToJ 257)</h4>
+
+                <p><em>Does Face Mask do anything during setup?</em></p>
+
+                <p>
+                    No. You don't get an opportunity to trigger Face Mask's
+                    <strong>Reaction</strong>, so you cannot name a trait.
+                    You can still setup Face Mask to draw an extra card though.
+                </p>
+
+                <h4 id="FAQ_6"><a href="{{ path('cards_zoom', { card_code: "00368" }) }}">Faceless Man</a> (ToJ 268)</h4>
+
+                <p><em>Does Faceless Man do anything during setup?</em></p>
+
+                <p>
+                    No, see Face Mask (ToJ 257).
+                </p>
+
+                <h4 id="FAQ_7"><a href="{{ path('cards_zoom', { card_code: "00267" }) }}">Fighting Pit</a> (ToJ 167)</h4>
+
+                <p><em>Can I use Fighting Pit to discard and then immediately put into play the same character?</em></p>
+
+                <p>Yes.</p>
+
+                <h4 id="FAQ_8"><a href="{{ path('cards_zoom', { card_code: "00361" }) }}">Hot Pie</a> (ToJ 261)</h4>
+
+                <p><em>Is it intended for Hot Pie's +1 STR effect to last indefinitely?</em></p>
+
+                <p>Yes.</p>
+
+                <p><em>If a character with a pie token leaves play and later returns, will
+                        it still have the +1 STR?</em></p>
+
+                <p>No, the effect will wear off once the character leaves play.</p>
+
+                <h4 id="FAQ_9"><a href="{{ path('cards_zoom', { card_code: "00336" }) }}">Melisandre's Gambit</a> (ToJ 236)</h4>
+
+                <p><em>Can I use Melisandre's Gambit to put into play another copy of
+                        the same character I killed?</em></p>
+
+                <p>
+                    No, the name of the character put into play has to be different
+                    from the one killed.
+                </p>
+
+                <h4 id="FAQ_10"><a href="{{ path('cards_zoom', { card_code: "00250" }) }}">Quentyn Martell</a> (ToJ 150)</h4>
+
+                <p><em>Does Quentyn's Action take STR modifiers into account?</em></p>
+
+                <p>
+                    Yes, legal targets to put into play with Quentyn's ability are
+                    determined based on his actual STR, not his printed STR.
+                </p>
+
+                <h4 id="FAQ_11"><a href="{{ path('cards_zoom', { card_code: "00362" }) }}">Sealing the Pact</a> (ToJ 262)</h4>
+
+                <p><em>Does “out-of-faction” include neutral cards?</em></p>
+
+                <p>
+                    No, out-of-faction specifically means non-neutral cards of a
+                    faction different from your faction card.
+                </p>
+
+                <h4 id="FAQ_12"><a href="{{ path('cards_zoom', { card_code: "00365" }) }}">Seeking Fortunes</a> (ToJ 265)</h4>
+
+                <p><em>Can I include out-of-faction locations without bestow?</em></p>
+
+                <p>
+                    Yes, Seeking Fortunes allows you to include both cards with
+                    bestow, and locations (bestow or not).
+                </p>
+
+                <h4 id="FAQ_13"><a href="{{ path('cards_zoom', { card_code: "00363" }) }}">Unknown and Unknowable</a> (ToJ 263)</h4>
+
+                <p><em>Does it make a difference which of my three factions I choose as
+                        the main faction?</em></p>
+
+                <p>
+                    No, but for tournament statistics it might be preferable to choose
+                    the faction that is most represented in your draw deck as your
+                    main faction.
+                </p>
+
+                <h2 id="Card_Changes">Card Changes</h2>
+
+                <p><strong>
+                    If you haven’t played with Tower of Joy Draft Packs
+                    distributed at the Stahleck 2025 tournament, you can
+                    ignore this section.
+                </strong></p>
+
+                <p>
+                    Due to issues on the printer’s side, the first print run of the
+                    Tower of Joy Draft Set had faulty pack collation, requiring us to
+                    order a second print run. We have used this as a chance to make
+                    some minor fixes and changes to “Draft format only” cards.
+                </p>
+
+                <h4 id="Change_1"><a href="{{ path('cards_zoom', { card_code: "00301" }) }}">All Men Must Die</a> (ToJ 201)</h4>
+
+                <p>
+                    Now has flavor text.
+                </p>
+
+                <h4 id="Change_2"><a href="{{ path('cards_zoom', { card_code: "00325" }) }}">All Men Must Serve</a> (ToJ 225)</h4>
+
+                <p>
+                    Now has flavor text.
+                </p>
+
+                <h4 id="Change_3"><a href="{{ path('cards_zoom', { card_code: "00288" }) }}">Arbor Jester</a> (ToJ 188)</h4>
+
+                <p>
+                    Old: “After Arbor Jester comes out of shadows”</br>
+                    New: “After Arbor Jester enters play”
+                </p>
+
+                <h4 id="Change_4"><a href="{{ path('cards_zoom', { card_code: "00260" }) }}">Beneath the Gold, the Bitter Steel</a> (ToJ 160)</h4>
+
+                <p>Card text was improperly formatted; <em><strong>Item</strong></em> is now properly formatted as a trait.</p>
+
+                <h4 id="Change_5"><a href="{{ path('cards_zoom', { card_code: "00132" }) }}">Cast Me Forth</a> (ToJ 32)</h4>
+
+                <p>
+                    Old: “You may ambush non-unique Drowned God <span style="color: #d74110">or Raider</span> characters from your dead pile”</br>
+                    New: “You may ambush <span style="color: #d74110">Drowned God or Raider</span> characters from your dead pile”
+                </p>
+
+                <h4 id="Change_6"><a href="{{ path('cards_zoom', { card_code: "00336" }) }}">Melisandre's Gambit</a> (ToJ 236)</h4>
+
+                <p>Now has "Plot deck limit: 1".</p>
+
+                <h4 id="Change_7"><a href="{{ path('cards_zoom', { card_code: "00117" }) }}">Myrish Pirates</a> (ToJ 17)</h4>
+
+                <p>
+                    Old: <em><strong>Mercenary. R’hllor. Smuggler. The Seven.</strong></em></br>
+                    New: <em><strong>Mercenary. Raider. R’hllor. The Seven.</strong></em>
+                </p>
+
+                <h4 id="Change_8"><a href="{{ path('cards_zoom', { card_code: "00146" }) }}">Stony Shore Thrall</a> (ToJ 46)</h4>
+
+                <p>
+                    Old: 1 STR.</br>
+                    New: 2 STR.
+                </p>
+
+                <p>
+                    Old: “After a card enters play during the challenges phase, kneel Stony Shore Thrall to choose an opponent.”</br>
+                    New: “After a card enters play during the challenges phase, choose an opponent.” and "(Limit once per round.)"
+                </p>
+
+                <h4 id="Change_9"><a href="{{ path('cards_zoom', { card_code: "00266" }) }}">Stormcrows</a> (ToJ 166)</h4>
+
+                <p>
+                    Old: “After Stormcrows comes out of shadows”</br>
+                    New: “After Stormcrows enters play during a challenge”
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
