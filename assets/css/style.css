@@ -212,6 +212,23 @@ ol {
     height: 70px;
 }
 
+.qty-select {
+    width: auto;
+    display: inline-block;
+    padding: 2px 6px;
+    font-size: 12px;
+    height: 24px;
+    line-height: 1.5;
+    min-width: 69px;
+}
+.modal .qty-select {
+    font-size: 14px;
+    padding: 6px 12px;
+    min-width: 90px;
+    height: auto;
+    line-height: 1.5;
+}
+
 /** Description panel **/
 div#description img,
 div#description-preview img {

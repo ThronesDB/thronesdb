@@ -43,24 +43,31 @@
 
   function refresh_agendas() {
     var rl = app.data.getBestSelectedRestrictedList();
-    if (! rl) {
-      $('.agenda').removeClass('hidden');
-      return;
-    }
+    var mode = $('input[name=build_mode]:checked').val();
 
-    $('.agenda').each(function (index, elem) {
-      var $elem = $(elem);
-      var code = $(elem).attr('data-card-code');
-      if (-1 === rl.contents.joust.banned.indexOf(code) || -1 === rl.contents.melee.banned.indexOf(code)) {
-        $elem.removeClass('hidden');
-      } else {
-        $elem.addClass('hidden');
-        $('input', $elem).each(function(idx, input) {
-          var $input = $(input);
-          $input.prop('checked', false);
-        });
+    if (mode === 'variant') {
+      $('.agenda.constructed').addClass('hidden');
+      $('.agenda.variant').removeClass('hidden');
+    } else {
+      $('.agenda.variant').addClass('hidden');
+      $('.agenda.constructed').removeClass('hidden');
+      if (! rl) {
+        return;
       }
-    });
+      $('.agenda.constructed:visible').each(function (index, elem) {
+        var $elem = $(elem);
+        var code = $(elem).attr('data-card-code');
+        if (-1 === rl.contents.joust.banned.indexOf(code) || -1 === rl.contents.melee.banned.indexOf(code)) {
+          $elem.removeClass('hidden');
+        } else {
+          $elem.addClass('hidden');
+          $('input', $elem).each(function(idx, input) {
+            var $input = $(input);
+            $input.prop('checked', false);
+          });
+        }
+      });
+    }
 
     if (! $('.agenda input:checked').length) {
       $('.no-agenda input[type="radio"]').prop('checked', true);
@@ -73,6 +80,7 @@
    */
   ui.setup_event_handlers = function setup_event_handlers() {
     $('#restricted_lists').on('change', on_rl_change);
+    $('input[name=build_mode]').on('change', refresh_agendas);
   };
 
   /**

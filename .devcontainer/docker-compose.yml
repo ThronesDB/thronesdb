@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    environment:
+      DATABASE_URL: mysql://app:password@db:3306/thronesdb
+    depends_on:
+      - db
+  
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: thronesdb
+      MYSQL_USER: app
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"

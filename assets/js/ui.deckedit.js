@@ -47,7 +47,7 @@
     {
         app.data.cards.find().forEach(function (record)
         {
-            var max_qty = Math.min(3, record.deck_limit);
+            var max_qty = record.deck_limit;
             if(record.pack_code === 'Core')
                 max_qty = Math.min(max_qty, record.quantity * app.config.get('core-set'));
             app.data.cards.updateById(record.code, {
@@ -372,6 +372,12 @@
                     $(element).prop('checked', true).closest('label').addClass('active');
                 }
             });
+
+            // for cards with deck limit > 3, update the dropdown value instead
+            var select = row.find('select.qty-select');
+            if(select.length) {
+                select.val(quantity);
+            }
         });
     };
 
@@ -451,7 +457,7 @@
         });
 
         $('#config-options').on('change', 'input', ui.on_config_change);
-        $('#collection').on('change', 'input[type=radio]', ui.on_list_quantity_change);
+        $('#collection').on('change', 'input[type=radio], select.qty-select', ui.on_list_quantity_change);
         $('#restricted_lists').on('change', 'input[type=radio]', ui.on_rl_change);
 
         $('#cardModal').on('keypress', function (event)
@@ -555,16 +561,28 @@
      */
     ui.build_row = function build_row(card)
     {
-        var radios = '', radioTpl = _.template(
-                '<label class="btn btn-xs btn-default <%= active %>"><input type="radio" name="qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
-                );
+        var radios;
 
-        for(var i = 0; i <= card.maxqty; i++) {
-            radios += radioTpl({
-                i: i,
-                active: (i === card.indeck ? ' active' : ''),
-                card: card
-            });
+        // if there are more than three copies allowed, show a dropdown instead of
+        // a button group. this makes the UI more compact for large limits.
+        if (card.maxqty > 3) {
+            radios = '<select class="qty-select form-control">';
+            for (var j = 0; j <= card.maxqty; j++) {
+                radios += '<option value="' + j + '"' + (j === card.indeck ? ' selected' : '') + '>' + j + '</option>';
+            }
+            radios += '</select>';
+        } else {
+            var radioTpl = _.template(
+                    '<label class="btn btn-xs btn-default <%= active %>"><input type="radio" name="qty-<%= card.code %>" value="<%= i %>"><%= i %></label>'
+                    );
+            radios = '';
+            for (var i = 0; i <= card.maxqty; i++) {
+                radios += radioTpl({
+                    i: i,
+                    active: (i === card.indeck ? ' active' : ''),
+                    card: card
+                });
+            }
         }
 
         var html = DisplayColumnsTpl({
@@ -640,6 +658,7 @@
                         }
                     }
             );
+            row.find('select.qty-select').val(card.indeck);
 
             row.find('.rl-labels').html(app.deck.get_card_labels(card));
 

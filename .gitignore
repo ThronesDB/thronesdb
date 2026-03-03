@@ -23,6 +23,7 @@
 
 # ignore FOS JS routing output
 /public/js/fos_js_routes.js
+/web/js/fos_js_routes.js
 
 # ignore node modules
 /node_modules

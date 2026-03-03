@@ -1,0 +1,18 @@
+{
+  "name": "ThronesDB",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [8000, 3306],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "felixbecker.php-debug",
+        "ms-vscode.php-tools",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "postStartCommand": "bash .devcontainer/post-start.sh"
+}

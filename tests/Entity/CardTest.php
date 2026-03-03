@@ -41,6 +41,6 @@ class CardTest extends TestCase
     {
         $card = new Card();
         $card->setText($text);
-        $this->assertEquals($card->hasShadowKeyword($shadowKeyword), $hasKeyword);
+        $this->assertEquals($card->hasKeyword($shadowKeyword), $hasKeyword);
     }
 }
