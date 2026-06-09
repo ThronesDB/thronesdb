@@ -18,6 +18,7 @@ nav:
   rulesreference: Guía de referencia
   syntax: Sintaxis
   faq: F.A.Q.
+  draft: Draft F.A.Q.
   restrictions: Cartas restringidas y prohibidas
   tournamentregulations: Normativa para torneos
   advancedsearch: Búsqueda avanzada
@@ -78,6 +79,9 @@ decks:
       agenda: "Nuevo mazo: %faction%, %agenda%"
     errors:
       nofaction: Se requiere una Facción.
+    mode:
+      constructed: Constructed
+      variant: Variant
   edit:
     unsaved: Este mazo tiene cambios sin guardar. Por favor, guarda el mazo o cancela los cambios antes de seguir modificándolo.
     refresh: Recargar los datos de la aplicación

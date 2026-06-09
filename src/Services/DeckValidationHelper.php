@@ -67,6 +67,14 @@ class DeckValidationHelper
                 case '21030': // Battle of the Trident
                     $expectedPlotDeckSize = 10;
                     break;
+                case '00362': // Sealing the Pact
+                case '00363': // Unknown and Unknowable
+                case '00364': // Pass Beneath the Shadow
+                case '00365': // Seeking Fortunes
+                case '00366': // Join Forces
+                case '00367': // Desperate Hope
+                    $expectedMinCardCount = 40;
+                    break;
                 default:
                     // do nothing here
             }
@@ -138,7 +146,7 @@ class DeckValidationHelper
         if ($card->getFaction()->getCode() === $deck->getFaction()->getCode()) {
             return true;
         }
-        if ($card->getIsLoyal()) {
+        if ($card->getIsLoyal() && $card->getPack()->getCode() !== 'ToJ') {
             return false;
         }
         foreach ($deck->getSlots()->getAgendas() as $slot) {
@@ -192,7 +200,7 @@ class DeckValidationHelper
             case '13079': // Kingdom of Shadows (BtRK)
             case '17148': // Kingdom of Shadows (R)
                 $langKey = $this->translator->trans('card.keywords.shadow');
-                return $card->getType()->getCode() === 'character' && $card->hasShadowKeyword($langKey);
+                return $card->getType()->getCode() === 'character' && $card->hasKeyword($langKey);
             case '13099': // The White Book
                 $trait = $this->translator->trans('card.traits.kingsguard');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
@@ -237,6 +245,17 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'character';
                 }
                 return false;
+            case '00362': // Sealing the Pact
+            case '00363': // Unknown and Unknowable
+            case '00366': // Join Forces
+            case '00367': // Desperate Hope
+                return $card->getPack()->getCode() === 'ToJ';
+            case '00364': // Pass Beneath the Shadow
+                $langKey = $this->translator->trans('card.keywords.shadow');
+                return $card->getPack()->getCode() === 'ToJ' && $card->hasKeyword($langKey);
+            case '00365': // Seeking Fortunes
+                $langKey = $this->translator->trans('keyword.bestow.name');
+                return $card->getPack()->getCode() === 'ToJ' && $card->hasKeyword($langKey);
         }
         return false;
     }
@@ -303,6 +322,15 @@ class DeckValidationHelper
                 return $this->validateSightOfTheThreeEyedCrow($slots);
             case '27620':
                 return $this->validateStreetsOfKingsLanding($slots);
+            case '00362': // Sealing the Pact
+                return $this->validateSealingThePact($slots, $faction);
+            case '00363': // Unknown and Unknowable
+                return $this->validateUnknownAndUnknowable($slots, $faction);
+            case '00366': // Join Forces
+                return $this->validateJoinForces($slots, $faction);
+            case '00364': // Pass Beneath the Shadow
+            case '00365': // Seeking Fortunes
+            case '00367': // Desperate Hope
             default:
                 return true;
         }
@@ -742,5 +770,54 @@ class DeckValidationHelper
         }
 
         return true;
+    }
+
+    public function validateSealingThePact(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    {
+        $outOfFactionCards = $slots->excludeByFaction($faction->getCode())->excludeByFaction('neutral');
+
+        $minorFactions = [];
+        foreach ($outOfFactionCards->getSlots() as $slot) {
+            $minorFactions[] = $slot->getCard()->getFaction()->getCode();
+        }
+        $minorFactions = array_unique($minorFactions);
+
+        return count($minorFactions) <= 1;
+    }
+
+    public function validateUnknownAndUnknowable(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    {
+        $outOfFactionCards = $slots->excludeByFaction($faction->getCode())->excludeByFaction('neutral');
+
+        $minorFactions = [];
+        foreach ($outOfFactionCards->getSlots() as $slot) {
+            $minorFactions[] = $slot->getCard()->getFaction()->getCode();
+        }
+        $minorFactions = array_unique($minorFactions);
+
+        return count($minorFactions) <= 2;
+    }
+
+    public function validateJoinForces(SlotCollectionInterface $slots, FactionInterface $faction): bool
+    {
+        $outOfFactionCards = $slots->excludeByFaction($faction->getCode())->excludeByFaction('neutral');
+
+        $commonTraits = [];
+        foreach ($outOfFactionCards->getSlots() as $slot) {
+            $traits = $slot->getCard()->getTraits();
+            $traits = array_filter(
+        array_map('trim', explode('.', $traits))
+            );
+            if (!$commonTraits) {
+                $commonTraits = $traits;
+            } else {
+                $commonTraits = array_intersect($commonTraits, $traits);
+                if (!$commonTraits) {
+                    return false;
+                }
+            }
+        }
+
+        return count($commonTraits) > 0;
     }
 }

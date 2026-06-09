@@ -18,6 +18,7 @@ nav:
   rulesreference: Referenzhandbuch
   syntax: Syntax
   faq: F.A.Q.
+  draft: Draft F.A.Q.
   restrictions: Eingeschränkte und Verbotene Karten
   tournamentregulations: Turnierregeln
   advancedsearch: Erweiterte Suche
@@ -78,6 +79,9 @@ decks:
       agenda: "Neue Deckliste: %faction%, %agenda%"
     errors:
       nofaction: Es muss Fraktion ausgewählt sein.
+    mode:
+      constructed: Constructed
+      variant: Variante
   edit:
     unsaved: Diese Deckliste enthält nicht gespeicherte Änderungen. Bitte speichere oder verwerfe diese, bevor du weitere Änderungen vornimmst.
     refresh: Die Daten neu laden

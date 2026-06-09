@@ -135,7 +135,7 @@ class CardRepository extends EntityRepository
     }
 
     /**
-     * Retrieves all agendas eligible for deck building.
+     * Retrieves all agendas eligible for constructed deck building.
      * @param array $excludedAgendas a list of codes of agendas to exclude.
      * @return array
      */
@@ -153,6 +153,30 @@ class CardRepository extends EntityRepository
         if (! empty($excludedAgendas)) {
             $qb->andWhere($qb->expr()->notIn('c.code', ':codes'));
             $qb->setParameter(':codes', $excludedAgendas, Connection::PARAM_STR_ARRAY);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Retrieves all agendas eligible for variant game modes deck building.
+     * @param array $variantAgendas a list of codes of agendas to include.
+     * @return array
+     */
+    public function getVariantAgendasForNewDeckWizard($variantAgendas = array()): array
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c, p')
+            ->join('c.pack', 'p')
+            ->join('c.type', 't')
+            ->where('t.code = :type')
+            ->orderBy('p.code', 'ASC');
+
+        $qb->setParameter(':type', 'agenda');
+
+        if (! empty($variantAgendas)) {
+            $qb->andWhere($qb->expr()->in('c.code', ':codes'));
+            $qb->setParameter(':codes', $variantAgendas, Connection::PARAM_STR_ARRAY);
         }
 
         return $qb->getQuery()->getResult();

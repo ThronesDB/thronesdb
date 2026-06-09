@@ -49,21 +49,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BuilderController extends AbstractController
 {
     /**
-     * @const EXCLUDED_AGENDAS Codes of agendas that should not be available for selection in the new deck wizard.
+     * @const VARIANT_AGENDAS Codes of agendas that should not be available for selection under "constructed" in the new deck wizard.
      * @todo Hardwiring those is good enough for now, rethink this if/as this list grows [ST 2019/04/04]
      */
-    protected const EXCLUDED_AGENDAS = [
-        '00001', // The Power of Wealth (VDS)
-        '00002', // Protectors of the Realm (VDS)
-        '00003', // Treaty (VDS)
-        '00004', // Uniting the Seven Kingdoms (VDS)
-        "00030", // The King's Voice (VHotK)
+    protected const VARIANT_AGENDAS = [
         '00362', // Sealing the Pact (ToJ)
         '00363', // Unknown and Unknowable (ToJ)
         '00364', // Pass Beneath a Shadow (ToJ)
         '00365', // Seeking Fortunes (ToJ)
         '00366', // Join Forces (ToJ)
         '00367', // Desperate Hope (ToJ)
+        '00001', // The Power of Wealth (VDS)
+        '00002', // Protectors of the Realm (VDS)
+        '00003', // Treaty (VDS)
+        '00004', // Uniting the Seven Kingdoms (VDS)
+        "00030", // The King's Voice (VHotK)
     ];
 
     /**
@@ -82,7 +82,11 @@ class BuilderController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $factions = $em->getRepository(Faction::class)->findPrimaries();
-        $agendas = $em->getRepository(Card::class)->getAgendasForNewDeckWizard(self::EXCLUDED_AGENDAS);
+        $agendas = $em->getRepository(Card::class)->getAgendasForNewDeckWizard(self::VARIANT_AGENDAS);
+        $variantAgendas = [];
+        if (count(self::VARIANT_AGENDAS)) {
+            $variantAgendas = $em->getRepository(Card::class)->getVariantAgendasForNewDeckWizard(self::VARIANT_AGENDAS);
+        }
 
         return $this->render(
             'Builder/initbuild.html.twig',
@@ -90,6 +94,7 @@ class BuilderController extends AbstractController
                 'pagetitle' => $translator->trans('decks.form.new'),
                 'factions' => $factions,
                 'agendas' => $agendas,
+                'variantAgendas' => $variantAgendas,
             ],
             $response
         );

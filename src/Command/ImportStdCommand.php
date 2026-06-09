@@ -214,6 +214,10 @@ class ImportStdCommand extends Command
         foreach ($cycles as $packs) {
             $position = 1;
             foreach ($packs as $pack) {
+                if ($pack['is_variant']) {
+                    // variants aren't really a cycle, so we want each variant pack to start at 1
+                    $position = 1;
+                }
                 foreach ($pack['cards'] as $item) {
                     $data = [];
                     $data['code'] = $item['code'];
@@ -767,6 +771,7 @@ class ImportStdCommand extends Command
             $cycle = [];
             foreach ($rawCycle['packs'] as $packCode) {
                 $pack = $rawPackData[$packCode];
+                $pack['is_variant'] = ($rawCycle['id'] === 'variants');
                 $cycle[] = $pack;
             }
             $cycles[]  = $cycle;

@@ -55,9 +55,11 @@ class ActivateRestrictionCommand extends Command
             $output->writeln('No restrictions to activate found.');
         } else {
             $helper = $this->getHelper('question');
+            $firstKey = array_key_first($options);
             $question = new ChoiceQuestion(
                 'Please select which restrictions to activate: ',
-                $options
+                $options,
+                $firstKey
             );
             $question->setMultiselect(true);
             $choices = $helper->ask($input, $output, $question);

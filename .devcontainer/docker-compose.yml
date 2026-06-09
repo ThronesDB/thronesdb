@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace:cached
+    environment:
+      DATABASE_URL: mysql://app:${DB_PASSWORD:-apppassword}@db:3306/${DB_NAME:-thronesdb}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - app-network
+  
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-thronesdb}
+      MYSQL_USER: app
+      MYSQL_PASSWORD: ${DB_PASSWORD:-apppassword}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:

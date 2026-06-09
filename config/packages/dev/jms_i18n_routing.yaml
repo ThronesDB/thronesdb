@@ -1,0 +1,4 @@
+# JMSI18nRoutingBundle Configuration
+jms_i18n_routing:
+    strategy: prefix_except_default
+    redirect_to_host: false
