@@ -7,7 +7,7 @@ userby: by %user%
 seemore:
   faction: More in this faction
 noimage: No image
-design_team_call_to_action: "Interested in helping the design team with the latest cards? <a href=\"%url%\">Click here</a> to join their Discord and find out more!</a>"
+design_team_call_to_action: "If you are interested in playtesting cards like this, visit <a href=\"%url%\">The Citadel</a> for more info!"
 
 nav:
   mydecks: My decks
