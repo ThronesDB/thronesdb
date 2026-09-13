@@ -1279,6 +1279,10 @@
                 return factions[faction].length <= 3;
             });
         }
+        var validate_sentinels_of_the_realm = function () {
+            var numGuards  = deck.get_nb_cards(deck.get_cards(null, {type_code: 'character', traits: new RegExp(Translator.trans('card.traits.guard') + '\\.')}));
+            return (12 <= numGuards);
+        }
 
         var validate_armed_to_the_teeth = function() {
             var reWeapon = new RegExp(Translator.trans('card.traits.weapon') + '\\.');
@@ -1497,6 +1501,8 @@
                 return validate_unknown_and_unknowable();
             case '00366':
                 return validate_join_forces();
+            case '27619':
+                return validate_sentinels_of_the_realm();
         }
         return true;
     };
@@ -1644,6 +1650,8 @@
                 return card.pack_code === 'ToJ' && card_has_keyword(card, Translator.trans('card.keywords.shadow'));
             case '00365': // Seeking Fortunes
                 return card.pack_code === 'ToJ' && card_has_keyword(card, Translator.trans('keyword.bestow.name'));
+            case '27619':
+                return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.guard')) !== -1;
         }
     };
 })(app.deck = {}, jQuery);
