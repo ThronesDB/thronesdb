@@ -167,7 +167,8 @@
 
         // special case:
         // for "The Conclave", "Kingdom of Shadows", "The Free Folk", "The White Book",
-        // "Mummer's Farce", "Uniting the Realm", "The Small Council", and "Trading with Braavos" pre-select all factions.
+        // "Mummer's Farce", "Uniting the Realm", "The Small Council", "Trading with Braavos", and "Sentinels of the Realm",
+        // pre-select all factions.
         if (agendas.length
             && -1 !== ["09045", "13079", "17148", "13099", "17150", "20051", "25120", "26040", "26080", "27619"].indexOf(agendas[0]['code'])) {
             faction_codes = app.deck.get_all_faction_codes();

@@ -256,6 +256,12 @@ class DeckValidationHelper
             case '00365': // Seeking Fortunes
                 $langKey = $this->translator->trans('keyword.bestow.name');
                 return $card->getPack()->getCode() === 'ToJ' && $card->hasKeyword($langKey);
+            case '27619': // Sentinels of the Realm
+                $trait = $this->translator->trans('card.traits.guard');
+                if (preg_match("/$trait\\./", $card->getTraits())) {
+                    return $card->getType()->getCode() === 'character';
+                }
+                return false;
         }
         return false;
     }
@@ -331,6 +337,8 @@ class DeckValidationHelper
             case '00364': // Pass Beneath the Shadow
             case '00365': // Seeking Fortunes
             case '00367': // Desperate Hope
+            case '27619':
+                return $this->validateSentinelsOfTheRealm($slots);
             default:
                 return true;
         }
@@ -473,6 +481,13 @@ class DeckValidationHelper
         }
 
         return true;
+    }
+
+    protected function validateSentinelsOfTheRealm(SlotCollectionInterface $slots): bool
+    {
+        $trait = $this->translator->trans('card.traits.guard');
+        $numGuards = $slots->getDrawDeck()->filterByTrait($trait)->countCards();
+        return (12 <= $numGuards);
     }
 
     /**
