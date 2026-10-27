@@ -1501,7 +1501,7 @@
                 return validate_unknown_and_unknowable();
             case '00366':
                 return validate_join_forces();
-            case '27619':
+            case '27040':
                 return validate_sentinels_of_the_realm();
         }
         return true;
@@ -1639,7 +1639,7 @@
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.smallCouncil')) !== -1;
             case '26080':
                 return card.type_code === 'location' && card.traits.indexOf(Translator.trans('card.traits.warship')) !== -1;
-            case '27619':
+            case '27040':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.guard')) !== -1;
             case '00362': // Sealing the Pact
             case '00363': // Unknown and Unknowable
@@ -1650,7 +1650,7 @@
                 return card.pack_code === 'ToJ' && card_has_keyword(card, Translator.trans('card.keywords.shadow'));
             case '00365': // Seeking Fortunes
                 return card.pack_code === 'ToJ' && card_has_keyword(card, Translator.trans('keyword.bestow.name'));
-            case '27619':
+            case '27040':
                 return card.type_code === 'character' && card.traits.indexOf(Translator.trans('card.traits.guard')) !== -1;
         }
     };

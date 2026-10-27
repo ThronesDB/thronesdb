@@ -239,7 +239,7 @@ class DeckValidationHelper
                     return $card->getType()->getCode() === 'location';
                 }
                 return false;
-            case '27619': // Sentinels of the Realm
+            case '27040': // Sentinels of the Realm
                 $trait = $this->translator->trans('card.traits.guard');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
                     return $card->getType()->getCode() === 'character';
@@ -256,7 +256,7 @@ class DeckValidationHelper
             case '00365': // Seeking Fortunes
                 $langKey = $this->translator->trans('keyword.bestow.name');
                 return $card->getPack()->getCode() === 'ToJ' && $card->hasKeyword($langKey);
-            case '27619': // Sentinels of the Realm
+            case '27040': // Sentinels of the Realm
                 $trait = $this->translator->trans('card.traits.guard');
                 if (preg_match("/$trait\\./", $card->getTraits())) {
                     return $card->getType()->getCode() === 'character';
@@ -338,7 +338,7 @@ class DeckValidationHelper
             case '00365': // Seeking Fortunes
             case '00367': // Desperate Hope
                 return true;
-            case '27619':
+            case '27040':
                 return $this->validateSentinelsOfTheRealm($slots);
             default:
                 return true;
