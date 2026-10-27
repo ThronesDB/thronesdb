@@ -337,6 +337,7 @@ class DeckValidationHelper
             case '00364': // Pass Beneath the Shadow
             case '00365': // Seeking Fortunes
             case '00367': // Desperate Hope
+                return true;
             case '27619':
                 return $this->validateSentinelsOfTheRealm($slots);
             default:
