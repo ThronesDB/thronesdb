@@ -14,8 +14,8 @@
         d: [add_string_sf, 'designer', Translator.trans('decks.smartfilter.filters.designer')],
         k: [add_string_sf, 'traits', Translator.trans('decks.smartfilter.filters.traits')],
         l: [add_boolean_sf, 'is_loyal', Translator.trans('decks.smartfilter.filters.is_loyal')],
-        m: [add_boolean_sf, 'is_military', Translator.trans('decks.smartfilter.filters.is_military')],
-        n: [add_integer_sf, 'income', Translator.trans('decks.smartfilter.filters.income')],
+        m: [add_boolean_sf, 'is_military', Translator.trans('decks.smartfilter.filters.is_military')],        
+        n: [add_income_sf, 'income', Translator.trans('decks.smartfilter.filters.income')],
         o: [add_integer_sf, 'cost', Translator.trans('decks.smartfilter.filters.cost')],
         p: [add_boolean_sf, 'is_power', Translator.trans('decks.smartfilter.filters.is_power')],
         r: [add_string_sf, 'rarity_code', Translator.trans('decks.smartfilter.filters.rarity')],
@@ -95,6 +95,18 @@
                 break;
         }
     }
+    
+    function add_income_sf(key, operator, values)
+    {
+        if (operator === ':' && values.length === 1 && /^x$/i.test(values[0])) {
+            SmartFilterQuery[key] = { '$eq': null };
+            SmartFilterQuery.type_code = 'plot';
+            return;
+        }
+    
+        add_integer_sf(key, operator, values);
+    }
+
     function add_string_sf(key, operator, values)
     {
         var regExps = [];
