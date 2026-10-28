@@ -68,7 +68,16 @@
     }
 
     function add_integer_sf(key, operator, values)
-    {
+    {        
+        if (key === 'strength' && operator === ':' &&
+            values.length === 1 && /^x$/i.test(values[0])) {
+            SmartFilterQuery['$and'] = [
+                { type_code: 'character' },
+                { strength: { '$eq': null } }
+            ];
+            return;
+        }
+
         for(var j = 0; j < values.length; j++) {
             values[j] = parseInt(values[j], 10);
         }
