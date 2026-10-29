@@ -11,6 +11,7 @@ use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
 use App\Entity\Review;
+use App\Entity\Restriction;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
@@ -232,6 +233,67 @@ class CardsData
             $searchName = SearchController::$searchKeys[$searchCode];
             $searchType = SearchController::$searchTypes[$searchCode];
             $operator = array_shift($condition);
+            
+            if ($searchCode === 'j') {
+                $restriction = $this->doctrine
+                    ->getRepository(Restriction::class)
+                    ->findOneBy(
+                        ['active' => true],
+                        ['effectiveOn' => 'DESC']
+                    );
+            
+                $codes = [];
+            
+                if ($restriction) {
+                    $contents = $restriction->getContents();
+            
+                    foreach ($condition as $arg) {
+                        $arg = strtolower((string) $arg);
+            
+                        if ($arg === 'j') {
+                            $codes = array_merge(
+                                $codes,
+                                $contents['joust']['restricted'] ?? []
+                            );
+                        } elseif ($arg === 'm') {
+                            $codes = array_merge(
+                                $codes,
+                                $contents['melee']['restricted'] ?? []
+                            );
+                        } elseif (preg_match('/^(p|mp)([1-9][0-9]*)?$/', $arg, $matches)) {
+                            $format = $matches[1] === 'p' ? 'joust' : 'melee';
+                            $prefix = $matches[1] === 'p' ? 'P' : 'MP';
+            
+                            foreach ($contents[$format]['restricted_pods'] ?? [] as $pod) {
+                                if (!isset($matches[2]) ||
+                                    strcasecmp($pod['title'], $prefix . $matches[2]) === 0) {
+                                    $codes = array_merge(
+                                        $codes,
+                                        $pod['cards'] ?? []
+                                    );
+            
+                                    if (!empty($pod['restricted'])) {
+                                        $codes[] = $pod['restricted'];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            
+                $codes = array_values(array_unique($codes));
+            
+                if ($codes) {
+                    $sqlOperator = $operator === '!' ? 'NOT IN' : 'IN';
+                    $qb->andWhere("c.code $sqlOperator (?$i)");
+                    $qb->setParameter($i++, $codes);
+                } else {
+                    $qb->andWhere($operator === '!' ? '1 = 1' : '1 = 0');
+                }
+            
+                continue;
+            }
+
 
             switch ($searchType) {
                 case 'boolean':
