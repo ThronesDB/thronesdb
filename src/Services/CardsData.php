@@ -253,10 +253,16 @@ class CardsData
                             foreach ($condition as $arg) {
                                 switch ($operator) {
                                     case ':':
-                                            $or[] = "(y.position = ?$i)";
+                                        $or[] = "(y.position = ?$i)";
                                         break;
                                     case '!':
-                                            $or[] = "(y.position != ?$i)";
+                                        $or[] = "(y.position != ?$i)";
+                                        break;
+                                    case '<':
+                                        $or[] = "(y.position < ?$i)";
+                                        break;
+                                    case '>':
+                                        $or[] = "(y.position > ?$i)";
                                         break;
                                 }
                                 $qb->setParameter($i++, $arg);
