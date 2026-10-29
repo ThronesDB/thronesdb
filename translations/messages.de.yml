@@ -221,6 +221,7 @@ decks:
     filters:
       flavor: Atmosphärischer Text
       claim: Schadenswert
+      cycle: Zyklus
       pack_code: Pack
       faction_code: Fraktion
       is_intrigue: Intrigenspiel-Symbol
