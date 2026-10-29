@@ -1,7 +1,7 @@
 (function app_smart_filter(smart_filter, $)
 {
-
     var SmartFilterQuery = [];
+    var SmartFilterTextConditions = [];
 
     var configuration = {
         a: [add_string_sf, 'flavor', Translator.trans('decks.smartfilter.filters.flavor')],
@@ -23,7 +23,7 @@
         t: [add_string_sf, 'type_code', Translator.trans('decks.smartfilter.filters.type_code')],
         u: [add_boolean_sf, 'is_unique', Translator.trans('decks.smartfilter.filters.is_unique')],
         v: [add_integer_sf, 'initiative', Translator.trans('decks.smartfilter.filters.initiative')],
-        x: [add_string_sf, 'text', Translator.trans('decks.smartfilter.filters.text')],
+        x: [add_text_sf, 'text', Translator.trans('decks.smartfilter.filters.text')],
         y: [add_integer_sf, 'quantity', Translator.trans('decks.smartfilter.filters.quantity')]
     };
 
@@ -44,19 +44,27 @@
     {
         var conditions = filterSyntax(value);
         SmartFilterQuery = {};
-
+        SmartFilterTextConditions = [];
+    
         for(var i = 0; i < conditions.length; i++) {
             var condition = conditions[i];
             var type = condition.shift();
             var operator = condition.shift();
             var values = condition;
-
+    
             var tools = configuration[type];
             if(tools) {
                 tools[0].call(this, tools[1], operator, values);
             }
         }
+    
+        if (SmartFilterTextConditions.length === 1) {
+            SmartFilterQuery.text = SmartFilterTextConditions[0].text;
+        } else if (SmartFilterTextConditions.length > 1) {
+            SmartFilterQuery['$and'] = (SmartFilterQuery['$and'] || []).concat(SmartFilterTextConditions);
+        }
     };
+
 
     smart_filter.get_help = function get_help()
     {
@@ -130,6 +138,23 @@
                 }
                 break;
         }
+    }    
+    function add_text_sf(key, operator, values)
+    {
+        if (operator !== ':' && operator !== '!') {
+            return;
+        }
+    
+        var regExps = values.map(function (value) {
+            return new RegExp(value, 'i');
+        });
+    
+        var condition = {};
+        condition[key] = operator === ':'
+            ? {'$in': regExps}
+            : {'$nin': regExps};
+    
+        SmartFilterTextConditions.push(condition);
     }
     function add_boolean_sf(key, operator, values)
     {
