@@ -334,8 +334,23 @@ class CardsData
                             $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
                             break;
                         default: // type, faction, or rarity
+                            $factionAliases = [
+                                'bara'  => 'baratheon',
+                                'gj'    => 'greyjoy',
+                                'lanni' => 'lannister',
+                                'ma'    => 'martell',
+                                'nw'    => 'thenightswatch',
+                                'st'    => 'stark',
+                                'targ'  => 'targaryen',
+                                'ty'    => 'tyrell',
+                            ];
+                        
                             $or = [];
                             foreach ($condition as $arg) {
+                                if ($searchCode === 'f') {
+                                    $arg = $factionAliases[strtolower($arg)] ?? $arg;
+                                }
+                        
                                 switch ($operator) {
                                     case ':':
                                             $or[] = "($searchCode.code = ?$i)";
