@@ -221,6 +221,7 @@ decks:
     filters:
       flavor: Texto de ambientación
       claim: Valor de conquista
+      cycle: Ciclo
       pack_code: Capítulo
       faction_code: Facción
       is_intrigue: Icono de intriga
