@@ -2,6 +2,7 @@
 {
 
     var SmartFilterQuery = [];
+    var SmartFilterRestrictionConditions = [];
 
     var configuration = {
         a: [add_string_sf, 'flavor', Translator.trans('decks.smartfilter.filters.flavor')],
@@ -10,7 +11,8 @@
         f: [add_string_sf, 'faction_code', Translator.trans('decks.smartfilter.filters.faction_code')],
         g: [add_boolean_sf, 'is_intrigue', Translator.trans('decks.smartfilter.filters.is_intrigue')],
         h: [add_integer_sf, 'reserve', Translator.trans('decks.smartfilter.filters.reserve')],
-        i: [add_string_sf, 'illustrator', Translator.trans('decks.smartfilter.filters.illustrator')],
+        i: [add_string_sf, 'illustrator', Translator.trans('decks.smartfilter.filters.illustrator')],        
+        j: [add_restriction_sf, 'code', Translator.trans('decks.smartfilter.filters.restrictions')],
         d: [add_string_sf, 'designer', Translator.trans('decks.smartfilter.filters.designer')],
         k: [add_string_sf, 'traits', Translator.trans('decks.smartfilter.filters.traits')],
         l: [add_boolean_sf, 'is_loyal', Translator.trans('decks.smartfilter.filters.is_loyal')],
@@ -33,8 +35,27 @@
      */
     smart_filter.get_query = function get_query(query)
     {
-        return _.extend(query, SmartFilterQuery);
+        query = _.extend(query, SmartFilterQuery);
+    
+        if (SmartFilterRestrictionConditions.length) {
+            var rl = app.data.getBestSelectedRestrictedList();
+    
+            var clauses = SmartFilterRestrictionConditions.map(function (condition) {
+                var codes = get_restriction_codes(rl, condition.values);
+    
+                return {
+                    code: condition.operator === '!'
+                        ? { '$nin': codes }
+                        : { '$in': codes }
+                };
+            });
+    
+            query['$and'] = (query['$and'] || []).concat(clauses);
+        }
+    
+        return query;
     };
+
 
     /**
      * called when the filter input is modified
@@ -44,6 +65,7 @@
     {
         var conditions = filterSyntax(value);
         SmartFilterQuery = {};
+        SmartFilterRestrictionConditions = [];
 
         for(var i = 0; i < conditions.length; i++) {
             var condition = conditions[i];
@@ -65,6 +87,54 @@
             return '<li><tt>' + key + '</tt> &ndash; ' + value[2] + '</li>';
         });
         return '<ul>' + items.join('') + '</ul><p>' + Translator.trans('decks.smartfilter.example') + '</p>';
+    }
+
+    function add_restriction_sf(key, operator, values)
+    {
+        if (operator === ':' || operator === '!') {
+            SmartFilterRestrictionConditions.push({
+                operator: operator,
+                values: values
+            });
+        }
+    }
+    
+    function get_restriction_codes(rl, values)
+    {
+        if (!rl || !rl.contents) {
+            return [];
+        }
+    
+        var codes = [];
+    
+        values.forEach(function (rawValue) {
+            var value = String(rawValue).toLowerCase();
+    
+            if (value === 'j') {
+                codes = codes.concat(rl.contents.joust.restricted || []);
+            } else if (value === 'm') {
+                codes = codes.concat(rl.contents.melee.restricted || []);
+            } else {
+                var match = /^(p|mp)([1-9][0-9]*)?$/.exec(value);
+    
+                if (match) {
+                    var format = match[1] === 'p' ? 'joust' : 'melee';
+                    var prefix = match[1] === 'p' ? 'P' : 'MP';
+    
+                    (rl.contents[format].restricted_pods || []).forEach(function (pod) {
+                        if (!match[2] || pod.title.toUpperCase() === prefix + match[2]) {
+                            codes = codes.concat(pod.cards || []);
+    
+                            if (pod.restricted) {
+                                codes.push(pod.restricted);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    
+        return _.uniq(codes);
     }
 
     function add_integer_sf(key, operator, values)

@@ -240,6 +240,7 @@ decks:
       text: Text
       quantity: Quantity in pack
       designer: Designer
+      restrictions: Restricted cards / Pods
   charts:
     faction:
       title: Card Factions
