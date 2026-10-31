@@ -79,6 +79,10 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
 (or uncomment `COMPOSE_FILE` in `.env`). This runs Symfony's dev environment with debug on, mounts `src/`, `templates/`, `translations/` and `config/` from the checkout so PHP and Twig edits show up without a rebuild, runs migrations on start, and sends all mail to Mailpit at `http://127.0.0.1:8025`. JavaScript and CSS changes still need `--build`.
 
+## Browser tests
+
+`docker-compose.e2e.yml` is an overlay for the Playwright tests in `tests/e2e/`: production environment, served as `localhost`, all mail caught by Mailpit. See `tests/e2e/README.md`.
+
 ## What lives on the host
 
 | Path | Contents |

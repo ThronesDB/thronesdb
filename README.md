@@ -7,6 +7,8 @@ ThronesDB
 
 The `docker/` folder has an image and compose setup that runs the site, its scheduled jobs and its database, and does the first-time setup below in one command. See [docker/README.md](docker/README.md).
 
+Browser smoke tests (Playwright) that run against that stack are in [tests/e2e](tests/e2e/README.md).
+
 # Very quick guide on how to install a local copy
 
 This guide assumes you know how to use the command-line and that your machine has php and mysql installed.

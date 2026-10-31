@@ -1,0 +1,25 @@
+# Overlay for the browser tests in tests/e2e. Use both files together:
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d --build
+#   docker compose -f docker-compose.yml -f docker-compose.e2e.yml --profile init run --rm init
+#
+# Keeps the production environment (that is what the tests check) but:
+# - serves the site as "localhost", so it answers at http://localhost:${APP_PORT}
+#   (and Spanish at http://es.localhost:${APP_PORT})
+# - sends all mail to Mailpit, which the tests read through its API
+#   at http://localhost:${MAILPIT_PORT:-8025}
+
+services:
+  app:
+    environment:
+      APP_WEBSITE_URL: localhost
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      SMTP_TLS: "off"
+      SMTP_USER: ""
+
+  mailpit:
+    image: axllent/mailpit:v1.33.0
+    container_name: ${COMPOSE_PROJECT_NAME:-thronesdb}_mailpit
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MAILPIT_PORT:-8025}:8025"

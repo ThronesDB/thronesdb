@@ -26,7 +26,7 @@ services:
       - ../config:/var/www/html/config
 
   mailpit:
-    image: axllent/mailpit:latest
+    image: axllent/mailpit:v1.33.0
     container_name: ${COMPOSE_PROJECT_NAME:-thronesdb}_mailpit
     restart: unless-stopped
     ports:
