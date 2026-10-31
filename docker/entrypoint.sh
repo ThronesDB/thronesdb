@@ -1,7 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 # Entrypoint for every role the image runs. The command picks the role:
-#   apache2-foreground  the web app (default)
-#   cron                the scheduled jobs in /etc/app.crontab
+#   apache2-foreground  the web app plus its scheduled jobs (default)
 #   init                first-time setup (see app-init)
 #   anything else       run as given, e.g. "php bin/console ..."
 set -e
@@ -50,13 +49,38 @@ case "$1" in
             console doctrine:migrations:migrate --no-interaction --allow-no-migration
         fi
         console cache:warmup --no-interaction
-        exec docker-php-entrypoint "$@"
-        ;;
-    cron)
-        php /usr/local/lib/app/dbcheck.php wait
-        console cache:warmup --no-interaction
-        # setpriv execs in place, so supercronic is PID 1 and reaps its children
-        exec setpriv --reuid=www-data --regid=www-data --init-groups supercronic /etc/app.crontab
+
+        # Two processes side by side: Apache serves the site, supercronic runs
+        # the scheduled jobs in /etc/app.crontab as www-data. If either one
+        # exits, stop the other and exit too, so Docker restarts the whole
+        # container rather than leaving it running half broken.
+        docker-php-entrypoint "$@" &
+        web=$!
+        setpriv --reuid=www-data --regid=www-data --init-groups supercronic /etc/app.crontab &
+        jobs=$!
+
+        stop_both() {
+            # SIGWINCH is Apache's graceful stop (the image's STOPSIGNAL, so
+            # it is also what "docker stop" sends)
+            kill -WINCH "$web" 2>/dev/null || true
+            kill -TERM "$jobs" 2>/dev/null || true
+        }
+        stopping=0
+        trap 'stopping=1; stop_both' TERM INT WINCH
+
+        set +e
+        wait -n "$web" "$jobs"
+        status=$?
+        if [ "$stopping" = 1 ]; then
+            # Asked to stop: report Apache's own exit status, not the signal's
+            wait "$web"
+            status=$?
+        else
+            # One of them died on its own: take the other down with it
+            stop_both
+        fi
+        wait
+        exit "$status"
         ;;
     init)
         exec app-init

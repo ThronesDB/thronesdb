@@ -1,13 +1,12 @@
 # Running ThronesDB with Docker
 
-One image runs everything. `docker-compose.yml` starts three containers from it plus the database:
+One image runs everything. `docker-compose.yml` starts the app and its database:
 
 | Service | Container | What it does |
 |---|---|---|
-| `app` | `<project>` | Apache + PHP serving the site on `127.0.0.1:${APP_PORT}` |
-| `cron` | `<project>_cron` | Scheduled jobs from `crontab` (same image, run by supercronic) |
+| `app` | `<project>` | Apache + PHP serving the site on `127.0.0.1:${APP_PORT}`, plus the scheduled jobs from `crontab` (run by supercronic alongside Apache; if either stops, the container restarts) |
 | `db` | `<project>_db` | MySQL 8.4, data in `data/mysql/` |
-| `init` | (one-off) | First-time setup: schema, default data, cards, restricted lists, admin account |
+| `init` | (one-off, same image) | First-time setup: schema, default data, cards, restricted lists, admin account |
 
 `<project>` is `COMPOSE_PROJECT_NAME` from `.env` (default `thronesdb`). All commands below run from this `docker/` folder.
 

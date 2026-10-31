@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 #
 # ThronesDB image: Apache + mod_php serving public/, with the PHP dependencies
-# and the built frontend assets baked in. One image runs three roles, chosen by
-# the command (see entrypoint.sh): the web app (default), the scheduled jobs
-# ("cron") and first-time setup ("init").
+# and the built frontend assets baked in. One image runs two roles, chosen by
+# the command (see entrypoint.sh): the web app with its scheduled jobs
+# (default) and first-time setup ("init").
 #
 # Build from the repository root's parent context, as docker-compose.yml does:
 #   docker compose -f docker/docker-compose.yml build
@@ -75,7 +75,7 @@ FROM base AS app
 ARG SUPERCRONIC_VERSION=v0.2.51
 ARG TARGETARCH
 
-# supercronic runs the scheduled jobs in the "cron" role: cron for containers,
+# supercronic runs the scheduled jobs alongside Apache: cron for containers,
 # which keeps the environment and logs to stdout.
 RUN set -eux; \
     case "${TARGETARCH:-amd64}" in \

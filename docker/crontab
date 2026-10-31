@@ -1,4 +1,4 @@
-# Scheduled jobs, run by supercronic in the cron container as www-data.
+# Scheduled jobs, run by supercronic inside the app container as www-data.
 # Standard cron syntax; times are UTC. Edit and rebuild to change.
 
 # Delete accounts that never confirmed their email address, 48 hours after registering.
