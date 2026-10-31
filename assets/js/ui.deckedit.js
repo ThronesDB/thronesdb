@@ -7,6 +7,25 @@
             SortKey = 'type_code',
             SortOrder = 1,
             CardDivs = [[], [], []];
+    
+    /**
+     * Provides a numeric sort value for printed cost / plot income.
+     * Shadows (-) first, then variable (X / null), then 0, 1, 2 ...
+     */
+    function get_cost_income_sort_value(card)
+    {
+        var value = card.ci;
+    
+        if (value === '-')
+            return -2;
+    
+        if (value === null || value === undefined || value === '' || String(value).toUpperCase() === 'X')
+            return -1;
+    
+        var number = Number(value);
+        return isFinite(number) ? number : -1;
+    }
+
 
     /**
      * inits the state of config buttons
@@ -521,7 +540,7 @@
                         '<tr>'
                         + '<td><div class="btn-group" data-toggle="buttons"><%= radios %></div></td>'
                         + '<td><a class="card card-tip" data-code="<%= card.code %>" href="<%= url %>" data-target="#cardModal" data-remote="false" data-toggle="modal"><%= card.label %></a><span class="rl-labels"><%= labels %></span></td>'
-                        + '<td class="cost"><%= card.cost %><%= card.income %></td>'
+                        + '<td class="cost"><%= card.type_code === "plot" && card.income == null ? "X" : (card.cost != null ? card.cost : (card.income != null ? card.income : "")) %></td>'
                         + '<td class="cost"><%= card.strength %><%= card.initiative %></td>'
                         + '<td class="type"><span class="icon-<%= card.type_code %>" title="<%= card.type_name %>"></span></td>'
                         + '<td class="faction"><span class="icon-<%= card.faction_code %> fg-<%= card.faction_code %>" title="<%= card.faction_name %>"></span></td>'
@@ -622,8 +641,21 @@
             orderBy[key] = SortOrder;
         });
         if(SortKey !== 'name')
-            orderBy['name'] = 1;
+            orderBy['name'] = 1;        
         var cards = app.data.cards.find(query, {'$orderBy': orderBy});
+        
+        if (SortKey === 'ci') {
+            cards.sort(function (a, b) {
+                var difference = get_cost_income_sort_value(a) - get_cost_income_sort_value(b);
+        
+                if (difference !== 0)
+                    return difference * SortOrder;
+        
+                var nameComparison = String(a.name || '').localeCompare(String(b.name || ''));
+                return nameComparison || String(a.code || '').localeCompare(String(b.code || ''));
+            });
+        }
+
         var divs = CardDivs[ app.config.get('display-column') - 1 ];
         var rl = app.data.getBestSelectedRestrictedList();
 
