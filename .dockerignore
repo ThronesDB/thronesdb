@@ -7,6 +7,7 @@
 !public/
 !src/
 !templates/
+!tests/
 !translations/
 !docker/
 !.env
@@ -16,6 +17,10 @@
 !package.json
 !package-lock.json
 !gulpfile.mjs
+!phpunit.xml.dist
+!.env.test
+!phpcs.xml.dist
+!phpstan.neon.dist
 
 # Generated or local files inside the allowed folders
 docker/.env
@@ -26,3 +31,4 @@ public/css/
 public/js/
 public/manifest.json
 assets/js/translations/
+tests/e2e/

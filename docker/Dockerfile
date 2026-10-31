@@ -8,7 +8,7 @@
 # Build from the repository root's parent context, as docker-compose.yml does:
 #   docker compose -f docker/docker-compose.yml build
 
-ARG PHP_VERSION=7.4
+ARG PHP_VERSION=8.4
 ARG NODE_VERSION=22
 
 # ---------------------------------------------------------------------------
@@ -16,13 +16,12 @@ ARG NODE_VERSION=22
 # ---------------------------------------------------------------------------
 FROM php:${PHP_VERSION}-apache AS base
 
-# php:7.4 images are Debian 11 (bullseye), which is past end of life: its
-# packages are moving from the normal mirrors to archive.debian.org. Try the
-# normal mirrors first and fall back to the archive.
+# Try the normal Debian mirrors first; once the base image's Debian release
+# is retired its packages move to archive.debian.org, so fall back to that.
 RUN set -eux; \
     install_packages() { \
         apt-get update --error-on=any "$@" \
-        && apt-get install -y --no-install-recommends "$@" git unzip msmtp; \
+        && apt-get install -y --no-install-recommends "$@" git unzip; \
     }; \
     if ! install_packages; then \
         sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list; \
@@ -53,6 +52,17 @@ RUN set -eux; \
     composer dump-autoload --no-dev --optimize; \
     php bin/console assets:install public --no-interaction; \
     php bin/console bazinga:js-translation:dump assets/js --no-interaction
+
+# ---------------------------------------------------------------------------
+# test: the vendor stage plus dev dependencies, for running PHPUnit:
+#   docker build -f docker/Dockerfile --target test -t thronesdb_test .
+#   docker run --rm thronesdb_test
+# ---------------------------------------------------------------------------
+FROM vendor AS test
+
+ENV APP_ENV=test
+RUN composer install --prefer-dist --no-scripts --no-interaction --no-progress
+CMD ["php", "vendor/bin/phpunit"]
 
 # ---------------------------------------------------------------------------
 # assets: gulp builds public/css, public/js and public/manifest.json

@@ -15,32 +15,17 @@ console() {
 mkdir -p var/cache var/log var/sessions
 chown -R www-data:www-data var
 
-# Outgoing mail: SwiftMailer hands messages to msmtp (config/packages/swiftmailer.yaml).
-# Write its config from SMTP_* variables; without SMTP_HOST mail is not sent.
-if [ -n "${SMTP_HOST:-}" ]; then
-    {
-        echo "defaults"
-        echo "logfile -"
-        echo "account default"
-        echo "host ${SMTP_HOST}"
-        echo "port ${SMTP_PORT:-587}"
-        echo "from ${SMTP_FROM:-${APP_EMAIL_SENDER_ADDRESS:-no-reply@localhost}}"
-        case "${SMTP_TLS:-starttls}" in
-            off)      echo "tls off" ;;
-            tls)      echo "tls on"; echo "tls_starttls off"; echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" ;;
-            *)        echo "tls on"; echo "tls_starttls on"; echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" ;;
-        esac
-        if [ -n "${SMTP_USER:-}" ]; then
-            echo "auth on"
-            echo "user ${SMTP_USER}"
-            echo "password ${SMTP_PASSWORD:-}"
-        else
-            echo "auth off"
-        fi
-    } > /etc/msmtprc
-    chown root:www-data /etc/msmtprc
-    chmod 640 /etc/msmtprc
+# OAuth2 signing keys (config/packages/league_oauth2_server.yaml). Created on
+# first start; var/oauth is a host bind mount so they survive rebuilds.
+if [ ! -f var/oauth/private.key ]; then
+    mkdir -p var/oauth
+    php -r '$k = openssl_pkey_new(["private_key_bits" => 2048, "private_key_type" => OPENSSL_KEYTYPE_RSA]);
+        openssl_pkey_export($k, $pem); file_put_contents("var/oauth/private.key", $pem);
+        file_put_contents("var/oauth/public.key", openssl_pkey_get_details($k)["key"]);'
+    echo "Created OAuth2 key pair in var/oauth"
 fi
+chown -R www-data:www-data var/oauth
+chmod 600 var/oauth/private.key
 
 case "$1" in
     apache2-foreground)

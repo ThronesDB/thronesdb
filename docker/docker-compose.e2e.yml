@@ -12,10 +12,7 @@ services:
   app:
     environment:
       APP_WEBSITE_URL: localhost
-      SMTP_HOST: mailpit
-      SMTP_PORT: "1025"
-      SMTP_TLS: "off"
-      SMTP_USER: ""
+      MAILER_DSN: smtp://mailpit:1025
 
   mailpit:
     image: axllent/mailpit:v1.33.0

@@ -15,10 +15,7 @@ services:
       APP_DEBUG: "1"
       RUN_MIGRATIONS: "1"
       PHP_OPCACHE_VALIDATE_TIMESTAMPS: "1"
-      SMTP_HOST: mailpit
-      SMTP_PORT: "1025"
-      SMTP_TLS: "off"
-      SMTP_USER: ""
+      MAILER_DSN: smtp://mailpit:1025
     volumes:
       - ../src:/var/www/html/src
       - ../templates:/var/www/html/templates

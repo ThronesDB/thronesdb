@@ -16,7 +16,7 @@ One image runs everything. `docker-compose.yml` starts the app and its database:
 cp .env.example .env            # compose and database settings
 cp app.env.example app.env      # the app's settings: APP_SECRET, mail, branding
 chmod 600 .env app.env
-# fill in both files (passwords, APP_SECRET, SMTP_*, optional ADMIN_*)
+# fill in both files (passwords, APP_SECRET, MAILER_DSN, optional ADMIN_*)
 
 docker compose up -d --build
 docker compose --profile init run --rm init
@@ -50,7 +50,7 @@ For example, `fos:user:promote <username> ROLE_ADMIN`, or `app:restrictions:impo
 
 ## Mail
 
-SwiftMailer sends through msmtp. The entrypoint writes msmtp's config from the `SMTP_*` settings in `app.env`. With `SMTP_HOST` empty nothing is sent, which also means new accounts can't confirm their email.
+Mail goes out through Symfony Mailer, configured by `MAILER_DSN` in `app.env` (for example `smtp://user:password@smtp.example.com:587`). With `null://null` nothing is sent, which also means new accounts can't confirm their email.
 
 ## Reverse proxy
 
@@ -91,8 +91,21 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 | `data/mysql/` | the database's data directory |
 | `data/sessions/` | PHP sessions |
 | `data/carddata/` | the card data repository used by `init` |
+| `data/oauth/` | the OAuth2 signing key pair, created on first start |
 
-Back up `data/mysql/` (or a `mysqldump` from the `db` container) and the two settings files.
+Back up `data/mysql/` (or a `mysqldump` from the `db` container), `data/oauth/` and the two settings files.
+
+## OAuth2 clients
+
+Apps that act on users' decks through `/api/oauth2/` are registered as OAuth2 clients:
+
+```bash
+docker exec -u www-data <project> php bin/console league:oauth2-server:create-client "App name" \
+    --redirect-uri=https://app.example.com/callback --grant-type=authorization_code --grant-type=refresh_token \
+    --scope=read_deck --scope=write_deck
+```
+
+`league:oauth2-server:list-clients`, `update-client` and `delete-client` manage them.
 
 ## Tuning
 
@@ -101,3 +114,19 @@ Back up `data/mysql/` (or a `mysqldump` from the `db` container) and the two set
 | `APACHE_MAX_WORKERS` | `app.env` | 10 Apache workers (each holds a PHP interpreter) |
 | `APP_MEM_LIMIT`, `DB_MEM_LIMIT` | `.env` | 1g each |
 | PHP settings | `php/app.ini` | memory_limit 256M, opcache on |
+
+## Checks
+
+`check.sh` runs everything a CI job would, from the repository root or anywhere else:
+
+```bash
+docker/check.sh             # build the images, then PHPUnit, lints, PHPStan, PHP_CodeSniffer
+docker/check.sh --no-build  # same checks, reusing the images from the last run
+```
+
+`make check` does the same. It uses the Dockerfile's `test` stage (the app plus its dev dependencies). To run only PHPUnit:
+
+```bash
+docker build -f docker/Dockerfile --target test -t thronesdb_check:test ..
+docker run --rm thronesdb_check:test
+```

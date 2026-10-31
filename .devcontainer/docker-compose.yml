@@ -7,7 +7,7 @@ services:
     volumes:
       - ..:/workspace:cached
     environment:
-      DATABASE_URL: mysql://app:${DB_PASSWORD:-apppassword}@db:3306/${DB_NAME:-thronesdb}
+      DATABASE_URL: mysql://app:${DB_PASSWORD:-apppassword}@db:3306/${DB_NAME:-thronesdb}?serverVersion=8.4.0
     depends_on:
       db:
         condition: service_healthy
