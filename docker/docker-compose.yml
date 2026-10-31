@@ -1,0 +1,86 @@
+# ThronesDB in containers: the web app, its scheduled jobs and its database.
+#
+#   cd docker
+#   cp .env.example .env && cp app.env.example app.env   # then fill both in; chmod 600
+#   docker compose up -d --build
+#   docker compose --profile init run --rm init           # first time only
+#
+# The app listens on 127.0.0.1:${APP_PORT} only; put a reverse proxy in front
+# of it (see README.md). Everything the host keeps lives under ./data.
+
+name: ${COMPOSE_PROJECT_NAME:-thronesdb}
+
+x-logging: &logging
+  driver: json-file
+  options: { max-size: "10m", max-file: "3" }
+
+x-app: &app
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+  image: ${COMPOSE_PROJECT_NAME:-thronesdb}_app
+  env_file: app.env
+  environment:
+    DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}?serverVersion=8.0"
+    # Requests reach the app through the host's reverse proxy via Docker's
+    # network, so trust X-Forwarded-* from private addresses.
+    TRUSTED_PROXIES: "127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+  depends_on:
+    db:
+      condition: service_healthy
+  logging: *logging
+
+services:
+  app:
+    <<: *app
+    container_name: ${COMPOSE_PROJECT_NAME:-thronesdb}
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${APP_PORT:-8000}:80"
+    volumes:
+      - ./data/sessions:/var/www/html/var/sessions   # logins survive a rebuild
+    mem_limit: ${APP_MEM_LIMIT:-1g}
+
+  cron:
+    <<: *app
+    container_name: ${COMPOSE_PROJECT_NAME:-thronesdb}_cron
+    restart: unless-stopped
+    command: ["cron"]
+    mem_limit: 256m
+
+  # One-shot setup; never started by "up". See docker/init.sh.
+  init:
+    <<: *app
+    profiles: ["init"]
+    restart: "no"
+    command: ["init"]
+    environment:
+      DATABASE_URL: "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}?serverVersion=8.0"
+      CARD_DATA_REPO: ${CARD_DATA_REPO:-https://github.com/throneteki/throneteki-json-data.git}
+      CARD_DATA_DIR: /srv/carddata
+    volumes:
+      - ./data/carddata:/srv/carddata
+
+  db:
+    image: mysql:8.4
+    container_name: ${COMPOSE_PROJECT_NAME:-thronesdb}_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "127.0.0.1:${DB_PORT:-3307}:3306"   # for a DB client on the host (or over an SSH tunnel)
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    healthcheck:
+      # Over TCP, so it only passes once the real server is up (the first-start
+      # setup server listens on the socket only).
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    mem_limit: ${DB_MEM_LIMIT:-1g}
+    logging: *logging

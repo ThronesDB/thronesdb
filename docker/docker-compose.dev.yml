@@ -1,0 +1,33 @@
+# Development overrides. Use both files together:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# or set COMPOSE_FILE=docker-compose.yml:docker-compose.dev.yml in .env.
+#
+# - Symfony's dev environment, with debug on
+# - PHP code, templates, translations and config bind-mounted from the
+#   checkout, so edits show up without a rebuild (JS/CSS still need one)
+# - migrations run automatically on start
+# - all mail goes to Mailpit: http://127.0.0.1:${MAILPIT_PORT:-8025}
+
+services:
+  app:
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: "1"
+      RUN_MIGRATIONS: "1"
+      PHP_OPCACHE_VALIDATE_TIMESTAMPS: "1"
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      SMTP_TLS: "off"
+      SMTP_USER: ""
+    volumes:
+      - ../src:/var/www/html/src
+      - ../templates:/var/www/html/templates
+      - ../translations:/var/www/html/translations
+      - ../config:/var/www/html/config
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ${COMPOSE_PROJECT_NAME:-thronesdb}_mailpit
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MAILPIT_PORT:-8025}:8025"

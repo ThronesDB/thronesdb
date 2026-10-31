@@ -35,3 +35,10 @@
 
 #ignore output dir of HTMLPurifier
 /src/URI
+
+###> docker ###
+/docker/.env
+/docker/app.env
+/docker/data/
+/docker/docker-compose.override.yml
+###< docker ###

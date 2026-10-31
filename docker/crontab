@@ -1,0 +1,9 @@
+# Scheduled jobs, run by supercronic in the cron container as www-data.
+# Standard cron syntax; times are UTC. Edit and rebuild to change.
+
+# Delete accounts that never confirmed their email address, 48 hours after registering.
+17 3 * * * php /var/www/html/bin/console app:delete-inactive-users --no-interaction
+
+# Disable accounts with no activity at all 7 days after registering (spam control).
+# Off by default: enable it if spam registrations become a problem.
+#47 3 * * * php /var/www/html/bin/console app:disable-inactive-users --no-interaction
