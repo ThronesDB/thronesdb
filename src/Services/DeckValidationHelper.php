@@ -6,7 +6,6 @@ use App\Classes\SlotCollectionInterface;
 use App\Entity\CardInterface;
 use App\Entity\CommonDeckInterface;
 use App\Entity\FactionInterface;
-use App\Entity\SlotInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -822,7 +821,7 @@ class DeckValidationHelper
         foreach ($outOfFactionCards->getSlots() as $slot) {
             $traits = $slot->getCard()->getTraits();
             $traits = array_filter(
-        array_map('trim', explode('.', $traits))
+                array_map('trim', explode('.', $traits))
             );
             if (!$commonTraits) {
                 $commonTraits = $traits;

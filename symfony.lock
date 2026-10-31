@@ -1,16 +1,4 @@
 {
-    "doctrine/annotations": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "a2759dd6123694c8d901d0ec80006e044c2e6457"
-        },
-        "files": [
-            "config/routes/annotations.yaml"
-        ]
-    },
     "doctrine/deprecations": {
         "version": "v0.5.3"
     },
@@ -54,14 +42,8 @@
             "migrations/.gitignore"
         ]
     },
-    "doctrine/reflection": {
-        "version": "1.2.2"
-    },
     "doctrine/sql-formatter": {
         "version": "1.1.1"
-    },
-    "friendsofphp/proxy-manager-lts": {
-        "version": "v1.0.4"
     },
     "friendsofsymfony/jsrouting-bundle": {
         "version": "2.3",
@@ -75,28 +57,8 @@
             "config/routes/fos_js_routing.yaml"
         ]
     },
-    "friendsofsymfony/oauth-server-bundle": {
-        "version": "1.6",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "1.6",
-            "ref": "7300db1277b1ba025cdc2791171d9bf3e7adcc42"
-        },
-        "files": [
-            "config/packages/fos_oauth_server.yaml",
-            "config/routes/fos_oauth_server.yaml",
-            "src/Entity/AccessToken.php",
-            "src/Entity/AuthCode.php",
-            "src/Entity/Client.php",
-            "src/Entity/RefreshToken.php"
-        ]
-    },
     "friendsofsymfony/user-bundle": {
         "version": "v2.1.2"
-    },
-    "jms/i18n-routing-bundle": {
-        "version": "3.1.0"
     },
     "nelmio/api-doc-bundle": {
         "version": "3.0",
@@ -145,30 +107,6 @@
         },
         "files": [
             "config/packages/ramsey_uuid_doctrine.yaml"
-        ]
-    },
-    "sensio/framework-extra-bundle": {
-        "version": "5.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "5.2",
-            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
-        },
-        "files": [
-            "config/packages/sensio_framework_extra.yaml"
-        ]
-    },
-    "sensiolabs/security-checker": {
-        "version": "4.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "4.0",
-            "ref": "160c9b600564faa1224e8f387d49ef13ceb8b793"
-        },
-        "files": [
-            "config/packages/security_checker.yaml"
         ]
     },
     "squizlabs/php_codesniffer": {
@@ -280,9 +218,6 @@
     "symfony/polyfill-intl-grapheme": {
         "version": "v1.20.0"
     },
-    "symfony/polyfill-php81": {
-        "version": "v1.23.0"
-    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -309,25 +244,8 @@
             "config/packages/security.yaml"
         ]
     },
-    "symfony/serializer-pack": {
-        "version": "v1.0.4"
-    },
     "symfony/string": {
         "version": "v5.1.8"
-    },
-    "symfony/swiftmailer-bundle": {
-        "version": "3.5",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.5",
-            "ref": "f0b2fccdca2dfd97dc2fd5ad216d5e27c4f895ac"
-        },
-        "files": [
-            "config/packages/dev/swiftmailer.yaml",
-            "config/packages/swiftmailer.yaml",
-            "config/packages/test/swiftmailer.yaml"
-        ]
     },
     "symfony/translation": {
         "version": "3.3",

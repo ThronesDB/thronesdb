@@ -5,46 +5,38 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="decklistslot")
- * @ORM\Entity
  * @package App\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'decklistslot')]
 class Decklistslot implements DecklistslotInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="quantity", type="smallint")
      */
+    #[ORM\Column(name: 'quantity', type: 'smallint')]
     protected $quantity;
 
     /**
      * @var Decklist
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Decklist", inversedBy="slots")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="decklist_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Decklist::class, inversedBy: 'slots')]
+    #[ORM\JoinColumn(name: 'decklist_id', referencedColumnName: 'id')]
     protected $decklist;
 
     /**
      * @var CardInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Card")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="card_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Card::class)]
+    #[ORM\JoinColumn(name: 'card_id', referencedColumnName: 'id')]
     protected $card;
 
     /**
@@ -82,7 +74,7 @@ class Decklistslot implements DecklistslotInterface
     /**
      * @inheritdoc
      */
-    public function setDecklist(Decklist $decklist = null)
+    public function setDecklist(?Decklist $decklist = null)
     {
         $this->decklist = $decklist;
     }
@@ -98,7 +90,7 @@ class Decklistslot implements DecklistslotInterface
     /**
      * @inheritdoc
      */
-    public function setCard(CardInterface $card = null)
+    public function setCard(?CardInterface $card = null)
     {
         $this->card = $card;
     }

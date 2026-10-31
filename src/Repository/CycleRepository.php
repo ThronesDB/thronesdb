@@ -10,7 +10,7 @@ class CycleRepository extends EntityRepository
     /**
      * @return CycleInterface[]
      */
-    public function findAll()
+    public function findAll(): array
     {
         $qb = $this->createQueryBuilder('y')
             ->select('y, p')

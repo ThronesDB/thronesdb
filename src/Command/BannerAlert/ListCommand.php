@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\BannerAlert;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\BannerAlert;
 use App\Entity\BannerAlertInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package App\Command
  */
+#[AsCommand(name: 'app:banner-alerts:list', description: 'List available banner alerts.')]
 class ListCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -25,15 +27,6 @@ class ListCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:banner-alerts:list')
-            ->setDescription(
-                'List available banner alerts.'
-            );
     }
     /**
      * @inheritdoc
@@ -66,6 +59,6 @@ class ListCommand extends Command
             $table->render();
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

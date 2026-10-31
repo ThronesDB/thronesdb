@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Restriction;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -16,6 +17,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  *
  * @package App\Command
  */
+#[AsCommand(name: 'app:restrictions:deactivate', description: 'Deactivates restrictions.')]
 class DeactivateRestrictionCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -24,15 +26,6 @@ class DeactivateRestrictionCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:restrictions:deactivate')
-            ->setDescription(
-                'Deactivates restrictions.'
-            );
     }
     /**
      * @inheritdoc
@@ -70,12 +63,12 @@ class DeactivateRestrictionCommand extends Command
             $this->entityManager->flush();
 
             if (1 === count($choices)) {
-                $output->writeln("${choices[0]} has been deactivated.");
+                $output->writeln("{$choices[0]} has been deactivated.");
             } else {
                 $output->writeln('The following restrictions have been deactivated: ' . implode(', ', $choices) . '.');
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

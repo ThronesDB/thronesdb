@@ -7,21 +7,19 @@ framework:
     secret: '%env(APP_SECRET)%'
     form: ~
     csrf_protection: true
-    validation: { enable_annotations: true }
-    #serializer: { enable_annotations: true }
+    validation: ~
+    annotations: false
     http_method_override: true
-    trusted_hosts: ~
-    # Enables session support. Note that the session will ONLY be started if you read or write from it.
-    # Remove or comment this section to explicitly disable session support.
+    handle_all_throwables: true
+    # Behind a reverse proxy: trust its X-Forwarded-* headers. A comma-separated
+    # list of addresses or ranges in TRUSTED_PROXIES; empty trusts none.
+    trusted_proxies: '%env(default::TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-host']
     session:
-        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id: session.handler.native_file
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         cookie_secure: auto
         cookie_samesite: lax
-    #esi: true
     fragments: true
     php_errors:
         log: true
-    templating:
-        engines: ['twig']

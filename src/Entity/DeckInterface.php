@@ -86,7 +86,7 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     /**
      * @param PackInterface $lastPack
      */
-    public function setLastPack(PackInterface $lastPack = null);
+    public function setLastPack(?PackInterface $lastPack = null);
 
     /**
      * @return PackInterface
@@ -96,7 +96,7 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     /**
      * @param DecklistInterface|null $parent
      */
-    public function setParent(DecklistInterface $parent = null);
+    public function setParent(?DecklistInterface $parent = null);
 
     /**
      * @return DecklistInterface
@@ -106,7 +106,7 @@ interface DeckInterface extends CommonDeckInterface, JsonSerializable
     /**
      * @param DeckInterface|null $parent
      */
-    public function setParentDeck(DeckInterface $parent = null);
+    public function setParentDeck(?DeckInterface $parent = null);
 
     /**
      * @return DeckInterface

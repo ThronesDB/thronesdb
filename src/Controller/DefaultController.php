@@ -2,31 +2,28 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\BannerAlert;
-use App\Entity\Card;
-use App\Entity\CardInterface;
-use App\Entity\DecklistInterface;
 use App\Entity\Faction;
-use App\Entity\Restriction;
-use App\Entity\RestrictionInterface;
 use App\Entity\Type;
-use App\Entity\TypeInterface;
 use App\Services\AgendaHelper;
-use App\Services\CardsData;
 use App\Services\DecklistManager;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DefaultController extends AbstractController
 {
     use LocaleAwareTemplating;
 
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
+
     /**
-     * @Route("/", name="index", methods={"GET"})
      *
      * @param int $cacheExpiration
      * @param string $gameName
@@ -36,6 +33,7 @@ class DefaultController extends AbstractController
      * @return Response
      * @throws Exception
      */
+    #[Route(path: '/', name: 'index', methods: ['GET'])]
     public function indexAction(
         int $cacheExpiration,
         string $gameName,
@@ -51,16 +49,16 @@ class DefaultController extends AbstractController
 
         $typeNames = [];
         /* @var TypeInterface $type */
-        foreach ($this->getDoctrine()->getRepository(Type::class)->findAll() as $type) {
+        foreach ($this->managerRegistry->getRepository(Type::class)->findAll() as $type) {
             $typeNames[$type->getCode()] = $type->getName();
         }
 
         $decklists_by_faction = [];
-        $factions = $this->getDoctrine()
+        $factions = $this->managerRegistry
             ->getRepository(Faction::class)
             ->findBy(['isPrimary' => true], ['code' => 'ASC']);
 
-        $alerts = $this->getDoctrine()->getRepository(BannerAlert::class)
+        $alerts = $this->managerRegistry->getRepository(BannerAlert::class)
             ->findBy(['active' => true], ['id' => 'DESC']);
 
         foreach ($factions as $faction) {
@@ -101,8 +99,8 @@ class DefaultController extends AbstractController
         return $this->render(
             'Default/index.html.twig',
             [
-                'pagetitle' => "${gameName} Deckbuilder",
-                'pagedescription' => "Build your deck for ${gameName} by ${publisherName}."
+                'pagetitle' => "{$gameName} Deckbuilder",
+                'pagedescription' => "Build your deck for {$gameName} by {$publisherName}."
                     . " Browse the cards and the thousand of decklists submitted by the community."
                     . " Publish your own decks and get feedback.",
                 'decklists_by_faction' => $decklists_by_faction,
@@ -113,11 +111,11 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/rulesreference", name="rulesreference", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/rulesreference', name: 'rulesreference', methods: ['GET'])]
     public function rulesreferenceAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
@@ -134,11 +132,11 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/faq", name="faq", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/faq', name: 'faq', methods: ['GET'])]
     public function faqAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
@@ -155,11 +153,11 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/draft", name="draft", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/draft', name: 'draft', methods: ['GET'])]
     public function draftAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
@@ -176,11 +174,11 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/syntax", name="syntax", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/syntax', name: 'syntax', methods: ['GET'])]
     public function syntaxAction(int $cacheExpiration, TranslatorInterface $translator): Response
     {
         $response = new Response();
@@ -200,11 +198,11 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/tournamentregulations", name="tournamentregulations", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/tournamentregulations', name: 'tournamentregulations', methods: ['GET'])]
     public function tournamentregulationsAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
@@ -224,12 +222,12 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/about", name="about", methods={"GET"})
      * @param Request $request
      * @param int $cacheExpiration
      * @param string $gameName
      * @return Response
      */
+    #[Route(path: '/about', name: 'about', methods: ['GET'])]
     public function aboutAction(Request $request, int $cacheExpiration, string $gameName)
     {
         $response = new Response();
@@ -247,12 +245,12 @@ class DefaultController extends AbstractController
     }
 
     /**
-     * @Route("/api/", name="api_intro", methods={"GET"}, options={"i18n" = false})
      * @param int $cacheExpiration
      * @param string $gameName
      * @param string $publisherName
      * @return Response
      */
+    #[Route(path: '/api/', name: 'api_intro', methods: ['GET'])]
     public function apiIntroAction(int $cacheExpiration, string $gameName, string $publisherName)
     {
         $response = new Response();

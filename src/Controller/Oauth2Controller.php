@@ -2,35 +2,36 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\Faction;
-use App\Entity\FactionInterface;
 use App\Entity\Tournament;
-use App\Entity\TournamentInterface;
 use App\Entity\UserInterface;
 use App\Services\DecklistFactory;
 use App\Services\DeckManager;
 use Exception;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Nelmio\ApiDocBundle\Annotation\Operation;
-use Swagger\Annotations as SWG;
+use OpenApi\Attributes as OA;
 use App\Entity\Deck;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @package App\Controller
  */
 class Oauth2Controller extends AbstractController
 {
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route("/api/oauth2/user", name="api_oauth2_user", methods={"GET"}, options={"i18n" = false})
      * @return Response
      */
+    #[Route(path: '/api/oauth2/user', name: 'api_oauth2_user', methods: ['GET'])]
     public function userAction()
     {
         $response = new Response();
@@ -40,7 +41,7 @@ class Oauth2Controller extends AbstractController
         $user = $this->getUser();
         $data = [
             'id'         => $user->getId(),
-            'username'   => $user->getUsername(),
+            'username'   => $user->getUserIdentifier(),
             'email'      => $user->getEmail(),
             'reputation' => $user->getReputation(),
         ];
@@ -55,29 +56,23 @@ class Oauth2Controller extends AbstractController
     }
 
     /**
+     * All the Decks
+     *
      * Get the description of all the Decks of the authenticated user
-     *
-     * @Route("/api/oauth2/decks", name="api_oauth2_decks", methods={"GET"}, options={"i18n" = false})
-     *
-     * @Operation(
-     *     tags={"Protected"},
-     *     summary="All the Decks",
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
-     * )
      *
      * @param Request $request
      * @return Response
      */
+    #[Route(path: '/api/oauth2/decks', name: 'api_oauth2_decks', methods: ['GET'])]
+    #[OA\Tag(name: 'Protected')]
+    #[OA\Response(response: 200, description: 'Returned when successful')]
     public function listDecksAction(Request $request)
     {
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
         /* @var $decks DeckInterface[] */
-        $decks = $this->getDoctrine()->getRepository(Deck::class)->findBy(['user' => $this->getUser()]);
+        $decks = $this->managerRegistry->getRepository(Deck::class)->findBy(['user' => $this->getUser()]);
 
         if (! empty($decks)) {
             $dateUpdates = array_map(function (DeckInterface $deck) {
@@ -100,33 +95,21 @@ class Oauth2Controller extends AbstractController
 
 
     /**
+     * Get one deck by its UUID
+     *
      * Get one deck by its UUID.
-     *
-     * @Route(
-     *     "/api/oauth2/deck/load/{uuid}",
-     *     name="api_oauth2_load_deck_by_uuid",
-     *     methods={"GET"},
-     *     requirements={"uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"},
-     *     options={"i18n" = false}
-     * )
-     *
-     * @Operation(
-     *     tags={"Protected"},
-     *     summary="Get one deck by its UUID",
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
-     * )
      *
      * @param Request $request
      * @param string  $uuid
      * @return Response
      */
+    #[Route(path: '/api/oauth2/deck/load/{uuid}', name: 'api_oauth2_load_deck_by_uuid', methods: ['GET'], requirements: ['uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'])]
+    #[OA\Tag(name: 'Protected')]
+    #[OA\Response(response: 200, description: 'Returned when successful')]
     public function loadDeckByUuidAction(Request $request, string $uuid): Response
     {
         /* @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getRepository(Deck::class)->findOneBy(['uuid' => $uuid]);
+        $deck = $this->managerRegistry->getRepository(Deck::class)->findOneBy(['uuid' => $uuid]);
         if (!$deck) {
             throw $this->createNotFoundException("Deck not found.");
         }
@@ -152,36 +135,24 @@ class Oauth2Controller extends AbstractController
     }
 
     /**
+     * Load One Deck
+     *
      * Get the description of one Deck of the authenticated user
-     *
-     * @Route(
-     *     "/api/oauth2/deck/load/{id}",
-     *     name="api_oauth2_load_deck",
-     *     methods={"GET"},
-     *     requirements={"id"="\d+"},
-     *     options={"i18n" = false}
-     * )
-     *
-     * @Operation(
-     *     tags={"Protected"},
-     *     summary="Load One Deck",
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
-     * )
      *
      * @param Request $request
      * @param int $id
      * @return Response
      */
+    #[Route(path: '/api/oauth2/deck/load/{id}', name: 'api_oauth2_load_deck', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[OA\Tag(name: 'Protected')]
+    #[OA\Response(response: 200, description: 'Returned when successful')]
     public function loadDeckAction(Request $request, $id)
     {
         $response = new Response();
         $response->headers->add(['Access-Control-Allow-Origin' => '*']);
 
         /* @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
+        $deck = $this->managerRegistry->getRepository(Deck::class)->find($id);
 
         if ($deck->getUser()->getId() !== $this->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied to this object.");
@@ -202,84 +173,30 @@ class Oauth2Controller extends AbstractController
 
 
     /**
+     * Save One Deck
+     *
      * Save one Deck of the authenticated user. The parameters are the same as in the response to the load method,
      * but only a few are writable.
      * So you can parse the result from the load, change a few values,
      * then send the object as the param of an ajax request.
      * If successful, id of Deck is in the msg.
      *
-     * @Route(
-     *     "/api/oauth2/deck/save/{id}",
-     *     name="api_oauth2_save_deck",
-     *     methods={"PUT"},
-     *     requirements={"id"="\d+"},
-     *     options={"i18n" = false}
-     * )
-     *
-     * @Operation(
-     *     tags={"Protected"},
-     *     summary="Save One Deck",
-     *     @SWG\Parameter(
-     *         name="name",
-     *         in="body",
-     *         description="Name of the Deck",
-     *         required=true,
-     *         @SWG\Schema(type="string")
-     *     ),
-     *     @SWG\Parameter(
-     *         name="decklist_id",
-     *         in="body",
-     *         description="Identifier of the Decklist from which the Deck is copied",
-     *         required=false,
-     *         @SWG\Schema(type="integer")
-     *     ),
-     *     @SWG\Parameter(
-     *         name="description_md",
-     *         in="body",
-     *         description="Description of the Decklist in Markdown",
-     *         required=false,
-     *         @SWG\Schema(type="string")
-     *     ),
-     *     @SWG\Parameter(
-     *         name="faction_code",
-     *         in="body",
-     *         description="Code of the faction of the Deck",
-     *         required=false,
-     *         @SWG\Schema(type="string")
-     *     ),
-     *     @SWG\Parameter(
-     *         name="tags",
-     *         in="body",
-     *         description="Space-separated list of tags",
-     *         required=false,
-     *         @SWG\Schema(type="string")
-     *     ),
-     *     @SWG\Parameter(
-     *         name="slots",
-     *         in="body",
-     *         description="Content of the Decklist as a JSON object",
-     *         required=false,
-     *         @SWG\Schema(type="string")
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
-     * )
-     *
-     *
      * @param int $id
      * @param Request $request
      * @param DeckManager $deckManager
      */
+    #[Route(path: '/api/oauth2/deck/save/{id}', name: 'api_oauth2_save_deck', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[OA\Tag(name: 'Protected')]
+    #[OA\RequestBody(content: new OA\MediaType(mediaType: 'application/x-www-form-urlencoded', schema: new OA\Schema(required: ['name'], properties: [new OA\Property(property: 'name', type: 'string', description: 'Name of the Deck'), new OA\Property(property: 'decklist_id', type: 'integer', description: 'Identifier of the Decklist from which the Deck is copied'), new OA\Property(property: 'description_md', type: 'string', description: 'Description of the Decklist in Markdown'), new OA\Property(property: 'faction_code', type: 'string', description: 'Code of the faction of the Deck'), new OA\Property(property: 'tags', type: 'string', description: 'Space-separated list of tags'), new OA\Property(property: 'slots', type: 'string', description: 'Content of the Decklist as a JSON object')])))]
+    #[OA\Response(response: 200, description: 'Returned when successful')]
     public function saveDeckAction($id, Request $request, DeckManager $deckManager)
     {
         if (!$id) {
             $deck = new Deck();
             $deck->setUuid(Uuid::uuid4());
-            $this->getDoctrine()->getManager()->persist($deck);
+            $this->managerRegistry->getManager()->persist($deck);
         } else {
-            $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
+            $deck = $this->managerRegistry->getRepository(Deck::class)->find($id);
             if ($deck->getUser()->getId() !== $this->getUser()->getId()) {
                 throw $this->createAccessDeniedException("Access denied to this object.");
             }
@@ -297,7 +214,7 @@ class Oauth2Controller extends AbstractController
             ]);
         }
         /* @var FactionInterface $faction */
-        $faction = $this->getDoctrine()
+        $faction = $this->managerRegistry
             ->getManager()
             ->getRepository(Faction::class)
             ->findOneBy(['code' => $faction_code]);
@@ -352,7 +269,7 @@ class Oauth2Controller extends AbstractController
             null
         );
 
-        $this->getDoctrine()->getManager()->flush();
+        $this->managerRegistry->getManager()->flush();
 
         return new JsonResponse([
             'success' => true,
@@ -361,57 +278,24 @@ class Oauth2Controller extends AbstractController
     }
 
     /**
+     * Publish One Deck
+     *
      * Try to publish one Deck of the authenticated user
      * If publication is successful, update the version of the deck and return the id of the decklist
-     *
-     * @Route(
-     *     "/api/oauth2/deck/publish/{id}",
-     *     name="api_oauth2_publish_deck",
-     *     methods={"PUT"},
-     *     requirements={"id"="\d+"},
-     *     options={"i18n" = false}
-     * )
-     *
-     * @Operation(
-     *     tags={"Protected"},
-     *     summary="Publish One Deck",
-     *     @SWG\Parameter(
-     *         name="description_md",
-     *         in="body",
-     *         description="Description of the Decklist in Markdown",
-     *         required=false,
-     *         @SWG\Schema(type="string")
-     *     ),
-     *     @SWG\Parameter(
-     *         name="tournament_id",
-     *         in="body",
-     *         description="Identifier of the Tournament type of the Decklist",
-     *         required=false,
-     *         @SWG\Schema(type="integer")
-     *     ),
-     *     @SWG\Parameter(
-     *         name="precedent_id",
-     *         in="body",
-     *         description="Identifier of the Predecessor of the Decklist",
-     *         required=false,
-     *         @SWG\Schema(type="integer")
-     *     ),
-     *     @SWG\Response(
-     *         response="200",
-     *         description="Returned when successful"
-     *     )
-     * )
-     *
      *
      * @param int $id
      * @param Request $request
      * @param DecklistFactory $decklistFactory
      * @return Response $response
      */
+    #[Route(path: '/api/oauth2/deck/publish/{id}', name: 'api_oauth2_publish_deck', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[OA\Tag(name: 'Protected')]
+    #[OA\RequestBody(content: new OA\MediaType(mediaType: 'application/x-www-form-urlencoded', schema: new OA\Schema(properties: [new OA\Property(property: 'description_md', type: 'string', description: 'Description of the Decklist in Markdown'), new OA\Property(property: 'tournament_id', type: 'integer', description: 'Identifier of the Tournament type of the Decklist'), new OA\Property(property: 'precedent_id', type: 'integer', description: 'Identifier of the Predecessor of the Decklist')])))]
+    #[OA\Response(response: 200, description: 'Returned when successful')]
     public function publishDeckAction($id, Request $request, DecklistFactory $decklistFactory)
     {
         /* @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getRepository(Deck::class)->find($id);
+        $deck = $this->managerRegistry->getRepository(Deck::class)->find($id);
         if ($this->getUser()->getId() !== $deck->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied to this object.");
         }
@@ -427,7 +311,7 @@ class Oauth2Controller extends AbstractController
             filter_var($request->request->get('tournament_id'), FILTER_SANITIZE_NUMBER_INT)
         );
         /* @var TournamentInterface $tournament */
-        $tournament = $this->getDoctrine()->getManager()->getRepository(Tournament::class)->find($tournament_id);
+        $tournament = $this->managerRegistry->getManager()->getRepository(Tournament::class)->find($tournament_id);
 
         $precedent_id = trim($request->request->get('precedent'));
         if (!preg_match('/^\d+$/', $precedent_id)) {
@@ -439,7 +323,7 @@ class Oauth2Controller extends AbstractController
             }
         }
         $precedent = $precedent_id
-            ? $this->getDoctrine()->getRepository(Decklist::class)->find($precedent_id)
+            ? $this->managerRegistry->getRepository(Decklist::class)->find($precedent_id)
             : null;
 
         try {
@@ -453,8 +337,8 @@ class Oauth2Controller extends AbstractController
 
         $decklist->setTournament($tournament);
         $decklist->setPrecedent($precedent);
-        $this->getDoctrine()->getManager()->persist($decklist);
-        $this->getDoctrine()->getManager()->flush();
+        $this->managerRegistry->getManager()->persist($decklist);
+        $this->managerRegistry->getManager()->flush();
 
         return new JsonResponse([
             'success' => true,

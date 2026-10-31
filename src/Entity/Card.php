@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\CardRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,263 +13,218 @@ use Exception;
 /**
  * Class Card
  * @package App\Entity
- * @ORM\Table(
- *     name="card",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="card_code_idx", columns={"code"})},
- *     indexes={@ORM\Index(name="card_name_idx", columns={"name"})}
- * )
- * @ORM\Entity(repositoryClass="App\Repository\CardRepository")
  */
+#[ORM\Entity(repositoryClass: CardRepository::class)]
+#[ORM\Table(name: 'card')]
+#[ORM\Index(name: 'card_name_idx', columns: ['name'])]
+#[ORM\UniqueConstraint(name: 'card_code_idx', columns: ['code'])]
 class Card implements CardInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="position", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'position', type: 'smallint', nullable: false)]
     protected $position;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'code', type: 'string', length: 255, nullable: false)]
     protected $code;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 50, nullable: false)]
     protected $name;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="cost", type="string", length=2, nullable=true)
      */
+    #[ORM\Column(name: 'cost', type: 'string', length: 2, nullable: true)]
     protected $cost;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'text', type: 'text', nullable: false)]
     protected $text;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'date_update', type: 'datetime', nullable: false)]
     protected $dateUpdate;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="quantity", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'quantity', type: 'smallint', nullable: false)]
     protected $quantity;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="income", type="smallint", nullable=true)
      */
+    #[ORM\Column(name: 'income', type: 'smallint', nullable: true)]
     protected $income;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="initiative", type="smallint", nullable=true)
      */
+    #[ORM\Column(name: 'initiative', type: 'smallint', nullable: true)]
     protected $initiative;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="claim", type="smallint", nullable=true)
      */
+    #[ORM\Column(name: 'claim', type: 'smallint', nullable: true)]
     protected $claim;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="reserve", type="smallint", nullable=true)
      */
+    #[ORM\Column(name: 'reserve', type: 'smallint', nullable: true)]
     protected $reserve;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="deck_limit", type="smallint", nullable=true)
      */
+    #[ORM\Column(name: 'deck_limit', type: 'smallint', nullable: true)]
     protected $deckLimit;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="designer", type="text", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'designer', type: 'text', length: 255, nullable: true)]
     protected $designer;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="strength", type="smallint", nullable=true)
      */
+    #[ORM\Column(name: 'strength', type: 'smallint', nullable: true)]
     protected $strength;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="traits", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'traits', type: 'string', length: 255, nullable: false)]
     protected $traits;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="flavor", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'flavor', type: 'text', nullable: false)]
     protected $flavor;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="illustrator", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'illustrator', type: 'string', length: 255, nullable: true)]
     protected $illustrator;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_unique", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'is_unique', type: 'boolean', nullable: false)]
     protected $isUnique;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_loyal", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'is_loyal', type: 'boolean', nullable: false)]
     protected $isLoyal;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_military", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'is_military', type: 'boolean', nullable: false)]
     protected $isMilitary;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_intrigue", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'is_intrigue', type: 'boolean', nullable: false)]
     protected $isIntrigue;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_power", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'is_power', type: 'boolean', nullable: false)]
     protected $isPower;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="octgn_id", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'octgn_id', type: 'string', nullable: true)]
     protected $octgnId;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_multiple", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'is_multiple', type: 'boolean', nullable: false)]
     protected $isMultiple;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="image_url", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'image_url', type: 'string', length: 255, nullable: true)]
     protected $imageUrl;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="errataed", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'errataed', type: 'boolean', nullable: false)]
     protected bool $errataed;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Review", mappedBy="card")
-     * @ORM\OrderBy({
-     *     "dateCreation"="DESC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'card')]
+    #[ORM\OrderBy(['dateCreation' => 'DESC'])]
     protected $reviews;
 
     /**
      * @var RarityInterface|null
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Rarity", inversedBy="cards")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="rarity_id", referencedColumnName="id", nullable=true)
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Rarity::class, inversedBy: 'cards')]
+    #[ORM\JoinColumn(name: 'rarity_id', referencedColumnName: 'id', nullable: true)]
     protected ?RarityInterface $rarity = null;
 
     /**
      * @var Pack
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Pack", inversedBy="cards")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pack_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Pack::class, inversedBy: 'cards')]
+    #[ORM\JoinColumn(name: 'pack_id', referencedColumnName: 'id')]
     protected $pack;
 
     /**
      * @var Type
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Type", inversedBy="cards")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="type_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Type::class, inversedBy: 'cards')]
+    #[ORM\JoinColumn(name: 'type_id', referencedColumnName: 'id')]
     protected $type;
 
     /**
      * @var FactionInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Faction", inversedBy="cards")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="faction_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Faction::class, inversedBy: 'cards')]
+    #[ORM\JoinColumn(name: 'faction_id', referencedColumnName: 'id')]
     protected $faction;
 
     /**
@@ -722,7 +678,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setPack(PackInterface $pack = null)
+    public function setPack(?PackInterface $pack = null)
     {
         $this->pack = $pack;
     }
@@ -738,7 +694,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setType(TypeInterface $type = null)
+    public function setType(?TypeInterface $type = null)
     {
         $this->type = $type;
     }
@@ -754,7 +710,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setFaction(FactionInterface $faction = null)
+    public function setFaction(?FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }
@@ -840,7 +796,7 @@ class Card implements CardInterface
     /**
      * @inheritdoc
      */
-    public function setImageUrl(string $imageUrl = null)
+    public function setImageUrl(?string $imageUrl = null)
     {
         $this->imageUrl = $imageUrl;
     }
@@ -851,7 +807,7 @@ class Card implements CardInterface
     public function hasKeyword($keyword): bool
     {
         // "Keyword (<cost>).", with <cost> being either digits or the letter "X"
-        $regex = "/${keyword} \\(([0-9]+|X)\\)\\./";
+        $regex = "/{$keyword} \\(([0-9]+|X)\\)\\./";
         // check if first line in the card text has that keyword.
         $textLines = explode("\n", $this->getText());
 
@@ -942,6 +898,20 @@ class Card implements CardInterface
         ksort($serialized);
 
         return $serialized;
+    }
+
+    /**
+     * PHP 8.1+ uses these instead of the Serializable methods.
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->serialize();
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data);
     }
 
     /**

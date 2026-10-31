@@ -2,116 +2,78 @@
 
 namespace App\Entity;
 
+use App\Repository\RestrictionRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Interface RestrictionInterface
  * @package App\Entity
-
- * @ORM\Table(name="restriction")
- * @ORM\Entity(repositoryClass="App\Repository\RestrictionRepository")
  */
+#[ORM\Entity(repositoryClass: RestrictionRepository::class)]
+#[ORM\Table(name: 'restriction')]
 class Restriction implements RestrictionInterface
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=20)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     *
-     * @Assert\Type(type="string")
      */
+    #[ORM\Column(name: 'code', type: 'string', length: 20)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[Assert\Type(type: 'string')]
     protected string $code;
 
-    /**
-     * @ORM\Column(name="effective_on", type="datetime")
-     *
-     * @Assert\NotBlank()
-     */
+    #[ORM\Column(name: 'effective_on', type: 'datetime')]
+    #[Assert\NotBlank]
     protected DateTime $effectiveOn;
 
-    /**
-     * @ORM\Column(name="title", type="string", length=50)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(
-     *      min = 1,
-     *      max = 50
-     * )
-     */
+    #[ORM\Column(name: 'title', type: 'string', length: 50)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 1, max: 50)]
     protected string $title;
 
-    /**
-     * @ORM\Column(name="issuer", type="string", length=50)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(
-     *      min = 1,
-     *      max = 50
-     * )
-     */
+    #[ORM\Column(name: 'issuer', type: 'string', length: 50)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 1, max: 50)]
     protected string $issuer;
 
-    /**
-     * @ORM\Column(name="card_set", type="string", length=20)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(
-     *      min = 1,
-     *      max = 20
-     * )
-     */
+    #[ORM\Column(name: 'card_set', type: 'string', length: 20)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 1, max: 20)]
     protected string $cardSet;
 
-    /**
-     * @ORM\Column(name="contents", type="json")
-     *
-     * @Assert\Type(type="array")
-     */
+    #[ORM\Column(name: 'contents', type: 'json')]
+    #[Assert\Type(type: 'array')]
     protected array $contents;
 
-    /**
-     * @ORM\Column(name="active", type="boolean")
-     *
-     * @Assert\NotNull()
-     * @Assert\Type(type="bool")
-     */
+    #[ORM\Column(name: 'active', type: 'boolean')]
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'bool')]
     protected bool $active;
 
-    /**
-     * @ORM\Column(name="version", type="string", length=20)
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(
-     *      min = 1,
-     *      max = 20
-     * )
-     */
+    #[ORM\Column(name: 'version', type: 'string', length: 20)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 1, max: 20)]
     protected string $version;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'date_update', type: 'datetime', nullable: false)]
     protected DateTime $dateUpdate;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected DateTime $dateCreation;
 
     /**
@@ -364,7 +326,7 @@ class Restriction implements RestrictionInterface
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return [
             'code' => $this->getCode(),

@@ -119,7 +119,7 @@ interface PackInterface extends Serializable
     /**
      * @param CycleInterface $cycle
      */
-    public function setCycle(CycleInterface $cycle = null);
+    public function setCycle(?CycleInterface $cycle = null);
 
     /**
      * @return CycleInterface

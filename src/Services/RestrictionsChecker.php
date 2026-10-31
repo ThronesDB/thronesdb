@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Classes\SlotCollectionInterface;
 use App\Entity\CommonDeckInterface;
 use App\Entity\RestrictionInterface;
-use App\Entity\SlotInterface;
 
 /**
  * Class RestrictionsChecker

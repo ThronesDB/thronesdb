@@ -74,7 +74,7 @@ interface CommonDeckInterface
     /**
      * @param FactionInterface|null $faction
      */
-    public function setFaction(FactionInterface $faction = null);
+    public function setFaction(?FactionInterface $faction = null);
 
     /**
      * @return SlotCollectionInterface
@@ -89,7 +89,7 @@ interface CommonDeckInterface
     /**
      * @param UserInterface|null $user
      */
-    public function setUser(UserInterface $user = null);
+    public function setUser(?UserInterface $user = null);
 
     /**
      * @return array

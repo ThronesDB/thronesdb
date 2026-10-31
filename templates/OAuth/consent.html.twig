@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Authorize {{ client.name }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p><strong>{{ client.name }}</strong> wants to access your account
+                            ({{ app.user.username }}) with these permissions:</p>
+                        <ul>
+                            {% for scope in scopes %}
+                                <li>
+                                    {% if scope == 'read_deck' %}Read your decks
+                                    {% elseif scope == 'write_deck' %}Create and change your decks
+                                    {% else %}{{ scope }}{% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <form method="post" action="{{ action }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token(csrf_id) }}">
+                            <button type="submit" name="decision" value="approve" class="btn btn-success">Allow</button>
+                            <button type="submit" name="decision" value="deny" class="btn btn-default">Deny</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

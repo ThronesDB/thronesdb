@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\User;
-use App\Entity\UserInterface;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @package App\Command
  */
+#[AsCommand(name: 'app:delete-inactive-users', description: 'Delete inactive users that were created 48 hours or longer ago.')]
 class DeleteInactiveCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -22,14 +23,6 @@ class DeleteInactiveCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-        ->setName('app:delete-inactive-users')
-        ->setDescription('Delete inactive users that were created 48 hours or longer ago.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -48,6 +41,6 @@ class DeleteInactiveCommand extends Command
         }
         $this->entityManager->flush();
         $output->writeln(date('c') . " Delete $count inactive users.");
-        return 0;
+        return Command::SUCCESS;
     }
 }

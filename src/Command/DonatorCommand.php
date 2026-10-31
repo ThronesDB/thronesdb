@@ -2,9 +2,8 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\User;
-use App\Entity\UserInterface;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -14,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @package App\Command
  */
+#[AsCommand(name: 'app:donator', description: 'Add a donation to a user by email address or username')]
 class DonatorCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -24,11 +24,9 @@ class DonatorCommand extends Command
         $this->entityManager = $entityManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-        ->setName('app:donator')
-        ->setDescription('Add a donation to a user by email address or username')
         ->addArgument(
             'email',
             InputArgument::REQUIRED,
@@ -64,6 +62,6 @@ class DonatorCommand extends Command
         } else {
             $output->writeln(date('c') . " " . "Cannot find user [$email]");
         }
-        return 0;
+        return Command::SUCCESS;
     }
 }

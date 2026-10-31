@@ -20,7 +20,7 @@ interface DeckslotInterface extends SlotInterface
     /**
      * @param DeckInterface $deck
      */
-    public function setDeck(DeckInterface $deck = null);
+    public function setDeck(?DeckInterface $deck = null);
 
     /**
      * @return DeckInterface

@@ -16,7 +16,7 @@ class CardRepository extends EntityRepository
     /**
      * @return CardInterface[]
      */
-    public function findAll()
+    public function findAll(): array
     {
         $qb = $this->createQueryBuilder('c')
             ->select('c, t, f, p, y')

@@ -9,98 +9,77 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="review")
- * @ORM\Entity
  * @package App\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'review')]
 class Review implements ReviewInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'date_update', type: 'datetime', nullable: false)]
     protected $dateUpdate;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text_md", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'text_md', type: 'text', nullable: false)]
     protected $textMd;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text_html", type="text", nullable=false)
      */
+    #[ORM\Column(name: 'text_html', type: 'text', nullable: false)]
     protected $textHtml;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="nb_votes", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'nb_votes', type: 'smallint', nullable: false)]
     protected $nbVotes;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Reviewcomment", mappedBy="review", cascade={"persist"})
      */
+    #[ORM\OneToMany(targetEntity: Reviewcomment::class, mappedBy: 'review', cascade: ['persist'])]
     protected $comments;
 
     /**
      * @var CardInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Card", inversedBy="reviews")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="card_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Card::class, inversedBy: 'reviews')]
+    #[ORM\JoinColumn(name: 'card_id', referencedColumnName: 'id')]
     protected $card;
 
     /**
      * @var UserInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reviews")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     protected $user;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="reviewvotes", cascade={"persist"})
-     * @ORM\JoinTable(name="reviewvote",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="review_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *   }
-     * )
      */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'reviewvotes', cascade: ['persist'])]
+    #[ORM\JoinTable(name: 'reviewvote', joinColumns: [new ORM\JoinColumn(name: 'review_id', referencedColumnName: 'id')], inverseJoinColumns: [new ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')])]
     protected $votes;
 
     /**
@@ -235,7 +214,7 @@ class Review implements ReviewInterface
     /**
      * @inheritdoc
      */
-    public function setCard(CardInterface $card = null)
+    public function setCard(?CardInterface $card = null)
     {
         $this->card = $card;
     }
@@ -251,7 +230,7 @@ class Review implements ReviewInterface
     /**
      * @inheritdoc
      */
-    public function setUser(UserInterface $user = null)
+    public function setUser(?UserInterface $user = null)
     {
         $this->user = $user;
     }

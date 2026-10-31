@@ -2,24 +2,21 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Card;
-use App\Entity\CardInterface;
 use App\Entity\Decklist;
-use App\Entity\DecklistInterface;
 use App\Entity\Faction;
-use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
-use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Mailer\MailerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
-use Swift_Mailer;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -27,14 +24,10 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class UserController extends AbstractController
 {
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route(
-     *     "/user/profile/{user_id}/{user_name}/{page}",
-     *     name="user_profile_public",
-     *     methods={"GET"},
-     *     defaults={"page"=1},
-     *     requirements={"user_id"="\d+"}
-     * )
      * @param int $cacheExpiration
      * @param int $user_id
      * @param string $user_name
@@ -42,6 +35,7 @@ class UserController extends AbstractController
      * @return Response
      * @todo Eliminate unused args from route and action. [ST 2020/08/09]
      */
+    #[Route(path: '/user/profile/{user_id}/{user_name}/{page}', name: 'user_profile_public', methods: ['GET'], defaults: ['page' => 1], requirements: ['user_id' => '\d+'])]
     public function publicProfileAction(int $cacheExpiration, $user_id, $user_name, $page)
     {
         $response = new Response();
@@ -49,7 +43,7 @@ class UserController extends AbstractController
         $response->setMaxAge($cacheExpiration);
 
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var UserInterface $user */
         $user = $em->getRepository(User::class)->find($user_id);
@@ -63,14 +57,14 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/profile_edit", name="user_profile_edit", methods={"GET"})
      * @return Response
      */
+    #[Route(path: '/user/profile_edit', name: 'user_profile_edit', methods: ['GET'])]
     public function editProfileAction()
     {
         $user = $this->getUser();
 
-        $factions = $this->getDoctrine()->getRepository(Faction::class)->findAll();
+        $factions = $this->managerRegistry->getRepository(Faction::class)->findAll();
 
         return $this->render('User/profile_edit.html.twig', array(
                 'user' => $user,
@@ -79,25 +73,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/profile_save", name="user_profile_save", methods={"POST"})
      *
      * @param Request $request
      * @param SessionInterface $session
      * @return RedirectResponse
      */
+    #[Route(path: '/user/profile_save', name: 'user_profile_save', methods: ['POST'])]
     public function saveProfileAction(Request $request, SessionInterface $session)
     {
         /* @var UserInterface $user */
         $user = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $username = filter_var($request->get('username'), FILTER_SANITIZE_STRING);
-        if ($username !== $user->getUsername()) {
+        if ($username !== $user->getUserIdentifier()) {
             $user_existing = $em->getRepository(User::class)->findOneBy(array('username' => $username));
 
             if ($user_existing) {
                 $session->getFlashBag()->set('error', "Username $username is already taken.");
-                return $this->redirect($this->generateUrl('user_profile_edit'));
+                return $this->redirectToRoute('user_profile_edit');
             }
 
             $user->setUsername($username);
@@ -122,19 +116,19 @@ class UserController extends AbstractController
         $user->setIsNotifMention($notifMention);
         $user->setIsShareDecks($shareDecks);
 
-        $this->getDoctrine()->getManager()->flush();
+        $this->managerRegistry->getManager()->flush();
 
         $session->getFlashBag()->set('notice', "Successfully saved your profile.");
 
-        return $this->redirect($this->generateUrl('user_profile_edit'));
+        return $this->redirectToRoute('user_profile_edit');
     }
 
     /**
-     * @Route("/api/public/user/info", name="user_info", methods={"GET"}, options={"i18n" = false})
      * @param Request $request
      * @param RouterInterface $router
      * @return Response
      */
+    #[Route(path: '/api/public/user/info', name: 'user_info', methods: ['GET'])]
     public function infoAction(Request $request, RouterInterface $router)
     {
         $jsonp = $request->query->get('jsonp');
@@ -151,40 +145,40 @@ class UserController extends AbstractController
 
             $public_profile_url = $router->generate('user_profile_public', array(
                     'user_id' => $user_id,
-                    'user_name' => urlencode($user->getUsername())
+                    'user_name' => urlencode($user->getUserIdentifier())
             ));
             $content = array(
                     'public_profile_url' => $public_profile_url,
                     'id' => $user_id,
-                    'name' => $user->getUsername(),
+                    'name' => $user->getUserIdentifier(),
                     'faction' => $user->getColor(),
                     'donation' => $user->getDonation(),
             );
 
             if (isset($decklist_id)) {
                 /* @var EntityManager $em */
-                $em = $this->getDoctrine()->getManager();
+                $em = $this->managerRegistry->getManager();
                 /* @var DecklistInterface $decklist */
                 $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
 
                 if ($decklist) {
                     $decklist_id = $decklist->getId();
 
-                    $dbh = $this->getDoctrine()->getConnection();
+                    $dbh = $this->managerRegistry->getConnection();
 
                     $content['is_liked'] = (bool) $dbh->executeQuery("SELECT
                         count(*)
                         from decklist d
                         join vote v on v.decklist_id=d.id
                         where v.user_id=?
-                        and d.id=?", array($user_id, $decklist_id))->fetch(\PDO::FETCH_NUM)[0];
+                        and d.id=?", array($user_id, $decklist_id))->fetchOne();
 
                     $content['is_favorite'] = (bool) $dbh->executeQuery("SELECT
                         count(*)
                         from decklist d
                         join favorite f on f.decklist_id=d.id
                         where f.user_id=?
-                        and d.id=?", array($user_id, $decklist_id))->fetch(\PDO::FETCH_NUM)[0];
+                        and d.id=?", array($user_id, $decklist_id))->fetchOne();
 
                     $content['is_author'] = ($user_id == $decklist->getUser()->getId());
 
@@ -196,7 +190,7 @@ class UserController extends AbstractController
 
             if (isset($card_id)) {
                 /* @var $em EntityManager */
-                $em = $this->getDoctrine()->getManager();
+                $em = $this->managerRegistry->getManager();
                 /* @var CardInterface $card */
                 $card = $em->getRepository(Card::class)->find($card_id);
 
@@ -228,18 +222,18 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/remind/{username}", name="remind_email", methods={"GET"})
      *
      * @param UserManagerInterface $userManager
-     * @param Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      * @param SessionInterface $session
      * @param RouterInterface $router
      * @param string $username
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/user/remind/{username}', name: 'remind_email', methods: ['GET'])]
     public function remindAction(
         UserManagerInterface $userManager,
-        Swift_Mailer $mailer,
+        MailerInterface $mailer,
         SessionInterface $session,
         RouterInterface $router,
         $username

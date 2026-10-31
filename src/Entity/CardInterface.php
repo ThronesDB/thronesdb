@@ -253,7 +253,7 @@ interface CardInterface extends Serializable
     public function getOctgnId();
 
     /**
-     * @param bool $octgnId
+     * @param bool $errataed
      */
     public function setErrataed(bool $errataed): void;
 
@@ -291,7 +291,7 @@ interface CardInterface extends Serializable
     /**
      * @param PackInterface $pack
      */
-    public function setPack(PackInterface $pack = null);
+    public function setPack(?PackInterface $pack = null);
 
     /**
      * @return PackInterface
@@ -301,7 +301,7 @@ interface CardInterface extends Serializable
     /**
      * @param TypeInterface $type
      */
-    public function setType(TypeInterface $type = null);
+    public function setType(?TypeInterface $type = null);
 
     /**
      * @return TypeInterface
@@ -311,7 +311,7 @@ interface CardInterface extends Serializable
     /**
      * @param FactionInterface $faction
      */
-    public function setFaction(FactionInterface $faction = null);
+    public function setFaction(?FactionInterface $faction = null);
 
     /**
      * @return FactionInterface
@@ -356,7 +356,7 @@ interface CardInterface extends Serializable
     /**
      * @param string|null $imageUrl
      */
-    public function setImageUrl(string $imageUrl = null);
+    public function setImageUrl(?string $imageUrl = null);
 
     /**
      * Checks if this card has the given keyword.

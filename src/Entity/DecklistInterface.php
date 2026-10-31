@@ -128,7 +128,7 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     /**
      * @param PackInterface|null $lastPack
      */
-    public function setLastPack(PackInterface $lastPack = null);
+    public function setLastPack(?PackInterface $lastPack = null);
 
     /**
      * @return PackInterface
@@ -138,7 +138,7 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     /**
      * @param DeckInterface|null $parent
      */
-    public function setParent(DeckInterface $parent = null);
+    public function setParent(?DeckInterface $parent = null);
 
     /**
      * @return DeckInterface
@@ -148,7 +148,7 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     /**
      * @param DecklistInterface|null $precedent
      */
-    public function setPrecedent(DecklistInterface $precedent = null);
+    public function setPrecedent(?DecklistInterface $precedent = null);
 
     /**
      * @return Decklist
@@ -158,7 +158,7 @@ interface DecklistInterface extends CommonDeckInterface, JsonSerializable
     /**
      * @param TournamentInterface|null $tournament
      */
-    public function setTournament(TournamentInterface $tournament = null);
+    public function setTournament(?TournamentInterface $tournament = null);
 
     /**
      * @return TournamentInterface

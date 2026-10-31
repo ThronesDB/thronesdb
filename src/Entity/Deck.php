@@ -11,170 +11,134 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\UuidInterface;
 use stdClass;
 
-/**
- * @ORM\Table(name="deck")
- * @ORM\Entity
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'deck')]
 class Deck extends CommonDeck implements DeckInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 255)]
     protected $name;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'date_update', type: 'datetime', nullable: false)]
     protected $dateUpdate;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="description_md", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'description_md', type: 'text', nullable: true)]
     protected $descriptionMd;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="problem", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'problem', type: 'string', length: 255, nullable: true)]
     protected $problem;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="tags", type="string", length=4000, nullable=true)
      */
+    #[ORM\Column(name: 'tags', type: 'string', length: 4000, nullable: true)]
     protected $tags;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="major_version", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'major_version', type: 'integer', nullable: false)]
     protected $majorVersion;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="minor_version", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'minor_version', type: 'integer', nullable: false)]
     protected $minorVersion;
 
     /**
      * @var UuidInterface|null
-     *
-     * @ORM\Column(name="uuid", type="uuid", nullable=true, unique=true)
      */
+    #[ORM\Column(name: 'uuid', type: 'uuid', nullable: true, unique: true)]
     protected $uuid;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Deckslot", mappedBy="deck", cascade={"persist","remove"})
      */
+    #[ORM\OneToMany(targetEntity: Deckslot::class, mappedBy: 'deck', cascade: ['persist', 'remove'])]
     protected $slots;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Decklist", mappedBy="parent")
-     * @ORM\OrderBy({
-     *     "dateCreation"="DESC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Decklist::class, mappedBy: 'parent')]
+    #[ORM\OrderBy(['dateCreation' => 'DESC'])]
     protected $children;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Deckchange", mappedBy="deck", cascade={"persist","remove"})
-     * @ORM\OrderBy({
-     *     "dateCreation"="DESC",
-     *     "isSaved"="DESC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Deckchange::class, mappedBy: 'deck', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['dateCreation' => 'DESC', 'isSaved' => 'DESC'])]
     protected $changes;
 
     /**
      * @var UserInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="decks")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'decks')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     protected $user;
 
     /**
      * @var FactionInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Faction")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="faction_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Faction::class)]
+    #[ORM\JoinColumn(name: 'faction_id', referencedColumnName: 'id')]
     protected $faction;
 
     /**
      * @var PackInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Pack")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="last_pack_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Pack::class)]
+    #[ORM\JoinColumn(name: 'last_pack_id', referencedColumnName: 'id')]
     protected $lastPack;
 
     /**
      * @var DecklistInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Decklist", inversedBy="children")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_decklist_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Decklist::class, inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_decklist_id', referencedColumnName: 'id')]
     protected $parent;
 
 
     /**
      * @var DeckInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="deckChildren")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_deck_id", referencedColumnName="id", onDelete="SET NULL")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Deck::class, inversedBy: 'deckChildren')]
+    #[ORM\JoinColumn(name: 'parent_deck_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     protected $parentDeck;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Deck", mappedBy="parentDeck")
      */
+    #[ORM\OneToMany(targetEntity: Deck::class, mappedBy: 'parentDeck')]
     protected $deckChildren;
 
     /**
@@ -408,7 +372,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setUser(UserInterface $user = null)
+    public function setUser(?UserInterface $user = null)
     {
         $this->user = $user;
     }
@@ -424,7 +388,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setFaction(FactionInterface $faction = null)
+    public function setFaction(?FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }
@@ -432,7 +396,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setLastPack(PackInterface $lastPack = null)
+    public function setLastPack(?PackInterface $lastPack = null)
     {
         $this->lastPack = $lastPack;
     }
@@ -448,7 +412,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setParent(DecklistInterface $parent = null)
+    public function setParent(?DecklistInterface $parent = null)
     {
         $this->parent = $parent;
     }
@@ -464,7 +428,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function setParentDeck(DeckInterface $parent = null)
+    public function setParentDeck(?DeckInterface $parent = null)
     {
         $this->parentDeck = $parent;
     }
@@ -636,7 +600,7 @@ class Deck extends CommonDeck implements DeckInterface
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $slots = $this->getSlots();
         $agendas = $slots->getAgendas();

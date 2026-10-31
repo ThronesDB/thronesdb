@@ -14,6 +14,7 @@
 
 ###> symfony/phpunit-bridge ###
 .phpunit
+/.phpunit.cache/
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
@@ -42,3 +43,5 @@
 /docker/data/
 /docker/docker-compose.override.yml
 ###< docker ###
+
+/config/reference.php

@@ -1,0 +1,22 @@
+# OAuth2 authorization server: lets other apps act on a user's decks
+# (scopes read_deck, write_deck). Clients are managed with the
+# league:oauth2-server:* console commands.
+league_oauth2_server:
+    authorization_server:
+        private_key: '%env(resolve:OAUTH_PRIVATE_KEY)%'
+        private_key_passphrase: '%env(default::OAUTH_PRIVATE_KEY_PASSPHRASE)%'
+        encryption_key: '%env(APP_SECRET)%'
+        enable_password_grant: false
+        enable_implicit_grant: false
+        # Clients registered before the move from FOSOAuthServerBundle are
+        # confidential clients without PKCE; keep them working.
+        require_code_challenge_for_public_clients: true
+    resource_server:
+        public_key: '%env(resolve:OAUTH_PUBLIC_KEY)%'
+    scopes:
+        available: ['read_deck', 'write_deck']
+        default: ['read_deck']
+    persistence:
+        doctrine: null
+    # Scopes become roles ROLE_READ_DECK and ROLE_WRITE_DECK, as before
+    role_prefix: ROLE_

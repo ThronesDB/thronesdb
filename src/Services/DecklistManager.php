@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Entity\Card;
-use App\Entity\CardInterface;
 use App\Entity\Decklist;
 use App\Entity\Decklistslot;
 use App\Entity\Faction;
@@ -55,7 +54,7 @@ class DecklistManager
         $this->logger = $logger;
     }
 
-    public function setFaction(FactionInterface $faction = null)
+    public function setFaction(?FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }

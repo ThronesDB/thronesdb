@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\BannerAlert;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\BannerAlert;
 use App\Entity\BannerAlertInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  *
  * @package App\Command
  */
+#[AsCommand(name: 'app:banner-alerts:activate', description: 'Activates banner alerts.')]
 class ActivateCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -25,15 +27,6 @@ class ActivateCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:banner-alerts:activate')
-            ->setDescription(
-                'Activates banner alerts.'
-            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -71,12 +64,12 @@ class ActivateCommand extends Command
             $this->entityManager->flush();
 
             if (1 === count($choices)) {
-                $output->writeln("${choices[0]} has been activated.");
+                $output->writeln("{$choices[0]} has been activated.");
             } else {
                 $output->writeln('The following banner alerts have been activated: ' . implode(', ', $choices) . '.');
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

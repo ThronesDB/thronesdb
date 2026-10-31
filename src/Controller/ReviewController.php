@@ -2,28 +2,27 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Card;
-use App\Entity\CardInterface;
 use App\Entity\Review;
 use App\Entity\Reviewcomment;
-use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use App\Services\Texts;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
-use Swift_Mailer;
-use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -31,8 +30,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ReviewController extends AbstractController
 {
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route("/review/post", name="card_review_post", methods={"POST"})
      * @param Request $request
      * @param Texts $texts
      * @return JsonResponse
@@ -40,10 +41,11 @@ class ReviewController extends AbstractController
      * @throws OptimisticLockException
      * @throws Exception
      */
+    #[Route(path: '/review/post', name: 'card_review_post', methods: ['POST'])]
     public function postAction(Request $request, Texts $texts)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -112,7 +114,6 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * @Route("/review/edit", name="card_review_edit", methods={"POST"})
      * @todo Clean this up. Response should always be JSON response (may require frontend changes). [ST 2020/07/25]
      * @param Request $request
      * @param Texts $texts
@@ -120,11 +121,12 @@ class ReviewController extends AbstractController
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/review/edit', name: 'card_review_edit', methods: ['POST'])]
     public function editAction(Request $request, Texts $texts)
     {
 
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -168,17 +170,17 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * @Route("/review/like", name="card_review_like", methods={"POST"})
      *
      * @param Request $request
      * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/review/like', name: 'card_review_like', methods: ['POST'])]
     public function likeAction(Request $request)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /** @var UserInterface $user */
         $user = $this->getUser();
@@ -221,18 +223,12 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/reviews/{page}",
-     *     name="card_reviews_list",
-     *     methods={"GET"},
-     *     defaults={"page"=1},
-     *     requirements={"page"="\d+"}
-     * )
      * @param Request $request
      * @param int $cacheExpiration
      * @param int $page
      * @return Response
      */
+    #[Route(path: '/reviews/{page}', name: 'card_reviews_list', methods: ['GET'], defaults: ['page' => 1], requirements: ['page' => '\d+'])]
     public function listAction(Request $request, int $cacheExpiration, $page = 1)
     {
         $response = new Response();
@@ -248,7 +244,7 @@ class ReviewController extends AbstractController
         $pagetitle = "Card Reviews";
 
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $dql = "SELECT r FROM App\Entity\Review r JOIN r.card c JOIN c.pack p ORDER BY r.dateCreation DESC";
         $query = $em->createQuery($dql)->setFirstResult($start)->setMaxResults($limit);
@@ -301,19 +297,13 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/user/reviews/{user_id}/{page}",
-     *     name="card_reviews_list_byauthor",
-     *     methods={"GET"},
-     *     defaults={"page"=1},
-     *     requirements={"page"="\d+", "user_id"="\d+"}
-     * )
      * @param Request $request
      * @param int $cacheExpiration
      * @param int $user_id
      * @param int $page
      * @return Response
      */
+    #[Route(path: '/user/reviews/{user_id}/{page}', name: 'card_reviews_list_byauthor', methods: ['GET'], defaults: ['page' => 1], requirements: ['page' => '\d+', 'user_id' => '\d+'])]
     public function byauthorAction(Request $request, int $cacheExpiration, $user_id, $page = 1)
     {
         $response = new Response();
@@ -327,11 +317,11 @@ class ReviewController extends AbstractController
         $start = ($page - 1) * $limit;
 
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $user = $em->getRepository(User::class)->find($user_id);
 
-        $pagetitle = "Card Reviews by " . $user->getUsername();
+        $pagetitle = "Card Reviews by " . $user->getUserIdentifier();
 
         $dql = "SELECT r FROM App\Entity\Review r WHERE r.user = :user ORDER BY r.dateCreation DESC";
         $query = $em->createQuery($dql)->setFirstResult($start)->setMaxResults($limit)->setParameter('user', $user);
@@ -387,18 +377,18 @@ class ReviewController extends AbstractController
     }
 
     /**
-     * @Route("/review/comment", name="card_reviewcomment_post", methods={"POST"})
      * @param Request $request
-     * @param Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      * @param string $emailSenderAddress
      * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function commentAction(Request $request, Swift_Mailer $mailer, string $emailSenderAddress)
+    #[Route(path: '/review/comment', name: 'card_reviewcomment_post', methods: ['POST'])]
+    public function commentAction(Request $request, MailerInterface $mailer, string $emailSenderAddress)
     {
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -438,7 +428,7 @@ class ReviewController extends AbstractController
         unset($spool[$user->getEmail()]);
 
         $email_data = array(
-            'username' => $user->getUsername(),
+            'username' => $user->getUserIdentifier(),
             'card_name' => $review->getCard()->getName(),
             'url' => $this->generateUrl(
                 'cards_zoom',
@@ -449,11 +439,12 @@ class ReviewController extends AbstractController
             'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL)
         );
         foreach ($spool as $email => $view) {
-            $message = (new Swift_Message("[thronesdb] New review comment"))
-                    ->setFrom(array($emailSenderAddress => $user->getUsername()))
-                    ->setTo($email)
-                    ->setBody($this->renderView($view, $email_data), 'text/html');
-            $$mailer->send($message);
+            $message = (new Email())
+                    ->subject("[thronesdb] New review comment")
+                    ->from(new Address($emailSenderAddress, $user->getUserIdentifier()))
+                    ->to($email)
+                    ->html($this->renderView($view, $email_data));
+            $mailer->send($message);
         }
 
         return new JsonResponse([

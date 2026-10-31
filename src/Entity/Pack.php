@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\PackRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,104 +11,89 @@ use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="pack", uniqueConstraints={@ORM\UniqueConstraint(name="pack_code_idx", columns={"code"})})
- * @ORM\Entity(repositoryClass="App\Repository\PackRepository")
  * @package App\Entity
  */
+#[ORM\Entity(repositoryClass: PackRepository::class)]
+#[ORM\Table(name: 'pack')]
+#[ORM\UniqueConstraint(name: 'pack_code_idx', columns: ['code'])]
 class Pack implements PackInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'code', type: 'string', length: 255, nullable: false)]
     protected $code;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=1024, nullable=false)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 1024, nullable: false)]
     protected $name;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="position", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'position', type: 'smallint', nullable: false)]
     protected $position;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="size", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'size', type: 'smallint', nullable: false)]
     protected $size;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'date_update', type: 'datetime', nullable: false)]
     protected $dateUpdate;
 
     /**
      * @var DateTime|null
-     *
-     * @ORM\Column(name="date_release", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'date_release', type: 'date', nullable: true)]
     protected $dateRelease;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="cgdb_id", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'cgdb_id', type: 'integer', nullable: true)]
     protected $cgdbId;
 
     /**
      * @var int|null
-     *
-     * @ORM\Column(name="work_in_progress", type="boolean", nullable=false, options={"default"=false})
      */
+    #[ORM\Column(name: 'work_in_progress', type: 'boolean', nullable: false, options: ['default' => false])]
     protected bool $workInProgress = false;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Card", mappedBy="pack")
-     * @ORM\OrderBy({
-     *     "position"="ASC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'pack')]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     protected $cards;
 
     /**
      * @var CycleInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Cycle", inversedBy="packs")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cycle_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Cycle::class, inversedBy: 'packs')]
+    #[ORM\JoinColumn(name: 'cycle_id', referencedColumnName: 'id')]
     protected $cycle;
 
     /**
@@ -289,7 +275,7 @@ class Pack implements PackInterface
     /**
      * @inheritdoc
      */
-    public function setCycle(CycleInterface $cycle = null)
+    public function setCycle(?CycleInterface $cycle = null)
     {
         $this->cycle = $cycle;
     }
@@ -327,6 +313,20 @@ class Pack implements PackInterface
             'cgdb_id' => $this->cgdbId,
             'work_in_progress' => $this->workInProgress
         ];
+    }
+
+    /**
+     * PHP 8.1+ uses these instead of the Serializable methods.
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->serialize();
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data);
     }
 
     /**

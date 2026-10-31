@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Cycle;
@@ -16,7 +17,6 @@ use GlobIterator;
 use SplFileInfo;
 use SplFileObject;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,6 +28,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @package App\Command
  */
+#[AsCommand(name: 'app:import:std', description: 'Import cards from a local thronteki-json-data repository.')]
 class ImportStdCommand extends Command
 {
     protected const PACKS_SUBDIRECTORY_NAME = 'packs';
@@ -42,13 +43,9 @@ class ImportStdCommand extends Command
         $this->entityManager = $entityManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('app:import:std')
-            ->setDescription(
-                'Import cards from a local thronteki-json-data repository.'
-            )
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
@@ -80,7 +77,7 @@ class ImportStdCommand extends Command
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
             if (! $helper->ask($input, $output, $question)) {
-                return 0;
+                return Command::SUCCESS;
             }
         }
         $this->entityManager->flush();
@@ -105,7 +102,7 @@ class ImportStdCommand extends Command
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
             if (! $helper->ask($input, $output, $question)) {
-                return 0;
+                return Command::SUCCESS;
             }
         }
 
@@ -122,12 +119,12 @@ class ImportStdCommand extends Command
         if (count($imported)) {
             $question = new ConfirmationQuestion("Do you confirm? (Y/n) ", true);
             if (! $helper->ask($input, $output, $question)) {
-                return 0;
+                return Command::SUCCESS;
             }
         }
         $this->entityManager->flush();
         $output->writeln("Done.");
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

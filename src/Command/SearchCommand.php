@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Services\CardsData;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @package App\Command
  */
+#[AsCommand(name: 'app:search', description: 'Search cards.')]
 class SearchCommand extends Command
 {
     protected CardsData $service;
@@ -23,11 +25,9 @@ class SearchCommand extends Command
         $this->service = $service;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-        ->setName('app:search')
-        ->setDescription('Search cards.')
         ->addArgument(
             'query',
             InputArgument::REQUIRED,
@@ -69,6 +69,6 @@ class SearchCommand extends Command
         $output->writeln('');
         $output->writeln(count($rows) . " cards");
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

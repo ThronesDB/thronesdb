@@ -2,201 +2,163 @@
 
 namespace App\Entity;
 
+use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * @ORM\Table(name="user")
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- */
-class User extends BaseUser implements UserInterface
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'user')]
+class User extends BaseUser implements UserInterface, LegacyPasswordAuthenticatedUserInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'date_update', type: 'datetime', nullable: false)]
     protected $dateUpdate;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="reputation", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'reputation', type: 'integer', nullable: false)]
     protected $reputation;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="resume", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'resume', type: 'text', nullable: true)]
     protected $resume;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="color", type="string", length=255, nullable=true)
      */
+    #[ORM\Column(name: 'color', type: 'string', length: 255, nullable: true)]
     protected $color;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="donation", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'donation', type: 'integer', nullable: false)]
     protected $donation;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_notif_author", type="boolean", nullable=false, options={"default"="1"})
      */
+    #[ORM\Column(name: 'is_notif_author', type: 'boolean', nullable: false, options: ['default' => '1'])]
     protected $isNotifAuthor = true;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_notif_commenter", type="boolean", nullable=false, options={"default"="1"})
      */
+    #[ORM\Column(name: 'is_notif_commenter', type: 'boolean', nullable: false, options: ['default' => '1'])]
     protected $isNotifCommenter = true;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_notif_mention", type="boolean", nullable=false, options={"default"="1"})
      */
+    #[ORM\Column(name: 'is_notif_mention', type: 'boolean', nullable: false, options: ['default' => '1'])]
     protected $isNotifMention = true;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_notif_follow", type="boolean", nullable=false, options={"default"="1"})
      */
+    #[ORM\Column(name: 'is_notif_follow', type: 'boolean', nullable: false, options: ['default' => '1'])]
     protected $isNotifFollow = true;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_notif_successor", type="boolean", nullable=false, options={"default"="1"})
      */
+    #[ORM\Column(name: 'is_notif_successor', type: 'boolean', nullable: false, options: ['default' => '1'])]
     protected $isNotifSuccessor = true;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_share_decks", type="boolean", nullable=false, options={"default"="0"})
      */
+    #[ORM\Column(name: 'is_share_decks', type: 'boolean', nullable: false, options: ['default' => '0'])]
     protected $isShareDecks = false;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Deck", mappedBy="user", cascade={"remove"})
-     * @ORM\OrderBy({
-     *     "dateUpdate"="DESC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Deck::class, mappedBy: 'user', cascade: ['remove'])]
+    #[ORM\OrderBy(['dateUpdate' => 'DESC'])]
     protected $decks;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Decklist", mappedBy="user")
      */
+    #[ORM\OneToMany(targetEntity: Decklist::class, mappedBy: 'user')]
     protected $decklists;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="user")
-     * @ORM\OrderBy({
-     *     "dateCreation"="DESC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user')]
+    #[ORM\OrderBy(['dateCreation' => 'DESC'])]
     protected $comments;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Reviewcomment", mappedBy="user")
-     * @ORM\OrderBy({
-     *     "dateCreation"="DESC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Reviewcomment::class, mappedBy: 'user')]
+    #[ORM\OrderBy(['dateCreation' => 'DESC'])]
     protected $reviewcomments;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Review", mappedBy="user")
-     * @ORM\OrderBy({
-     *     "dateCreation"="DESC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'user')]
+    #[ORM\OrderBy(['dateCreation' => 'DESC'])]
     protected $reviews;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Decklist", mappedBy="favorites", cascade={"remove"})
      */
+    #[ORM\ManyToMany(targetEntity: Decklist::class, mappedBy: 'favorites', cascade: ['remove'])]
     protected $favorites;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Decklist", mappedBy="votes", cascade={"remove"})
      */
+    #[ORM\ManyToMany(targetEntity: Decklist::class, mappedBy: 'votes', cascade: ['remove'])]
     protected $votes;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Review", mappedBy="votes", cascade={"remove"})
      */
+    #[ORM\ManyToMany(targetEntity: Review::class, mappedBy: 'votes', cascade: ['remove'])]
     protected $reviewvotes;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="followers")
      */
+    #[ORM\ManyToMany(targetEntity: \App\Entity\User::class, mappedBy: 'followers')]
     protected $following;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="following")
-     * @ORM\JoinTable(name="follow",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="following_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="follower_id", referencedColumnName="id")
-     *   }
-     * )
      */
+    #[ORM\ManyToMany(targetEntity: \App\Entity\User::class, inversedBy: 'following')]
+    #[ORM\JoinTable(name: 'follow', joinColumns: [new ORM\JoinColumn(name: 'following_id', referencedColumnName: 'id')], inverseJoinColumns: [new ORM\JoinColumn(name: 'follower_id', referencedColumnName: 'id')])]
     protected $followers;
 
     /**

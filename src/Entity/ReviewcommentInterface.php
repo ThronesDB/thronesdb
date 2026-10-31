@@ -52,7 +52,7 @@ interface ReviewcommentInterface
     /**
      * @param UserInterface $user
      */
-    public function setUser(UserInterface $user = null);
+    public function setUser(?UserInterface $user = null);
 
     /**
      * @return UserInterface
@@ -62,7 +62,7 @@ interface ReviewcommentInterface
     /**
      * @param ReviewInterface $review
      */
-    public function setReview(ReviewInterface $review = null);
+    public function setReview(?ReviewInterface $review = null);
 
     /**
      * @return ReviewInterface

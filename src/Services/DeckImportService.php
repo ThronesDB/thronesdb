@@ -68,7 +68,7 @@ class DeckImportService
             return $rhett;
         }
 
-        $textChunks = preg_split(self::DECKS_DELIMITER_REGEXP, $text, null, PREG_SPLIT_NO_EMPTY);
+        $textChunks = preg_split(self::DECKS_DELIMITER_REGEXP, $text, -1, PREG_SPLIT_NO_EMPTY);
 
         $decks = [];
 
