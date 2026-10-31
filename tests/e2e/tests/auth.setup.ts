@@ -2,6 +2,7 @@ import fs from 'fs';
 import { test as setup, expect } from '@playwright/test';
 import { waitForMail, findLink } from '../helpers/mailpit';
 import { authDir, usersFile, storageFor, Role, User } from '../helpers/users';
+import { snap } from '../helpers/test';
 
 // Registers a fresh author and voter for this run through the real
 // registration form and confirmation email, and saves their logged-in
@@ -24,11 +25,13 @@ for (const role of ['author', 'voter'] as Role[]) {
     await page.fill('#fos_user_registration_form_plainPassword_second', user.password);
     await page.click('form[name=fos_user_registration_form] [type=submit]');
     await expect(page).toHaveURL(/\/register\/check-email/);
+    await snap(page, `${role} registered, waiting for email`);
 
     const mail = await waitForMail(user.email);
     const confirmUrl = findLink(mail.text, '/register/confirm/');
     await page.goto(confirmUrl);
     await expect(page).toHaveURL(/\/register\/confirmed/);
+    await snap(page, `${role} confirmed and logged in`);
 
     fs.mkdirSync(authDir, { recursive: true });
     await page.context().storageState({ path: storageFor(role) });

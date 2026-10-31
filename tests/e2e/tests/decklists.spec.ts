@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { test, expect, runId, waitForCardData } from '../helpers/test';
+import { test, expect, runId, waitForCardData, snap } from '../helpers/test';
 import { storageFor } from '../helpers/users';
 
 // Publishing a deck as a decklist, and what other users can do with it:
@@ -33,11 +33,13 @@ test('publish a deck as a decklist', async ({ page }) => {
   await expect(page).toHaveURL(/\/deck\/publish\//);
   await page.fill('#name', decklistName);
   await page.fill('#descriptionMd', 'Published by the **smoke test**.');
+  await snap(page, 'publish form');
   await page.click('form[action="/decklist/create"] button[type=submit]');
 
   await expect(page).toHaveURL(/\/decklist\/view\/(\d+)\//);
   await expect(page.locator('h1')).toContainText(decklistName);
   await expect(page.locator('body')).toContainText('Published by the smoke test.');
+  await snap(page, 'decklist published');
   decklistUrl = page.url();
   decklistId = decklistUrl.match(/\/decklist\/view\/(\d+)\//)![1];
 
@@ -69,6 +71,7 @@ test('another user likes, favourites and comments on it', async ({ pageAs }) => 
     page.locator('form:has(#comment-form-text) button[type=submit]').click(),
   ]);
   await expect(page.locator('.alert-success')).toContainText('comment has been posted');
+  await snap(page, 'liked, favourited, comment posted');
 
   // The counts are stored, not just updated in the page
   await page.reload();
@@ -76,15 +79,18 @@ test('another user likes, favourites and comments on it', async ({ pageAs }) => 
   await expect(page.locator('#social-icon-favorite .num')).toHaveText('1');
   await expect(page.locator('#social-icon-comment .num')).toHaveText('1');
   await expect(page.locator('.comment-text').filter({ hasText: comment })).toBeVisible();
+  await snap(page, 'after reload: counts and comment kept');
 });
 
 test('the decklist shows up in search and in the favourites list', async ({ page, pageAs }) => {
   await page.goto(`/decklists/find?name=${encodeURIComponent(decklistName)}&sort=likes`);
   await expect(page.getByRole('link', { name: decklistName })).toBeVisible();
+  await snap(page, 'search by name');
 
   const voter = await pageAs('voter');
   await voter.goto('/decklists/favorites');
   await expect(voter.getByRole('link', { name: decklistName })).toBeVisible();
+  await snap(voter, "voter's favourites");
 });
 
 test('the public API serves the decklist', async ({ request }) => {

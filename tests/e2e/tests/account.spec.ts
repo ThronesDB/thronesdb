@@ -1,4 +1,4 @@
-import { test, expect, login } from '../helpers/test';
+import { test, expect, login, snap } from '../helpers/test';
 import { waitForMail, findLink } from '../helpers/mailpit';
 import { loadUsers } from '../helpers/users';
 
@@ -12,6 +12,7 @@ test('log in and log out', async ({ page }) => {
   const res = await page.goto('/decks');
   expect(res?.status()).toBe(200);
   await expect(page).toHaveURL(/\/decks/);
+  await snap(page, 'logged in: my decks');
 
   await page.goto('/logout');
   await page.goto('/decks');
@@ -26,6 +27,7 @@ test('a wrong password is refused', async ({ page }) => {
   await page.click('#_submit');
   await expect(page).toHaveURL(/\/login/);
   await expect(page.locator('.alert-danger, .alert-error')).toBeVisible();
+  await snap(page, 'wrong password refused');
 });
 
 test('password reset sends an email with a working link', async ({ page }) => {
@@ -39,4 +41,5 @@ test('password reset sends an email with a working link', async ({ page }) => {
   const resetUrl = findLink(mail.text, '/resetting/reset/');
   await page.goto(resetUrl);
   await expect(page.locator('#fos_user_resetting_form_plainPassword_first')).toBeVisible();
+  await snap(page, 'reset link opens the new-password form');
 });

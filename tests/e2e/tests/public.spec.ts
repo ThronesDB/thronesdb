@@ -1,4 +1,4 @@
-import { test, expect } from '../helpers/test';
+import { test, expect, snap } from '../helpers/test';
 import { baseURL } from '../playwright.config';
 
 // Pages and API endpoints anyone can see without logging in.
@@ -7,6 +7,7 @@ test('home page renders with navigation', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('nav.navbar')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Decklists' }).first()).toBeVisible();
+  await snap(page, 'home page');
   // The built CSS and JS bundles (gulp output) are referenced and load
   const css = await page.locator('link[rel=stylesheet][href*="/css/"]').count();
   const js = await page.locator('script[src*="/js/app"]').count();
@@ -17,17 +18,20 @@ test('home page renders with navigation', async ({ page }) => {
 test('card search finds cards', async ({ page }) => {
   await page.goto('/find?q=Eddard');
   await expect(page.locator('body')).toContainText('Eddard Stark');
+  await snap(page, 'search results for Eddard');
 });
 
 test('a card page shows the card', async ({ page }) => {
   await page.goto('/card/01001');
   await expect(page.locator('body')).toContainText('A Clash of Kings');
+  await snap(page, 'card 01001');
 });
 
 test('decklist listings load', async ({ page }) => {
   for (const type of ['popular', 'recent', 'halloffame']) {
     const res = await page.goto(`/decklists/${type}`);
     expect(res?.status(), type).toBe(200);
+    await snap(page, `decklists: ${type}`);
   }
 });
 
@@ -55,4 +59,5 @@ test('the Spanish site is served from the es. subdomain', async ({ page }) => {
   url.hostname = `es.${url.hostname}`;
   await page.goto(url.toString());
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+  await snap(page, 'Spanish home page');
 });

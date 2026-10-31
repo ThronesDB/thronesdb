@@ -6,10 +6,11 @@
     "test": "playwright test --project=smoke",
     "test:visual": "playwright test --project=visual",
     "test:visual:baseline": "playwright test --project=visual --update-snapshots",
-    "report": "playwright show-report",
+    "report": "node open-report.js",
     "stack:up": "docker compose -f ../../docker/docker-compose.yml -f ../../docker/docker-compose.e2e.yml up -d --build",
     "stack:init": "docker compose -f ../../docker/docker-compose.yml -f ../../docker/docker-compose.e2e.yml --profile init run --rm init",
-    "stack:down": "docker compose -f ../../docker/docker-compose.yml -f ../../docker/docker-compose.e2e.yml down"
+    "stack:down": "docker compose -f ../../docker/docker-compose.yml -f ../../docker/docker-compose.e2e.yml down",
+    "reports:clean": "node open-report.js --clean"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0"

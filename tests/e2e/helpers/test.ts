@@ -74,6 +74,16 @@ export async function waitForCardData(page: Page) {
   await page.waitForFunction(() => (window as any).app?.data?.isLoaded === true);
 }
 
+/**
+ * Attaches a full-page screenshot to the test's entry in the HTML report,
+ * under a readable name ("01 decklist published"). Numbered in call order.
+ */
+export async function snap(page: Page, name: string) {
+  const info = test.info();
+  const n = String(info.attachments.filter((a) => a.contentType === 'image/png').length + 1).padStart(2, '0');
+  await info.attach(`${n} ${name}`, { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' });
+}
+
 /** Logs in through the login form. */
 export async function login(page: Page, username: string, password: string) {
   await page.goto('/login');
