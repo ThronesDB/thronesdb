@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Restriction;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -16,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package App\Command
  */
+#[AsCommand(name: 'app:restrictions:list', description: 'List available restrictions.')]
 class ListRestrictionsCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -24,15 +26,6 @@ class ListRestrictionsCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:restrictions:list')
-            ->setDescription(
-                'List available restrictions.'
-            );
     }
     /**
      * @inheritdoc
@@ -63,6 +56,6 @@ class ListRestrictionsCommand extends Command
             $table->render();
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

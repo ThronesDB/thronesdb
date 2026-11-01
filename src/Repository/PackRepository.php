@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class PackRepository extends EntityRepository
 {
-    public function findAll()
+    public function findAll(): array
     {
         $qb = $this->createQueryBuilder('p')
                 ->select('p, y')

@@ -1,0 +1,34 @@
+# Allowlist: only what the image build needs goes into the build context.
+*
+!assets/
+!bin/
+!config/
+!migrations/
+!public/
+!src/
+!templates/
+!tests/
+!translations/
+!docker/
+!.env
+!composer.json
+!composer.lock
+!symfony.lock
+!package.json
+!package-lock.json
+!gulpfile.mjs
+!phpunit.xml.dist
+!.env.test
+!phpcs.xml.dist
+!phpstan.neon.dist
+
+# Generated or local files inside the allowed folders
+docker/.env
+docker/app.env
+docker/data/
+public/bundles/
+public/css/
+public/js/
+public/manifest.json
+assets/js/translations/
+tests/e2e/

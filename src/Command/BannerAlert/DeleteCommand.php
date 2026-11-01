@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\BannerAlert;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\BannerAlert;
 use App\Entity\BannerAlertInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
  *
  * @package App\Command
  */
+#[AsCommand(name: 'app:banner-alerts:delete', description: 'Deletes banner alerts.')]
 class DeleteCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -25,15 +27,6 @@ class DeleteCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:banner-alerts:delete')
-            ->setDescription(
-                'Deletes banner alerts.'
-            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -70,12 +63,12 @@ class DeleteCommand extends Command
             $this->entityManager->flush();
 
             if (1 === count($choices)) {
-                $output->writeln("${choices[0]} has been deleted.");
+                $output->writeln("{$choices[0]} has been deleted.");
             } else {
                 $output->writeln('The following banner alerts have been deleted: ' . implode(', ', $choices) . '.');
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

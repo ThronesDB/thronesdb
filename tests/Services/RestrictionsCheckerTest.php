@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Card;
 use App\Entity\CommonDeckInterface;
 use App\Entity\Deck;
@@ -17,6 +19,8 @@ use PHPUnit\Framework\TestCase;
  * Class DeckImportServiceTest
  * @package App\Tests\Service
  */
+#[CoversMethod(\App\Services\RestrictionsChecker::class, 'isLegalForJoust')]
+#[CoversMethod(\App\Services\RestrictionsChecker::class, 'isLegalForMelee')]
 class RestrictionsCheckerTest extends TestCase
 {
     protected RestrictionsChecker $restrictionsChecker;
@@ -100,7 +104,7 @@ class RestrictionsCheckerTest extends TestCase
         unset($this->restrictionsChecker);
     }
 
-    public function isLegalProvider(): array
+    public static function isLegalProvider(): array
     {
         return [
             [['04001', '04002'], 'contains no restricted nor banned cards.'],
@@ -113,11 +117,10 @@ class RestrictionsCheckerTest extends TestCase
     }
 
     /**
-     * @covers \App\Services\RestrictionsChecker::isLegalForJoust
-     * @dataProvider isLegalProvider
      * @param array $codes
      * @param string $message
      */
+    #[DataProvider('isLegalProvider')]
     public function testIsLegalForJoust(array $codes, string $message): void
     {
         $deck = $this->buildDeck($codes);
@@ -125,11 +128,10 @@ class RestrictionsCheckerTest extends TestCase
     }
 
     /**
-     * @covers \App\Services\RestrictionsChecker::isLegalForMelee
-     * @dataProvider isLegalProvider
      * @param array $codes
      * @param string $message
      */
+    #[DataProvider('isLegalProvider')]
     public function testIsLegalForMelee(array $codes, string $message): void
     {
         $deck = $this->buildDeck($codes);
@@ -137,7 +139,7 @@ class RestrictionsCheckerTest extends TestCase
     }
 
 
-    public function isNotLegalProvider(): array
+    public static function isNotLegalProvider(): array
     {
         return [
             [['04001', '04002', '01900'], 'contains banned card'],
@@ -148,11 +150,10 @@ class RestrictionsCheckerTest extends TestCase
     }
 
     /**
-     * @covers \App\Services\RestrictionsChecker::isLegalForJoust
-     * @dataProvider isNotLegalProvider
      * @param array $codes
      * @param string $message
      */
+    #[DataProvider('isNotLegalProvider')]
     public function testIsNotLegalForJoust(array $codes, string $message): void
     {
         $deck = $this->buildDeck($codes);
@@ -160,11 +161,10 @@ class RestrictionsCheckerTest extends TestCase
     }
 
     /**
-     * @covers \App\Services\RestrictionsChecker::isLegalForMelee
-     * @dataProvider isNotLegalProvider
      * @param array $codes
      * @param string $message
      */
+    #[DataProvider('isNotLegalProvider')]
     public function testIsNotLegalForMelee(array $codes, string $message): void
     {
         $deck = $this->buildDeck($codes);

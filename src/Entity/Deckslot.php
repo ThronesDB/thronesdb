@@ -5,46 +5,38 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="deckslot")
- * @ORM\Entity
  * @package App\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'deckslot')]
 class Deckslot implements DeckslotInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="quantity", type="smallint")
      */
+    #[ORM\Column(name: 'quantity', type: 'smallint')]
     protected $quantity;
 
     /**
      * @var DeckInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="slots")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Deck::class, inversedBy: 'slots')]
+    #[ORM\JoinColumn(name: 'deck_id', referencedColumnName: 'id')]
     protected $deck;
 
     /**
      * @var CardInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Card")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="card_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Card::class)]
+    #[ORM\JoinColumn(name: 'card_id', referencedColumnName: 'id')]
     protected $card;
 
     /**
@@ -82,7 +74,7 @@ class Deckslot implements DeckslotInterface
     /**
      * @inheritdoc
      */
-    public function setDeck(DeckInterface $deck = null)
+    public function setDeck(?DeckInterface $deck = null)
     {
         $this->deck = $deck;
     }
@@ -98,7 +90,7 @@ class Deckslot implements DeckslotInterface
     /**
      * @inheritdoc
      */
-    public function setCard(CardInterface $card = null)
+    public function setCard(?CardInterface $card = null)
     {
         $this->card = $card;
     }

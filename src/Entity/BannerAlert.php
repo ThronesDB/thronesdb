@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\BannerAlertRepository;
 use DateTime;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,60 +12,42 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Banner alert class.
  *
  * @package App\Entity
- * @ORM\Table(name="banneralert")
- * @ORM\Entity(repositoryClass="App\Repository\BannerAlertRepository")
  */
+#[ORM\Entity(repositoryClass: BannerAlertRepository::class)]
+#[ORM\Table(name: 'banneralert')]
 class BannerAlert implements BannerAlertInterface
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Assert\Type(type="int")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[Assert\Type(type: 'int')]
     protected int $id;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(
-     * min = 1,
-     * max = 255
-     * )
-     */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 1, max: 255)]
     protected string $name;
 
-    /**
-     * @ORM\Column(name="text", type="text", nullable=false)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
-     * @Assert\Length(
-     * min = 1,
-     * max = 65000
-     * )
-     */
+    #[ORM\Column(name: 'text', type: 'text', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 1, max: 65000)]
     protected string $description;
 
-    /**
-     * @ORM\Column(name="level", type="smallint", nullable=false)
-     * @Assert\NotBlank()
-     * @Assert\Type(type="int")
-     * @Assert\Range(min=1, max=2)
-     */
+    #[ORM\Column(name: 'level', type: 'smallint', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: 'int')]
+    #[Assert\Range(min: 1, max: 2)]
     protected int $level;
 
-    /**
-     * @ORM\Column(name="active", type="boolean")
-     * @Assert\NotNull()
-     * @Assert\Type(type="bool")
-     */
+    #[ORM\Column(name: 'active', type: 'boolean')]
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'bool')]
     protected bool $active;
 
-    /**
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
-     */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected DateTime $dateCreation;
 
 

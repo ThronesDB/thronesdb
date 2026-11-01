@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Card;
-use App\Entity\CardInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @package App\Command
  */
+#[AsCommand(name: 'app:check:multiple', description: 'Check card is_multiple field')]
 class CheckMultipleCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -20,13 +21,6 @@ class CheckMultipleCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:check:multiple')
-            ->setDescription('Check card is_multiple field');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -59,6 +53,6 @@ class CheckMultipleCommand extends Command
                 );
             }
         }
-        return 0;
+        return Command::SUCCESS;
     }
 }

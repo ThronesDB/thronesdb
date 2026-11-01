@@ -53,7 +53,7 @@ interface CommentInterface
     /**
      * @param UserInterface $user
      */
-    public function setUser(UserInterface $user = null);
+    public function setUser(?UserInterface $user = null);
 
     /**
      * @return UserInterface
@@ -63,7 +63,7 @@ interface CommentInterface
     /**
      * @param DecklistInterface $decklist
      */
-    public function setDecklist(DecklistInterface $decklist = null);
+    public function setDecklist(?DecklistInterface $decklist = null);
 
     /**
      * @return DecklistInterface

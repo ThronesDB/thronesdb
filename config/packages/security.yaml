@@ -1,73 +1,83 @@
 security:
-    encoders:
-        FOS\UserBundle\Model\UserInterface: sha512
+    password_hashers:
+        # FOSUserBundle accounts were hashed with salted SHA-512 (5000 rounds,
+        # base64). Keep verifying those; new and changed passwords use the
+        # current default algorithm, and old hashes are upgraded on login.
+        legacy_sha512:
+            algorithm: sha512
+            encode_as_base64: true
+            iterations: 5000
+        FOS\UserBundle\Model\UserInterface:
+            algorithm: auto
+            migrate_from:
+                - legacy_sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         fos_userbundle:
             id: fos_user.user_provider.username_email
 
     firewalls:
-        oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
-
-        oauth_authorize:
-            pattern:    ^/oauth/v2/auth
-            form_login:
-                provider: fos_userbundle
-                check_path: oauth_server_auth_login_check
-                login_path: oauth_server_auth_login
-            anonymous: true
-            logout_on_user_change: true
-
-        api_oauth2:
-            pattern:    ^/api/oauth2
-            fos_oauth:  true
-            stateless:  true
-
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        # OAuth2: clients exchange codes and refresh tokens here, no session
+        oauth_token:
+            pattern: ^/oauth/v2/token$
+            security: false
+
+        # The OAuth2-protected API: a bearer token, no session
+        api_oauth2:
+            pattern: ^/api/oauth2
+            stateless: true
+            oauth2: true
+
         main:
             pattern: ^/
+            lazy: true
+            provider: fos_userbundle
             form_login:
-                provider: fos_userbundle
-                csrf_token_generator: security.csrf.token_manager
-                always_use_default_target_path: false
+                login_path: fos_user_security_login
+                check_path: fos_user_security_check
+                enable_csrf: true
                 default_target_path: index
-            logout:       true
-            logout_on_user_change: true
-            anonymous:    true
+                always_use_default_target_path: false
+            logout:
+                path: fos_user_security_logout
             remember_me:
-                secret:   "%env(APP_SECRET)%"
-                lifetime: 31536000 # 365 jours en secondes
-                path:     /
-                domain:   ~ # Prend la valeur par défaut du domaine courant depuis $_SERVER
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+                secret: '%env(APP_SECRET)%'
+                lifetime: 31536000 # one year
+                path: /
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
+    # Only the first matching rule applies
     access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/remind, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: ROLE_ADMIN }
-        - { path: ^/api/public, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/oauth2/user, role: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api/oauth2/decks, role: ROLE_READ_DECK }
-        - { path: ^/api/oauth2/deck/load, role: ROLE_READ_DECK }
-        - { path: ^/api/oauth2/deck/save, role: ROLE_WRITE_DECK }
-        - { path: ^/js/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/deck/view/, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/deck/, role: ROLE_USER }
-        - { path: ^/decks, role: ROLE_USER }
-        - { path: ^/user/, role: ROLE_USER }
+        - { path: ^/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/resetting, roles: PUBLIC_ACCESS }
+        - { path: ^/remind, roles: PUBLIC_ACCESS }
+        - { path: ^/oauth/v2/auth, roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/admin/, roles: ROLE_ADMIN }
+        - { path: ^/api/public, roles: PUBLIC_ACCESS }
+        - { path: ^/api/oauth2/user, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/oauth2/decks, roles: ROLE_READ_DECK }
+        - { path: ^/api/oauth2/deck/load, roles: ROLE_READ_DECK }
+        - { path: ^/api/oauth2/deck/save, roles: ROLE_WRITE_DECK }
+        - { path: ^/js/, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/deck/view/, roles: PUBLIC_ACCESS }
+        - { path: ^/deck/, roles: ROLE_USER }
+        - { path: ^/decks, roles: ROLE_USER }
+        - { path: ^/user/, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            FOS\UserBundle\Model\UserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

@@ -2,36 +2,38 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Deck;
-use App\Entity\DeckInterface;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @package App\Controller
  */
 class TagController extends AbstractController
 {
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
     /**
-     * @Route("/tag/add", name="tag_add", methods={"POST"})
      *
      * @param Request $request
      * @return Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/tag/add', name: 'tag_add', methods: ['POST'])]
     public function addAction(Request $request)
     {
         $list_id = $request->get('ids');
         $list_tag = $request->get('tags');
 
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $response = array("success" => true);
 
@@ -65,20 +67,20 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("/tag/remove", name="tag_remove", methods={"POST"})
      *
      * @param Request $request
      * @return Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/tag/remove', name: 'tag_remove', methods: ['POST'])]
     public function removeAction(Request $request)
     {
         $list_id = $request->get('ids');
         $list_tag = $request->get('tags');
 
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $response = array("success" => true);
 
@@ -101,19 +103,19 @@ class TagController extends AbstractController
     }
 
     /**
-     * @Route("/tag/clear", name="tag_clear", methods={"POST"})
      *
      * @param Request $request
      * @return Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/tag/clear', name: 'tag_clear', methods: ['POST'])]
     public function clearAction(Request $request)
     {
         $list_id = $request->get('ids');
 
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $response = array("success" => true);
 

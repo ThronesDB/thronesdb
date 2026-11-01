@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Card;
 use App\Entity\Comment;
 use App\Entity\CommentInterface;
 use App\Entity\Cycle;
 use App\Entity\Deck;
-use App\Entity\DeckInterface;
 use App\Entity\Decklist;
 use App\Entity\DecklistInterface;
 use App\Entity\Faction;
 use App\Entity\Restriction;
 use App\Entity\Tournament;
 use App\Entity\User;
-use App\Entity\UserInterface;
 use App\Services\DeckValidationHelper;
 use App\Services\CardsData;
 use App\Services\DecklistFactory;
@@ -22,18 +22,14 @@ use App\Services\DecklistManager;
 use App\Services\RestrictionsChecker;
 use App\Services\Texts;
 use DateTime;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
-use PDO;
-use Swift_Mailer;
-use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +38,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -54,16 +50,14 @@ class SocialController extends AbstractController
 {
     use LocaleAwareTemplating;
 
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
+
     /**
      * Checks to see if a deck can be published in its current saved state
      * If it is, displays the decklist edit form for initial publication of a deck.
      *
-     * @Route(
-     *     "/deck/publish/{deck_uuid}",
-     *     name="deck_publish_form",
-     *     methods={"GET"},
-     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
-     * )
      *
      * @param TranslatorInterface $translator
      * @param SessionInterface $session
@@ -74,6 +68,7 @@ class SocialController extends AbstractController
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
+    #[Route(path: '/deck/publish/{deck_uuid}', name: 'deck_publish_form', methods: ['GET'], requirements: ['deck_uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'])]
     public function publishFormAction(
         TranslatorInterface $translator,
         SessionInterface $session,
@@ -82,7 +77,7 @@ class SocialController extends AbstractController
         $deck_uuid
     ) {
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -102,7 +97,7 @@ class SocialController extends AbstractController
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.antispam.newbie'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
+            return $this->redirectToRoute('deck_view', ['deck_uuid' => $deck->getUuid()]);
         }
 
         $query = $em->createQuery(
@@ -117,7 +112,7 @@ class SocialController extends AbstractController
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.antispam.limit'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
+            return $this->redirectToRoute('deck_view', ['deck_uuid' => $deck->getUuid()]);
         }
 
         $lastPack = $deck->getLastPack();
@@ -126,14 +121,14 @@ class SocialController extends AbstractController
                 ->getFlashBag()
                 ->set('error', $translator->trans('decklist.publish.errors.unreleased'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
+            return $this->redirectToRoute('deck_view', ['deck_uuid' => $deck->getUuid()]);
         }
 
         $problem = $deckValidationHelper->findProblem($deck);
         if ($problem) {
             $session->getFlashBag()->set('error', $translator->trans('decklist.publish.errors.invalid'));
 
-            return $this->redirect($this->generateUrl('deck_view', ['deck_uuid' => $deck->getUuid()]));
+            return $this->redirectToRoute('deck_view', ['deck_uuid' => $deck->getUuid()]);
         }
 
         $new_content = json_encode($deck->getSlots()->getContent());
@@ -179,7 +174,6 @@ class SocialController extends AbstractController
     /**
      * Creates a new decklist from a deck (publish action).
      *
-     * @Route("/decklist/create", name="decklist_create", methods={"POST"})
      *
      * @param Request $request
      * @param DecklistFactory $decklistFactory
@@ -189,10 +183,11 @@ class SocialController extends AbstractController
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/decklist/create', name: 'decklist_create', methods: ['POST'])]
     public function createAction(Request $request, DecklistFactory $decklistFactory, TranslatorInterface $translator)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
         /* @var UserInterface $user */
         $user = $this->getUser();
 
@@ -227,7 +222,7 @@ class SocialController extends AbstractController
         $deck_id = intval(filter_var($request->request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT));
 
         /* @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getRepository(Deck::class)->find($deck_id);
+        $deck = $this->managerRegistry->getRepository(Deck::class)->find($deck_id);
         if ($user->getId() !== $deck->getUser()->getId()) {
             throw $this->createAccessDeniedException("Access denied to this object.");
         }
@@ -270,29 +265,24 @@ class SocialController extends AbstractController
         $em->persist($decklist);
         $em->flush();
 
-        return $this->redirect(
-            $this->generateUrl(
-                'decklist_detail',
-                array(
-                    'decklist_id' => $decklist->getId(),
-                    'decklist_name' => $decklist->getNameCanonical(),
-                )
-            )
-        );
+        return $this->redirectToRoute('decklist_detail', array(
+            'decklist_id' => $decklist->getId(),
+            'decklist_name' => $decklist->getNameCanonical(),
+        ));
     }
 
     /**
      * Displays the decklist edit form.
      *
-     * @Route("/decklist/edit/{decklist_id}", name="decklist_edit", methods={"GET"}, requirements={"decklist_id"="\d+"})
      *
      * @param int $decklist_id
      * @return Response
      */
+    #[Route(path: '/decklist/edit/{decklist_id}', name: 'decklist_edit', methods: ['GET'], requirements: ['decklist_id' => '\d+'])]
     public function editFormAction($decklist_id)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -312,7 +302,7 @@ class SocialController extends AbstractController
             throw $this->createAccessDeniedException("Access denied");
         }
 
-        $tournaments = $this->getDoctrine()->getManager()->getRepository(Tournament::class)->findAll();
+        $tournaments = $this->managerRegistry->getManager()->getRepository(Tournament::class)->findAll();
 
         return $this->render(
             'Decklist/decklist_edit.html.twig',
@@ -328,12 +318,6 @@ class SocialController extends AbstractController
     /**
      * Save the name and description of a decklist by its publisher.
      *
-     * @Route(
-     *     "/decklist/save/{decklist_id}",
-     *     name="decklist_save",
-     *     methods={"POST"},
-     *     requirements={"decklist_id"="\d+"}
-     * )
      *
      * @param Request $request
      * @param Texts $texts
@@ -342,10 +326,11 @@ class SocialController extends AbstractController
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/decklist/save/{decklist_id}', name: 'decklist_save', methods: ['POST'], requirements: ['decklist_id' => '\d+'])]
     public function saveAction(Request $request, Texts $texts, $decklist_id)
     {
         /* @var EntityManager $em*/
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $user = $this->getUser();
         if (!$user) {
@@ -403,26 +388,15 @@ class SocialController extends AbstractController
         $decklist->setDateUpdate(new DateTime());
         $em->flush();
 
-        return $this->redirect(
-            $this->generateUrl(
-                'decklist_detail',
-                array(
-                    'decklist_id' => $decklist_id,
-                    'decklist_name' => $decklist->getNameCanonical(),
-                )
-            )
-        );
+        return $this->redirectToRoute('decklist_detail', array(
+            'decklist_id' => $decklist_id,
+            'decklist_name' => $decklist->getNameCanonical(),
+        ));
     }
 
     /**
      * Deletes a decklist if it has no comment, no vote, no favorite.
      *
-     * @Route(
-     *     "/decklist/delete/{decklist_id}",
-     *     name="decklist_delete",
-     *     methods={"POST"},
-     *     requirements={"decklist_id"="\d+"}
-     * )
      *
      * @param string $decklist_id
      * @param Request $request
@@ -430,10 +404,11 @@ class SocialController extends AbstractController
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/decklist/delete/{decklist_id}', name: 'decklist_delete', methods: ['POST'], requirements: ['decklist_id' => '\d+'])]
     public function deleteAction($decklist_id, Request $request)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $user = $this->getUser();
         if (!$user) {
@@ -466,14 +441,9 @@ class SocialController extends AbstractController
         $em->remove($decklist);
         $em->flush();
 
-        return $this->redirect(
-            $this->generateUrl(
-                'decklists_list',
-                array(
-                    'type' => 'mine',
-                )
-            )
-        );
+        return $this->redirectToRoute('decklists_list', array(
+            'type' => 'mine',
+        ));
     }
 
     /**
@@ -484,7 +454,7 @@ class SocialController extends AbstractController
      */
     protected function searchForm(Request $request, TranslatorInterface $translator, CardsData $cardsData)
     {
-        $doctrine = $this->getDoctrine();
+        $doctrine = $this->managerRegistry;
         $dbh = $doctrine->getConnection();
 
         $cards_code = $request->query->get('cards');
@@ -496,7 +466,7 @@ class SocialController extends AbstractController
         $packs = $request->query->get('packs');
 
         if (!is_array($packs)) {
-            $packs = $dbh->executeQuery("select id from pack")->fetchAll(PDO::FETCH_COLUMN);
+            $packs = $dbh->executeQuery("select id from pack")->fetchFirstColumn();
         }
 
         $categories = [];
@@ -506,7 +476,7 @@ class SocialController extends AbstractController
             "label" => $translator->trans('decklist.list.search.allowed.core'),
             "packs" => [],
         );
-        $list_cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
+        $list_cycles = $this->managerRegistry->getRepository(Cycle::class)->findAll();
         foreach ($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
             if ($cycle->getPosition() == 0 || $size == 0) {
@@ -546,11 +516,11 @@ class SocialController extends AbstractController
             }
         }
 
-        $activeTournamentTiers = $this->getDoctrine()
+        $activeTournamentTiers = $this->managerRegistry
             ->getRepository(Tournament::class)
             ->findBy(['active' => true]);
 
-        $inactiveTournamentTiers = $this->getDoctrine()
+        $inactiveTournamentTiers = $this->managerRegistry
             ->getRepository(Tournament::class)
             ->findBy(['active' => false]);
 
@@ -564,12 +534,12 @@ class SocialController extends AbstractController
             'inactiveTournamentTiers' => $inactiveTournamentTiers,
         );
         $params['sort_' . $sort] = ' selected="selected"';
-        $params['factions'] = $this->getDoctrine()->getRepository(Faction::class)->findAllAndOrderByName();
+        $params['factions'] = $this->managerRegistry->getRepository(Faction::class)->findAllAndOrderByName();
         $params['faction_selected'] = $faction_code;
         $params['selectedTournament'] = $tournament;
 
         if (!empty($cards_code) && is_array($cards_code)) {
-            $cards = $this->getDoctrine()->getRepository(Card::class)->findAllByCodes($cards_code);
+            $cards = $this->managerRegistry->getRepository(Card::class)->findAllByCodes($cards_code);
 
             $params['cards'] = '';
             foreach ($cards as $card) {
@@ -584,16 +554,6 @@ class SocialController extends AbstractController
     /**
      * Displays the lists of decklists.
      *
-     * @Route(
-     *     "/decklists/{type}/{page}",
-     *     name="decklists_list",
-     *     methods={"GET"},
-     *     defaults={"type"="popular", "page"=1},
-     *     requirements={
-     *         "type"="find|favorites|mine|recent|halloffame|hottopics|tournament|popular",
-     *         "page"="\d+"
-     *     }
-     * )
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param DecklistManager $decklistManager
@@ -604,6 +564,7 @@ class SocialController extends AbstractController
      * @param int $page
      * @return Response
      */
+    #[Route(path: '/decklists/{type}/{page}', name: 'decklists_list', methods: ['GET'], defaults: ['type' => 'popular', 'page' => 1], requirements: ['type' => 'find|favorites|mine|recent|halloffame|hottopics|tournament|popular', 'page' => '\d+'])]
     public function listAction(
         Request $request,
         TranslatorInterface $translator,
@@ -671,7 +632,7 @@ class SocialController extends AbstractController
         $pagetitle = $translator->trans('decklist.list.titles.' . $type);
 
         // check all decks against all active RLs
-        $restrictionsRepo = $this->getDoctrine()->getRepository(Restriction::class);
+        $restrictionsRepo = $this->managerRegistry->getRepository(Restriction::class);
         $activeRestrictions = $restrictionsRepo->findBy(['active' => true], ['effectiveOn' => 'DESC']);
 
         $deckLegalityMap = [];
@@ -715,26 +676,20 @@ class SocialController extends AbstractController
     /**
      * Displays the content of a decklist along with comments, siblings, similar, etc.
      *
-     * @Route(
-     *     "/decklist/view/{decklist_id}/{decklist_name}",
-     *     name="decklist_detail",
-     *     methods={"GET"},
-     *     defaults={"decklist_name"=null},
-     *     requirements={"decklist_id"="\d+"}
-     * )
      *
      * @param TranslatorInterface $translator
      * @param int $cacheExpiration
      * @param string $decklist_id
      * @return Response
      */
+    #[Route(path: '/decklist/view/{decklist_id}/{decklist_name}', name: 'decklist_detail', methods: ['GET'], defaults: ['decklist_name' => null], requirements: ['decklist_id' => '\d+'])]
     public function viewAction(TranslatorInterface $translator, int $cacheExpiration, $decklist_id)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($cacheExpiration);
 
-        $decklistRepo = $this->getDoctrine()->getManager()->getRepository(Decklist::class);
+        $decklistRepo = $this->managerRegistry->getManager()->getRepository(Decklist::class);
 
         $decklist = $decklistRepo->find($decklist_id);
         if (!$decklist) {
@@ -751,7 +706,7 @@ class SocialController extends AbstractController
 
         $commenters = array_map(
             function (CommentInterface $comment) {
-                return $comment->getUser()->getUsername();
+                return $comment->getUser()->getUserIdentifier();
             },
             $decklist->getComments()->getValues()
         );
@@ -774,16 +729,16 @@ class SocialController extends AbstractController
     /**
      * Adds a decklist to a user's list of favorites.
      *
-     * @Route("/user/favorite", name="decklist_favorite", methods={"POST"})
      *
      * @param Request $request
      * @return Response
      * @throws Exception
      */
+    #[Route(path: '/user/favorite', name: 'decklist_favorite', methods: ['POST'])]
     public function favoriteAction(Request $request)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $user = $this->getUser();
         if (!$user) {
@@ -800,7 +755,7 @@ class SocialController extends AbstractController
 
         $author = $decklist->getUser();
 
-        $dbh = $this->getDoctrine()->getConnection();
+        $dbh = $this->managerRegistry->getConnection();
         $is_favorite = $dbh->executeQuery(
             "SELECT
                 count(*)
@@ -813,7 +768,7 @@ class SocialController extends AbstractController
                 $decklist_id,
             )
         )
-            ->fetch(PDO::FETCH_NUM)[0];
+            ->fetchOne();
 
         if ($is_favorite) {
             $decklist->setNbfavorites($decklist->getNbFavorites() - 1);
@@ -829,7 +784,7 @@ class SocialController extends AbstractController
                 $author->setReputation($author->getReputation() + 5);
             }
         }
-        $this->getDoctrine()->getManager()->flush();
+        $this->managerRegistry->getManager()->flush();
 
         return new Response($decklist->getNbFavorites());
     }
@@ -837,18 +792,18 @@ class SocialController extends AbstractController
     /**
      * Records a user's comment.
      *
-     * @Route("/user/comment", name="decklist_comment", methods={"POST"})
      *
      * @param Request $request
      * @param Texts $texts
-     * @param Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      * @param string $emailSenderAddress
      * @return RedirectResponse
      */
+    #[Route(path: '/user/comment', name: 'decklist_comment', methods: ['POST'])]
     public function commentAction(
         Request $request,
         Texts $texts,
-        Swift_Mailer $mailer,
+        MailerInterface $mailer,
         string $emailSenderAddress
     ) {
         /* @var UserInterface $user */
@@ -858,7 +813,7 @@ class SocialController extends AbstractController
         }
 
         $decklist_id = filter_var($request->get('id'), FILTER_SANITIZE_NUMBER_INT);
-        $decklist = $this->getDoctrine()
+        $decklist = $this->managerRegistry
             ->getRepository(Decklist::class)
             ->find($decklist_id);
 
@@ -889,13 +844,13 @@ class SocialController extends AbstractController
             $comment->setDecklist($decklist);
             $comment->setIsHidden(false);
 
-            $this->getDoctrine()
+            $this->managerRegistry
                 ->getManager()
                 ->persist($comment);
             $decklist->setDateUpdate($now);
             $decklist->setNbcomments($decklist->getNbcomments() + 1);
 
-            $this->getDoctrine()
+            $this->managerRegistry
                 ->getManager()
                 ->flush();
 
@@ -917,7 +872,7 @@ class SocialController extends AbstractController
             }
             foreach ($mentioned_usernames as $mentioned_username) {
                 /* @var UserInterface $mentioned_user */
-                $mentioned_user = $this->getDoctrine()
+                $mentioned_user = $this->managerRegistry
                     ->getRepository(User::class)
                     ->findOneBy(array('username' => $mentioned_username));
                 if ($mentioned_user && $mentioned_user->getIsNotifMention()) {
@@ -929,7 +884,7 @@ class SocialController extends AbstractController
             unset($spool[$user->getEmail()]);
 
             $email_data = array(
-                'username' => $user->getUsername(),
+                'username' => $user->getUserIdentifier(),
                 'decklist_name' => $decklist->getName(),
                 'url' => $this->generateUrl(
                     'decklist_detail',
@@ -943,29 +898,24 @@ class SocialController extends AbstractController
                 'profile' => $this->generateUrl('user_profile_edit', [], UrlGeneratorInterface::ABSOLUTE_URL),
             );
             foreach ($spool as $email => $view) {
-                $message = (new Swift_Message("[thronesdb] New comment"))
-                    ->setFrom(array($emailSenderAddress => $user->getUsername()))
-                    ->setTo($email)
-                    ->setBody($this->renderView($view, $email_data), 'text/html');
+                $message = (new Email())
+                    ->subject("[thronesdb] New comment")
+                    ->from(new Address($emailSenderAddress, $user->getUserIdentifier()))
+                    ->to($email)
+                    ->html($this->renderView($view, $email_data));
                 $mailer->send($message);
             }
         }
 
-        return $this->redirect(
-            $this->generateUrl(
-                'decklist_detail',
-                array(
-                    'decklist_id' => $decklist_id,
-                    'decklist_name' => $decklist->getNameCanonical(),
-                )
-            )
-        );
+        return $this->redirectToRoute('decklist_detail', array(
+            'decklist_id' => $decklist_id,
+            'decklist_name' => $decklist->getNameCanonical(),
+        ));
     }
 
     /**
      * Hides a comment, or if $hidden is false, unhide a comment.
      *
-     * @Route("/user/hidecomment/{comment_id}/{hidden}", name="decklist_comment_hide", methods={"POST"})
      *
      * @param string $comment_id
      * @param string $hidden
@@ -973,6 +923,7 @@ class SocialController extends AbstractController
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/user/hidecomment/{comment_id}/{hidden}', name: 'decklist_comment_hide', methods: ['POST'])]
     public function hidecommentAction($comment_id, $hidden)
     {
         /* @var UserInterface $user */
@@ -982,7 +933,7 @@ class SocialController extends AbstractController
         }
 
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $comment = $em->getRepository(Comment::class)->find($comment_id);
         if (!$comment) {
@@ -1002,16 +953,16 @@ class SocialController extends AbstractController
     /**
      * Records a user's vote.
      *
-     * @Route("/user/like", name="decklist_like", methods={"POST"})
      *
      * @param Request $request
      * @return Response
      * @throws Exception
      */
+    #[Route(path: '/user/like', name: 'decklist_like', methods: ['POST'])]
     public function voteAction(Request $request)
     {
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var UserInterface $user */
         $user = $this->getUser();
@@ -1040,14 +991,14 @@ class SocialController extends AbstractController
                 $author->setReputation($author->getReputation() + 1);
                 $decklist->setDateUpdate(new DateTime());
                 $decklist->setNbVotes($decklist->getNbVotes() + 1);
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
             } else {
                 $user->removeVote($decklist);
                 $author = $decklist->getUser();
                 $author->setReputation($author->getReputation() - 1);
                 $decklist->setDateUpdate(new DateTime());
                 $decklist->setNbVotes($decklist->getNbVotes() - 1);
-                $this->getDoctrine()->getManager()->flush();
+                $this->managerRegistry->getManager()->flush();
             }
         }
 
@@ -1060,7 +1011,7 @@ class SocialController extends AbstractController
      */
     public function findSimilarDecklists($decklist_id, $number)
     {
-        $dbh = $this->getDoctrine()->getConnection();
+        $dbh = $this->managerRegistry->getConnection();
 
         $list = $dbh->executeQuery(
             "SELECT
@@ -1095,11 +1046,11 @@ class SocialController extends AbstractController
                 $decklist_id,
                 $decklist_id,
             )
-        )->fetchAll();
+        )->fetchAllAssociative();
 
         $arr = [];
         foreach ($list as $item) {
-            $dbh = $this->getDoctrine()->getConnection();
+            $dbh = $this->managerRegistry->getConnection();
             $rows = $dbh->executeQuery(
                 "SELECT
                     d.id,
@@ -1114,7 +1065,7 @@ class SocialController extends AbstractController
                 array(
                     $item["id"],
                 )
-            )->fetchAll();
+            )->fetchAllAssociative();
 
             $decklist = $rows[0];
             $arr[] = $decklist;
@@ -1124,12 +1075,6 @@ class SocialController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/decklist/export/text/{decklist_id}",
-     *     name="decklist_download",
-     *     methods={"GET"},
-     *     requirements={"decklist_id"="\d+"}
-     * )
      *
      * @param Request $request
      * @param int $cacheExpiration
@@ -1137,10 +1082,11 @@ class SocialController extends AbstractController
      * @param int $decklist_id
      * @return Response
      */
+    #[Route(path: '/decklist/export/text/{decklist_id}', name: 'decklist_download', methods: ['GET'], requirements: ['decklist_id' => '\d+'])]
     public function downloadAction(Request $request, int $cacheExpiration, Texts $texts, $decklist_id)
     {
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
@@ -1262,7 +1208,7 @@ class SocialController extends AbstractController
      * @param $page
      * @param Request $request
      * @return Response
-     * @throws DBALException
+     * @throws \Doctrine\DBAL\Exception
      *
      * @todo This is not wired up, enable or remove this. [ST 2020/07/28]
      */
@@ -1281,7 +1227,7 @@ class SocialController extends AbstractController
         $start = ($page - 1) * $limit;
 
         /* @var $dbh Connection */
-        $dbh = $this->getDoctrine()->getConnection();
+        $dbh = $this->managerRegistry->getConnection();
 
         $comments = $dbh->executeQuery(
             "SELECT SQL_CALC_FOUND_ROWS
@@ -1300,9 +1246,9 @@ class SocialController extends AbstractController
                 $user->getId(),
             )
         )
-            ->fetchAll(PDO::FETCH_ASSOC);
+            ->fetchAllAssociative();
 
-        $maxcount = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(PDO::FETCH_NUM)[0];
+        $maxcount = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetchOne();
 
         // pagination : calcul de nbpages // currpage // prevpage // nextpage
         // à partir de $start, $limit, $count, $maxcount, $page
@@ -1359,7 +1305,7 @@ class SocialController extends AbstractController
      * @param int $cacheExpiration
      * @param int $page
      * @return Response
-     * @throws DBALException
+     * @throws \Doctrine\DBAL\Exception
      *
      * @todo This is not wired up, enable or remove this. [ST 2020/07/28]
      */
@@ -1376,7 +1322,7 @@ class SocialController extends AbstractController
         $start = ($page - 1) * $limit;
 
         /* @var $dbh Connection */
-        $dbh = $this->getDoctrine()->getConnection();
+        $dbh = $this->managerRegistry->getConnection();
 
         $comments = $dbh->executeQuery(
             "SELECT SQL_CALC_FOUND_ROWS
@@ -1394,9 +1340,9 @@ class SocialController extends AbstractController
                 order by date_creation desc
                 limit $start, $limit",
             []
-        )->fetchAll(PDO::FETCH_ASSOC);
+        )->fetchAllAssociative();
 
-        $maxcount = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetch(PDO::FETCH_NUM)[0];
+        $maxcount = $dbh->executeQuery("SELECT FOUND_ROWS()")->fetchOne();
 
         // pagination : calcul de nbpages // currpage // prevpage // nextpage
         // à partir de $start, $limit, $count, $maxcount, $page
@@ -1447,26 +1393,26 @@ class SocialController extends AbstractController
     }
 
     /**
-     * @Route("/decklists/search", name="decklists_searchform", methods={"GET"})
      *
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param int $cacheExpiration
      * @return Response
      */
+    #[Route(path: '/decklists/search', name: 'decklists_searchform', methods: ['GET'])]
     public function searchAction(Request $request, TranslatorInterface $translator, int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($cacheExpiration);
 
-        $factions = $this->getDoctrine()->getRepository(Faction::class)->findAllAndOrderByName();
+        $factions = $this->managerRegistry->getRepository(Faction::class)->findAllAndOrderByName();
 
         $categories = [];
         $on = 0;
         $off = 0;
         $categories[] = array("label" => $translator->trans("decklist.list.search.allowed.core"), "packs" => []);
-        $list_cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
+        $list_cycles = $this->managerRegistry->getRepository(Cycle::class)->findAll();
         foreach ($list_cycles as $cycle) {
             $size = count($cycle->getPacks());
             if ($cycle->getPosition() == 0 || $size == 0) {
@@ -1506,11 +1452,11 @@ class SocialController extends AbstractController
             }
         }
 
-        $activeTournamentTiers = $this->getDoctrine()
+        $activeTournamentTiers = $this->managerRegistry
             ->getRepository(Tournament::class)
             ->findBy(['active' => true]);
 
-        $inactiveTournamentTiers = $this->getDoctrine()
+        $inactiveTournamentTiers = $this->managerRegistry
             ->getRepository(Tournament::class)
             ->findBy(['active' => false]);
 
@@ -1547,12 +1493,12 @@ class SocialController extends AbstractController
     }
 
     /**
-     * @Route("/donators", name="donators", methods={"GET"})
      * @param Request $request
      * @param int $cacheExpiration
      * @return Response
-     * @throws DBALException
+     * @throws \Doctrine\DBAL\Exception
      */
+    #[Route(path: '/donators', name: 'donators', methods: ['GET'])]
     public function donatorsAction(Request $request, int $cacheExpiration)
     {
         $response = new Response();
@@ -1560,10 +1506,10 @@ class SocialController extends AbstractController
         $response->setMaxAge($cacheExpiration);
 
         /* @var $dbh Connection */
-        $dbh = $this->getDoctrine()->getConnection();
+        $dbh = $this->managerRegistry->getConnection();
 
         $users = $dbh->executeQuery("SELECT * FROM user WHERE donation>0 ORDER BY donation DESC, username", [])
-            ->fetchAll(PDO::FETCH_ASSOC);
+            ->fetchAllAssociative();
 
         return $this->render(
             $this->getLocaleSpecificViewPath(

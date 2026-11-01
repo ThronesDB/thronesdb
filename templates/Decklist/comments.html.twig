@@ -4,7 +4,7 @@
     <thead>
     <tr>
         <th>
-            <span class="fas fa-comment"></span> {% transchoice decklist.nbComments with {'%count%': decklist.nbComments} %}decklist.view.comments.count{% endtranschoice %}
+            <span class="fas fa-comment"></span> {{ 'decklist.view.comments.count'|trans({'%count%': decklist.nbComments}) }}
         </th>
     </tr>
     </thead>

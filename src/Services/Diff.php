@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Classes\SlotCollectionInterface;
-use App\Entity\SlotInterface;
 use App\Classes\SlotCollectionDecorator;
 use App\Entity\Deckslot;
 use Doctrine\Common\Collections\ArrayCollection;

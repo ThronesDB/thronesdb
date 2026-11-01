@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Services;
 
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use App\Entity\Card;
 use App\Entity\Faction;
 use App\Entity\Pack;
@@ -21,9 +24,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Class DeckImportServiceTest
  * @package App\Tests\Service
  */
+#[CoversMethod(\App\Services\DeckImportService::class, 'parseTextImport')]
 class DeckImportServiceTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
     protected MockInterface $mockEntityManager;
     protected MockInterface $mockCardRepository;
@@ -67,7 +71,7 @@ class DeckImportServiceTest extends TestCase
     /**
      * @return array
      */
-    public function testParseTextImportForCardWithPackNameProvider(): array
+    public static function parseTextImportForCardWithPackNameProvider(): array
     {
         return [
             [
@@ -117,14 +121,13 @@ class DeckImportServiceTest extends TestCase
     }
 
     /**
-     * @covers       \App\Services\DeckImportService::parseTextImport
-     * @dataProvider testParseTextImportForCardWithPackNameProvider
      * @param string $input
      * @param int $expectedQuantity
      * @param string $expectedName
      * @param string $expectedPackName
      * @param string $expectedFaction
      */
+    #[DataProvider('parseTextImportForCardWithPackNameProvider')]
     public function testParseTextImportForCardWithPackName(
         string $input,
         int $expectedQuantity,
@@ -157,7 +160,7 @@ class DeckImportServiceTest extends TestCase
         $this->assertEquals($faction, $data['decks'][0]['faction']);
     }
 
-    public function testParseTextImportForCardWithPackCodeProvider(): array
+    public static function parseTextImportForCardWithPackCodeProvider(): array
     {
         return [
             ["House Targaryen\n1x The Hand's Judgment (Core)", 1, "The Hand's Judgment", "Core", "House Targaryen"],
@@ -171,14 +174,13 @@ class DeckImportServiceTest extends TestCase
     }
 
     /**
-     * @covers       \App\Services\DeckImportService::parseTextImport
-     * @dataProvider testParseTextImportForCardWithPackCodeProvider
      * @param string $input
      * @param int $expectedQuantity
      * @param string $expectedName
      * @param string $expectedPackCode
      * @param string $expectedFaction
      */
+    #[DataProvider('parseTextImportForCardWithPackCodeProvider')]
     public function testParseTextImportForCardWithPackCode(
         string $input,
         int $expectedQuantity,
@@ -210,7 +212,7 @@ class DeckImportServiceTest extends TestCase
         $this->assertEquals($faction, $data['decks'][0]['faction']);
     }
 
-    public function parseTextImportForCardWithoutPackInfoProvider(): array
+    public static function parseTextImportForCardWithoutPackInfoProvider(): array
     {
         return [
             ["House Stark\n1x The Hand's Judgment", 1, "The Hand's Judgment", "House Stark"],
@@ -223,13 +225,12 @@ class DeckImportServiceTest extends TestCase
     }
 
     /**
-     * @covers       \App\Services\DeckImportService::parseTextImport
-     * @dataProvider parseTextImportForCardWithoutPackInfoProvider
      * @param string $input
      * @param int $expectedQuantity
      * @param string $expectedName
      * @param string $expectedFaction
      */
+    #[DataProvider('parseTextImportForCardWithoutPackInfoProvider')]
     public function testParseTextImportForCardWithoutPackInfo(
         string $input,
         int $expectedQuantity,
@@ -257,7 +258,7 @@ class DeckImportServiceTest extends TestCase
         $this->assertEquals($faction, $data['decks'][0]['faction']);
     }
 
-    public function parseTextImportIgnoreEmptyInputProvider(): array
+    public static function parseTextImportIgnoreEmptyInputProvider(): array
     {
         return [
             [""],
@@ -270,10 +271,9 @@ class DeckImportServiceTest extends TestCase
     }
 
     /**
-     * @covers       \App\Services\DeckImportService::parseTextImport
-     * @dataProvider parseTextImportIgnoreEmptyInputProvider
      * @param string $input
      */
+    #[DataProvider('parseTextImportIgnoreEmptyInputProvider')]
     public function testParseTextImportIgnoreEmptyInput(string $input): void
     {
         $data = $this->service->parseTextImport($input);
@@ -281,9 +281,6 @@ class DeckImportServiceTest extends TestCase
         $this->assertEmpty($data['errors']);
     }
 
-    /**
-     * @covers \App\Services\DeckImportService::parseTextImport
-     */
     public function testParseTextImportMultipleDecks(): void
     {
         $text = <<<EOL
@@ -347,9 +344,6 @@ class DeckImportServiceTest extends TestCase
         $this->assertEquals(1, $data['decks'][2]['content']['Aloof and Apart']);
     }
 
-    /**
-     * @covers \App\Services\DeckImportService::parseTextImport
-     */
     public function testParseTextImportFailsIfFactionCannotBeIdentified(): void
     {
         $text = <<<EOL

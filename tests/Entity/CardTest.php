@@ -2,17 +2,19 @@
 
 namespace App\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Card;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class CardTest
  * @package App\Tests\Entity
- * @covers Card
  */
+#[CoversClass(Card::class)]
 class CardTest extends TestCase
 {
-    public function hasShadowKeywordProvider()
+    public static function hasShadowKeywordProvider()
     {
         return [
             ['', 'Shadow', false],
@@ -33,10 +35,7 @@ class CardTest extends TestCase
             ["Shadow (99). and other stuff on first line\nlorem ipsum", 'Shadow', true],
         ];
     }
-    /**
-     * @covers Card::hasShadowKeyword
-     * @dataProvider hasShadowKeywordProvider
-     */
+    #[DataProvider('hasShadowKeywordProvider')]
     public function testHasShadowKeyword($text, $shadowKeyword, $hasKeyword)
     {
         $card = new Card();

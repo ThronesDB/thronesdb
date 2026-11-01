@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 
 class UserRepository extends EntityRepository
 {
-    public function getInactiveUsers(DateTime $createdOnOrBefore = null, $excludeDeactivated = true): array
+    public function getInactiveUsers(?DateTime $createdOnOrBefore = null, $excludeDeactivated = true): array
     {
         $qb = $this->createQueryBuilder('u')
             ->select('u')

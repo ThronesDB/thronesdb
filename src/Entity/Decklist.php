@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\DecklistRepository;
 use App\Classes\SlotCollectionDecorator;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,222 +12,166 @@ use JsonSerializable;
 use Doctrine\ORM\Mapping as ORM;
 use stdClass;
 
-/**
- * @ORM\Table(name="decklist")
- * @ORM\Entity(repositoryClass="App\Repository\DecklistRepository")
- */
+#[ORM\Entity(repositoryClass: DecklistRepository::class)]
+#[ORM\Table(name: 'decklist')]
 class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 255)]
     protected $name;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(name="date_update", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'update')]
+    #[ORM\Column(name: 'date_update', type: 'datetime', nullable: false)]
     protected $dateUpdate;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="description_md", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'description_md', type: 'text', nullable: true)]
     protected $descriptionMd;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name_canonical", type="string", length=255)
      */
+    #[ORM\Column(name: 'name_canonical', type: 'string', length: 255)]
     protected $nameCanonical;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="description_html", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'description_html', type: 'text', nullable: true)]
     protected $descriptionHtml;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="signature", type="string", length=32)
      */
+    #[ORM\Column(name: 'signature', type: 'string', length: 32)]
     protected $signature;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="nb_votes", type="integer")
      */
+    #[ORM\Column(name: 'nb_votes', type: 'integer')]
     protected $nbVotes;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="nb_favorites", type="integer")
      */
+    #[ORM\Column(name: 'nb_favorites', type: 'integer')]
     protected $nbFavorites;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="nb_comments", type="integer")
      */
+    #[ORM\Column(name: 'nb_comments', type: 'integer')]
     protected $nbComments;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="version", type="string", length=8)
      */
+    #[ORM\Column(name: 'version', type: 'string', length: 8)]
     protected $version;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Decklistslot", mappedBy="decklist", cascade={"persist","remove"})
      */
+    #[ORM\OneToMany(targetEntity: Decklistslot::class, mappedBy: 'decklist', cascade: ['persist', 'remove'])]
     protected $slots;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="decklist", cascade={"persist","remove"})
-     * @ORM\OrderBy({
-     *     "dateCreation"="ASC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'decklist', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['dateCreation' => 'ASC'])]
     protected $comments;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Decklist", mappedBy="precedent")
-     * @ORM\OrderBy({
-     *     "dateCreation"="ASC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Decklist::class, mappedBy: 'precedent')]
+    #[ORM\OrderBy(['dateCreation' => 'ASC'])]
     protected $successors;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Deck", mappedBy="parent")
      */
+    #[ORM\OneToMany(targetEntity: Deck::class, mappedBy: 'parent')]
     protected $children;
 
     /**
      * @var UserInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="decklists")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'decklists')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     protected $user;
 
     /**
      * @var FactionInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Faction")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="faction_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Faction::class)]
+    #[ORM\JoinColumn(name: 'faction_id', referencedColumnName: 'id')]
     protected $faction;
 
     /**
      * @var PackInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Pack")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="last_pack_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Pack::class)]
+    #[ORM\JoinColumn(name: 'last_pack_id', referencedColumnName: 'id')]
     protected $lastPack;
 
     /**
      * @var DeckInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="children")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_deck_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Deck::class, inversedBy: 'children')]
+    #[ORM\JoinColumn(name: 'parent_deck_id', referencedColumnName: 'id')]
     protected $parent;
 
     /**
      * @var DecklistInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Decklist", inversedBy="successors")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="precedent_decklist_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Decklist::class, inversedBy: 'successors')]
+    #[ORM\JoinColumn(name: 'precedent_decklist_id', referencedColumnName: 'id')]
     protected $precedent;
 
     /**
      * @var TournamentInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Tournament", inversedBy="decklists")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Tournament::class, inversedBy: 'decklists')]
+    #[ORM\JoinColumn(name: 'tournament_id', referencedColumnName: 'id')]
     protected $tournament;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="favorites")
-     * @ORM\JoinTable(name="favorite",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="decklist_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *   }
-     * )
      */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'favorites')]
+    #[ORM\JoinTable(name: 'favorite', joinColumns: [new ORM\JoinColumn(name: 'decklist_id', referencedColumnName: 'id')], inverseJoinColumns: [new ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')])]
     protected $favorites;
 
     /**
      * @var Collection
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="votes")
-     * @ORM\JoinTable(name="vote",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="decklist_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     *   }
-     * )
      */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'votes')]
+    #[ORM\JoinTable(name: 'vote', joinColumns: [new ORM\JoinColumn(name: 'decklist_id', referencedColumnName: 'id')], inverseJoinColumns: [new ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')])]
     protected $votes;
 
     /**
@@ -525,7 +470,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     /**
      * @inheritdoc
      */
-    public function setUser(UserInterface $user = null)
+    public function setUser(?UserInterface $user = null)
     {
         $this->user = $user;
     }
@@ -541,7 +486,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     /**
      * @inheritdoc
      */
-    public function setFaction(FactionInterface $faction = null)
+    public function setFaction(?FactionInterface $faction = null)
     {
         $this->faction = $faction;
     }
@@ -549,7 +494,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     /**
      * @inheritdoc
      */
-    public function setLastPack(PackInterface $lastPack = null)
+    public function setLastPack(?PackInterface $lastPack = null)
     {
         $this->lastPack = $lastPack;
     }
@@ -565,7 +510,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     /**
      * @inheritdoc
      */
-    public function setParent(DeckInterface $parent = null)
+    public function setParent(?DeckInterface $parent = null)
     {
         $this->parent = $parent;
     }
@@ -581,7 +526,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     /**
      * @inheritdoc
      */
-    public function setPrecedent(DecklistInterface $precedent = null)
+    public function setPrecedent(?DecklistInterface $precedent = null)
     {
         $this->precedent = $precedent;
     }
@@ -597,7 +542,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     /**
      * @inheritdoc
      */
-    public function setTournament(TournamentInterface $tournament = null)
+    public function setTournament(?TournamentInterface $tournament = null)
     {
         $this->tournament = $tournament;
     }
@@ -677,7 +622,7 @@ class Decklist extends CommonDeck implements JsonSerializable, DecklistInterface
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $slots = $this->getSlots();
         $agendas = $slots->getAgendas();

@@ -2,49 +2,45 @@
 
 namespace App\Entity;
 
+use App\Repository\TypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 
 /**
- * @ORM\Table(name="type", uniqueConstraints={@ORM\UniqueConstraint(name="type_code_idx", columns={"code"})})
- * @ORM\Entity(repositoryClass="App\Repository\TypeRepository")
  * @package App\Entity
  */
+#[ORM\Entity(repositoryClass: TypeRepository::class)]
+#[ORM\Table(name: 'type')]
+#[ORM\UniqueConstraint(name: 'type_code_idx', columns: ['code'])]
 class Type implements TypeInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'code', type: 'string', length: 255, nullable: false)]
     protected $code;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=1024, nullable=false)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 1024, nullable: false)]
     protected $name;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Card", mappedBy="type")
-     * @ORM\OrderBy({
-     *     "position"="ASC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'type')]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     protected $cards;
 
     /**
@@ -136,6 +132,20 @@ class Type implements TypeInterface
             'code' => $this->code,
             'name' => $this->name
         ];
+    }
+
+    /**
+     * PHP 8.1+ uses these instead of the Serializable methods.
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->serialize();
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data);
     }
 
     /**

@@ -20,7 +20,7 @@ interface DecklistslotInterface extends SlotInterface
     /**
      * @param Decklist $decklist
      */
-    public function setDecklist(Decklist $decklist = null);
+    public function setDecklist(?Decklist $decklist = null);
 
     /**
      * @return Decklist

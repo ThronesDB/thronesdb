@@ -2,64 +2,57 @@
 
 namespace App\Entity;
 
+use App\Repository\FactionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Exception;
-use Serializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="faction", uniqueConstraints={@ORM\UniqueConstraint(name="faction_code_idx", columns={"code"})})
- * @ORM\Entity(repositoryClass="App\Repository\FactionRepository")
  * @package App\Entity
  */
+#[ORM\Entity(repositoryClass: FactionRepository::class)]
+#[ORM\Table(name: 'faction')]
+#[ORM\UniqueConstraint(name: 'faction_code_idx', columns: ['code'])]
 class Faction implements FactionInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'code', type: 'string', length: 255, nullable: false)]
     protected $code;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=1024, nullable=false)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 1024, nullable: false)]
     protected $name;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_primary", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'is_primary', type: 'boolean', nullable: false)]
     protected $isPrimary;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="octgn_id", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'octgn_id', type: 'string', nullable: true)]
     protected $octgnId;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Card", mappedBy="faction")
-     * @ORM\OrderBy({
-     *     "position"="ASC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'faction')]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     protected $cards;
 
 
@@ -183,6 +176,20 @@ class Faction implements FactionInterface
             'is_primary' => $this->isPrimary,
             'octgn_id' => $this->octgnId
         ];
+    }
+
+    /**
+     * PHP 8.1+ uses these instead of the Serializable methods.
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->serialize();
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data);
     }
 
     /**

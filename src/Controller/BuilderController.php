@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\BannerAlert;
 use App\Entity\Card;
 use App\Entity\Deck;
@@ -22,13 +24,11 @@ use App\Services\DeckManager;
 use App\Services\Diff;
 use App\Services\RestrictionsChecker;
 use App\Services\Texts;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,7 +38,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -65,13 +65,16 @@ class BuilderController extends AbstractController
         '00004', // Uniting the Seven Kingdoms (VDS)
         "00030", // The King's Voice (VHotK)
     ];
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
 
     /**
-     * @Route("/deck/new", name="deck_buildform", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/deck/new', name: 'deck_buildform', methods: ['GET'])]
     public function buildformAction(int $cacheExpiration, TranslatorInterface $translator)
     {
         $response = new Response();
@@ -79,7 +82,7 @@ class BuilderController extends AbstractController
         $response->setMaxAge($cacheExpiration);
 
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $factions = $em->getRepository(Faction::class)->findPrimaries();
         $agendas = $em->getRepository(Card::class)->getAgendasForNewDeckWizard(self::VARIANT_AGENDAS);
@@ -101,7 +104,6 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/deck/build", name="deck_initbuild", methods={"POST"})
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param SessionInterface $session
@@ -111,6 +113,7 @@ class BuilderController extends AbstractController
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/deck/build', name: 'deck_initbuild', methods: ['POST'])]
     public function initbuildAction(
         Request $request,
         TranslatorInterface $translator,
@@ -119,7 +122,7 @@ class BuilderController extends AbstractController
         AgendaHelper $agendaHelper
     ) {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $faction_code = $request->request->get('faction');
         $agenda_code = $request->request->get('agenda');
@@ -127,14 +130,14 @@ class BuilderController extends AbstractController
         if (!$faction_code) {
             $session->getFlashBag()->set('error', $translator->trans("decks.build.errors.nofaction"));
 
-            return $this->redirect($this->generateUrl('deck_buildform'));
+            return $this->redirectToRoute('deck_buildform');
         }
 
         $faction = $em->getRepository(Faction::class)->findByCode($faction_code);
         if (!$faction) {
             $session->getFlashBag()->set('error', $translator->trans("decks.build.errors.nofaction"));
 
-            return $this->redirect($this->generateUrl('deck_buildform'));
+            return $this->redirectToRoute('deck_buildform');
         }
         $tags = [$faction_code];
 
@@ -187,17 +190,17 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/deck/import", name="deck_import", methods={"GET"})
      * @param int $cacheExpiration
      * @return Response
      */
+    #[Route(path: '/deck/import', name: 'deck_import', methods: ['GET'])]
     public function importAction(int $cacheExpiration)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($cacheExpiration);
 
-        $factions = $this->getDoctrine()->getRepository(Faction::class)->findAll();
+        $factions = $this->managerRegistry->getRepository(Faction::class)->findAll();
 
         return $this->render(
             'Builder/directimport.html.twig',
@@ -215,7 +218,6 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/deck/fileimport", name="deck_fileimport", methods={"POST"})
      * @param Request $request
      * @param DeckImportService $deckImportService
      * @param DeckManager $deckManager
@@ -224,6 +226,7 @@ class BuilderController extends AbstractController
      * @throws BadRequestHttpException
      * @return RedirectResponse
      */
+    #[Route(path: '/deck/fileimport', name: 'deck_fileimport', methods: ['POST'])]
     public function fileimportAction(
         Request $request,
         DeckImportService $deckImportService,
@@ -269,7 +272,7 @@ class BuilderController extends AbstractController
                 . ' ' .
                 $translator->trans('decks.save.outOfSlots')
             );
-            return $this->redirect($this->generateUrl('decks_list'));
+            return $this->redirectToRoute('decks_list');
         }
 
         // finally, import all the "good" decks(s)
@@ -290,7 +293,7 @@ class BuilderController extends AbstractController
             );
         }
 
-        $this->getDoctrine()->getManager()->flush();
+        $this->managerRegistry->getManager()->flush();
         if ($numberSuccessfullyParsedDecks) {
             $session->getFlashBag()->set(
                 'notice',
@@ -317,25 +320,20 @@ class BuilderController extends AbstractController
             );
         }
 
-        return $this->redirect($this->generateUrl('decks_list'));
+        return $this->redirectToRoute('decks_list');
     }
 
     /**
-     * @Route(
-     *     "/deck/export/octgn/{deck_uuid}",
-     *     name="deck_download",
-     *     methods={"GET"},
-     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
-     * )
      * @param Request $request
      * @param Texts $texts
      * @param string $deck_uuid
      * @return Response
      */
+    #[Route(path: '/deck/export/octgn/{deck_uuid}', name: 'deck_download', methods: ['GET'], requirements: ['deck_uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'])]
     public function downloadAction(Request $request, Texts $texts, $deck_uuid)
     {
         /* @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
+        $deck = $this->managerRegistry->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         $is_owner = $this->getUser() && $this->getUser()->getId() == $deck->getUser()->getId();
         if (!$deck->getUser()->getIsShareDecks() && !$is_owner) {
@@ -365,18 +363,13 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/deck/clone/{deck_uuid}",
-     *     name="deck_clone",
-     *     methods={"GET"},
-     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
-     * )
      * @param string $deck_uuid
      * @return Response
      */
+    #[Route(path: '/deck/clone/{deck_uuid}', name: 'deck_clone', methods: ['GET'], requirements: ['deck_uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'])]
     public function cloneAction($deck_uuid, DeckManager $deckManager, TranslatorInterface $translator)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
         /* @var DeckInterface $deck */
         $deck = $em->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
@@ -419,21 +412,21 @@ class BuilderController extends AbstractController
             null,
         );
         $em->flush();
-        return $this->redirect($this->generateUrl('decks_list'));
+        return $this->redirectToRoute('decks_list');
     }
 
     /**
-     * @Route("/deck/save", name="deck_save", methods={"POST"})
      * @param Request $request
      * @param DeckManager $deckManager
      * @param TranslatorInterface $translator
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/deck/save', name: 'deck_save', methods: ['POST'])]
     public function saveAction(Request $request, DeckManager $deckManager, TranslatorInterface $translator)
     {
 
         /* @var EntityManager $em*/
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $user = $this->getUser();
         if (count($user->getDecks()) > $user->getMaxNbDecks()) {
@@ -468,7 +461,7 @@ class BuilderController extends AbstractController
                 $deckManager->revert($deck);
             }
 
-            return $this->redirect($this->generateUrl('decks_list'));
+            return $this->redirectToRoute('decks_list');
         }
 
         $is_copy = (bool)filter_var($request->get('copy'), FILTER_SANITIZE_NUMBER_INT);
@@ -511,27 +504,27 @@ class BuilderController extends AbstractController
         );
         $em->flush();
 
-        return $this->redirect($this->generateUrl('decks_list'));
+        return $this->redirectToRoute('decks_list');
     }
 
     /**
-     * @Route("/deck/delete", name="deck_delete", methods={"POST"})
      * @param Request $request
      * @param SessionInterface $session
      * @return RedirectResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/deck/delete', name: 'deck_delete', methods: ['POST'])]
     public function deleteAction(Request $request, SessionInterface $session)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $deck_id = filter_var($request->get('deck_id'), FILTER_SANITIZE_NUMBER_INT);
         /** @var DeckInterface $deck */
         $deck = $em->getRepository(Deck::class)->find($deck_id);
         if (!$deck) {
-            return $this->redirect($this->generateUrl('decks_list'));
+            return $this->redirectToRoute('decks_list');
         }
         if ($this->getUser()->getId() != $deck->getUser()->getId()) {
             throw new UnauthorizedHttpException("You don't have access to this deck.");
@@ -546,19 +539,19 @@ class BuilderController extends AbstractController
 
         $session->getFlashBag()->set('notice', "Deck deleted.");
 
-        return $this->redirect($this->generateUrl('decks_list'));
+        return $this->redirectToRoute('decks_list');
     }
 
     /**
-     * @Route("/deck/download_list", name="deck_download_list", methods={"POST"})
      * @param Request $request
      * @param SessionInterface $session
      * @return Response
      */
+    #[Route(path: '/deck/download_list', name: 'deck_download_list', methods: ['POST'])]
     public function downloadListAction(Request $request, SessionInterface $session)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
         $ids = explode('-', $request->get('ids'));
         $decks = $em->getRepository(Deck::class)->findBy(['id' => $ids]);
 
@@ -589,17 +582,17 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/deck/delete_list", name="deck_delete_list", methods={"POST"})
      * @param Request $request
      * @param SessionInterface $session
      * @return RedirectResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/deck/delete_list', name: 'deck_delete_list', methods: ['POST'])]
     public function deleteListAction(Request $request, SessionInterface $session)
     {
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $list_id = explode('-', $request->get('ids'));
 
@@ -621,24 +614,19 @@ class BuilderController extends AbstractController
         $em->flush();
 
         $session->getFlashBag()->set('notice', "Decks deleted.");
-        return $this->redirect($this->generateUrl('decks_list'));
+        return $this->redirectToRoute('decks_list');
     }
 
     /**
-     * @Route(
-     *     "/deck/edit/{deck_uuid}",
-     *     name="deck_edit",
-     *     methods={"GET"},
-     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
-     * )
      *
      * @param string $deck_uuid
      * @return Response
      */
+    #[Route(path: '/deck/edit/{deck_uuid}', name: 'deck_edit', methods: ['GET'], requirements: ['deck_uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'])]
     public function editAction($deck_uuid)
     {
         /** @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
+        $deck = $this->managerRegistry->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         if ($this->getUser()->getId() != $deck->getUser()->getId()) {
             return $this->render(
@@ -660,19 +648,14 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/deck/view/{deck_uuid}",
-     *     name="deck_view",
-     *     methods={"GET"},
-     *     requirements={"deck_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"}
-     * )
      * @param string $deck_uuid
      * @return Response
      */
+    #[Route(path: '/deck/view/{deck_uuid}', name: 'deck_view', methods: ['GET'], requirements: ['deck_uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'])]
     public function viewAction($deck_uuid)
     {
         /** @var DeckInterface $deck */
-        $deck = $this->getDoctrine()->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
+        $deck = $this->managerRegistry->getManager()->getRepository(Deck::class)->findOneBy(['uuid' => $deck_uuid]);
 
         if (!$deck) {
             return $this->render(
@@ -696,7 +679,7 @@ class BuilderController extends AbstractController
             );
         }
 
-        $tournaments = $this->getDoctrine()->getManager()->getRepository(Tournament::class)->findAll();
+        $tournaments = $this->managerRegistry->getManager()->getRepository(Tournament::class)->findAll();
 
         return $this->render(
             'Builder/deckview.html.twig',
@@ -710,23 +693,15 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/deck/compare/{deck1_uuid}/{deck2_uuid}",
-     *     name="decks_diff",
-     *     methods={"GET"},
-     *     requirements={
-     *          "deck1_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}",
-     *          "deck2_uuid"="[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}"
-     *     }
-     * )
      * @param string $deck1_uuid
      * @param string $deck2_uuid
      * @param Diff $diff
      * @return Response
      */
+    #[Route(path: '/deck/compare/{deck1_uuid}/{deck2_uuid}', name: 'decks_diff', methods: ['GET'], requirements: ['deck1_uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', 'deck2_uuid' => '[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}'])]
     public function compareAction($deck1_uuid, $deck2_uuid, Diff $diff)
     {
-        $repo = $this->getDoctrine()->getManager()->getRepository(Deck::class);
+        $repo = $this->managerRegistry->getManager()->getRepository(Deck::class);
 
         /* @var DeckInterface $deck1 */
         $deck1 = $repo->findOneBy(['uuid' => $deck1_uuid]);
@@ -782,12 +757,12 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/decks", name="decks_list", methods={"GET"})
      * @param DeckManager $deckManager
      * @param RestrictionsChecker $restrictionsChecker
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/decks', name: 'decks_list', methods: ['GET'])]
     public function listAction(
         DeckManager $deckManager,
         RestrictionsChecker $restrictionsChecker,
@@ -798,13 +773,13 @@ class BuilderController extends AbstractController
 
         $decks = $deckManager->getByUser($user);
 
-        $alerts = $this->getDoctrine()->getRepository(BannerAlert::class)
+        $alerts = $this->managerRegistry->getRepository(BannerAlert::class)
             ->findBy(['active' => true], ['id' => 'DESC']);
 
         /* @todo refactor this out, use DQL not raw SQL [ST 2019/04/04] */
-        $tournaments = $this->getDoctrine()->getConnection()->executeQuery(
+        $tournaments = $this->managerRegistry->getConnection()->executeQuery(
             "SELECT t.id, t.description FROM tournament t ORDER BY t.description desc"
-        )->fetchAll();
+        )->fetchAllAssociative();
 
 
         if (count($decks)) {
@@ -817,7 +792,7 @@ class BuilderController extends AbstractController
             $tags = array_unique($tags);
 
             // check all decks against all active RLs
-            $restrictionsRepo = $this->getDoctrine()->getRepository(Restriction::class);
+            $restrictionsRepo = $this->managerRegistry->getRepository(Restriction::class);
             $activeRestrictions = $restrictionsRepo->findBy(['active' => true], ['effectiveOn' => 'DESC']);
 
             $deckLegalityMap = [];
@@ -869,14 +844,14 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/deck/copy/{decklist_id}", name="deck_copy", methods={"GET"}, requirements={"decklist_id"="\d+"})
      * @param int $decklist_id
      * @return Response
      */
+    #[Route(path: '/deck/copy/{decklist_id}', name: 'deck_copy', methods: ['GET'], requirements: ['decklist_id' => '\d+'])]
     public function copyAction($decklist_id)
     {
         /* @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         /* @var DecklistInterface $decklist */
         $decklist = $em->getRepository(Decklist::class)->find($decklist_id);
@@ -887,7 +862,7 @@ class BuilderController extends AbstractController
         }
 
         return $this->forward(
-            'App\Controller\BuilderController:saveAction',
+            'App\Controller\BuilderController::saveAction',
             array(
                 'name' => $decklist->getName(),
                 'faction_code' => $decklist->getFaction()->getCode(),
@@ -898,19 +873,19 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/deck/autosave", name="deck_autosave", methods={"POST"})
      * @param Request $request
      * @param LoggerInterface $logger
      * @return Response
      * @throws ORMException
      * @throws OptimisticLockException
      */
+    #[Route(path: '/deck/autosave', name: 'deck_autosave', methods: ['POST'])]
     public function autosaveAction(Request $request, LoggerInterface $logger)
     {
         $user = $this->getUser();
 
         /* @var $em EntityManager */
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $deck_id = $request->get('deck_id');
 
@@ -1032,13 +1007,13 @@ class BuilderController extends AbstractController
     }
 
     /**
-     * @Route("/decks/bulkclone", name="decks_bulkclone", methods={"POST", "GET"})
      * @param Request $request
      * @param TranslatorInterface $translator
      * @param DeckManager $deckManager
      * @return Response|RedirectResponse
      * @throws Exception
      */
+    #[Route(path: '/decks/bulkclone', name: 'decks_bulkclone', methods: ['POST', 'GET'])]
     public function bulkCloneDeckAction(
         Request $request,
         TranslatorInterface $translator,
@@ -1046,7 +1021,7 @@ class BuilderController extends AbstractController
     ): Response {
 
         /* @var EntityManager $em*/
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->managerRegistry->getManager();
 
         $form = $this->createFormBuilder([])
             ->add('decks', TextareaType::class, [
@@ -1116,22 +1091,22 @@ class BuilderController extends AbstractController
                     : '';
 
                 if (!preg_match($reUuid4, $clean['url'], $matches)) {
-                    $errors[] = "[line ${i}] ${clean['url']}"
-                        . ($hasName ? " (${clean['name']})" : '')
+                    $errors[] = "[line {$i}] {$clean['url']}"
+                        . ($hasName ? " ({$clean['name']})" : '')
                         . ' is not a valid deck URL.';
                     continue;
                 }
                 /* @var DeckInterface $deck */
                 $deck = $deckRepo->findOneBy(['uuid' => $matches[0]]);
                 if (!$deck) {
-                    $errors[] = "[line ${i}] Cannot find deck at ${clean['url']}"
-                    . ($hasName ? " (${clean['name']})" : '') . '.';
+                    $errors[] = "[line {$i}] Cannot find deck at {$clean['url']}"
+                    . ($hasName ? " ({$clean['name']})" : '') . '.';
                     continue;
                 }
                 $owner = $deck->getUser();
                 if (!$owner->getIsShareDecks() && $owner->getId() !== $user->getId()) {
-                    $errors[] = "[line ${i}] ${clean['url']}"
-                        . ($hasName ? " (${clean['name']})" : '')
+                    $errors[] = "[line {$i}] {$clean['url']}"
+                        . ($hasName ? " ({$clean['name']})" : '')
                         . ' cannot be accessed because deck-sharing is not enabled by its owner.';
                     continue;
                 }
@@ -1162,10 +1137,10 @@ class BuilderController extends AbstractController
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
-                $successes[] = "<a href=\"${clean['url']}\" target=\"_blank\">${clean['url']}</a> "
+                $successes[] = "<a href=\"{$clean['url']}\" target=\"_blank\">{$clean['url']}</a> "
                     . 'has been successfully cloned to '
-                    . "<a href=\"${newDeckUrl}\" target=\"_blank\">${newDeckUrl}"
-                    . ($hasName ? " (${clean['name']})" : '')
+                    . "<a href=\"{$newDeckUrl}\" target=\"_blank\">{$newDeckUrl}"
+                    . ($hasName ? " ({$clean['name']})" : '')
                     . "</a>.";
             }
 
@@ -1179,7 +1154,7 @@ class BuilderController extends AbstractController
                 $this->addFlash('notice', $success);
             }
 
-            return $this->redirect($this->generateUrl('decks_bulkclone'));
+            return $this->redirectToRoute('decks_bulkclone');
         }
 
         return $this->render('Builder/bulkclone.html.twig', [

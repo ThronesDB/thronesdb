@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Card;
-use App\Entity\CardInterface;
 use App\Entity\Restriction;
 use App\Entity\RestrictionInterface;
 use App\Services\CardsData;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -20,13 +20,17 @@ class RestrictionsController extends AbstractController
 {
     use LocaleAwareTemplating;
 
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
+
     /**
-     * @Route("/restrictions", name="restrictions", methods={"GET"})
      * @param int $cacheExpiration
      * @param TranslatorInterface $translator
      * @param CardsData $cardsData
      * @return Response
      */
+    #[Route(path: '/restrictions', name: 'restrictions', methods: ['GET'])]
     public function restrictionsAction(
         int $cacheExpiration,
         TranslatorInterface $translator,
@@ -36,8 +40,8 @@ class RestrictionsController extends AbstractController
         $response->setPublic();
         $response->setMaxAge($cacheExpiration);
 
-        $restrictionsRepo = $this->getDoctrine()->getRepository(Restriction::class);
-        $cardsRepo = $this->getDoctrine()->getRepository(Card::class);
+        $restrictionsRepo = $this->managerRegistry->getRepository(Restriction::class);
+        $cardsRepo = $this->managerRegistry->getRepository(Card::class);
         $restrictions = $restrictionsRepo->findBy(['active' => true], ['effectiveOn' => 'DESC']);
 
         // get all card codes from all RLs

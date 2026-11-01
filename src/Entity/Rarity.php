@@ -8,43 +8,38 @@ use Exception;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="rarity", uniqueConstraints={@ORM\UniqueConstraint(name="rarity_code_idx", columns={"code"})})
- * @ORM\Entity()
  * @package App\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'rarity')]
+#[ORM\UniqueConstraint(name: 'rarity_code_idx', columns: ['code'])]
 class Rarity implements RarityInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'code', type: 'string', length: 255, nullable: false)]
     protected string $code;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
     protected string $name;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Card", mappedBy="rarity")
-     * @ORM\OrderBy({
-     *     "id"="ASC"
-     * })
      */
+    #[ORM\OneToMany(targetEntity: Card::class, mappedBy: 'rarity')]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     protected Collection $cards;
 
 
@@ -134,6 +129,20 @@ class Rarity implements RarityInterface
         return [
             'code' => $this->code,
         ];
+    }
+
+    /**
+     * PHP 8.1+ uses these instead of the Serializable methods.
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->serialize();
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize($data);
     }
 
     /**

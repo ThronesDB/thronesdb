@@ -9,10 +9,8 @@ use App\Entity\Cycle;
 use App\Entity\CycleInterface;
 use App\Entity\Faction;
 use App\Entity\Pack;
-use App\Entity\PackInterface;
 use App\Entity\Review;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -532,7 +530,7 @@ class CardsData
      * @param string|null $version
      * @return array
      */
-    public function getCardInfo(CardInterface $card, bool $api, string $version = null)
+    public function getCardInfo(CardInterface $card, bool $api, ?string $version = null)
     {
         $cardinfo = [];
 

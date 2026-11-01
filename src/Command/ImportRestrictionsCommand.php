@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Restriction;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @package App\Command
  * * @todo provide more detailed output as to what was newly imported and updated. [ST 2020/12/07]
  */
+#[AsCommand(name: 'app:restrictions:import', description: 'Import deck-building restrictions from a local thronteki-json-data repository.')]
 class ImportRestrictionsCommand extends Command
 {
     protected const RESTRICTIONS_FILE_NAME = 'restricted-list.json';
@@ -36,13 +38,9 @@ class ImportRestrictionsCommand extends Command
         $this->entityManager = $entityManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('app:restrictions:import')
-            ->setDescription(
-                'Import deck-building restrictions from a local thronteki-json-data repository.'
-            )
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
@@ -62,7 +60,7 @@ class ImportRestrictionsCommand extends Command
 
         if (empty($data)) {
             $output->writeln('No restrictions to import found.');
-            return 0;
+            return Command::SUCCESS;
         }
 
         foreach ($data as $item) {
@@ -75,10 +73,10 @@ class ImportRestrictionsCommand extends Command
             $contents = $this->buildContents($item);
 
             if (array_key_exists($code, $existingRestrictions)) {
-                $output->writeln("Updating existing restrictions (code = ${code}).");
+                $output->writeln("Updating existing restrictions (code = {$code}).");
                 $restriction = $existingRestrictions[$code];
             } else {
-                $output->writeln("Importing new restrictions (code = ${code}).");
+                $output->writeln("Importing new restrictions (code = {$code}).");
                 $restriction = new Restriction();
                 $restriction->setCode($code);
                 $restriction->setActive(false);
@@ -94,7 +92,7 @@ class ImportRestrictionsCommand extends Command
         }
 
         $this->entityManager->flush();
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -113,7 +111,7 @@ class ImportRestrictionsCommand extends Command
         $filepath = $path . DIRECTORY_SEPARATOR . self::RESTRICTIONS_FILE_NAME;
 
         if (! $fs->exists($filepath)) {
-            throw new Exception('No ' . self::RESTRICTIONS_FILE_NAME . " file found at [${path}].");
+            throw new Exception('No ' . self::RESTRICTIONS_FILE_NAME . " file found at [{$path}].");
         }
 
         $text = file_get_contents($filepath);
@@ -121,7 +119,7 @@ class ImportRestrictionsCommand extends Command
 
         if ($data === null) {
             throw new Exception(
-                "File [${$filepath}] contains incorrect JSON (error code " . json_last_error() . ".)"
+                "File [{${$filepath}}] contains incorrect JSON (error code " . json_last_error() . ".)"
             );
         }
 

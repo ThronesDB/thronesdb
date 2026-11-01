@@ -2,15 +2,16 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Card;
 use App\Entity\CardInterface;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'app:import:images', description: 'Download missing card images from FFG websites')]
 class ImportImagesCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -19,13 +20,6 @@ class ImportImagesCommand extends Command
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this
-            ->setName('app:import:images')
-            ->setDescription('Download missing card images from FFG websites');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -68,6 +62,6 @@ class ImportImagesCommand extends Command
         }
 
         $this->entityManager->flush();
-        return 0;
+        return Command::SUCCESS;
     }
 }

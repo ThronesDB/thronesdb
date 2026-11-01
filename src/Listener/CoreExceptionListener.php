@@ -4,18 +4,18 @@ namespace App\Listener;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class CoreExceptionListener
 {
     /**
      * Handles security related exceptions.
      *
-     * @param GetResponseForExceptionEvent $event An GetResponseForExceptionEvent instance
+     * @param ExceptionEvent $event
      */
-    public function onCoreException(GetResponseForExceptionEvent $event)
+    public function onCoreException(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         $request = $event->getRequest();
         if (!$request->isXmlHttpRequest()) {
             return;

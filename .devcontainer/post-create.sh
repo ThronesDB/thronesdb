@@ -7,6 +7,13 @@ composer install
 echo "Installing Node dependencies..."
 npm install
 
+echo "Creating OAuth2 keys..."
+if [ ! -f var/oauth/private.key ]; then
+  mkdir -p var/oauth
+  openssl genrsa -out var/oauth/private.key 2048
+  openssl rsa -in var/oauth/private.key -pubout -out var/oauth/public.key
+fi
+
 echo "Creating database..."
 php bin/console doctrine:database:create --if-not-exists
 

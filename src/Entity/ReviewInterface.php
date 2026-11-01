@@ -89,7 +89,7 @@ interface ReviewInterface
     /**
      * @param CardInterface $card
      */
-    public function setCard(CardInterface $card = null);
+    public function setCard(?CardInterface $card = null);
 
     /**
      * @return CardInterface
@@ -99,7 +99,7 @@ interface ReviewInterface
     /**
      * @param UserInterface $user
      */
-    public function setUser(UserInterface $user = null);
+    public function setUser(?UserInterface $user = null);
 
     /**
      * @return UserInterface

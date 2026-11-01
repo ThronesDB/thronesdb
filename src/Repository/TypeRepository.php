@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class TypeRepository extends EntityRepository
 {
-    public function findAll()
+    public function findAll(): array
     {
         $qb = $this->createQueryBuilder('t')
             ->select('t')

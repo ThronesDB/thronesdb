@@ -2,23 +2,23 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Card;
 use App\Entity\CardInterface;
 use App\Entity\Cycle;
 use App\Entity\Faction;
 use App\Entity\Pack;
-use App\Entity\PackInterface;
 use App\Entity\Rarity;
 use App\Entity\Type;
 use App\Services\CardsData;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -86,29 +86,32 @@ class SearchController extends AbstractController
         'u' => 'boolean',
         'r' => 'code',
     );
+    public function __construct(private readonly ManagerRegistry $managerRegistry)
+    {
+    }
 
     /**
-     * @Route("/search", name="cards_search", methods={"GET"})
      * @param int $cacheExpiration
      * @param CardsData $cardsData
      * @param TranslatorInterface $translator
      * @return Response
      */
+    #[Route(path: '/search', name: 'cards_search', methods: ['GET'])]
     public function formAction(int $cacheExpiration, CardsData $cardsData, TranslatorInterface $translator)
     {
         $response = new Response();
         $response->setPublic();
         $response->setMaxAge($cacheExpiration);
 
-        $dbh = $this->getDoctrine()->getConnection();
+        $dbh = $this->managerRegistry->getConnection();
 
         $packs = $cardsData->allsetsdata();
 
-        $cycles = $this->getDoctrine()->getRepository(Cycle::class)->findAll();
-        $types = $this->getDoctrine()->getRepository(Type::class)->findAll();
-        $factions = $this->getDoctrine()->getRepository(Faction::class)->findAllAndOrderByName();
-        $rarity = $this->getDoctrine()->getRepository(Rarity::class)->findAll();
-        $list_traits = $this->getDoctrine()->getRepository(Card::class)->findTraits();
+        $cycles = $this->managerRegistry->getRepository(Cycle::class)->findAll();
+        $types = $this->managerRegistry->getRepository(Type::class)->findAll();
+        $factions = $this->managerRegistry->getRepository(Faction::class)->findAllAndOrderByName();
+        $rarity = $this->managerRegistry->getRepository(Rarity::class)->findAll();
+        $list_traits = $this->managerRegistry->getRepository(Card::class)->findTraits();
         $traits = [];
         foreach ($list_traits as $card) {
             $subs = explode('.', $card["traits"]);
@@ -121,7 +124,7 @@ class SearchController extends AbstractController
 
         $list_illustrators = $dbh->executeQuery(
             "SELECT DISTINCT c.illustrator FROM card c WHERE c.illustrator != '' ORDER BY c.illustrator"
-        )->fetchAll();
+        )->fetchAllAssociative();
         $illustrators = array_map(function ($card) {
             return $card["illustrator"];
         }, $list_illustrators);
@@ -140,7 +143,6 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route("/card/{card_code}", name="cards_zoom", methods={"GET"}, requirements={"card_code"="\d+"})
      * @param string $card_code
      * @param Request $request
      * @param string $gameName
@@ -148,10 +150,11 @@ class SearchController extends AbstractController
      * @return Response
      * @throws NonUniqueResultException
      */
+    #[Route(path: '/card/{card_code}', name: 'cards_zoom', methods: ['GET'], requirements: ['card_code' => '\d+'])]
     public function zoomAction($card_code, Request $request, string $gameName, string $publisherName)
     {
         /* @var CardInterface $card */
-        $card = $this->getDoctrine()->getRepository(Card::class)->findByCode($card_code);
+        $card = $this->managerRegistry->getRepository(Card::class)->findByCode($card_code);
         if (!$card) {
             throw $this->createNotFoundException('Sorry, this card is not in the database (yet?)');
         }
@@ -161,12 +164,12 @@ class SearchController extends AbstractController
             . $card->getFaction()->getName()
             . " "
             . $card->getType()->getName()
-            . " card for ${gameName} from the set "
+            . " card for {$gameName} from the set "
             . $card->getPack()->getName()
-            . " published by ${publisherName}.";
+            . " published by {$publisherName}.";
 
         return $this->forward(
-            'App\Controller\SearchController:displayAction',
+            'App\Controller\SearchController::displayAction',
             array(
                 '_route' => $request->attributes->get('_route'),
                 '_route_params' => $request->attributes->get('_route_params'),
@@ -180,12 +183,6 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/set/{pack_code}/{view}/{sort}/{page}",
-     *     name="cards_list",
-     *     methods={"GET"},
-     *     defaults={"view"="list", "sort"="set", "page"=1}
-     * )
      * @param string $pack_code
      * @param string $view
      * @param string $sort
@@ -195,6 +192,7 @@ class SearchController extends AbstractController
      * @param string $publisherName
      * @return Response
      */
+    #[Route(path: '/set/{pack_code}/{view}/{sort}/{page}', name: 'cards_list', methods: ['GET'], defaults: ['view' => 'list', 'sort' => 'set', 'page' => 1])]
     public function listAction(
         $pack_code,
         $view,
@@ -205,20 +203,20 @@ class SearchController extends AbstractController
         string $publisherName
     ) {
         /* @var PackInterface $pack */
-        $pack = $this->getDoctrine()->getRepository(Pack::class)->findByCode($pack_code);
+        $pack = $this->managerRegistry->getRepository(Pack::class)->findByCode($pack_code);
         if (!$pack) {
             throw $this->createNotFoundException('This pack does not exist');
         }
 
 
-        $meta = $pack->getName() . ", a set of cards for ${gameName}"
+        $meta = $pack->getName() . ", a set of cards for {$gameName}"
                 . ($pack->getDateRelease() ? " published on " . $pack->getDateRelease()->format('Y/m/d') : "")
-                . " by ${publisherName}.";
+                . " by {$publisherName}.";
 
         $key = array_search('pack', SearchController::$searchKeys);
 
         return $this->forward(
-            'App\Controller\SearchController:displayAction',
+            'App\Controller\SearchController::displayAction',
             array(
                 '_route' => $request->attributes->get('_route'),
                 '_route_params' => $request->attributes->get('_route_params'),
@@ -233,12 +231,6 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route(
-     *     "/cycle/{cycle_code}/{view}/{sort}/{page}",
-     *     name="cards_cycle",
-     *     methods={"GET"},
-     *     defaults={"view"="list", "sort"="faction", "page"=1}
-     * )
      * @param string $cycle_code
      * @param string $view
      * @param string $sort
@@ -248,6 +240,7 @@ class SearchController extends AbstractController
      * @param string $publisherName
      * @return Response
      */
+    #[Route(path: '/cycle/{cycle_code}/{view}/{sort}/{page}', name: 'cards_cycle', methods: ['GET'], defaults: ['view' => 'list', 'sort' => 'faction', 'page' => 1])]
     public function cycleAction(
         $cycle_code,
         $view,
@@ -257,17 +250,17 @@ class SearchController extends AbstractController
         string $gameName,
         string $publisherName
     ) {
-        $cycle = $this->getDoctrine()->getRepository(Cycle::class)->findOneBy(array("code" => $cycle_code));
+        $cycle = $this->managerRegistry->getRepository(Cycle::class)->findOneBy(array("code" => $cycle_code));
         if (!$cycle) {
             throw $this->createNotFoundException('This cycle does not exist');
         }
 
-        $meta = $cycle->getName() . ", a cycle of datapack for ${gameName} published by ${publisherName}.";
+        $meta = $cycle->getName() . ", a cycle of datapack for {$gameName} published by {$publisherName}.";
 
         $key = array_search('cycle', SearchController::$searchKeys);
 
         return $this->forward(
-            'App\Controller\SearchController:displayAction',
+            'App\Controller\SearchController::displayAction',
             array(
                 '_route' => $request->attributes->get('_route'),
                 '_route_params' => $request->attributes->get('_route_params'),
@@ -282,18 +275,18 @@ class SearchController extends AbstractController
     }
 
     /**
-     * @Route("/process", name="cards_processSearchForm", methods={"GET"})
      * Processes the action of the card search form
      * @param Request $request
      * @return RedirectResponse
      */
+    #[Route(path: '/process', name: 'cards_processSearchForm', methods: ['GET'])]
     public function processAction(Request $request)
     {
         $view = $request->query->get('view') ?: 'list';
         $sort = $request->query->get('sort') ?: 'name';
 
         $operators = array(":","!","<",">");
-        $factions = $this->getDoctrine()->getRepository(Faction::class)->findAll();
+        $factions = $this->managerRegistry->getRepository(Faction::class)->findAll();
 
         $params = [];
         if ($request->query->get('q') != "") {
@@ -337,12 +330,12 @@ class SearchController extends AbstractController
 
     /**
      * Processes the action of the single card search input
-     * @Route("/find", name="cards_find", methods={"GET"})
      * @param Request $request
      * @param CardsData $cardsData
      * @param RouterInterface $router
      * @return RedirectResponse|Response
      */
+    #[Route(path: '/find', name: 'cards_find', methods: ['GET'])]
     public function findAction(Request $request, CardsData $cardsData, RouterInterface $router)
     {
         $q = $request->query->get('q');
@@ -367,7 +360,7 @@ class SearchController extends AbstractController
             }
             if ($conditions[0][0] == array_search('cycle', SearchController::$searchKeys)) {
                 $cycle_position = $conditions[0][2];
-                $cycle = $this->getDoctrine()
+                $cycle = $this->managerRegistry
                     ->getRepository(Cycle::class)
                     ->findOneBy(array('position' => $cycle_position));
                 if ($cycle) {
@@ -386,7 +379,7 @@ class SearchController extends AbstractController
         }
 
         return $this->forward(
-            'App\Controller\SearchController:displayAction',
+            'App\Controller\SearchController::displayAction',
             array(
                 'q' => $q,
                 'view' => $view,
@@ -461,7 +454,7 @@ class SearchController extends AbstractController
             if ($pagetitle == "") {
                 if (count($conditions) == 1 && count($conditions[0]) == 3 && $conditions[0][1] == ":") {
                     if ($conditions[0][0] == "e") {
-                        $pack = $this->getDoctrine()
+                        $pack = $this->managerRegistry
                             ->getRepository(Pack::class)
                             ->findOneBy(array("code" => $conditions[0][2]));
                         if ($pack) {
@@ -469,7 +462,7 @@ class SearchController extends AbstractController
                         }
                     }
                     if ($conditions[0][0] == "c") {
-                        $cycle = $this->getDoctrine()
+                        $cycle = $this->managerRegistry
                             ->getRepository(Cycle::class)
                             ->findOneBy(array("code" => $conditions[0][2]));
                         if ($cycle) {
@@ -576,7 +569,7 @@ class SearchController extends AbstractController
      */
     protected function setnavigation(RouterInterface $router, CardInterface $card)
     {
-        $repo = $this->getDoctrine()->getRepository(Card::class);
+        $repo = $this->managerRegistry->getRepository(Card::class);
         $prev = $repo->findPreviousCard($card);
         $next = $repo->findNextCard($card);
         return $this->renderView('Search/setnavigation.html.twig', array(

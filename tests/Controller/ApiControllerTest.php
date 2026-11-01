@@ -2,13 +2,14 @@
 
 namespace App\Tests\Controller;
 
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Class ApiControllerTest
  * @package App\Tests\Controller
- * @group api
  */
+#[Group('api')]
 class ApiControllerTest extends WebTestCase
 {
     public function testGetCard()
@@ -20,7 +21,7 @@ class ApiControllerTest extends WebTestCase
         $this->assertJson($json);
         $data = json_decode($json, true);
         $this->assertNotNull($data);
-        $this->assertInternalType('array', $data);
+        $this->assertIsArray($data);
         $this->assertNotEmpty($data);
         $this->assertArrayHasKey("code", $data);
         $this->assertEquals("01001", $data['code']);
@@ -35,7 +36,7 @@ class ApiControllerTest extends WebTestCase
         $this->assertJson($json);
         $data = json_decode($json, true);
         $this->assertNotNull($data);
-        $this->assertInternalType('array', $data);
+        $this->assertIsArray($data);
         $this->assertNotEmpty($data);
     }
 
@@ -48,10 +49,10 @@ class ApiControllerTest extends WebTestCase
         $this->assertJson($json);
         $data = json_decode($json, true);
         $this->assertNotNull($data);
-        $this->assertInternalType('array', $data);
+        $this->assertIsArray($data);
         $this->assertNotEmpty($data);
         foreach ($data as $item) {
-            $this->assertInternalType('array', $item);
+            $this->assertIsArray($item);
             $this->assertArrayHasKey("pack_code", $item);
             $this->assertEquals("Core", $item['pack_code']);
         }
@@ -66,7 +67,7 @@ class ApiControllerTest extends WebTestCase
         $this->assertJson($json);
         $data = json_decode($json, true);
         $this->assertNotNull($data);
-        $this->assertInternalType('array', $data);
+        $this->assertIsArray($data);
         $this->assertNotEmpty($data);
     }
 
@@ -79,7 +80,7 @@ class ApiControllerTest extends WebTestCase
         $this->assertJson($json);
         $data = json_decode($json, true);
         $this->assertNotNull($data);
-        $this->assertInternalType('array', $data);
+        $this->assertIsArray($data);
         $this->assertArrayHasKey("id", $data);
         $this->assertEquals(1, $data['id']);
     }

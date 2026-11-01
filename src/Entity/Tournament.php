@@ -8,40 +8,35 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Tournament
- *
- * @ORM\Table(name="tournament")
- * @ORM\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'tournament')]
 class Tournament implements TournamentInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="description", type="string", length=60)
      */
+    #[ORM\Column(name: 'description', type: 'string', length: 60)]
     protected $description;
 
     /**
      * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Decklist", mappedBy="tournament")
      */
+    #[ORM\OneToMany(targetEntity: Decklist::class, mappedBy: 'tournament')]
     protected $decklists;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default"="1"})
      */
+    #[ORM\Column(name: 'active', type: 'boolean', nullable: false, options: ['default' => '1'])]
     protected $active;
 
     /**

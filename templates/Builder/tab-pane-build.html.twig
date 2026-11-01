@@ -58,7 +58,7 @@
                         <a href="#">
                             <label>
                                 <input type="radio" name="display-column" value="{{ i }}">
-                                {% transchoice i with {'%cols%': i} %}decks.edit.build.options.display{% endtranschoice %}
+                                {{ 'decks.edit.build.options.display'|trans({'%cols%': i, '%count%': i}) }}
                             </label>
                         </a>
                     </li>
@@ -68,7 +68,7 @@
                         <a href="#">
                             <label>
                                 <input type="radio" name="core-set" value="{{ i }}">
-                                {% transchoice i with {'%core%': i} %}decks.edit.build.options.usecore{% endtranschoice %}
+                                {{ 'decks.edit.build.options.usecore'|trans({'%core%': i, '%count%': i}) }}
                             </label>
                         </a>
                     </li>

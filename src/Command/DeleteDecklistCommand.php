@@ -2,10 +2,9 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Deck;
-use App\Entity\DeckInterface;
 use App\Entity\Decklist;
-use App\Entity\DecklistInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @package App\Command
  */
+#[AsCommand(name: 'app:decklist:delete', description: 'Delete one decklist')]
 class DeleteDecklistCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -25,11 +25,9 @@ class DeleteDecklistCommand extends Command
         $this->entityManager = $entityManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-        ->setName('app:decklist:delete')
-        ->setDescription('Delete one decklist')
         ->addArgument(
             'decklist_id',
             InputArgument::REQUIRED,
@@ -64,6 +62,6 @@ class DeleteDecklistCommand extends Command
 
         $output->writeln("Decklist deleted");
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

@@ -7,58 +7,50 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="deckchange")
- * @ORM\Entity
  * @package App\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'deckchange')]
 class Deckchange implements DeckchangeInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var DateTime
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="variation", type="string", length=1024)
      */
+    #[ORM\Column(name: 'variation', type: 'string', length: 1024)]
     protected $variation;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_saved", type="boolean")
      */
+    #[ORM\Column(name: 'is_saved', type: 'boolean')]
     protected $isSaved;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(name="version", type="string", length=8, nullable=true)
      */
+    #[ORM\Column(name: 'version', type: 'string', length: 8, nullable: true)]
     protected $version;
 
     /**
      * @var DeckInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deck", inversedBy="changes")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Deck::class, inversedBy: 'changes')]
+    #[ORM\JoinColumn(name: 'deck_id', referencedColumnName: 'id')]
     protected $deck;
 
     /**
@@ -128,7 +120,7 @@ class Deckchange implements DeckchangeInterface
     /**
      * @inheritdoc
      */
-    public function setDeck(DeckInterface $deck = null)
+    public function setDeck(?DeckInterface $deck = null)
     {
         $this->deck = $deck;
     }

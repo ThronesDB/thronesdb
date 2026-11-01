@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use stdClass;
-
 /**
  * Base class for both deck and deck-list entities.
  * @package App\Entity

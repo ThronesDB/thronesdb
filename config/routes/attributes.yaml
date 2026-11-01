@@ -1,0 +1,21 @@
+# The site's pages, in one copy per language, each on its own hostname:
+# English on APP_WEBSITE_URL, Spanish on es.APP_WEBSITE_URL. Route names get a
+# locale suffix (index.en, index.es); path('index') picks the current language.
+controllers:
+    resource: ../../src/Controller/
+    type: attribute
+    exclude:
+        - '../../src/Controller/ApiController.php'
+        - '../../src/Controller/Oauth2Controller.php'
+    host:
+        en: '%website_url%'
+        es: 'es.%website_url%'
+
+# The JSON APIs have no language and answer on any hostname.
+api_public:
+    resource: ../../src/Controller/ApiController.php
+    type: attribute
+
+api_oauth2:
+    resource: ../../src/Controller/Oauth2Controller.php
+    type: attribute

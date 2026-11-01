@@ -6,7 +6,6 @@ use App\Services\DataimportFileLocator;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Mapping\ClassMetadata;
 
 /**
@@ -65,7 +64,7 @@ abstract class AbstractFixture extends Fixture
     /**
      * @inheritdoc
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         /** @var EntityManager $manager */
         // disable the SQL logger

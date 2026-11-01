@@ -7,60 +7,51 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="comment")
- * @ORM\Entity
  * @package App\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'comment')]
 class Comment implements CommentInterface
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text", type="text")
      */
+    #[ORM\Column(name: 'text', type: 'text')]
     protected $text;
 
     /**
      * @var DateTime
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(name="date_creation", type="datetime", nullable=false)
      */
+    #[Gedmo\Timestampable(on: 'create')]
+    #[ORM\Column(name: 'date_creation', type: 'datetime', nullable: false)]
     protected $dateCreation;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_hidden", type="boolean")
      */
+    #[ORM\Column(name: 'is_hidden', type: 'boolean')]
     protected $isHidden;
 
     /**
      * @var UserInterface
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     protected $user;
 
     /**
      * @var Decklist
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Decklist", inversedBy="comments")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="decklist_id", referencedColumnName="id")
-     * })
      */
+    #[ORM\ManyToOne(targetEntity: Decklist::class, inversedBy: 'comments')]
+    #[ORM\JoinColumn(name: 'decklist_id', referencedColumnName: 'id')]
     protected $decklist;
 
     /**
@@ -130,7 +121,7 @@ class Comment implements CommentInterface
     /**
      * @inheritdoc
      */
-    public function setUser(UserInterface $user = null)
+    public function setUser(?UserInterface $user = null)
     {
         $this->user = $user;
     }
@@ -146,7 +137,7 @@ class Comment implements CommentInterface
     /**
      * @inheritdoc
      */
-    public function setDecklist(DecklistInterface $decklist = null)
+    public function setDecklist(?DecklistInterface $decklist = null)
     {
         $this->decklist = $decklist;
     }

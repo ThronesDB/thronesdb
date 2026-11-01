@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use App\Entity\Deck;
 use App\Entity\Decklist;
 use App\Entity\User;
@@ -14,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @package App\Command
  */
+#[AsCommand(name: 'app:user:remove', description: 'Deactivates one user and delete all its content.')]
 class RemoveUserCommand extends Command
 {
     protected EntityManagerInterface $entityManager;
@@ -24,11 +26,9 @@ class RemoveUserCommand extends Command
         $this->entityManager = $entityManager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName('app:user:remove')
-            ->setDescription('Deactivates one user and delete all its content.')
             ->addArgument(
                 'user_id',
                 InputArgument::REQUIRED,
@@ -43,7 +43,7 @@ class RemoveUserCommand extends Command
 
         if (! $user) {
             $output->writeln("User not found.");
-            return 0;
+            return Command::SUCCESS;
         }
 
         $output->writeln("User " . $user->getUsername());
@@ -90,6 +90,6 @@ class RemoveUserCommand extends Command
 
         $this->entityManager->flush();
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
