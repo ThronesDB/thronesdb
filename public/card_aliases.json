@@ -1,0 +1,1109 @@
+[
+  {
+    "card": "A Dragon Is No Slave (GtR)",
+    "code": "06034",
+    "aliases": [
+      "adins"
+    ]
+  },
+  {
+    "card": "A Game of Thrones (Core)",
+    "code": "01003",
+    "aliases": [
+      "agot"
+    ]
+  },
+  {
+    "card": "A Mummer's Farce (HMW)",
+    "code": "20051",
+    "aliases": [
+      "fool agenda"
+    ]
+  },
+  {
+    "card": "A Pinch of Powder (IDP)",
+    "code": "11099",
+    "aliases": [
+      "a pinch of salt"
+    ]
+  },
+  {
+    "card": "Aegon Targaryen (WK)",
+    "code": "25113",
+    "aliases": [
+      "king aegon"
+    ]
+  },
+  {
+    "card": "Arianne Martell (PoS)",
+    "code": "13055",
+    "aliases": [
+      "shadow arianne"
+    ]
+  },
+  {
+    "card": "Arya Stark (TFM)",
+    "code": "08081",
+    "aliases": [
+      "no save arya"
+    ]
+  },
+  {
+    "card": "Azor Ahai Reborn (FotS)",
+    "code": "14020",
+    "aliases": [
+      "aar"
+    ]
+  },
+  {
+    "card": "Balon Greyjoy (CtA)",
+    "code": "04031",
+    "aliases": [
+      "king balon"
+    ]
+  },
+  {
+    "card": "Balon Greyjoy (KotI)",
+    "code": "12001",
+    "aliases": [
+      "steal balon"
+    ]
+  },
+  {
+    "card": "Battle on the Green Fork (TTS)",
+    "code": "25079",
+    "aliases": [
+      "jim's plot"
+    ]
+  },
+  {
+    "card": "Beacon of the South (SoD)",
+    "code": "10038",
+    "aliases": [
+      "bacon down south"
+    ]
+  },
+  {
+    "card": "Begging Brother (OR)",
+    "code": "06097",
+    "aliases": [
+      "bb"
+    ]
+  },
+  {
+    "card": "Besieged (HoT)",
+    "code": "09047",
+    "aliases": [
+      "intimidate plot"
+    ]
+  },
+  {
+    "card": "Black Wind (JtO)",
+    "code": "08032",
+    "aliases": [
+      "asha's boat"
+    ]
+  },
+  {
+    "card": "Blood of the Dragon (NMG)",
+    "code": "02075",
+    "aliases": [
+      "burn plot"
+    ]
+  },
+  {
+    "card": "Bodyguard (Core)",
+    "code": "01033",
+    "aliases": [
+      "kevin costner"
+    ]
+  },
+  {
+    "card": "Bran Stark (Core)",
+    "code": "01142",
+    "aliases": [
+      "core bran"
+    ]
+  },
+  {
+    "card": "Bran Stark (OR)",
+    "code": "06081",
+    "aliases": [
+      "direwolf bran"
+    ]
+  },
+  {
+    "card": "Brienne of Tarth (HoT)",
+    "code": "09002",
+    "aliases": [
+      "combo brienne"
+    ]
+  },
+  {
+    "card": "Catelyn Stark (WotN)",
+    "code": "03002",
+    "aliases": [
+      "fat cat"
+    ]
+  },
+  {
+    "card": "Cersei Lannister (LoCR)",
+    "code": "05001",
+    "aliases": [
+      "big cersei"
+    ]
+  },
+  {
+    "card": "Chamber of the Painted Table (Core)",
+    "code": "01060",
+    "aliases": [
+      "table",
+      "ikea kit"
+    ]
+  },
+  {
+    "card": "Close Call (TS)",
+    "code": "02120",
+    "aliases": [
+      "close one"
+    ]
+  },
+  {
+    "card": "Consuming Flames (JtO)",
+    "code": "08034",
+    "aliases": [
+      "cf"
+    ]
+  },
+  {
+    "card": "Counting Coppers (Core)",
+    "code": "01010",
+    "aliases": [
+      "cc"
+    ]
+  },
+  {
+    "card": "Crown of Gold (R)",
+    "code": "17134",
+    "aliases": [
+      "a crown fo a king"
+    ]
+  },
+  {
+    "card": "Daenerys Targaryen (Core)",
+    "code": "01160",
+    "aliases": [
+      "core danny"
+    ]
+  },
+  {
+    "card": "Daenerys Targaryen (FUtG)",
+    "code": "25053",
+    "aliases": [
+      "francis' danny",
+      "dothraki danny"
+    ]
+  },
+  {
+    "card": "Daenerys Targaryen (R)",
+    "code": "17128",
+    "aliases": [
+      "big danny"
+    ]
+  },
+  {
+    "card": "Daenerys Targaryen (R2)",
+    "code": "17171",
+    "aliases": [
+      "pyro danny"
+    ]
+  },
+  {
+    "card": "Daenerys Targaryen (TFM)",
+    "code": "08093",
+    "aliases": [
+      "pyro danny tfm"
+    ]
+  },
+  {
+    "card": "Dalla (WotW)",
+    "code": "07040",
+    "aliases": [
+      "sam's wife"
+    ]
+  },
+  {
+    "card": "Dark and Full of Terrors (HMW)",
+    "code": "20003",
+    "aliases": [
+      "dafot"
+    ]
+  },
+  {
+    "card": "Doran's Game (R)",
+    "code": "17114",
+    "aliases": [
+      "dg"
+    ]
+  },
+  {
+    "card": "Dorea Sand (TAK)",
+    "code": "08016",
+    "aliases": [
+      "bounce dorea"
+    ]
+  },
+  {
+    "card": "Dracarys! (Core)",
+    "code": "01176",
+    "aliases": [
+      "drac",
+      "burn baby burn"
+    ]
+  },
+  {
+    "card": "Drogon (R)",
+    "code": "17129",
+    "aliases": [
+      "burn drogon"
+    ]
+  },
+  {
+    "card": "Drowned God Fanatic (R)",
+    "code": "17106",
+    "aliases": [
+      "vince"
+    ]
+  },
+  {
+    "card": "Eddard Stark (WotN)",
+    "code": "03003",
+    "aliases": [
+      "fast eddy"
+    ]
+  },
+  {
+    "card": "Filthy Accusations (Core)",
+    "code": "01011",
+    "aliases": [
+      "kneel plot"
+    ]
+  },
+  {
+    "card": "Fire and Blood (Core)",
+    "code": "01177",
+    "aliases": [
+      "fab"
+    ]
+  },
+  {
+    "card": "Flea Bottom (R)",
+    "code": "17142",
+    "aliases": [
+      "fb"
+    ]
+  },
+  {
+    "card": "Free Companies (FH)",
+    "code": "18019",
+    "aliases": [
+      "fc"
+    ]
+  },
+  {
+    "card": "Freedmen (TBWB)",
+    "code": "06113",
+    "aliases": [
+      "naked people"
+    ]
+  },
+  {
+    "card": "Frozen Solid (WotN)",
+    "code": "03021",
+    "aliases": [
+      "froso"
+    ]
+  },
+  {
+    "card": "Fury of the Khalasar (DotE)",
+    "code": "15046",
+    "aliases": [
+      "dothraki plot"
+    ]
+  },
+  {
+    "card": "Ghost Hill Elite (WoW)",
+    "code": "26027",
+    "aliases": [
+      "ghe"
+    ]
+  },
+  {
+    "card": "Great Hall (R)",
+    "code": "17144",
+    "aliases": [
+      "gh"
+    ]
+  },
+  {
+    "card": "Here to Serve (TtB)",
+    "code": "02020",
+    "aliases": [
+      "maester plot"
+    ]
+  },
+  {
+    "card": "His Viper Eyes (WotN)",
+    "code": "03032",
+    "aliases": [
+      "hve"
+    ]
+  },
+  {
+    "card": "Hizdahr zo Loraq (R)",
+    "code": "17130",
+    "aliases": [
+      "king hizdahr"
+    ]
+  },
+  {
+    "card": "I Never Bet Against My Family (TKP)",
+    "code": "02050",
+    "aliases": [
+      "inbamf"
+    ]
+  },
+  {
+    "card": "Ice (Core)",
+    "code": "01153",
+    "aliases": [
+      "ice ice baby"
+    ]
+  },
+  {
+    "card": "In the Name of Your King! (TRtW)",
+    "code": "02028",
+    "aliases": [
+      "itnoyk"
+    ]
+  },
+  {
+    "card": "Jhiqui (Km)",
+    "code": "08053",
+    "aliases": [
+      "it is known"
+    ]
+  },
+  {
+    "card": "Jon Snow (MoD)",
+    "code": "11065",
+    "aliases": [
+      "jon tron"
+    ]
+  },
+  {
+    "card": "Khal Drogo (Core)",
+    "code": "01162",
+    "aliases": [
+      "core khal"
+    ]
+  },
+  {
+    "card": "Khal Drogo (DotE)",
+    "code": "15005",
+    "aliases": [
+      "bad khal"
+    ]
+  },
+  {
+    "card": "Knights of the Hollow Hill (CoS)",
+    "code": "13039",
+    "aliases": [
+      "321"
+    ]
+  },
+  {
+    "card": "Maester Aemon (WotW)",
+    "code": "07005",
+    "aliases": [
+      "claemon"
+    ]
+  },
+  {
+    "card": "Maester Murenmure (KotI)",
+    "code": "12010",
+    "aliases": [
+      "muremure"
+    ]
+  },
+  {
+    "card": "Mag the Mighty (TAK)",
+    "code": "08018",
+    "aliases": [
+      "magnus the mighty"
+    ]
+  },
+  {
+    "card": "Maiden's Bane (KotI)",
+    "code": "12019",
+    "aliases": [
+      "dj cap"
+    ]
+  },
+  {
+    "card": "Margaery Tyrell (AMAF)",
+    "code": "06003",
+    "aliases": [
+      "tinder marge"
+    ]
+  },
+  {
+    "card": "Margaery Tyrell (Core)",
+    "code": "01181",
+    "aliases": [
+      "pump marge"
+    ]
+  },
+  {
+    "card": "Margaery Tyrell (HoT)",
+    "code": "09006",
+    "aliases": [
+      "bendy marge"
+    ]
+  },
+  {
+    "card": "Marriage Pact (GtR)",
+    "code": "06022",
+    "aliases": [
+      "get married"
+    ]
+  },
+  {
+    "card": "Melisandre (Core)",
+    "code": "01047",
+    "aliases": [
+      "core mel"
+    ]
+  },
+  {
+    "card": "Melisandre (FotS)",
+    "code": "14003",
+    "aliases": [
+      "kill mel"
+    ]
+  },
+  {
+    "card": "Melisandre (GtR)",
+    "code": "06027",
+    "aliases": [
+      "dom mel"
+    ]
+  },
+  {
+    "card": "Milk of the Poppy (Core)",
+    "code": "01035",
+    "aliases": [
+      "glass of milk"
+    ]
+  },
+  {
+    "card": "Mirri Maz Duur (CoW)",
+    "code": "02093",
+    "aliases": [
+      "mirri mass murder"
+    ]
+  },
+  {
+    "card": "Nymeria Sand (SoD)",
+    "code": "10007",
+    "aliases": [
+      "dom nymeria"
+    ]
+  },
+  {
+    "card": "Nymeria Sand (TRtW)",
+    "code": "02035",
+    "aliases": [
+      "annoying bish nymeria"
+    ]
+  },
+  {
+    "card": "Obella Sand (SoD)",
+    "code": "10010",
+    "aliases": [
+      "claim obella"
+    ]
+  },
+  {
+    "card": "\"Off To Gulltown\" (SoD)",
+    "code": "10044",
+    "aliases": [
+      "otg"
+    ]
+  },
+  {
+    "card": "Old Bill Bone (IDP)",
+    "code": "11097",
+    "aliases": [
+      "old bone"
+    ]
+  },
+  {
+    "card": "Our Word Is Good as Gold (HMW)",
+    "code": "20033",
+    "aliases": [
+      "owigag"
+    ]
+  },
+  {
+    "card": "Plaza of Pride (WotW)",
+    "code": "07036",
+    "aliases": [
+      "stand plaza"
+    ]
+  },
+  {
+    "card": "Plaza of Punishment (Core)",
+    "code": "01173",
+    "aliases": [
+      "burn plaza"
+    ]
+  },
+  {
+    "card": "Political Disaster (TRtW)",
+    "code": "02040",
+    "aliases": [
+      "pd"
+    ]
+  },
+  {
+    "card": "Put to the Sword (Core)",
+    "code": "01041",
+    "aliases": [
+      "ptts"
+    ]
+  },
+  {
+    "card": "Put to the Torch (Core)",
+    "code": "01042",
+    "aliases": [
+      "pttt"
+    ]
+  },
+  {
+    "card": "Queensguard (R2)",
+    "code": "17173",
+    "aliases": [
+      "qg"
+    ]
+  },
+  {
+    "card": "Randyll Tarly (Core)",
+    "code": "01183",
+    "aliases": [
+      "standy randy"
+    ]
+  },
+  {
+    "card": "Randyll Tarly (R2)",
+    "code": "17174",
+    "aliases": [
+      "new randy"
+    ]
+  },
+  {
+    "card": "Red Ronnet (DitD)",
+    "code": "11107",
+    "aliases": [
+      "shadow raise claim"
+    ]
+  },
+  {
+    "card": "Risen from the Sea (Core)",
+    "code": "01081",
+    "aliases": [
+      "raisin"
+    ]
+  },
+  {
+    "card": "Robb Stark (AtSK)",
+    "code": "04002",
+    "aliases": [
+      "king robb"
+    ]
+  },
+  {
+    "card": "Robert Baratheon (FotS)",
+    "code": "14001",
+    "aliases": [
+      "chef bob"
+    ]
+  },
+  {
+    "card": "Robert Baratheon (LMHR)",
+    "code": "13107",
+    "aliases": [
+      "fast bob"
+    ]
+  },
+  {
+    "card": "Sand Steed (Km)",
+    "code": "08056",
+    "aliases": [
+      "sand speed"
+    ]
+  },
+  {
+    "card": "Sea of Blood (R)",
+    "code": "17149",
+    "aliases": [
+      "sob"
+    ]
+  },
+  {
+    "card": "Secret Schemes (TRW)",
+    "code": "06076",
+    "aliases": [
+      "awesome draw"
+    ]
+  },
+  {
+    "card": "Seen In Flames (Core)",
+    "code": "01064",
+    "aliases": [
+      "sif"
+    ]
+  },
+  {
+    "card": "Sentinels of the Realm (WGYK)",
+    "code": "27040",
+    "aliases": [
+      "guard agenda"
+    ]
+  },
+  {
+    "card": "Ser Cletus Yronwood (SoD)",
+    "code": "10012",
+    "aliases": [
+      "cleinit"
+    ]
+  },
+  {
+    "card": "Ser Denys Mallister (WotW)",
+    "code": "07007",
+    "aliases": [
+      "dennis"
+    ]
+  },
+  {
+    "card": "Ser Gregor Clegane (FotS)",
+    "code": "14027",
+    "aliases": [
+      "bad gregor"
+    ]
+  },
+  {
+    "card": "Ser Gregor Clegane (TKP)",
+    "code": "02049",
+    "aliases": [
+      "the mountain",
+      "good gregor"
+    ]
+  },
+  {
+    "card": "Ser Jorah Mormont (LMHR)",
+    "code": "13113",
+    "aliases": [
+      "bad jorah"
+    ]
+  },
+  {
+    "card": "Ser Rolly Duckfield (BtB)",
+    "code": "22019",
+    "aliases": [
+      "duckface"
+    ]
+  },
+  {
+    "card": "Shadowblack Assassin (BtRK)",
+    "code": "13073",
+    "aliases": [
+      "shadowblack ass"
+    ]
+  },
+  {
+    "card": "Someone Always Tells (R2)",
+    "code": "17168",
+    "aliases": [
+      "someone always smells"
+    ]
+  },
+  {
+    "card": "Spears of the Merling King (TFoA)",
+    "code": "06048",
+    "aliases": [
+      "bara save"
+    ]
+  },
+  {
+    "card": "Superior Claim (Core)",
+    "code": "01043",
+    "aliases": [
+      "sup claim"
+    ]
+  },
+  {
+    "card": "Tears of Lys (Core)",
+    "code": "01044",
+    "aliases": [
+      "tears"
+    ]
+  },
+  {
+    "card": "The Conclave (HoT)",
+    "code": "09045",
+    "aliases": [
+      "maester's agenda"
+    ]
+  },
+  {
+    "card": "The Dragonpit (PoS)",
+    "code": "13054",
+    "aliases": [
+      "the pit"
+    ]
+  },
+  {
+    "card": "The Field of Fire (TSoW)",
+    "code": "24021",
+    "aliases": [
+      "fof"
+    ]
+  },
+  {
+    "card": "The First Snow of Winter (NMG)",
+    "code": "02079",
+    "aliases": [
+      "tfsow",
+      "first snow"
+    ]
+  },
+  {
+    "card": "The Free Folk (R)",
+    "code": "17150",
+    "aliases": [
+      "ff"
+    ]
+  },
+  {
+    "card": "The Hand's Judgment (Core)",
+    "code": "01045",
+    "aliases": [
+      "hj"
+    ]
+  },
+  {
+    "card": "The House With the Red Door (JtO)",
+    "code": "08039",
+    "aliases": [
+      "hrd"
+    ]
+  },
+  {
+    "card": "The Iron Bank Will Have Its Due (OR)",
+    "code": "06099",
+    "aliases": [
+      "tibwhid"
+    ]
+  },
+  {
+    "card": "The Iron Throne (Core)",
+    "code": "01038",
+    "aliases": [
+      "chair",
+      "ikea kit"
+    ]
+  },
+  {
+    "card": "The Iron Throne (LMHR)",
+    "code": "13117",
+    "aliases": [
+      "nope throne"
+    ]
+  },
+  {
+    "card": "The King in the North (R)",
+    "code": "17159",
+    "aliases": [
+      "king plot"
+    ]
+  },
+  {
+    "card": "The Knight of Flowers (AtG)",
+    "code": "13003",
+    "aliases": [
+      "natalie portman"
+    ]
+  },
+  {
+    "card": "\"The Last of the Giants\" (WotW)",
+    "code": "07045",
+    "aliases": [
+      "tlotg"
+    ]
+  },
+  {
+    "card": "The Mad King's Command (BtB)",
+    "code": "22030",
+    "aliases": [
+      "mkc"
+    ]
+  },
+  {
+    "card": "The Many-Faced God (HMW)",
+    "code": "20052",
+    "aliases": [
+      "mfg"
+    ]
+  },
+  {
+    "card": "The Prince Who Came Too Late (DotE)",
+    "code": "15052",
+    "aliases": [
+      "prince plot"
+    ]
+  },
+  {
+    "card": "The Queen of Thorns (TMoW)",
+    "code": "11023",
+    "aliases": [
+      "shadow queen of thorns"
+    ]
+  },
+  {
+    "card": "The Red Viper (Core)",
+    "code": "01109",
+    "aliases": [
+      "oberyn",
+      "core viper"
+    ]
+  },
+  {
+    "card": "The Red Viper (SoD)",
+    "code": "10003",
+    "aliases": [
+      "the bastard viper",
+      "box viper"
+    ]
+  },
+  {
+    "card": "The Skahazadhan (Km)",
+    "code": "08054",
+    "aliases": [
+      "the golden river"
+    ]
+  },
+  {
+    "card": "The Things I Do For Love (Core)",
+    "code": "01101",
+    "aliases": [
+      "ttidfl"
+    ]
+  },
+  {
+    "card": "The Wall (Core)",
+    "code": "01137",
+    "aliases": [
+      "core wall"
+    ]
+  },
+  {
+    "card": "The Wall (TMoW)",
+    "code": "11026",
+    "aliases": [
+      "big wall"
+    ]
+  },
+  {
+    "card": "The Wars To Come (R)",
+    "code": "17151",
+    "aliases": [
+      "wtc"
+    ]
+  },
+  {
+    "card": "The Watch Has Need (TtB)",
+    "code": "02002",
+    "aliases": [
+      "twhn"
+    ]
+  },
+  {
+    "card": "The Withering Cold (Km)",
+    "code": "08060",
+    "aliases": [
+      "no standing"
+    ]
+  },
+  {
+    "card": "Theon Greyjoy (TFoA)",
+    "code": "06051",
+    "aliases": [
+      "weak theon"
+    ]
+  },
+  {
+    "card": "Three-Finger Hobb (R)",
+    "code": "17119",
+    "aliases": [
+      "3fh"
+    ]
+  },
+  {
+    "card": "To Go Forward You Must Go Back (SAT)",
+    "code": "08114",
+    "aliases": [
+      "tgfymgb"
+    ]
+  },
+  {
+    "card": "Trading With Braavos (LotW)",
+    "code": "26080",
+    "aliases": [
+      "warship agenda"
+    ]
+  },
+  {
+    "card": "Tycho Nestoris (TMoW)",
+    "code": "11037",
+    "aliases": [
+      "extra jank"
+    ]
+  },
+  {
+    "card": "Uneasy Truce (SoKL)",
+    "code": "11060",
+    "aliases": [
+      "stall plot"
+    ]
+  },
+  {
+    "card": "Uniting the Realm (WK)",
+    "code": "25120",
+    "aliases": [
+      "utr"
+    ]
+  },
+  {
+    "card": "Valar Dohaeris (TAK)",
+    "code": "08020",
+    "aliases": [
+      "vd"
+    ]
+  },
+  {
+    "card": "Valar Morghulis (TIMC)",
+    "code": "04080",
+    "aliases": [
+      "vm"
+    ]
+  },
+  {
+    "card": "Valyrian Steel (R)",
+    "code": "17152",
+    "aliases": [
+      "vs"
+    ]
+  },
+  {
+    "card": "Varys (Core)",
+    "code": "01029",
+    "aliases": [
+      "core varys"
+    ]
+  },
+  {
+    "card": "Varys (DitD)",
+    "code": "11119",
+    "aliases": [
+      "snipe varys"
+    ]
+  },
+  {
+    "card": "Varys (TTS)",
+    "code": "25077",
+    "aliases": [
+      "cancel varys"
+    ]
+  },
+  {
+    "card": "Varys's Riddle (AtSK)",
+    "code": "04020",
+    "aliases": [
+      "copy plot"
+    ]
+  },
+  {
+    "card": "Vengeance for Elia (CoW)",
+    "code": "02096",
+    "aliases": [
+      "vfe"
+    ]
+  },
+  {
+    "card": "Victarion Greyjoy (ATT)",
+    "code": "25003",
+    "aliases": [
+      "drowned god vic"
+    ]
+  },
+  {
+    "card": "Victarion Greyjoy (R)",
+    "code": "17102",
+    "aliases": [
+      "big-d vic"
+    ]
+  },
+  {
+    "card": "We Do Not Sow (Core)",
+    "code": "01083",
+    "aliases": [
+      "they always have it"
+    ]
+  },
+  {
+    "card": "White Harbor (SoKL)",
+    "code": "11042",
+    "aliases": [
+      "pearl harbor"
+    ]
+  },
+  {
+    "card": "White Tree (AtSK)",
+    "code": "04007",
+    "aliases": [
+      "choke tree"
+    ]
+  },
+  {
+    "card": "Winter Is Coming (Core)",
+    "code": "01159",
+    "aliases": [
+      "wic"
+    ]
+  },
+  {
+    "card": "Winter Reserves (MoD)",
+    "code": "11080",
+    "aliases": [
+      "winter opening"
+    ]
+  },
+  {
+    "card": "You Win Or You Die (SAT)",
+    "code": "08120",
+    "aliases": [
+      "ywoyd"
+    ]
+  }
+]
