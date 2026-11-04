@@ -263,6 +263,45 @@ class CardsData
                             }
                             $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
                             break;
+                        
+                        case 'n': // income: X is stored as NULL for plot cards
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                if ($operator === ':' && strcasecmp((string) $arg, 'x') === 0) {
+                                    $or[] = "(c.income IS NULL AND t.code = ?$i)";
+                                    $qb->setParameter($i++, 'plot');
+                                    continue;
+                                }
+                        
+                                switch ($operator) {
+                                    case ':':
+                                        $or[] = "(c.income = ?$i)";
+                                        break;
+                                    case '!':
+                                        $or[] = "(c.income != ?$i)";
+                                        break;
+                                    case '<':
+                                        if (ctype_digit((string) $arg) && (int) $arg > 0) {
+                                            $or[] = "((c.income < ?$i) OR (c.income IS NULL AND t.code = 'plot'))";
+                                        } else {
+                                            $or[] = "(c.income < ?$i)";
+                                        }
+                                        break;
+                                    case '>':
+                                        $or[] = "(c.income > ?$i)";
+                                        break;
+                                    default:
+                                        continue 2;
+                                }
+                        
+                                $qb->setParameter($i++, $arg);
+                            }
+                        
+                            if ($or) {
+                                $qb->andWhere(implode($operator === '!' ? ' and ' : ' or ', $or));
+                            }
+                            break;
+
                         default:
                             $or = [];
                             foreach ($condition as $arg) {
