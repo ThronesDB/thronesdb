@@ -239,6 +239,7 @@ decks:
       initiative: Valor de iniciativa
       text: Texto
       quantity: Cantidad en el capítulo
+      restrictions: Cartas restringidas / Pods
   charts:
     faction:
       title: Cartas por Facción

@@ -11,6 +11,7 @@
         g: [add_boolean_sf, 'is_intrigue', Translator.trans('decks.smartfilter.filters.is_intrigue')],
         h: [add_integer_sf, 'reserve', Translator.trans('decks.smartfilter.filters.reserve')],
         i: [add_string_sf, 'illustrator', Translator.trans('decks.smartfilter.filters.illustrator')],
+        j: [add_restriction_sf, 'code', Translator.trans('decks.smartfilter.filters.restrictions')],
         d: [add_string_sf, 'designer', Translator.trans('decks.smartfilter.filters.designer')],
         k: [add_string_sf, 'traits', Translator.trans('decks.smartfilter.filters.traits')],
         l: [add_boolean_sf, 'is_loyal', Translator.trans('decks.smartfilter.filters.is_loyal')],
@@ -79,6 +80,58 @@
         }
         // for any other strength filter input use the int comparison method.
         return add_integer_sf(key, operator, values);
+    }
+
+    function add_restriction_sf(key, operator, values)
+    {
+        if (operator === ':' || operator === '!') {
+            var rl = app.data.getBestSelectedRestrictedList();
+            var codes = get_restriction_codes(rl, values);
+            var query = operator === '!' ? { '$nin' : codes } : { '$in' : codes };
+            // allow for combinations of restriction filters.
+            if (!SmartFilterQuery.hasOwnProperty(key)) {
+                SmartFilterQuery[key] = { '$and': [] };
+            }
+            SmartFilterQuery[key]['$and'].push(query);
+        }
+    }
+
+    function get_restriction_codes(rl, values)
+    {
+        if (!rl || !rl.contents) {
+            return [];
+        }
+
+        var codes = [];
+
+        values.forEach(function (rawValue) {
+            var value = String(rawValue).toLowerCase();
+
+            if (value === 'j') {
+                codes = codes.concat(rl.contents.joust.restricted || []);
+            } else if (value === 'm') {
+                codes = codes.concat(rl.contents.melee.restricted || []);
+            } else {
+                var match = /^(p|mp)([1-9][0-9]*)?$/.exec(value);
+
+                if (match) {
+                    var format = match[1] === 'p' ? 'joust' : 'melee';
+                    var prefix = match[1] === 'p' ? 'P' : 'MP';
+
+                    (rl.contents[format].restricted_pods || []).forEach(function (pod) {
+                        if (!match[2] || pod.title.toUpperCase() === prefix + match[2]) {
+                            codes = codes.concat(pod.cards || []);
+
+                            if (pod.restricted) {
+                                codes.push(pod.restricted);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        return _.uniq(codes);
     }
 
     function add_integer_sf(key, operator, values)

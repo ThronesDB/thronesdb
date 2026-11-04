@@ -240,6 +240,7 @@ decks:
       text: Text
       quantity: Anzahl der Kopien im Pack
       designer: Designer/in
+      restrictions: Eingeschränkte Karten / Pods
   charts:
     faction:
       title: Karten pro Fraktion
