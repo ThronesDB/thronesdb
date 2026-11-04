@@ -19,7 +19,7 @@
         o: [add_integer_sf, 'cost', Translator.trans('decks.smartfilter.filters.cost')],
         p: [add_boolean_sf, 'is_power', Translator.trans('decks.smartfilter.filters.is_power')],
         r: [add_string_sf, 'rarity_code', Translator.trans('decks.smartfilter.filters.rarity')],
-        s: [add_integer_sf, 'strength', Translator.trans('decks.smartfilter.filters.strength')],
+        s: [add_strength_sf, 'strength', Translator.trans('decks.smartfilter.filters.strength')],
         t: [add_string_sf, 'type_code', Translator.trans('decks.smartfilter.filters.type_code')],
         u: [add_boolean_sf, 'is_unique', Translator.trans('decks.smartfilter.filters.is_unique')],
         v: [add_integer_sf, 'initiative', Translator.trans('decks.smartfilter.filters.initiative')],
@@ -65,6 +65,20 @@
             return '<li><tt>' + key + '</tt> &ndash; ' + value[2] + '</li>';
         });
         return '<ul>' + items.join('') + '</ul><p>' + Translator.trans('decks.smartfilter.example') + '</p>';
+    }
+
+    function add_strength_sf(key, operator, values)
+    {
+        // special case - strength equality check on 'X' or 'x'.
+        if (operator === ':' && 1 === values.length && /^x$/i.test(values[0])) {
+            SmartFilterQuery['$and'] = [
+                { type_code: 'character' },
+                { strength: { '$eq': null } }
+            ];
+            return;
+        }
+        // for any other strength filter input use the int comparison method.
+        return add_integer_sf(key, operator, values);
     }
 
     function add_integer_sf(key, operator, values)
