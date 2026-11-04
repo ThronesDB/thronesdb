@@ -10,7 +10,6 @@ twig:
         supported_locales: '%supported_locales%'
         cards_data: '@App\Services\CardsData'
         deck_validation_helper: '@App\Services\DeckValidationHelper'
-        google_analytics_tracking_code: '%google_analytics_tracking_code%'
         allow_search_engine_tracking: '%allow_search_engine_tracking%'
         design_team_url: '%design_team_url%'
     form_themes:
