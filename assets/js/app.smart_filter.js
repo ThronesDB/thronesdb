@@ -2,7 +2,6 @@
 {
 
     var SmartFilterQuery = [];
-    var SmartFilterRestrictionConditions = [];
 
     var configuration = {
         a: [add_string_sf, 'flavor', Translator.trans('decks.smartfilter.filters.flavor')],
@@ -35,27 +34,8 @@
      */
     smart_filter.get_query = function get_query(query)
     {
-        query = _.extend(query, SmartFilterQuery);
-
-        if (SmartFilterRestrictionConditions.length) {
-            var rl = app.data.getBestSelectedRestrictedList();
-
-            var clauses = SmartFilterRestrictionConditions.map(function (condition) {
-                var codes = get_restriction_codes(rl, condition.values);
-
-                return {
-                    code: condition.operator === '!'
-                        ? { '$nin': codes }
-                        : { '$in': codes }
-                };
-            });
-
-            query['$and'] = (query['$and'] || []).concat(clauses);
-        }
-
-        return query;
+        return _.extend(query, SmartFilterQuery);
     };
-
 
     /**
      * called when the filter input is modified
@@ -65,7 +45,6 @@
     {
         var conditions = filterSyntax(value);
         SmartFilterQuery = {};
-        SmartFilterRestrictionConditions = [];
 
         for(var i = 0; i < conditions.length; i++) {
             var condition = conditions[i];
@@ -106,10 +85,14 @@
     function add_restriction_sf(key, operator, values)
     {
         if (operator === ':' || operator === '!') {
-            SmartFilterRestrictionConditions.push({
-                operator: operator,
-                values: values
-            });
+            var rl = app.data.getBestSelectedRestrictedList();
+            var codes = get_restriction_codes(rl, values);
+            var query = operator === '!' ? { '$nin' : codes } : { '$in' : codes };
+            // allow for combinations of restriction filters.
+            if (!SmartFilterQuery.hasOwnProperty(key)) {
+                SmartFilterQuery[key] = { '$and': [] };
+            }
+            SmartFilterQuery[key]['$and'].push(query);
         }
     }
 
