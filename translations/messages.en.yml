@@ -221,6 +221,7 @@ decks:
     filters:
       flavor: Flavor text
       claim: Claim value
+      cycle: Cycle
       pack_code: Pack
       faction_code: Faction
       is_intrigue: Intrigue icon
