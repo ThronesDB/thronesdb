@@ -60,9 +60,9 @@
 
     smart_filter.get_help = function get_help()
     {
-        var items = _.map(configuration, function (value, key)
+        var items = _.map(Object.keys(configuration).sort(), function (key)
         {
-            return '<li><tt>' + key + '</tt> &ndash; ' + value[2] + '</li>';
+            return '<li><tt>' + key + '</tt> &ndash; ' + configuration[key][2] + '</li>';
         });
         return '<ul>' + items.join('') + '</ul><p>' + Translator.trans('decks.smartfilter.example') + '</p>';
     }
