@@ -351,12 +351,13 @@ class CardsData
                     }
                     break;
                 case 'string':
-                    switch ($searchCode) {
+                    switch ($searchCode) {                        
                         case '': // name or index
                             $or = [];
                             foreach ($condition as $arg) {
                                 $code = preg_match('/^\d\d\d\d\d$/u', $arg);
                                 $acronym = preg_match('/^[A-Z]{2,}$/', $arg);
+                        
                                 if ($code) {
                                     $or[] = "(c.code = ?$i)";
                                     $qb->setParameter($i++, $arg);
@@ -368,8 +369,15 @@ class CardsData
                                     $or[] = "(c.name like ?$i)";
                                     $qb->setParameter($i++, "%$arg%");
                                 }
+                        
+                                // Add matching aliases without replacing standard searches.
+                                foreach ($this->findAliasCardCodes($arg) as $aliasCode) {
+                                    $or[] = "(c.code = ?$i)";
+                                    $qb->setParameter($i++, $aliasCode);
+                                }
                             }
-                            $qb->andWhere(implode(" or ", $or));
+                        
+                            $qb->andWhere('(' . implode(' or ', $or) . ')');
                             break;
                         case 'x': // text
                             $or = [];
@@ -525,6 +533,68 @@ class CardsData
 
         return $rows;
     }
+
+    
+    /**
+     * Find card codes associated with an alias containing the
+     * requested phrase as one or more complete words.
+     */
+    private function findAliasCardCodes(string $term): array
+    {
+        static $registry = null;
+    
+        if ($registry === null) {
+            $registry = [];
+            $file = dirname(__DIR__, 2) . '/public/card_aliases.json';
+    
+            if (is_readable($file)) {
+                $decoded = json_decode(file_get_contents($file), true);
+    
+                if (is_array($decoded)) {
+                    foreach ($decoded as $entry) {
+                        if (isset($entry['code'], $entry['aliases'])
+                            && is_string($entry['code'])
+                            && is_array($entry['aliases'])) {
+                            $registry[] = $entry;
+                        }
+                    }
+                }
+            }
+        }
+    
+        $needle = $this->normalizeAliasText($term);
+    
+        if ($needle === '') {
+            return [];
+        }
+    
+        $codes = [];
+    
+        foreach ($registry as $entry) {
+            foreach ($entry['aliases'] as $alias) {
+                if (!is_string($alias)) {
+                    continue;
+                }
+    
+                $haystack = $this->normalizeAliasText($alias);
+    
+                if (strpos(' ' . $haystack . ' ', ' ' . $needle . ' ') !== false) {
+                    $codes[$entry['code']] = $entry['code'];
+                    break;
+                }
+            }
+        }
+    
+        return array_values($codes);
+    }
+    
+    private function normalizeAliasText(string $text): string
+    {
+        return trim(
+            preg_replace('/[^\p{L}\p{N}]+/u', ' ', mb_strtolower($text)) ?? ''
+        );
+    }
+
 
     /**
      * @param CardInterface $card
