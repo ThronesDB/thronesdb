@@ -7,9 +7,11 @@ use App\Entity\CardInterface;
 use App\Entity\Review;
 use App\Entity\Reviewcomment;
 use App\Entity\ReviewInterface;
+use App\Entity\ReviewEditHistory;
 use App\Entity\User;
 use App\Entity\UserInterface;
 use App\Services\Texts;
+use App\Services\ReviewPermissions;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -25,6 +27,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+
 
 /**
  * @package App\Controller
@@ -110,6 +114,62 @@ class ReviewController extends AbstractController
             'success' => true
         ]);
     }
+    
+    /**
+     * @Route(
+     *     "/review/{id}/edit-data",
+     *     name="card_review_edit_data",
+     *     methods={"GET"},
+     *     requirements={"id"="\d+"}
+     * )
+     */
+    public function editDataAction(
+        int $id,
+        ReviewPermissions $permissions,
+        CsrfTokenManagerInterface $csrfTokenManager
+    ): JsonResponse {
+        /** @var UserInterface|null $user */
+        $user = $this->getUser();
+    
+        if (!$user) {
+            throw $this->createAccessDeniedException(
+                'You are not logged in.'
+            );
+        }
+    
+        /** @var ReviewInterface|null $review */
+        $review = $this->getDoctrine()
+            ->getRepository(Review::class)
+            ->find($id);
+    
+        if (!$review) {
+            throw $this->createNotFoundException(
+                'Review not found.'
+            );
+        }
+    
+        if (!$permissions->canEdit($user, $review)) {
+            throw $this->createAccessDeniedException(
+                'You cannot edit this review.'
+            );
+        }
+    
+        $response = new JsonResponse([
+            'review_id' => $review->getId(),
+            'text_md' => $review->getTextMd(),
+            'csrf_token' => $csrfTokenManager
+                ->getToken('review_edit')
+                ->getValue(),
+        ]);
+    
+        $response->headers->set(
+            'Cache-Control',
+            'private, no-store, max-age=0'
+        );
+    
+        return $response;
+    }
+
 
     /**
      * @Route("/review/edit", name="card_review_edit", methods={"POST"})
@@ -120,7 +180,11 @@ class ReviewController extends AbstractController
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function editAction(Request $request, Texts $texts)
+    public function editAction(
+        Request $request,
+        Texts $texts,
+        ReviewPermissions $permissions
+    )
     {
 
         /* @var $em EntityManager */
@@ -129,7 +193,7 @@ class ReviewController extends AbstractController
         /* @var UserInterface $user */
         $user = $this->getUser();
         if (!$user) {
-            throw new UnauthorizedHttpException("You are not logged in.");
+            throw $this->createAccessDeniedException("You are not logged in.");
         }
 
         $review_id = filter_var($request->get('review_id'), FILTER_SANITIZE_NUMBER_INT);
@@ -138,11 +202,25 @@ class ReviewController extends AbstractController
         if (!$review) {
             throw new BadRequestHttpException("Unable to find review.");
         }
-        if ($review->getUser()->getId() !== $user->getId()) {
-            throw new UnauthorizedHttpException("You cannot edit this review.");
+        
+        if (!$permissions->canEdit($user, $review)) {
+            throw $this->createAccessDeniedException(
+                'You cannot edit this review.'
+            );
         }
+        
+        if (!$this->isCsrfTokenValid(
+            'review_edit',
+            (string) $request->request->get('_token')
+        )) {
+            throw $this->createAccessDeniedException(
+                'Invalid CSRF token.'
+            );
+        }
+        
+        $previousText = $review->getTextMd();
+        $review_raw = trim((string) $request->request->get('review'));
 
-        $review_raw = trim($request->get('review'));
 
         $review_raw = preg_replace(
             '%(?<!\()\b(?:(?:https?|ftp)://)(?:((?:(?:[a-z\d\x{00a1}-\x{ffff}]+-?)*[a-z\d\x{00a1}-\x{ffff}]+)'
@@ -152,18 +230,31 @@ class ReviewController extends AbstractController
             $review_raw
         );
 
-        $review_html = $texts->markdown($review_raw);
+        $review_html = $texts->markdown($review_raw);                
         if (!$review_html) {
-            return new Response('Your review is empty.');
+            return new JsonResponse([
+                'message' => 'Your review is empty.'
+            ], 400);
         }
-
+               
         $review->setTextMd($review_raw);
         $review->setTextHtml($review_html);
-
+        
+        // Keep a permanent record of the previous and new Markdown.
+        $history = new ReviewEditHistory(
+            $review,
+            $user,
+            $previousText,
+            $review_raw
+        );
+        
+        $em->persist($history);
         $em->flush();
-
+        
         return new JsonResponse([
-            'success' => true
+            'success' => true,
+            'review_id' => $review->getId(),
+            'review_html' => $review_html,
         ]);
     }
 
