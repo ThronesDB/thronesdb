@@ -10,6 +10,7 @@ use App\Entity\Faction;
 use App\Entity\ReviewInterface;
 use App\Entity\User;
 use App\Entity\UserInterface;
+use App\Services\ReviewPermissions;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Swift_Mailer;
@@ -135,7 +136,11 @@ class UserController extends AbstractController
      * @param RouterInterface $router
      * @return Response
      */
-    public function infoAction(Request $request, RouterInterface $router)
+    public function infoAction(
+        Request $request,
+        RouterInterface $router,
+        ReviewPermissions $permissions
+    )
     {
         $jsonp = $request->query->get('jsonp');
 
@@ -159,6 +164,7 @@ class UserController extends AbstractController
                     'name' => $user->getUsername(),
                     'faction' => $user->getColor(),
                     'donation' => $user->getDonation(),
+                    'can_moderate_reviews' => $permissions->isModerator($user),
             );
 
             if (isset($decklist_id)) {
