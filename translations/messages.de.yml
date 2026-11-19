@@ -451,8 +451,11 @@ card:
     title: Karten-Rezensionen
     none: Noch keine Rezensionen dieser Karte.
     unreleased: Rezensionen dieser Karte können erst geschrieben werden, wenn sie veröffentlicht wurde.
-    like: Mir gefällt diese Rezension.
+    like: Mir gefällt diese Rezension.    
     edit: Rezension bearbeiten
+    edit_mine: Meine Rezension bearbeiten
+    edit_moderator: Rezension bearbeiten (Moderator)
+    updated: Rezension erfolgreich aktualisiert.
     write: Eine Rezension schreiben
     hint: "Schreibe eine Rezension dieser Karte. Rezensionen müssen mindestens %min% Zeichen lang sein. Die Anzahl deiner Rezensionen darf nicht größer sein als dein Ruf. Rezensionen sind nicht für Fragen und Kommentare vorgesehen. Tippe # um einen Kartennamen oder $ um ein Spielsymbol einzugeben."
     submit: Rezension veröffentlichen

@@ -453,6 +453,9 @@ card:
     unreleased: Reviews will be enabled for this card when it is officially released.
     like: Like that review
     edit: Edit review
+    edit_mine: Edit my review
+    edit_moderator: Edit review (moderator)
+    updated: Review updated successfully.
     write: Write a review
     hint: "Write your analysis of the card, in at least %min% characters. You can write a number of card reviews equal to your reputation. This is not a place for questions or comments. Type # to enter a card name. Type $ to enter a symbol."
     submit: Submit preview

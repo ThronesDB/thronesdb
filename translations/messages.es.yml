@@ -450,8 +450,11 @@ card:
     title: Reseñas
     none: Aún no hay reseñas para esta carta.
     unreleased: Las reseñas para esta carta se habilitarán cuando ésta sea publicada oficialmente.
-    like: Me gusta esta reseña
+    like: Me gusta esta reseña    
     edit: Editar reseña
+    edit_mine: Editar mi reseña
+    edit_moderator: Editar reseña (moderador)
+    updated: Reseña actualizada correctamente.
     write: Escribir una reseña
     hint: "Escribe tu análisis de esta carta en al menos %min% caracteres. Puedes escribir tantas reseñas como tu reputación. Éste no es lugar para preguntas o comentarios. Escribe # para introducir el nombre de una carta. Escribe $ para introducir un símbolo."
     submit: Enviar reseña
