@@ -263,27 +263,48 @@ class CardsData
                             }
                             $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
                             break;
+                        case 's': // strength
+                            $or = [];
+                            foreach ($condition as $arg) {
+                                switch ($operator) {
+                                    case ':':
+                                        if (strcasecmp((string) $arg, 'x') === 0) {
+                                            $or[] = "(c.strength IS NULL AND t.code = ?$i)";
+                                            $qb->setParameter($i++, 'character');
+                                            continue 2;
+                                        }
+                                        $or[] = "(c.strength = ?$i)";
+                                        break;
+                                    case '!':
+                                        $or[] = "(c.strength != ?$i)";
+                                        break;
+                                    case '<':
+                                        if (ctype_digit((string) $arg) && (int) $arg > 0) {
+                                            $or[] = "((c.strength < ?$i) OR (c.strength IS NULL AND t.code = 'character'))";
+                                        } else {
+                                            $or[] = "(c.strength < ?$i)";
+                                        }
+                                        break;
+                                    case '>':
+                                        $or[] = "(c.strength > ?$i)";
+                                        break;
+                                }
+                                $qb->setParameter($i++, $arg);
+                            }
+                            $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
+                            break;
                         default:
                             $or = [];
                             foreach ($condition as $arg) {
                                 switch ($operator) {
                                     case ':':
-                                        if ($searchCode === 's' && strcasecmp((string) $arg, 'x') === 0) {
-                                            $or[] = "(c.strength IS NULL AND t.code = ?$i)";
-                                            $qb->setParameter($i++, 'character');
-                                            continue 2;
-                                        }
                                         $or[] = "(c.$searchName = ?$i)";
                                         break;
                                     case '!':
                                         $or[] = "(c.$searchName != ?$i)";
                                         break;
                                     case '<':
-                                        if ($searchCode === 's' && ctype_digit((string) $arg) && (int) $arg > 0) {
-                                            $or[] = "((c.strength < ?$i) OR (c.strength IS NULL AND t.code = 'character'))";
-                                        } else {
-                                            $or[] = "(c.$searchName < ?$i)";
-                                        }
+                                        $or[] = "(c.$searchName < ?$i)";
                                         break;
                                     case '>':
                                         $or[] = "(c.$searchName > ?$i)";
