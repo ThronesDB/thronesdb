@@ -262,7 +262,7 @@ class CardsData
                                 $qb->setParameter($i++, $arg);
                             }
                             $qb->andWhere(implode($operator == '!' ? " and " : " or ", $or));
-                            break;                        
+                            break;
                         default:
                             $or = [];
                             foreach ($condition as $arg) {
