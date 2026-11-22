@@ -11,6 +11,7 @@ use App\Entity\Faction;
 use App\Entity\Pack;
 use App\Entity\PackInterface;
 use App\Entity\Review;
+use App\Entity\Restriction;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
@@ -328,10 +329,10 @@ class CardsData
                                     default:
                                         continue 2;
                                 }
-                        
+
                                 $qb->setParameter($i++, $arg);
                             }
-                        
+
                             if ($or) {
                                 $qb->andWhere(implode($operator === '!' ? ' and ' : ' or ', $or));
                             }
@@ -418,13 +419,13 @@ class CardsData
                                 'targ'  => 'targaryen',
                                 'ty'    => 'tyrell',
                             ];
-                        
+
                             $or = [];
                             foreach ($condition as $arg) {
                                 if ($searchCode === 'f') {
                                     $arg = $factionAliases[strtolower($arg)] ?? $arg;
                                 }
-                        
+
                                 switch ($operator) {
                                     case ':':
                                             $or[] = "($searchCode.code = ?$i)";
@@ -583,7 +584,84 @@ class CardsData
                             }
                                 $qb->andWhere(implode(" or ", $or));
                             break;
-                        break;
+                        case 'j': // restricted list
+                            // grab the lastest active standard RL, ignore Valyrian.
+                            $restriction = $this->doctrine
+                                ->getRepository(Restriction::class)
+                                ->createQueryBuilder('r')
+                                ->where('r.active = :active')
+                                ->andWhere('r.code LIKE :codePrefix')
+                                ->setParameter('active', true)
+                                ->setParameter('codePrefix', 'gotstandard%')
+                                ->orderBy('r.effectiveOn', 'DESC')
+                                ->setMaxResults(1)
+                                ->getQuery()
+                                ->getOneOrNullResult();
+
+                            // filter the restricted list by the given criteria and grab all relevant card codes
+                            $codes = [];
+                            if ($restriction) {
+                                $contents = $restriction->getContents();
+
+                                foreach ($condition as $arg) {
+                                    $arg = strtolower((string) $arg);
+
+                                    if ($arg === 'j') {
+                                        $codes = array_merge(
+                                            $codes,
+                                            $contents['joust']['restricted'] ?? []
+                                        );
+                                    } elseif ($arg === 'm') {
+                                        $codes = array_merge(
+                                            $codes,
+                                            $contents['melee']['restricted'] ?? []
+                                        );
+                                    } elseif (preg_match('/^(p|mp)([1-9][0-9]*)?$/', $arg, $matches)) {
+                                        $format = $matches[1] === 'p' ? 'joust' : 'melee';
+                                        $prefix = $matches[1] === 'p' ? 'P' : 'MP';
+
+                                        foreach ($contents[$format]['restricted_pods'] ?? [] as $pod) {
+                                            if (
+                                                !isset($matches[2]) ||
+                                                strcasecmp($pod['title'], $prefix . $matches[2]) === 0
+                                            ) {
+                                                $codes = array_merge(
+                                                    $codes,
+                                                    $pod['cards'] ?? []
+                                                );
+
+                                                if (!empty($pod['restricted'])) {
+                                                    $codes[] = $pod['restricted'];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $codes = array_values(array_unique($codes));
+
+                            if ($codes) {
+                                // grab or exclude all cards with the identified codes
+                                if ('!' === $operator) {
+                                    $qb->andWhere($qb->expr()->notIn('c.code', "?$i"));
+                                } else {
+                                    $qb->andWhere($qb->expr()->in('c.code', "?$i"));
+                                }
+                                $qb->setParameter($i++, $codes);
+                            } else {
+                                if (':' === $operator) {
+                                    // if no cards were found on the RL that match the filter,
+                                    // then short-circuit here and return an empty list
+                                    // if the filter query was looking for matches.
+                                    return [];
+                                } else {
+                                    // if the filter query was exclusionary, then ignore the filter query altogether.
+                                    // we'll have to add a query constraint here that always matches just so that the
+                                    // query is executed later.
+                                    $qb->andWhere('1 = 1');
+                                }
+                            }
+                            break;
                     }
             }
         }
