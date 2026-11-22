@@ -667,6 +667,7 @@ class CardsData
             unset($cardinfo['id']);
             $cardinfo['ci'] = $card->getCostIncome();
             $cardinfo['si'] = $card->getStrengthInitiative();
+            $cardinfo['cycle'] = $card->getPack()->getCycle()->getId();
         } else {
             $cardinfo['text'] = $this->replaceSymbols($cardinfo['text']);
             $cardinfo['text'] = $this->addAbbrTags($cardinfo['text']);
