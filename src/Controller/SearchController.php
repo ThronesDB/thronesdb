@@ -66,7 +66,7 @@ class SearchController extends AbstractController
         't' => 'code',
         'e' => 'code',
         'f' => 'code',
-        'j' => 'code',
+        'j' => 'string',
         '' => 'string',
         'a' => 'string',
         'i' => 'string',
