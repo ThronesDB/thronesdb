@@ -640,17 +640,18 @@
         {
             orderBy[key] = SortOrder;
         });
-        if(SortKey !== 'name')
-            orderBy['name'] = 1;        
+        if (SortKey !== 'name') {
+            orderBy['name'] = 1;
+        }
         var cards = app.data.cards.find(query, {'$orderBy': orderBy});
-        
+
         if (SortKey === 'ci') {
             cards.sort(function (a, b) {
                 var difference = get_cost_income_sort_value(a) - get_cost_income_sort_value(b);
-        
-                if (difference !== 0)
+
+                if (difference !== 0) {
                     return difference * SortOrder;
-        
+                }
                 var nameComparison = String(a.name || '').localeCompare(String(b.name || ''));
                 return nameComparison || String(a.code || '').localeCompare(String(b.code || ''));
             });
