@@ -237,11 +237,15 @@ class CardsData
             if ($searchCode === 'j') {
                 $restriction = $this->doctrine
                     ->getRepository(Restriction::class)
-                    ->findOneBy(
-                        ['active' => true],
-                        ['effectiveOn' => 'DESC']
-                    );
-            
+                    ->createQueryBuilder('r')
+                    ->where('r.active = :active')
+                    ->andWhere('r.code LIKE :codePrefix')
+                    ->setParameter('active', true)
+                    ->setParameter('codePrefix', 'gotstandard%')
+                    ->orderBy('r.effectiveOn', 'DESC')
+                    ->setMaxResults(1)
+                    ->getQuery()
+                    ->getOneOrNullResult();            
                 $codes = [];
             
                 if ($restriction) {
