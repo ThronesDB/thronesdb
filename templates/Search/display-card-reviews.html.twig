@@ -7,10 +7,11 @@
     <form method="POST" action="{{ path('card_review_post') }}" style="clear:right" id="review-edit-form">
         <input type="hidden" name="card_id" value="{{ card.id }}">
         <input type="hidden" name="review_id" value="">
+        <input type="hidden" name="_token" value="">
     </form>
     {% if card.reviews|length %}
         {% for review in card.reviews %}
-            <article class="review" data-id="{{ review.id }}" id="review-{{ review.id }}">
+            <article class="review" data-id="{{ review.id }}" data-author-id="{{ review.user.id }}" id="review-{{ review.id }}">
                 <div class="review-like">
                     <a id="review-social-icon-like" href="#" class="social-icon-like" data-toggle="tooltip"
                        data-placement="bottom" title="{{ 'card.reviews.like' | trans }}">

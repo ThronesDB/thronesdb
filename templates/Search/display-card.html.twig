@@ -4,6 +4,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('js/ui.card.js') }}"></script>
+    {% if includeReviews and cards|length == 1 %}
+        <script>
+            app.user.params.card_id = {{ cards[0].id|json_encode|raw }};
+        </script>
+    {% endif %}
 {% endblock %}
 
 {% block main %}
