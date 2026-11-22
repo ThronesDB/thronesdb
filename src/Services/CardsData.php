@@ -642,8 +642,11 @@ class CardsData
 
                             // grab or exclude all cards with the identified codes
                             if ($codes) {
-                                $sqlOperator = $operator === '!' ? 'NOT IN' : 'IN';
-                                $qb->andWhere("c.code $sqlOperator (?$i)");
+                                if ('!' === $operator) {
+                                    $qb->andWhere($qb->expr()->notIn('c.code', "?$i"));
+                                } else {
+                                    $qb->andWhere($qb->expr()->in('c.code', "?$i"));
+                                }
                                 $qb->setParameter($i++, $codes);
                             } else {
                                 $qb->andWhere($operator === '!' ? '1 = 1' : '1 = 0');
