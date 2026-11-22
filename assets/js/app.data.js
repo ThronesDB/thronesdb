@@ -113,17 +113,7 @@
         data.packs.setData(masters.packs.find());
 
         data.cards = database.collection('card', {primaryKey: 'code', changeTimestamp: false});
-        
-        var cyclePositionsByPack = {};
-        data.packs.find().forEach(function (pack) {
-            cyclePositionsByPack[pack.code] = pack.cycle_position;
-        });
-        
-        data.cards.setData(masters.cards.find().map(function (card) {
-            return _.extend({}, card, {
-                cycle_position: cyclePositionsByPack[card.pack_code]
-            });
-        }));
+        data.cards.setData(masters.cards.find());
 
         data.isLoaded = true;
 
