@@ -6,7 +6,22 @@
     var DisplayColumnsTpl = '',
             SortKey = 'type_code',
             SortOrder = 1,
-            CardDivs = [[], [], []];
+            CardDivs = [[], [], []],
+            CardAliases = [];
+    
+    function normalize_alias_text(value)
+    {
+        return String(value || '').toLowerCase()
+            .replace(/[^a-z0-9\u00c0-\u024f]+/g, ' ')
+            .trim();
+    }
+    
+    function alias_contains_words(alias, query)
+    {
+        return (' ' + normalize_alias_text(alias) + ' ')
+            .indexOf(' ' + query + ' ') !== -1;
+    }
+
 
     /**
      * inits the state of config buttons
@@ -712,6 +727,46 @@
             cb(app.data.cards.find({name: regexp}));
         }
 
+        
+        function findAliasMatches(q, cb)
+        {
+            if (q.match(/^\w[:<>!]/)) {
+                cb([]);
+                return;
+            }
+        
+            var query = normalize_alias_text(q);
+        
+            if (!query) {
+                cb([]);
+                return;
+            }
+        
+            var matches = [];
+        
+            CardAliases.forEach(function (entry) {
+                var card = app.data.cards.findById(entry.code);
+        
+                if (!card || !Array.isArray(entry.aliases)) {
+                    return;
+                }
+        
+                var aliases = entry.aliases.filter(function (alias) {
+                    return typeof alias === 'string'
+                        && alias_contains_words(alias, query);
+                });
+        
+                if (aliases.length) {
+                    matches.push({
+                        code: card.code,
+                        label: aliases.join(' / ') + ' \u2192 ' + entry.card
+                    });
+                }
+            });
+        
+            cb(matches);
+        }
+        
         $('#filter-text').typeahead({
             hint: true,
             highlight: true,
@@ -719,8 +774,15 @@
         }, {
             name: 'cardnames',
             displayKey: 'label',
+            limit: 100,
             source: findMatches
+        }, {
+            name: 'cardaliases',
+            displayKey: 'label',
+            limit: 100,
+            source: findAliasMatches
         });
+
 
     };
 
@@ -785,7 +847,19 @@
         ui.refresh_rl_indicators();
         ui.refresh_list();
         ui.setup_typeahead();
+        
+        $.getJSON($('#filter-text').attr('data-aliases-url'))
+            .done(function (entries) {
+                if (Array.isArray(entries)) {
+                    CardAliases = entries;
+                }
+            })
+            .fail(function () {
+                console.warn('Card aliases unavailable; standard suggestions remain enabled.');
+            });
+        
         app.deck_history && app.deck_history.setup('#history');
+
     };
 
 })(app.ui, jQuery);
