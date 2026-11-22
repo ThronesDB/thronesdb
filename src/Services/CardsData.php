@@ -640,8 +640,8 @@ class CardsData
                             }
                             $codes = array_values(array_unique($codes));
 
-                            // grab or exclude all cards with the identified codes
                             if ($codes) {
+                                // grab or exclude all cards with the identified codes
                                 if ('!' === $operator) {
                                     $qb->andWhere($qb->expr()->notIn('c.code', "?$i"));
                                 } else {
@@ -649,7 +649,17 @@ class CardsData
                                 }
                                 $qb->setParameter($i++, $codes);
                             } else {
-                                $qb->andWhere($operator === '!' ? '1 = 1' : '1 = 0');
+                                if (':' === $operator) {
+                                    // if no cards were found on the RL that match the filter,
+                                    // then short-circuit here and return an empty list
+                                    // if the filter query was looking for matches.
+                                    return [];
+                                } else {
+                                    // if the filter query was exclusionary, then ignore the filter query altogether.
+                                    // we'll have to add a query constraint here that always matches just so that the
+                                    // query is executed later.
+                                    $qb->andWhere('1 = 1');
+                                }
                             }
                             break;
                     }
