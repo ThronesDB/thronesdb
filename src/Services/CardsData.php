@@ -234,72 +234,6 @@ class CardsData
             $searchType = SearchController::$searchTypes[$searchCode];
             $operator = array_shift($condition);
 
-            if ($searchCode === 'j') {
-                $restriction = $this->doctrine
-                    ->getRepository(Restriction::class)
-                    ->createQueryBuilder('r')
-                    ->where('r.active = :active')
-                    ->andWhere('r.code LIKE :codePrefix')
-                    ->setParameter('active', true)
-                    ->setParameter('codePrefix', 'gotstandard%')
-                    ->orderBy('r.effectiveOn', 'DESC')
-                    ->setMaxResults(1)
-                    ->getQuery()
-                    ->getOneOrNullResult();
-                $codes = [];
-
-                if ($restriction) {
-                    $contents = $restriction->getContents();
-
-                    foreach ($condition as $arg) {
-                        $arg = strtolower((string) $arg);
-
-                        if ($arg === 'j') {
-                            $codes = array_merge(
-                                $codes,
-                                $contents['joust']['restricted'] ?? []
-                            );
-                        } elseif ($arg === 'm') {
-                            $codes = array_merge(
-                                $codes,
-                                $contents['melee']['restricted'] ?? []
-                            );
-                        } elseif (preg_match('/^(p|mp)([1-9][0-9]*)?$/', $arg, $matches)) {
-                            $format = $matches[1] === 'p' ? 'joust' : 'melee';
-                            $prefix = $matches[1] === 'p' ? 'P' : 'MP';
-
-                            foreach ($contents[$format]['restricted_pods'] ?? [] as $pod) {
-                                if (
-                                    !isset($matches[2]) ||
-                                    strcasecmp($pod['title'], $prefix . $matches[2]) === 0
-                                ) {
-                                    $codes = array_merge(
-                                        $codes,
-                                        $pod['cards'] ?? []
-                                    );
-
-                                    if (!empty($pod['restricted'])) {
-                                        $codes[] = $pod['restricted'];
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                $codes = array_values(array_unique($codes));
-
-                if ($codes) {
-                    $sqlOperator = $operator === '!' ? 'NOT IN' : 'IN';
-                    $qb->andWhere("c.code $sqlOperator (?$i)");
-                    $qb->setParameter($i++, $codes);
-                } else {
-                    $qb->andWhere($operator === '!' ? '1 = 1' : '1 = 0');
-                }
-
-                continue;
-            }
-
             switch ($searchType) {
                 case 'boolean':
                     switch ($searchCode) {
@@ -650,7 +584,71 @@ class CardsData
                             }
                                 $qb->andWhere(implode(" or ", $or));
                             break;
-                        break;
+                        case 'j': // restricted list
+                            // grab the lastest active standard RL, ignore Valyrian.
+                            $restriction = $this->doctrine
+                                ->getRepository(Restriction::class)
+                                ->createQueryBuilder('r')
+                                ->where('r.active = :active')
+                                ->andWhere('r.code LIKE :codePrefix')
+                                ->setParameter('active', true)
+                                ->setParameter('codePrefix', 'gotstandard%')
+                                ->orderBy('r.effectiveOn', 'DESC')
+                                ->setMaxResults(1)
+                                ->getQuery()
+                                ->getOneOrNullResult();
+
+                            // filter the restricted list by the given criteria and grab all relevant card codes
+                            $codes = [];
+                            if ($restriction) {
+                                $contents = $restriction->getContents();
+
+                                foreach ($condition as $arg) {
+                                    $arg = strtolower((string) $arg);
+
+                                    if ($arg === 'j') {
+                                        $codes = array_merge(
+                                            $codes,
+                                            $contents['joust']['restricted'] ?? []
+                                        );
+                                    } elseif ($arg === 'm') {
+                                        $codes = array_merge(
+                                            $codes,
+                                            $contents['melee']['restricted'] ?? []
+                                        );
+                                    } elseif (preg_match('/^(p|mp)([1-9][0-9]*)?$/', $arg, $matches)) {
+                                        $format = $matches[1] === 'p' ? 'joust' : 'melee';
+                                        $prefix = $matches[1] === 'p' ? 'P' : 'MP';
+
+                                        foreach ($contents[$format]['restricted_pods'] ?? [] as $pod) {
+                                            if (
+                                                !isset($matches[2]) ||
+                                                strcasecmp($pod['title'], $prefix . $matches[2]) === 0
+                                            ) {
+                                                $codes = array_merge(
+                                                    $codes,
+                                                    $pod['cards'] ?? []
+                                                );
+
+                                                if (!empty($pod['restricted'])) {
+                                                    $codes[] = $pod['restricted'];
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            $codes = array_values(array_unique($codes));
+
+                            // grab or exclude all cards with the identified codes
+                            if ($codes) {
+                                $sqlOperator = $operator === '!' ? 'NOT IN' : 'IN';
+                                $qb->andWhere("c.code $sqlOperator (?$i)");
+                                $qb->setParameter($i++, $codes);
+                            } else {
+                                $qb->andWhere($operator === '!' ? '1 = 1' : '1 = 0');
+                            }
+                            break;
                     }
             }
         }
