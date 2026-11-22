@@ -233,7 +233,7 @@ class CardsData
             $searchName = SearchController::$searchKeys[$searchCode];
             $searchType = SearchController::$searchTypes[$searchCode];
             $operator = array_shift($condition);
-            
+
             if ($searchCode === 'j') {
                 $restriction = $this->doctrine
                     ->getRepository(Restriction::class)
@@ -245,15 +245,15 @@ class CardsData
                     ->orderBy('r.effectiveOn', 'DESC')
                     ->setMaxResults(1)
                     ->getQuery()
-                    ->getOneOrNullResult();            
+                    ->getOneOrNullResult();
                 $codes = [];
-            
+
                 if ($restriction) {
                     $contents = $restriction->getContents();
-            
+
                     foreach ($condition as $arg) {
                         $arg = strtolower((string) $arg);
-            
+
                         if ($arg === 'j') {
                             $codes = array_merge(
                                 $codes,
@@ -267,15 +267,17 @@ class CardsData
                         } elseif (preg_match('/^(p|mp)([1-9][0-9]*)?$/', $arg, $matches)) {
                             $format = $matches[1] === 'p' ? 'joust' : 'melee';
                             $prefix = $matches[1] === 'p' ? 'P' : 'MP';
-            
+
                             foreach ($contents[$format]['restricted_pods'] ?? [] as $pod) {
-                                if (!isset($matches[2]) ||
-                                    strcasecmp($pod['title'], $prefix . $matches[2]) === 0) {
+                                if (
+                                    !isset($matches[2]) ||
+                                    strcasecmp($pod['title'], $prefix . $matches[2]) === 0
+                                ) {
                                     $codes = array_merge(
                                         $codes,
                                         $pod['cards'] ?? []
                                     );
-            
+
                                     if (!empty($pod['restricted'])) {
                                         $codes[] = $pod['restricted'];
                                     }
@@ -284,9 +286,9 @@ class CardsData
                         }
                     }
                 }
-            
+
                 $codes = array_values(array_unique($codes));
-            
+
                 if ($codes) {
                     $sqlOperator = $operator === '!' ? 'NOT IN' : 'IN';
                     $qb->andWhere("c.code $sqlOperator (?$i)");
@@ -294,10 +296,9 @@ class CardsData
                 } else {
                     $qb->andWhere($operator === '!' ? '1 = 1' : '1 = 0');
                 }
-            
+
                 continue;
             }
-
 
             switch ($searchType) {
                 case 'boolean':
@@ -394,10 +395,10 @@ class CardsData
                                     default:
                                         continue 2;
                                 }
-                        
+
                                 $qb->setParameter($i++, $arg);
                             }
-                        
+
                             if ($or) {
                                 $qb->andWhere(implode($operator === '!' ? ' and ' : ' or ', $or));
                             }
@@ -484,13 +485,13 @@ class CardsData
                                 'targ'  => 'targaryen',
                                 'ty'    => 'tyrell',
                             ];
-                        
+
                             $or = [];
                             foreach ($condition as $arg) {
                                 if ($searchCode === 'f') {
                                     $arg = $factionAliases[strtolower($arg)] ?? $arg;
                                 }
-                        
+
                                 switch ($operator) {
                                     case ':':
                                             $or[] = "($searchCode.code = ?$i)";
