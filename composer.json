@@ -21,7 +21,7 @@
     "friendsofsymfony/jsrouting-bundle": "^2.1",
     "friendsofsymfony/oauth-server-bundle": "^1.6.2",
     "friendsofsymfony/user-bundle": "^2.0",
-    "guzzlehttp/guzzle": "^7.0",
+    "guzzlehttp/guzzle": "^8.5",
     "incenteev/composer-parameter-handler": "^2.0",
     "jms/i18n-routing-bundle": "@stable",
     "nelmio/api-doc-bundle": "^3.6",
