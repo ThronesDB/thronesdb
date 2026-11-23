@@ -50,7 +50,7 @@
   },
   "require-dev": {
     "beberlei/assert": "^3.2",
-    "justinrainbow/json-schema": "^5.2",
+    "justinrainbow/json-schema": "^6.14",
     "mockery/mockery": "^1.2",
     "phpstan/extension-installer": "^1.0",
     "phpstan/phpstan": "^0.12.31",
